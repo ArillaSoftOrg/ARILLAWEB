@@ -17,7 +17,7 @@ export default function AnimatedBrand() {
                     </span>
 
                     {/* shadow layer */}
-                    <span className="absolute inset-0 text-white/10 blur-sm translate-x-[1px] translate-y-[1px]">
+                    <span className="absolute inset-0 text-slate-900/5 blur-sm translate-x-[1px] translate-y-[1px]">
                         Arilla Soft
                     </span>
                 </h1>

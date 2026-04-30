@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #08090d;
-  --foreground: #f1f5f9;
-  --surface: #111219;
-  --surface-2: #161820;
-  --border: rgba(255, 255, 255, 0.07);
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --surface: #f8fafc;
+  --surface-2: #f1f5f9;
+  --border: #e2e8f0;
   --accent-violet: #7c3aed;
   --accent-violet-light: #8b5cf6;
   --accent-cyan: #06b6d4;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
 }
 
 @theme inline {
@@ -64,9 +64,9 @@ body {
 
 /* Glass card */
 .glass-card {
-  background: rgba(22, 24, 32, 0.8);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid #e2e8f0;
 }
 
 /* Animated gradient bg */
@@ -90,8 +90,8 @@ body {
 /* Grid lines background pattern */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
   background-size: 60px 60px;
 }
 
@@ -275,11 +275,11 @@ body {
 
 .brand-text {
   background: linear-gradient(90deg,
-      #ffffff 0%,
-      #f8fafc 38%,
-      #a78bfa 50%,
-      #f8fafc 62%,
-      #ffffff 100%);
+      #0f172a 0%,
+      #1e293b 38%,
+      #7c3aed 50%,
+      #1e293b 62%,
+      #0f172a 100%);
   background-size: 200% auto;
 
   -webkit-background-clip: text;

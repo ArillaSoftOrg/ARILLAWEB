@@ -1,7 +1,7 @@
 "use client";
 
 import AnimatedBrand from "@/components/AnimatedBrand";
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import HomeBlogPreview from "@/components/HomeBlogPreview";
@@ -19,8 +19,6 @@ import {
   Star,
   Users,
   TrendingUp,
-  Menu,
-  X,
   ChevronRight,
   Layers,
   Cpu,
@@ -50,15 +48,6 @@ import {
 // ─────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────
-const NAV_LINKS = [
-  { label: "Ana Sayfa", href: "/" },
-  { label: "Hakkımızda", href: "/hakkimizda" },
-  { label: "Hizmetler", href: "/services" },
-  { label: "Projeler", href: "/projects" },
-  { label: "Blog", href: "/blog" },
-  { label: "İletişim", href: "/iletisim" },
-];
-
 const QR_FEATURES = [
   {
     icon: Smartphone,
@@ -231,153 +220,76 @@ function renderGradientText(text: string) {
 // ─────────────────────────────────────────────
 function QRPhoneMockup() {
   const cards = [
-    {
-      title: "Web Geliştirme",
-      text: "Modern, hızlı ve ölçeklenebilir web projeleri.",
-    },
-    {
-      title: "Mobil Uygulama",
-      text: "iOS ve Android uyumlu kullanıcı odaklı deneyimler.",
-    },
-    {
-      title: "Özel Yazılım",
-      text: "İşletmenize özel operasyon ve yönetim sistemleri.",
-    },
-    {
-      title: "API & Altyapı",
-      text: "Güvenli, performanslı ve sürdürülebilir backend yapıları.",
-    },
+    { title: "Web Geliştirme", text: "Modern, hızlı ve ölçeklenebilir web projeleri.", Icon: Globe, accent: "#7c3aed" },
+    { title: "Mobil Uygulama", text: "iOS ve Android uyumlu kullanıcı odaklı deneyimler.", Icon: Smartphone, accent: "#06b6d4" },
+    { title: "Özel Yazılım", text: "İşletmenize özel operasyon ve yönetim sistemleri.", Icon: Code2, accent: "#7c3aed" },
+    { title: "API & Altyapı", text: "Güvenli, performanslı ve sürdürülebilir backend yapıları.", Icon: Zap, accent: "#06b6d4" },
   ];
 
   return (
-    <div
-      className="float-animation"
-      style={{
-        position: "relative",
-        width: "100%",
-        maxWidth: "560px",
-        minHeight: "460px",
-        paddingTop: "20px",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: "40px",
-          left: "40px",
-          width: "180px",
-          height: "180px",
-          background: "rgba(124,58,237,0.18)",
-          filter: "blur(90px)",
-          borderRadius: "999px",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          bottom: "20px",
-          right: "20px",
-          width: "180px",
-          height: "180px",
-          background: "rgba(6,182,212,0.14)",
-          filter: "blur(90px)",
-          borderRadius: "999px",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          inset: "-40px",
-          background:
-            "radial-gradient(circle at 20% 20%, rgba(124,58,237,0.18), transparent 35%), radial-gradient(circle at 80% 30%, rgba(6,182,212,0.16), transparent 35%), radial-gradient(circle at 60% 80%, rgba(124,58,237,0.12), transparent 30%)",
-          filter: "blur(40px)",
-          pointerEvents: "none",
-        }}
-      />
+    <div style={{ width: "100%", maxWidth: "520px" }}>
       <div
         style={{
           display: "inline-flex",
           alignItems: "center",
-          gap: "8px",
-          padding: "8px 14px",
+          gap: "6px",
+          padding: "6px 14px",
           borderRadius: "999px",
-          background: "rgba(255,255,255,0.06)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          color: "#e2e8f0",
+          background: "rgba(124,58,237,0.06)",
+          border: "1px solid rgba(124,58,237,0.15)",
+          color: "#7c3aed",
           fontSize: "12px",
           fontWeight: 600,
-          marginBottom: "16px",
-          backdropFilter: "blur(10px)",
+          marginBottom: "20px",
         }}
       >
         Web • Mobil • Özel Yazılım
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
-        {cards.map((card, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {cards.map((card) => (
           <div
             key={card.title}
             style={{
-              borderRadius: "24px",
+              borderRadius: "16px",
               padding: "22px",
-              minHeight: "170px",
-              background:
-                index % 2 === 0
-                  ? "linear-gradient(145deg, rgba(17,24,39,0.92), rgba(10,12,18,0.96))"
-                  : "linear-gradient(145deg, rgba(15,23,42,0.92), rgba(10,12,18,0.96))",
-              border: "1px solid rgba(255,255,255,0.08)",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.28)",
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "space-between",
+              gap: "16px",
+              transition: "transform 0.2s ease, box-shadow 0.2s ease",
+              cursor: "default",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-4px)";
+              e.currentTarget.style.boxShadow = "0 10px 28px rgba(0,0,0,0.09)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.05)";
             }}
           >
             <div
               style={{
-                width: "46px",
-                height: "46px",
-                borderRadius: "14px",
-                background:
-                  index % 2 === 0
-                    ? "linear-gradient(135deg, rgba(124,58,237,0.22), rgba(124,58,237,0.08))"
-                    : "linear-gradient(135deg, rgba(6,182,212,0.22), rgba(6,182,212,0.08))",
-                border:
-                  index % 2 === 0
-                    ? "1px solid rgba(124,58,237,0.22)"
-                    : "1px solid rgba(6,182,212,0.22)",
+                width: "42px",
+                height: "42px",
+                borderRadius: "10px",
+                background: `${card.accent}0d`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: "18px",
-                color: index % 2 === 0 ? "#c4b5fd" : "#67e8f9",
+                flexShrink: 0,
               }}
             >
-              {index === 0 ? "◫" : index === 1 ? "◉" : index === 2 ? "✦" : "▣"}
+              <card.Icon size={19} color={card.accent} />
             </div>
-
-            <div style={{ marginTop: "18px" }}>
-              <h3
-                style={{
-                  fontSize: "20px",
-                  fontWeight: 700,
-                  color: "#f8fafc",
-                  margin: "0 0 10px 0",
-                  letterSpacing: "-0.3px",
-                }}
-              >
+            <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
+              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: 0, letterSpacing: "-0.2px" }}>
                 {card.title}
               </h3>
-              <p
-                style={{
-                  fontSize: "14px",
-                  lineHeight: 1.8,
-                  color: "#94a3b8",
-                  margin: 0,
-                }}
-              >
+              <p style={{ fontSize: "13px", lineHeight: 1.7, color: "#64748b", margin: 0 }}>
                 {card.text}
               </p>
             </div>
@@ -391,7 +303,7 @@ function QRPhoneMockup() {
 // ─────────────────────────────────────────────
 // Hero Section
 // ─────────────────────────────────────────────
-function HeroSection({ settings }: { settings: SiteSettings }) {
+function HeroSection() {
   return (
     <section
       style={{
@@ -401,70 +313,73 @@ function HeroSection({ settings }: { settings: SiteSettings }) {
         alignItems: "center",
         overflowX: "hidden",
         overflowY: "clip",
-        paddingTop: "80px",
+        paddingTop: "68px",
+        background: "#ffffff",
       }}
-      className="grid-bg"
     >
-      {/* Background radial glows */}
+      {/* Subtle grid overlay */}
+      <div className="grid-bg" style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
+      {/* Very soft violet tint — top-left only */}
       <div
         style={{
           position: "absolute",
-          top: "-20%",
-          left: "-10%",
-          width: "clamp(300px, 60vw, 700px)",
-          height: "clamp(300px, 60vw, 700px)",
-          background: "radial-gradient(ellipse, rgba(124,58,237,0.15) 0%, transparent 65%)",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          top: "10%",
-          right: "0",
-          width: "clamp(200px, 40vw, 600px)",
-          height: "clamp(200px, 40vw, 600px)",
-          background: "radial-gradient(ellipse, rgba(6,182,212,0.1) 0%, transparent 65%)",
-          pointerEvents: "none",
-          transform: "translateX(20%)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "-10%",
-          left: "30%",
-          width: "clamp(200px, 45vw, 500px)",
-          height: "clamp(200px, 45vw, 500px)",
-          background: "radial-gradient(ellipse, rgba(124,58,237,0.08) 0%, transparent 65%)",
+          top: 0,
+          left: 0,
+          width: "clamp(300px, 50vw, 640px)",
+          height: "clamp(300px, 50vw, 640px)",
+          background: "radial-gradient(ellipse at top left, rgba(124,58,237,0.05) 0%, transparent 65%)",
           pointerEvents: "none",
         }}
       />
 
-      <div
-        className="w-full max-w-[1280px] mx-auto flex flex-col lg:grid lg:grid-cols-2 items-center gap-8 sm:gap-10 lg:gap-20 px-4 sm:px-6 lg:px-8 pt-16 pb-10 sm:pt-20 sm:pb-14 lg:py-24"
-      >
+      <div className="w-full max-w-[1280px] mx-auto flex flex-col lg:grid lg:grid-cols-2 items-center gap-10 lg:gap-20 px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pt-14 sm:pb-20 lg:py-28">
+
         {/* Left: Text */}
         <motion.div
           variants={stagger}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-5 sm:gap-6 lg:gap-7 items-center lg:items-start text-center lg:text-left"
+          className="flex flex-col gap-6 items-center lg:items-start text-center lg:text-left"
         >
+          {/* Badge */}
+          <motion.div variants={fadeUp}>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "6px 14px",
+                borderRadius: "999px",
+                background: "rgba(124,58,237,0.06)",
+                border: "1px solid rgba(124,58,237,0.18)",
+                fontSize: "12px",
+                fontWeight: 700,
+                color: "#7c3aed",
+                letterSpacing: "0.04em",
+              }}
+            >
+              ✦ Türkiye&apos;nin Dijital Yazılım Ortağı
+            </div>
+          </motion.div>
 
           {/* Headline */}
           <motion.div
             variants={fadeUp}
-            className="w-full flex flex-col items-center lg:items-start text-center lg:text-left"
+            className="flex flex-col items-center lg:items-start"
           >
-
-            {/* Animasyonlu yazı */}
             <AnimatedBrand />
-
-            {/* Ana başlık */}
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium mt-6 leading-tight max-w-[700px] text-slate-300">
-              İşinizi Dijitale Taşıyan <br />
-              <span className="text-white font-semibold">
+            <h2
+              style={{
+                fontSize: "clamp(20px, 3vw, 38px)",
+                fontWeight: 500,
+                color: "#475569",
+                marginTop: "16px",
+                lineHeight: 1.45,
+                maxWidth: "520px",
+              }}
+            >
+              İşinizi Dijitale Taşıyan{" "}
+              <span style={{ color: "#0f172a", fontWeight: 700 }}>
                 Akıllı Yazılım Çözümleri
               </span>
             </h2>
@@ -473,7 +388,13 @@ function HeroSection({ settings }: { settings: SiteSettings }) {
           {/* Subtext */}
           <motion.p
             variants={fadeUp}
-            className="mt-5 text-slate-400 max-w-[560px] text-sm sm:text-base leading-7"
+            style={{
+              color: "#64748b",
+              maxWidth: "480px",
+              fontSize: "clamp(14px, 1.4vw, 16px)",
+              lineHeight: 1.8,
+              margin: 0,
+            }}
           >
             Web siteleri, özel yazılımlar ve dijital sistemlerle işletmenizi
             daha hızlı, daha güçlü ve daha profesyonel hale getiriyoruz.
@@ -482,75 +403,75 @@ function HeroSection({ settings }: { settings: SiteSettings }) {
           {/* Feature bullets */}
           <motion.div
             variants={fadeUp}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-3xl mx-auto lg:mx-0"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl mx-auto lg:mx-0"
           >
             {[
-              {
-                title: "Hızlı Teslim",
-                text: "İhtiyacınıza uygun çözümleri hızlı şekilde yayına alıyoruz.",
-              },
-              {
-                title: "Güçlü Altyapı",
-                text: "Modern, güvenli ve ölçeklenebilir yazılım sistemleri kuruyoruz.",
-              },
-              {
-                title: "İş Odaklı Çözüm",
-                text: "Sadece yazılım değil, işletmenize değer katan sistemler geliştiriyoruz.",
-              },
+              { title: "Hızlı Teslim", text: "İhtiyacınıza uygun çözümleri hızlı şekilde yayına alıyoruz." },
+              { title: "Güçlü Altyapı", text: "Modern, güvenli ve ölçeklenebilir yazılım sistemleri." },
+              { title: "İş Odaklı", text: "İşletmenize değer katan sistemler geliştiriyoruz." },
             ].map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm"
+                style={{
+                  borderRadius: "14px",
+                  border: "1px solid #e2e8f0",
+                  background: "#f8fafc",
+                  padding: "14px 16px",
+                }}
               >
-                <p className="text-white font-semibold text-sm sm:text-base">{item.title}</p>
-                <p className="text-slate-400 text-xs sm:text-sm mt-2 leading-6">{item.text}</p>
+                <p style={{ color: "#0f172a", fontWeight: 600, fontSize: "13px", margin: "0 0 4px 0" }}>{item.title}</p>
+                <p style={{ color: "#64748b", fontSize: "12px", lineHeight: 1.6, margin: 0 }}>{item.text}</p>
               </div>
             ))}
           </motion.div>
 
           {/* CTAs */}
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
+          <motion.div variants={fadeUp} className="flex flex-wrap gap-3 justify-center lg:justify-start">
             <Link
               href="/projects"
-              className="inline-flex items-center gap-2 rounded-xl font-bold text-white transition-all"
               style={{
-                padding: "11px 22px",
-                fontSize: "clamp(13px, 2vw, 15px)",
-                background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)",
-                boxShadow: "0 0 30px rgba(124,58,237,0.35), 0 4px 20px rgba(0,0,0,0.3)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "12px 24px",
+                borderRadius: "10px",
+                fontSize: "14px",
+                fontWeight: 600,
                 textDecoration: "none",
+                color: "white",
+                background: "linear-gradient(135deg, #7c3aed, #5b21b6)",
+                boxShadow: "0 4px 14px rgba(124,58,237,0.25)",
               }}
             >
-              Projelerimizi İncele
-              <ArrowRight size={14} />
+              Projelerimizi İncele <ArrowRight size={14} />
             </Link>
-
             <Link
               href="/iletisim"
-              className="inline-flex items-center gap-2 rounded-xl font-semibold transition-all"
               style={{
-                padding: "11px 22px",
-                fontSize: "clamp(13px, 2vw, 15px)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "12px 24px",
+                borderRadius: "10px",
+                fontSize: "14px",
+                fontWeight: 600,
                 textDecoration: "none",
-                color: "#e2e8f0",
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                color: "#475569",
+                background: "transparent",
+                border: "1px solid #e2e8f0",
               }}
             >
-              Teklif Al
-              <ArrowRight size={14} />
+              Teklif Al <ArrowRight size={14} />
             </Link>
           </motion.div>
-
         </motion.div>
 
-        {/* Right: Phone mockup */}
+        {/* Right: Service cards */}
         <motion.div
           variants={scaleIn}
           initial="hidden"
           animate="visible"
-          className="flex justify-center items-center w-full overflow-visible"
-          style={{ maxWidth: "100%" }}
+          className="flex justify-center items-center w-full"
         >
           <QRPhoneMockup />
         </motion.div>
@@ -563,7 +484,7 @@ function HeroSection({ settings }: { settings: SiteSettings }) {
         transition={{ delay: 1.5 }}
         style={{
           position: "absolute",
-          bottom: "32px",
+          bottom: "28px",
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
@@ -572,19 +493,13 @@ function HeroSection({ settings }: { settings: SiteSettings }) {
           gap: "6px",
         }}
       >
-        <div style={{ width: "1px", height: "40px", background: "linear-gradient(to bottom, transparent, rgba(124,58,237,0.5))" }} />
+        <div style={{ width: "1px", height: "36px", background: "linear-gradient(to bottom, transparent, #cbd5e1)" }} />
         <div
-          style={{
-            width: "6px",
-            height: "6px",
-            borderRadius: "50%",
-            background: "#7c3aed",
-            boxShadow: "0 0 10px #7c3aed",
-          }}
+          style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#7c3aed" }}
           className="pulse-glow"
         />
       </motion.div>
-    </section >
+    </section>
   );
 }
 
@@ -1844,9 +1759,9 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div style={{ background: "#08090d", minHeight: "100vh", color: "#f1f5f9", overflowX: "hidden" }}>
+    <div style={{ background: "#ffffff", minHeight: "100vh", color: "#0f172a", overflowX: "hidden" }}>
       <Navbar />
-      <HeroSection settings={settings} />
+      <HeroSection />
       <StatsSection />
       <QRMenuSection settings={settings} />
       <ServicesSection settings={settings} />

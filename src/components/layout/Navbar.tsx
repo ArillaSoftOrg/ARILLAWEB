@@ -1,14 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Code2, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Menu, X, ArrowRight } from 'lucide-react';
 import { NAV_LINKS } from '@/lib/constants';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hoveredTab, setHoveredTab] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -29,113 +31,180 @@ export default function Navbar() {
         left: 0,
         right: 0,
         zIndex: 50,
-        transition: 'all 0.3s ease',
-        background: scrolled ? 'rgba(8, 9, 13, 0.92)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(16px)' : 'none',
-        borderBottom: scrolled ? '1px solid rgba(255,255,255,0.07)' : '1px solid transparent',
+        background: 'rgba(255,255,255,0.97)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
+        borderBottom: '1px solid rgba(0,0,0,0.07)',
+        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.07)' : 'none',
+        transition: 'box-shadow 0.3s ease',
       }}
     >
-      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '68px' }}>
-          {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 0 20px rgba(124,58,237,0.4)',
-              }}
-            >
-              <Code2 size={18} color="white" />
-            </div>
-            <span style={{ fontWeight: 700, fontSize: '18px', color: '#f1f5f9', letterSpacing: '-0.3px' }}>
-              Arilla<span style={{ color: '#8b5cf6' }}>soft</span>
-            </span>
-          </Link>
+      <div className="max-w-[1440px] mx-auto px-4 lg:px-10 xl:px-14">
+        <div className="flex items-center h-14 lg:h-[92px]">
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-1">
-            {NAV_LINKS.slice(0, 6).map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
+          {/* Logo */}
+          <div style={{ flex: 1 }}>
+            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', gap: '12px' }}>
+              <img
+                src="/logoarilla.png"
+                alt="Arilla Soft"
+                className="h-10 lg:h-[56px] w-auto flex-shrink-0"
+              />
+              <span
+                className="text-[15px] tracking-[0.20em] lg:text-[22px] lg:tracking-[0.18em]"
                 style={{
-                  padding: '6px 14px',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  color: pathname === link.href ? '#a78bfa' : '#94a3b8',
-                  background: pathname === link.href ? 'rgba(124,58,237,0.1)' : 'transparent',
-                  textDecoration: 'none',
-                  transition: 'all 0.2s',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  color: '#0F172A',
+                  userSelect: 'none',
                 }}
               >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* CTA */}
-          <div className="hidden lg:flex items-center gap-3">
-            <Link
-              href="/iletisim"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '9px 20px',
-                borderRadius: '10px',
-                fontSize: '14px',
-                fontWeight: 600,
-                textDecoration: 'none',
-                color: 'white',
-                background: 'linear-gradient(135deg, #7c3aed, #5b21b6)',
-                boxShadow: '0 0 20px rgba(124,58,237,0.3)',
-                transition: 'all 0.2s',
-              }}
-            >
-              Teklif Al <ArrowRight size={14} />
+                ARILLA{' '}
+                <span style={{ color: '#64748B', fontWeight: 500 }}>SOFT</span>
+              </span>
             </Link>
           </div>
 
-          {/* Mobile Toggle */}
-          <button
-            className="lg:hidden"
-            onClick={() => setIsOpen(!isOpen)}
-            style={{
-              background: 'rgba(255,255,255,0.07)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '8px',
-              padding: '8px',
-              color: '#f1f5f9',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            aria-label="Menüyü aç/kapat"
+          {/* Nav links — center */}
+          <nav
+            className="hidden lg:flex items-center"
+            style={{ gap: '2px' }}
+            onMouseLeave={() => setHoveredTab(null)}
           >
-            {isOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
+            {NAV_LINKS.slice(0, 6).map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onMouseEnter={() => setHoveredTab(link.href)}
+                  style={{
+                    position: 'relative',
+                    padding: '8px 14px',
+                    paddingBottom: '10px',
+                    borderRadius: '7px',
+                    fontSize: '15px',
+                    fontWeight: isActive ? 600 : 500,
+                    color: isActive
+                      ? '#1E40AF'
+                      : hoveredTab === link.href
+                      ? '#3B82F6'
+                      : '#334155',
+                    textDecoration: 'none',
+                    transition: 'color 0.2s ease',
+                    whiteSpace: 'nowrap',
+                    background: isActive ? 'rgba(37,99,235,0.06)' : 'transparent',
+                  }}
+                >
+                  {hoveredTab === link.href && (
+                    <motion.span
+                      layoutId="hover-pill"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '7px',
+                        background: 'rgba(37,99,235,0.10)',
+                        zIndex: 0,
+                      }}
+                    />
+                  )}
+                  <span style={{ position: 'relative', zIndex: 1 }}>{link.label}</span>
+                  {isActive && (
+                    <motion.span
+                      layoutId="active-underline"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                      style={{
+                        position: 'absolute',
+                        bottom: '4px',
+                        left: '14px',
+                        right: '14px',
+                        height: '2px',
+                        borderRadius: '1px',
+                        background: '#2563EB',
+                        zIndex: 1,
+                      }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* CTA + mobile toggle — right */}
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px' }}>
+            <Link
+              href="/iletisim"
+              className="hidden lg:inline-flex items-center"
+              style={{
+                gap: '6px',
+                padding: '10px 24px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                color: '#FFFFFF',
+                background: '#0F172A',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)';
+                (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 14px rgba(0,0,0,0.2), 0 0 0 1.5px #2563EB';
+                const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
+                if (arrow) arrow.style.transform = 'translateX(3px)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)';
+                (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 1px 3px rgba(0,0,0,0.15)';
+                const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
+                if (arrow) arrow.style.transform = 'translateX(0)';
+              }}
+            >
+              Teklif Al{' '}
+              <span data-arrow="" style={{ display: 'inline-flex', transition: 'transform 0.2s ease' }}>
+                <ArrowRight size={14} />
+              </span>
+            </Link>
+
+            <button
+              className="flex items-center justify-center lg:hidden"
+              onClick={() => setIsOpen(!isOpen)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                padding: '6px',
+                color: '#334155',
+                cursor: 'pointer',
+              }}
+              aria-label="Menüyü aç/kapat"
+            >
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {isOpen && (
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.18, ease: 'easeOut' }}
           style={{
-            background: 'rgba(8, 9, 13, 0.98)',
-            borderTop: '1px solid rgba(255,255,255,0.07)',
-            backdropFilter: 'blur(16px)',
+            position: 'absolute',
+            left: '12px',
+            right: '12px',
+            zIndex: 100,
+            background: '#FFFFFF',
+            border: '1px solid rgba(0,0,0,0.08)',
+            borderRadius: '16px',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.12)',
+            padding: '12px',
           }}
-          className="lg:hidden"
+          className="lg:hidden top-14"
         >
-          <nav style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
@@ -144,10 +213,11 @@ export default function Navbar() {
                   padding: '10px 14px',
                   borderRadius: '8px',
                   fontSize: '15px',
-                  fontWeight: 500,
-                  color: pathname === link.href ? '#a78bfa' : '#94a3b8',
-                  background: pathname === link.href ? 'rgba(124,58,237,0.08)' : 'transparent',
+                  fontWeight: pathname === link.href ? 600 : 500,
+                  color: pathname === link.href ? '#1E40AF' : '#334155',
+                  background: pathname === link.href ? 'rgba(37,99,235,0.08)' : 'transparent',
                   textDecoration: 'none',
+                  transition: 'color 0.2s ease',
                 }}
               >
                 {link.label}
@@ -158,19 +228,19 @@ export default function Navbar() {
               style={{
                 marginTop: '8px',
                 padding: '11px 20px',
-                borderRadius: '10px',
+                borderRadius: '8px',
                 textAlign: 'center',
                 fontWeight: 600,
                 fontSize: '15px',
                 textDecoration: 'none',
-                color: 'white',
-                background: 'linear-gradient(135deg, #7c3aed, #5b21b6)',
+                color: '#FFFFFF',
+                background: '#0F172A',
               }}
             >
               Teklif Al
             </Link>
           </nav>
-        </div>
+        </motion.div>
       )}
     </header>
   );
