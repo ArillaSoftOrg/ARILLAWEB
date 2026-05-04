@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, startTransition } from "react";
 import {
     Mail,
     MailOpen,
@@ -36,7 +36,9 @@ export default function AdminContactPage() {
     }
 
     useEffect(() => {
-        load();
+        startTransition(() => {
+            load();
+        });
     }, []);
 
     const unreadCount = messages.filter((m) => !m.isRead).length;

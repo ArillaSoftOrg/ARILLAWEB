@@ -85,14 +85,14 @@ export default function Footer() {
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
-                { label: 'Web Uygulama Geliştirme', href: '/services' },
-                { label: 'Mobil Uygulama', href: '/services' },
-                { label: 'QR Menü Sistemi', href: '/services' },
-                { label: 'UI/UX Tasarımı', href: '/services' },
-                { label: 'Backend & API', href: '/services' },
-                { label: 'Bakım & Destek', href: '/services' },
+                { label: 'Web Uygulama Geliştirme', href: '/hizmetler' },
+                { label: 'Mobil Uygulama', href: '/hizmetler' },
+                { label: 'QR Menü Sistemi', href: '/hizmetler' },
+                { label: 'UI/UX Tasarımı', href: '/hizmetler' },
+                { label: 'Backend & API', href: '/hizmetler' },
+                { label: 'Bakım & Destek', href: '/hizmetler' },
               ].map((item) => (
-                <li key={item.href}>
+                <li key={`${item.label}-${item.href}`}>
                   <Link
                     href={item.href}
                     style={{ fontSize: '14px', color: '#475569', textDecoration: 'none' }}
@@ -111,12 +111,10 @@ export default function Footer() {
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
-                { label: 'Hakkımızda', href: '/' },
-                { label: 'Projeler', href: '/projects' },
-                { label: 'Blog', href: '/blog' },
-                { label: 'Kariyer', href: '/iletisim' },
-                { label: 'Sık Sorulan Sorular', href: '/iletisim' },
-                { label: 'İletişim', href: '/iletisim' },
+                { label: 'Hakkımızda', href: '/kurumsal/hakkimizda' },
+                { label: 'Blog', href: '/kurumsal/blog' },
+                { label: 'Kariyer', href: '/kurumsal/kariyer' },
+                { label: 'İletişim', href: '/kurumsal/iletisim' },
               ].map((item) => (
                 <li key={item.href}>
                   <Link
@@ -158,7 +156,7 @@ export default function Footer() {
             </ul>
             <div style={{ marginTop: '20px' }}>
               <Link
-                href="/iletisim"
+                href="/kurumsal/iletisim"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

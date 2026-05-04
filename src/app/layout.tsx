@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/constants';
 import { prisma } from '@/lib/prisma';
-import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -62,7 +61,6 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body>
-        <Navbar />
         <PageTransition>{children}</PageTransition>
       </body>
     </html>

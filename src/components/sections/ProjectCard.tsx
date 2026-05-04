@@ -23,7 +23,7 @@ export default function ProjectCard({
   clientName,
 }: ProjectCardProps) {
   return (
-    <Link href={`/projects/${slug}`} className="group block bg-white rounded-xl border border-slate-100 overflow-hidden hover:shadow-md hover:border-blue-200 transition-all duration-200">
+    <Link href="/" className="group block bg-white rounded-xl border border-slate-100 overflow-hidden hover:shadow-md hover:border-blue-200 transition-all duration-200">
       {/* Image */}
       <div className="aspect-video bg-gradient-to-br from-blue-50 to-indigo-100 relative overflow-hidden">
         {coverImage ? (

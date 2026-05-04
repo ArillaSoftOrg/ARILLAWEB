@@ -3,12 +3,45 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://arillasoft.
 export const SITE_DESCRIPTION =
   'Modern yazılım çözümleri ile işletmenizi dijital geleceğe taşıyoruz. Web, mobil ve kurumsal yazılım geliştirme.';
 
-export const NAV_LINKS = [
-  { label: 'Ana Sayfa', href: '/' },
-  { label: 'Hizmetler', href: '/services' },
-  { label: 'Projeler', href: '/projects' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'İletişim', href: '/iletisim' },
+export type NavChild = {
+  label: string;
+  href?: string;
+  children?: NavChild[];
+};
+
+export type NavItem = {
+  label: string;
+  href?: string;
+  children?: NavChild[];
+};
+
+export const NAV_LINKS: NavItem[] = [
+  {
+    label: 'Sektörel Yazılımlar',
+    children: [
+      { label: 'Tüm Sektörel Yazılımlar', href: '/sektorel-yazilimlar' },
+      { label: 'QR Menü', href: '/sektorel-yazilimlar/qr-menu' },
+      { label: 'Randevu Sistemi', href: '/sektorel-yazilimlar/randevu-sistemi' },
+      { label: 'Kuaför Randevu Sistemi', href: '/sektorel-yazilimlar/randevu-sistemi/kuafor-randevu-sistemi' },
+      { label: 'Klinik Randevu Sistemi', href: '/sektorel-yazilimlar/randevu-sistemi/klinik-randevu-sistemi' },
+      { label: 'Güzellik Merkezi Randevu Sistemi', href: '/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi' },
+    ],
+  },
+  {
+    label: 'Hizmetler',
+    children: [
+      { label: 'Tüm Hizmetler', href: '/hizmetler' },
+    ],
+  },
+  {
+    label: 'Kurumsal',
+    children: [
+      { label: 'Hakkımızda', href: '/kurumsal/hakkimizda' },
+      { label: 'Blog', href: '/kurumsal/blog' },
+      { label: 'Kariyer', href: '/kurumsal/kariyer' },
+      { label: 'İletişim', href: '/kurumsal/iletisim' },
+    ],
+  },
 ];
 
 export const PROJECT_TYPE_LABELS: Record<string, string> = {

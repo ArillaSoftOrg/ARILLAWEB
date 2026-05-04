@@ -1,17 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, startTransition } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Menu, X, ArrowRight } from 'lucide-react';
-import { NAV_LINKS } from '@/lib/constants';
+import { Menu, X, ArrowRight, ChevronDown } from 'lucide-react';
+import { NAV_LINKS, type NavItem } from '@/lib/constants';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const pathname = usePathname();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -20,8 +22,26 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    setIsOpen(false);
+    startTransition(() => {
+      setIsOpen(false);
+      setMobileExpanded(null);
+    });
   }, [pathname]);
+
+  function handleMouseEnter(label: string) {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpenDropdown(label);
+  }
+
+  function handleMouseLeave() {
+    closeTimer.current = setTimeout(() => setOpenDropdown(null), 120);
+  }
+
+  function isItemActive(item: NavItem): boolean {
+    if (item.href && pathname === item.href) return true;
+    if (item.children) return item.children.some((c) => pathname === c.href);
+    return false;
+  }
 
   return (
     <header
@@ -69,72 +89,204 @@ export default function Navbar() {
           <nav
             className="hidden lg:flex items-center"
             style={{ gap: '2px' }}
-            onMouseLeave={() => setHoveredTab(null)}
           >
-            {NAV_LINKS.slice(0, 6).map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onMouseEnter={() => setHoveredTab(link.href)}
-                  style={{
-                    position: 'relative',
-                    padding: '8px 14px',
-                    paddingBottom: '10px',
-                    borderRadius: '7px',
-                    fontSize: '15px',
-                    fontWeight: isActive ? 600 : 500,
-                    color: isActive
-                      ? '#1E40AF'
-                      : hoveredTab === link.href
-                      ? '#3B82F6'
-                      : '#334155',
-                    textDecoration: 'none',
-                    transition: 'color 0.2s ease',
-                    whiteSpace: 'nowrap',
-                    background: isActive ? 'rgba(37,99,235,0.06)' : 'transparent',
-                  }}
-                >
-                  {hoveredTab === link.href && (
-                    <motion.span
-                      layoutId="hover-pill"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            {NAV_LINKS.map((item, navIndex) => {
+              const active = isItemActive(item);
+              const hasChildren = Boolean(item.children?.length);
+              const isDropdownOpen = openDropdown === item.label;
+
+              if (hasChildren) {
+                return (
+                  <div
+                    key={`${item.label}-${navIndex}`}
+                    style={{ position: 'relative' }}
+                    onMouseEnter={() => handleMouseEnter(item.label)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    {/* Dropdown trigger */}
+                    <button
                       style={{
-                        position: 'absolute',
-                        inset: 0,
+                        position: 'relative',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        padding: '8px 14px',
+                        paddingBottom: '10px',
                         borderRadius: '7px',
-                        background: 'rgba(37,99,235,0.10)',
-                        zIndex: 0,
+                        fontSize: '15px',
+                        fontWeight: active ? 600 : 500,
+                        color: active ? '#1E40AF' : isDropdownOpen ? '#3B82F6' : '#334155',
+                        background: active ? 'rgba(37,99,235,0.06)' : isDropdownOpen ? 'rgba(37,99,235,0.10)' : 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'color 0.2s ease, background 0.2s ease',
+                        whiteSpace: 'nowrap',
                       }}
-                    />
-                  )}
-                  <span style={{ position: 'relative', zIndex: 1 }}>{link.label}</span>
-                  {isActive && (
-                    <motion.span
-                      layoutId="active-underline"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      style={{
-                        position: 'absolute',
-                        bottom: '4px',
-                        left: '14px',
-                        right: '14px',
-                        height: '2px',
-                        borderRadius: '1px',
-                        background: '#2563EB',
-                        zIndex: 1,
-                      }}
-                    />
-                  )}
-                </Link>
-              );
+                    >
+                      {item.label}
+                      <ChevronDown
+                        size={14}
+                        style={{
+                          transition: 'transform 0.2s ease',
+                          transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                          color: active ? '#1E40AF' : isDropdownOpen ? '#3B82F6' : '#64748B',
+                        }}
+                      />
+                      {active && (
+                        <motion.span
+                          layoutId="active-underline"
+                          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                          style={{
+                            position: 'absolute',
+                            bottom: '4px',
+                            left: '14px',
+                            right: '14px',
+                            height: '2px',
+                            borderRadius: '1px',
+                            background: '#2563EB',
+                          }}
+                        />
+                      )}
+                    </button>
+
+                    {/* Dropdown panel */}
+                    {isDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.15, ease: 'easeOut' }}
+                        style={{
+                          position: 'absolute',
+                          top: 'calc(100% + 4px)',
+                          left: 0,
+                          minWidth: '220px',
+                          background: '#FFFFFF',
+                          border: '1px solid rgba(0,0,0,0.08)',
+                          borderRadius: '12px',
+                          boxShadow: '0 12px 40px rgba(0,0,0,0.12)',
+                          padding: '6px',
+                          zIndex: 200,
+                        }}
+                        onMouseEnter={() => handleMouseEnter(item.label)}
+                        onMouseLeave={handleMouseLeave}
+                      >
+                        {item.children!.map((child, childIndex) => {
+                          // If child has href, render as Link, otherwise as div
+                          if (child.href) {
+                            return (
+                              <Link
+                                key={`${child.label}-${childIndex}`}
+                                href={child.href}
+                                style={{
+                                  display: 'block',
+                                  padding: '9px 14px',
+                                  borderRadius: '8px',
+                                  fontSize: '14px',
+                                  fontWeight: pathname === child.href ? 600 : 400,
+                                  color: pathname === child.href ? '#1E40AF' : '#334155',
+                                  background: pathname === child.href ? 'rgba(37,99,235,0.08)' : 'transparent',
+                                  textDecoration: 'none',
+                                  transition: 'background 0.15s ease, color 0.15s ease',
+                                  whiteSpace: 'nowrap',
+                                }}
+                                onMouseEnter={(e) => {
+                                  if (pathname !== child.href) {
+                                    e.currentTarget.style.background = 'rgba(37,99,235,0.06)';
+                                    e.currentTarget.style.color = '#3B82F6';
+                                  }
+                                }}
+                                onMouseLeave={(e) => {
+                                  if (pathname !== child.href) {
+                                    e.currentTarget.style.background = 'transparent';
+                                    e.currentTarget.style.color = '#334155';
+                                  }
+                                }}
+                              >
+                                {child.label}
+                              </Link>
+                            );
+                          }
+                          // If no href, render as div (for parent categories)
+                          return (
+                            <div
+                              key={`${child.label}-${childIndex}`}
+                              style={{
+                                display: 'block',
+                                padding: '9px 14px',
+                                borderRadius: '8px',
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                color: '#334155',
+                                background: 'transparent',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {child.label}
+                            </div>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </div>
+                );
+              }
+
+              // Plain link (no children)
+              // Only render as Link if item has href
+              if (item.href) {
+                return (
+                  <Link
+                    key={`${item.label}-${navIndex}`}
+                    href={item.href}
+                    style={{
+                      position: 'relative',
+                      padding: '8px 14px',
+                      paddingBottom: '10px',
+                      borderRadius: '7px',
+                      fontSize: '15px',
+                      fontWeight: active ? 600 : 500,
+                      color: active ? '#1E40AF' : '#334155',
+                      textDecoration: 'none',
+                      transition: 'color 0.2s ease',
+                      whiteSpace: 'nowrap',
+                      background: active ? 'rgba(37,99,235,0.06)' : 'transparent',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) e.currentTarget.style.color = '#3B82F6';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) e.currentTarget.style.color = '#334155';
+                    }}
+                  >
+                    {item.label}
+                    {active && (
+                      <motion.span
+                        layoutId="active-underline"
+                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                        style={{
+                          position: 'absolute',
+                          bottom: '4px',
+                          left: '14px',
+                          right: '14px',
+                          height: '2px',
+                          borderRadius: '1px',
+                          background: '#2563EB',
+                        }}
+                      />
+                    )}
+                  </Link>
+                );
+              }
+
+              // If item has no href and no children (shouldn't happen), render empty
+              return null;
             })}
           </nav>
 
           {/* CTA + mobile toggle — right */}
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px' }}>
             <Link
-              href="/iletisim"
+              href="/teklif-al"
               className="hidden lg:inline-flex items-center"
               style={{
                 gap: '6px',
@@ -205,26 +357,123 @@ export default function Navbar() {
           className="lg:hidden top-14"
         >
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                style={{
-                  padding: '10px 14px',
-                  borderRadius: '8px',
-                  fontSize: '15px',
-                  fontWeight: pathname === link.href ? 600 : 500,
-                  color: pathname === link.href ? '#1E40AF' : '#334155',
-                  background: pathname === link.href ? 'rgba(37,99,235,0.08)' : 'transparent',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s ease',
-                }}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((item, mobileIndex) => {
+              const active = isItemActive(item);
+              const hasChildren = Boolean(item.children?.length);
+              const isExpanded = mobileExpanded === item.label;
+
+              if (hasChildren) {
+                return (
+                  <div key={`${item.label}-${mobileIndex}`}>
+                    <button
+                      onClick={() => setMobileExpanded(isExpanded ? null : item.label)}
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        fontSize: '15px',
+                        fontWeight: active ? 600 : 500,
+                        color: active ? '#1E40AF' : '#334155',
+                        background: active ? 'rgba(37,99,235,0.08)' : 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        textAlign: 'left',
+                      }}
+                    >
+                      {item.label}
+                      <ChevronDown
+                        size={15}
+                        style={{
+                          transition: 'transform 0.2s ease',
+                          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                          color: '#64748B',
+                          flexShrink: 0,
+                        }}
+                      />
+                    </button>
+                    {isExpanded && (
+                      <div style={{ paddingLeft: '12px', paddingBottom: '4px', display: 'flex', flexDirection: 'column', gap: '1px' }}>
+                        {item.children!.map((child, childMobileIndex) => {
+                          // If child has href, render as Link, otherwise as div
+                          if (child.href) {
+                            return (
+                              <Link
+                                key={`${child.label}-${childMobileIndex}`}
+                                href={child.href}
+                                onClick={() => setIsOpen(false)}
+                                style={{
+                                  display: 'block',
+                                  padding: '8px 14px',
+                                  borderRadius: '7px',
+                                  fontSize: '14px',
+                                  fontWeight: pathname === child.href ? 600 : 400,
+                                  color: pathname === child.href ? '#1E40AF' : '#475569',
+                                  background: pathname === child.href ? 'rgba(37,99,235,0.08)' : 'transparent',
+                                  textDecoration: 'none',
+                                }}
+                              >
+                                {child.label}
+                              </Link>
+                            );
+                          }
+                          // If no href, render as div
+                          return (
+                            <div
+                              key={`${child.label}-${childMobileIndex}`}
+                              style={{
+                                display: 'block',
+                                padding: '8px 14px',
+                                borderRadius: '7px',
+                                fontSize: '14px',
+                                fontWeight: 400,
+                                color: '#475569',
+                                background: 'transparent',
+                              }}
+                            >
+                              {child.label}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              // Plain link (no children)
+              // Only render as Link if item has href
+              if (item.href) {
+                return (
+                  <Link
+                    key={`${item.label}-${mobileIndex}`}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      padding: '10px 14px',
+                      borderRadius: '8px',
+                      fontSize: '15px',
+                      fontWeight: active ? 600 : 500,
+                      color: active ? '#1E40AF' : '#334155',
+                      background: active ? 'rgba(37,99,235,0.08)' : 'transparent',
+                      textDecoration: 'none',
+                      transition: 'color 0.2s ease',
+                    }}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              }
+
+              // If item has no href and no children (shouldn't happen), render empty
+              return null;
+            })}
+
             <Link
-              href="/iletisim"
+              href="/teklif-al"
+              onClick={() => setIsOpen(false)}
               style={{
                 marginTop: '8px',
                 padding: '11px 20px',

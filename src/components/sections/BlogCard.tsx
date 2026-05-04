@@ -29,7 +29,7 @@ export default function BlogCard({
 
   return (
     <Link
-      href={`/blog/${slug}`}
+      href={`/kurumsal/blog/${slug}`}
       className="group block bg-white rounded-xl border border-slate-100 overflow-hidden hover:shadow-md hover:border-blue-200 transition-all duration-200"
     >
       {/* Image */}

@@ -131,7 +131,7 @@ export default function HomeBlogPreview() {
                     </div>
 
                     <Link
-                        href="/blog"
+                        href="/kurumsal/blog"
                         style={{
                             display: "inline-flex",
                             alignItems: "center",
@@ -179,7 +179,7 @@ export default function HomeBlogPreview() {
                             return (
                                 <Link
                                     key={post.slug}
-                                    href={`/blog/${post.slug}`}
+                                    href={`/kurumsal/blog/${post.slug}`}
                                     style={{
                                         textDecoration: "none",
                                         display: "block",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, startTransition } from "react";
 import Link from "next/link";
 import {
   Plus,
@@ -302,7 +302,9 @@ export default function AdminServicesPage() {
   }
 
   useEffect(() => {
-    loadServices();
+    startTransition(() => {
+      loadServices();
+    });
   }, []);
 
   const filtered = services.filter(

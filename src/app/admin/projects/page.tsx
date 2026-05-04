@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { FolderKanban, Plus, Pencil, Trash2, Star } from "lucide-react";
 import { getAdminProjects, deleteProject } from "@/lib/project-actions";
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
+
+type Project = Awaited<ReturnType<typeof getAdminProjects>>[number];
 
 export default function AdminProjectsPage() {
-    const [projects, setProjects] = useState<any[]>([]);
-    const [deleteTarget, setDeleteTarget] = useState<any | null>(null);
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [deleteTarget, setDeleteTarget] = useState<Project | null>(null);
 
     async function loadProjects() {
         const data = await getAdminProjects();
@@ -15,7 +17,9 @@ export default function AdminProjectsPage() {
     }
 
     useEffect(() => {
-        loadProjects();
+        startTransition(() => {
+            loadProjects();
+        });
     }, []);
 
     async function handleDelete() {
@@ -39,7 +43,7 @@ export default function AdminProjectsPage() {
                         style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.1)" }}
                     >
                         <p className="mb-4 text-white">
-                            "{deleteTarget.title}" silinsin mi?
+                            &quot;{deleteTarget.title}&quot; silinsin mi?
                         </p>
 
                         <div className="flex gap-3">

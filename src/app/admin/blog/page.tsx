@@ -1,7 +1,7 @@
 "use client";
 
 import CloudinaryUpload from "@/components/admin/CloudinaryUpload";
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, startTransition } from "react";
 import {
   Plus,
   Search,
@@ -442,7 +442,9 @@ export default function AdminBlogPage() {
   }
 
   useEffect(() => {
-    loadPosts();
+    startTransition(() => {
+      loadPosts();
+    });
   }, []);
 
   /* filter */
