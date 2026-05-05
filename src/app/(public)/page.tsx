@@ -1,6 +1,7 @@
 "use client";
 
 import AnimatedBrand from "@/components/AnimatedBrand";
+import SupportChatWidget from "@/components/SupportChatWidget";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import HomeBlogPreview from "@/components/HomeBlogPreview";
@@ -106,19 +107,6 @@ type DbService = {
   icon: string;
   slug: string;
 };
-
-const STATS = [
-  { value: "150+", label: "Tamamlanan Proje", icon: Package },
-  { value: "98%", label: "Müşteri Memnuniyeti", icon: Star },
-  { value: "50+", label: "Aktif Müşteri", icon: Users },
-  { value: "5+", label: "Yıllık Deneyim", icon: TrendingUp },
-];
-
-const TECH_STACK = [
-  "React", "Next.js", "TypeScript", "Node.js", ".NET",
-  "Python", "PostgreSQL", "MongoDB", "React Native", "Flutter",
-  "AWS", "Docker", "Redis", "Kubernetes", "GraphQL",
-];
 
 type SiteSettings = {
   heroTitle: string;
@@ -313,76 +301,36 @@ function HeroSection() {
         overflowX: "hidden",
         overflowY: "clip",
         paddingTop: "68px",
-        background: "#ffffff",
+        background: "#F4FAF7",
       }}
     >
-      {/* Subtle grid overlay */}
-      <div className="grid-bg" style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
-      {/* Very soft violet tint — top-left only */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "clamp(300px, 50vw, 640px)",
-          height: "clamp(300px, 50vw, 640px)",
-          background: "radial-gradient(ellipse at top left, rgba(124,58,237,0.05) 0%, transparent 65%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div className="w-full max-w-[1280px] mx-auto flex flex-col lg:grid lg:grid-cols-2 items-center gap-10 lg:gap-20 px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pt-14 sm:pb-20 lg:py-28">
+      <div className="w-full max-w-[1280px] mx-auto flex flex-col lg:grid lg:grid-cols-2 items-center gap-10 lg:gap-20 px-4 sm:px-6 lg:px-8 pt-6 pb-16 sm:pt-10 sm:pb-20 lg:py-28">
 
         {/* Left: Text */}
         <motion.div
           variants={stagger}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-6 items-center lg:items-start text-center lg:text-left"
+          className="flex flex-col gap-6 items-start text-left"
         >
-          {/* Badge */}
-          <motion.div variants={fadeUp}>
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "6px 14px",
-                borderRadius: "999px",
-                background: "rgba(124,58,237,0.06)",
-                border: "1px solid rgba(124,58,237,0.18)",
-                fontSize: "12px",
-                fontWeight: 700,
-                color: "#7c3aed",
-                letterSpacing: "0.04em",
-              }}
-            >
-              ✦ Türkiye&apos;nin Dijital Yazılım Ortağı
-            </div>
-          </motion.div>
-
           {/* Headline */}
-          <motion.div
-            variants={fadeUp}
-            className="flex flex-col items-center lg:items-start"
-          >
-            <AnimatedBrand />
-            <h2
-              style={{
-                fontSize: "clamp(20px, 3vw, 38px)",
-                fontWeight: 500,
-                color: "#475569",
-                marginTop: "16px",
-                lineHeight: 1.45,
-                maxWidth: "520px",
-              }}
-            >
-              İşinizi Dijitale Taşıyan{" "}
-              <span style={{ color: "#0f172a", fontWeight: 700 }}>
-                Akıllı Yazılım Çözümleri
-              </span>
-            </h2>
-          </motion.div>
+<motion.div
+  variants={fadeUp}
+  className="flex flex-col items-start"
+>
+  <h2
+    style={{
+      fontSize: "clamp(36px, 9vw, 56px)",
+      fontWeight: 800,
+      color: "#050505",
+      marginTop: "8px",
+      lineHeight: 1.15,
+      maxWidth: "clamp(520px, 100%, 720px)",
+    }}
+  >
+    Kişisel ya da kurumsal dijital çözümünüzü bugün hayata geçirin.
+  </h2>
+</motion.div>
 
           {/* Subtext */}
           <motion.p
@@ -391,35 +339,37 @@ function HeroSection() {
               color: "#64748b",
               maxWidth: "480px",
               fontSize: "clamp(14px, 1.4vw, 16px)",
-              lineHeight: 1.8,
+              lineHeight: 1.65,
               margin: 0,
+              marginBottom: "24px",
             }}
           >
-            Web siteleri, özel yazılımlar ve dijital sistemlerle işletmenizi
-            daha hızlı, daha güçlü ve daha profesyonel hale getiriyoruz.
+            Arilla Soft; kişisel ve kurumsal ihtiyaçlara özel web siteleri, yazılımlar ve yönetim sistemleri geliştirir. Daha profesyonel görünmenizi, daha düzenli çalışmanızı ve dijital süreçlerinizi daha kolay yönetmenizi sağlar.
           </motion.p>
 
           {/* Feature bullets */}
           <motion.div
             variants={fadeUp}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl mx-auto lg:mx-0"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-xl mx-auto lg:mx-0"
           >
             {[
-              { title: "Hızlı Teslim", text: "İhtiyacınıza uygun çözümleri hızlı şekilde yayına alıyoruz." },
-              { title: "Güçlü Altyapı", text: "Modern, güvenli ve ölçeklenebilir yazılım sistemleri." },
-              { title: "İş Odaklı", text: "İşletmenize değer katan sistemler geliştiriyoruz." },
+              { title: "İhtiyaca Özel Sistemler", text: "İşletmenize uygun, sade ve etkili dijital çözümler geliştiriyoruz." },
+              { title: "Verimli İş Süreçleri", text: "Operasyonları kolaylaştıran, zaman kazandıran modern yapılar sunuyoruz." },
+              { title: "Güvenilir Dijital Altyapı", text: "Ölçeklenebilir ve uzun vadeli kullanıma uygun yazılım altyapıları kuruyoruz." },
             ].map((item) => (
               <div
                 key={item.title}
                 style={{
-                  borderRadius: "14px",
+                  borderRadius: "12px",
                   border: "1px solid #e2e8f0",
-                  background: "#f8fafc",
-                  padding: "14px 16px",
+                  borderTop: "3px solid #7c3aed",
+                  background: "#ffffff",
+                  padding: "20px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                 }}
               >
-                <p style={{ color: "#0f172a", fontWeight: 600, fontSize: "13px", margin: "0 0 4px 0" }}>{item.title}</p>
-                <p style={{ color: "#64748b", fontSize: "12px", lineHeight: 1.6, margin: 0 }}>{item.text}</p>
+                <p style={{ color: "#0f172a", fontWeight: 600, fontSize: "14px", margin: "0 0 6px 0" }}>{item.title}</p>
+                <p style={{ color: "#64748b", fontSize: "13px", lineHeight: 1.7, margin: 0 }}>{item.text}</p>
               </div>
             ))}
           </motion.div>
@@ -438,11 +388,11 @@ function HeroSection() {
                 fontWeight: 600,
                 textDecoration: "none",
                 color: "white",
-                background: "linear-gradient(135deg, #7c3aed, #5b21b6)",
-                boxShadow: "0 4px 14px rgba(124,58,237,0.25)",
+                background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
+                boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
               }}
             >
-              Projelerimizi İncele <ArrowRight size={14} />
+              Ön Görüşme Al <ArrowRight size={14} />
             </Link>
             <Link
               href="/kurumsal/iletisim"
@@ -455,22 +405,25 @@ function HeroSection() {
                 fontSize: "14px",
                 fontWeight: 600,
                 textDecoration: "none",
-                color: "#475569",
-                background: "transparent",
-                border: "1px solid #e2e8f0",
+                color: "#1e293b",
+                background: "#ffffff",
+                border: "1.5px solid #cbd5e1",
               }}
             >
-              Teklif Al <ArrowRight size={14} />
+              Hizmetleri İncele <ArrowRight size={14} />
             </Link>
           </motion.div>
         </motion.div>
 
-        {/* Right: Service cards */}
+        {/* Right: Service cards — desktop only */}
         <motion.div
           variants={scaleIn}
           initial="hidden"
           animate="visible"
-          className="flex justify-center items-center w-full"
+          className="hidden lg:flex justify-center items-center w-full"
+          style={{
+            overflow: "hidden",
+          }}
         >
           <QRPhoneMockup />
         </motion.div>
@@ -503,303 +456,51 @@ function HeroSection() {
 }
 
 // ─────────────────────────────────────────────
-// Stats Bar
-// ─────────────────────────────────────────────
-function StatsSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-
-  return (
-    <section
-      ref={ref}
-      style={{
-        background: "rgba(255,255,255,0.02)",
-        borderTop: "1px solid rgba(255,255,255,0.06)",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-      }}
-    >
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "32px 20px" }} className="sm:px-6 sm:py-12">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-8">
-          {STATS.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 24 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
-                gap: "8px",
-              }}
-            >
-              <div
-                style={{
-                  width: "44px",
-                  height: "44px",
-                  borderRadius: "12px",
-                  background: "rgba(124,58,237,0.12)",
-                  border: "1px solid rgba(124,58,237,0.2)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "4px",
-                }}
-              >
-                <stat.icon size={20} color="#a78bfa" />
-              </div>
-              <div
-                style={{
-                  fontSize: "clamp(26px, 5vw, 36px)",
-                  fontWeight: 800,
-                  letterSpacing: "-1px",
-                  lineHeight: 1,
-                }}
-                className="gradient-text"
-              >
-                {stat.value}
-              </div>
-              <div style={{ fontSize: "14px", color: "#64748b", fontWeight: 500 }}>{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─────────────────────────────────────────────
-// QR Menu Feature Section
-// ─────────────────────────────────────────────
-function QRMenuSection({ settings }: { settings: SiteSettings }) {
-  return (
-    <section
-      style={{ position: "relative", overflow: "hidden" }}
-      className="py-16 sm:py-20 lg:py-28"
-      id="qr-menu"
-    >
-      {/* Bg glow */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: "800px",
-          height: "800px",
-          background: "radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div style={{ maxWidth: "1280px", margin: "0 auto" }} className="px-5 sm:px-6">
-        {/* Section header */}
-        <AnimatedSection className="text-center mb-10 sm:mb-14">
-          <motion.div variants={fadeUp} style={{ marginBottom: "40px", textAlign: "center" }}>
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "6px 14px",
-                borderRadius: "100px",
-                background: "rgba(124,58,237,0.1)",
-                border: "1px solid rgba(124,58,237,0.25)",
-                fontSize: "12px",
-                fontWeight: 700,
-                color: "#a78bfa",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-                marginBottom: "20px",
-              }}
-            >
-              <QrCode size={12} />
-              Ana Ürünümüz
-            </div>
-            <h2
-              style={{
-                fontSize: "clamp(24px, 5vw, 52px)",
-                fontWeight: 800,
-                color: "#f1f5f9",
-                letterSpacing: "-1px",
-                lineHeight: 1.15,
-                margin: "0 0 16px 0",
-                wordBreak: "break-word",
-              }}
-            >
-              {renderGradientText(settings.whyChooseUsTitle)}
-            </h2>
-            <p
-              style={{
-                fontSize: "clamp(15px, 2.5vw, 18px)",
-                color: "#64748b",
-                maxWidth: "560px",
-                margin: "0 auto",
-                lineHeight: 1.7,
-              }}
-            >
-              {settings.whyChooseUsText}
-            </p>
-          </motion.div>
-        </AnimatedSection>
-
-        {/* Features grid */}
-        <AnimatedSection>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-            {QR_FEATURES.map((feature, i) => (
-              <motion.div
-                key={feature.title}
-                variants={fadeUp}
-                className="p-5 sm:p-7"
-                style={{
-                  borderRadius: "16px",
-                  background: "rgba(22, 24, 32, 0.8)",
-                  border: "1px solid rgba(255,255,255,0.07)",
-                  backdropFilter: "blur(12px)",
-                  transition: "all 0.3s ease",
-                  cursor: "default",
-                }}
-                whileHover={{
-                  y: -4,
-                  borderColor: `${feature.color}40`,
-                  boxShadow: `0 20px 40px rgba(0,0,0,0.3), 0 0 0 1px ${feature.color}20`,
-                }}
-              >
-                <div
-                  style={{
-                    width: "48px",
-                    height: "48px",
-                    borderRadius: "12px",
-                    background: `${feature.color}15`,
-                    border: `1px solid ${feature.color}30`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: "16px",
-                  }}
-                >
-                  <feature.icon size={22} color={feature.color} />
-                </div>
-                <h3
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 700,
-                    color: "#f1f5f9",
-                    marginBottom: "8px",
-                    letterSpacing: "-0.3px",
-                  }}
-                >
-                  {feature.title}
-                </h3>
-                <p style={{ fontSize: "14px", color: "#64748b", lineHeight: 1.7, margin: 0 }}>
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </AnimatedSection>
-
-        {/* Bottom CTA card */}
-        <AnimatedSection className="mt-10 sm:mt-14 lg:mt-16">
-          <motion.div variants={fadeUp}>
-            <div
-              style={{
-                borderRadius: "24px",
-                background: "linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(6,182,212,0.08) 100%)",
-                border: "1px solid rgba(124,58,237,0.2)",
-                alignItems: "center",
-              }}
-              className="flex flex-col lg:grid lg:grid-cols-[1fr_auto] gap-6 sm:gap-8 lg:gap-10 p-6 sm:p-8 lg:p-12"
-            >
-              <div>
-                <h3
-                  style={{
-                    fontSize: "clamp(20px, 4vw, 28px)",
-                    fontWeight: 800,
-                    color: "#f1f5f9",
-                    marginBottom: "12px",
-                    letterSpacing: "-0.5px",
-                  }}
-                >
-                  QR Menü ile neler elde edersiniz?
-                </h3>
-                <div
-                  style={{ marginTop: "16px" }}
-                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-                >
-                  {QR_PLAN_FEATURES.map((feat) => (
-                    <div key={feat} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                      <CheckCircle size={15} color="#a78bfa" />
-                      <span style={{ fontSize: "14px", color: "#94a3b8" }}>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px", flexShrink: 0 }}>
-                <Link
-                  href="/hizmetler"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    padding: "14px 28px",
-                    borderRadius: "12px",
-                    fontWeight: 700,
-                    fontSize: "15px",
-                    textDecoration: "none",
-                    color: "white",
-                    background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)",
-                    boxShadow: "0 0 30px rgba(124,58,237,0.35)",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <QrCode size={16} />
-                  Hemen Başlayın
-                </Link>
-                <Link
-                  href="/kurumsal/iletisim"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "8px",
-                    padding: "13px 28px",
-                    borderRadius: "12px",
-                    fontWeight: 600,
-                    fontSize: "14px",
-                    textDecoration: "none",
-                    color: "#a78bfa",
-                    background: "rgba(124,58,237,0.1)",
-                    border: "1px solid rgba(124,58,237,0.25)",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  Fiyat Teklifi Al
-                  <ArrowRight size={14} />
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatedSection>
-      </div>
-    </section>
-  );
-}
-
-// ─────────────────────────────────────────────
 // Services Section
 // ─────────────────────────────────────────────
+const MAIN_SERVICES = [
+  {
+    id: "1",
+    title: "Kurumsal Web Sitesi",
+    description: "Profesyonel, hızlı ve SEO dostu kurumsal web siteleri geliştiriyoruz. İşletmenizi çevrimiçi dünyada en iyi şekilde sunuyoruz.",
+    icon: "Globe",
+  },
+  {
+    id: "2",
+    title: "Özel Yazılım Geliştirme",
+    description: "İşletmenize özel, ölçeklenebilir yazılım çözümleri tasarlarız. Masaüstü, mobil veya web uygulaması — her türü yapabiliriz.",
+    icon: "Code2",
+  },
+  {
+    id: "3",
+    title: "Dijital Sistemler ve Otomasyon",
+    description: "İş süreçlerinizi otomatikleştiren akıllı sistemler kurarız. Verimliliği artırın, maliyetleri azaltın, hataları elimine edin.",
+    icon: "Zap",
+  },
+];
+
+const SECTORAL_SOFTWARE = [
+  {
+    id: "1",
+    title: "QR Menü Sistemi",
+    description: "Restoranlar ve kafe işletmeleri için QR kod ile anlık güncellenebilen, çoklu dil desteği olan dijital menü sistemi.",
+    icon: "QrCode",
+  },
+  {
+    id: "2",
+    title: "Randevu Yönetim Sistemi",
+    description: "Salon, klinik ve konsultasyon işletmeleri için müşteri randevu yönetimi, otomatik hatırlatma ve ödeme entegrasyonu.",
+    icon: "Calendar",
+  },
+  {
+    id: "3",
+    title: "İşletmeye Özel Dijital Sistemler",
+    description: "Perakende, lojistik, imalat veya hizmet sektörüne özel tasarlanmış, iş akışını optimize eden yazılım çözümleri.",
+    icon: "Layers",
+  },
+];
+
 function ServicesSection({ settings }: { settings: SiteSettings }) {
-  const [services, setServices] = useState<DbService[]>([]);
-
-  useEffect(() => {
-    fetch("/api/services")
-      .then((r) => r.json())
-      .then((data) => setServices(data))
-      .catch(() => { });
-  }, []);
-
   return (
     <section style={{ position: "relative" }} className="py-16 sm:py-20 lg:py-28">
       <div
@@ -846,7 +547,7 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
               }}
             >
               Her İhtiyacınız İçin{" "}
-              <span style={{ color: "#22d3ee" }}>Yazılım Çözümü</span>
+              <span style={{ color: "#00f0ff", fontWeight: 900 }}>Yazılım Çözümü</span>
             </h2>
             <p
               style={{
@@ -862,154 +563,279 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
           </motion.div>
         </AnimatedSection>
 
-        {services.length > 0 && (
-          <AnimatedSection>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-              {services.map((service) => {
-                const Icon = SERVICE_ICON_MAP[service.icon] ?? Code2;
-                return (
-                  <motion.div key={service.id} variants={fadeUp}>
-                    <Link
-                      href={`/hizmetler/${service.slug}`}
-                      style={{ textDecoration: "none", display: "block" }}
+        <AnimatedSection>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7 mb-12">
+            {MAIN_SERVICES.map((service) => {
+              const Icon = SERVICE_ICON_MAP[service.icon] ?? Code2;
+              return (
+                <motion.div key={service.id} variants={fadeUp}>
+                  <div
+                    className="p-6 sm:p-8 lg:p-10"
+                    style={{
+                      borderRadius: "20px",
+                      background: "rgba(17, 18, 25, 0.95)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      transition: "all 0.3s ease",
+                      cursor: "default",
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget;
+                      el.style.borderColor = "rgba(34,211,238,0.35)";
+                      el.style.background = "rgba(22, 26, 36, 0.98)";
+                      el.style.transform = "translateY(-4px)";
+                      el.style.boxShadow = "0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(34,211,238,0.1)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget;
+                      el.style.borderColor = "rgba(255,255,255,0.08)";
+                      el.style.background = "rgba(17, 18, 25, 0.95)";
+                      el.style.transform = "translateY(0)";
+                      el.style.boxShadow = "0 8px 24px rgba(0,0,0,0.2)";
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "52px",
+                        height: "52px",
+                        borderRadius: "14px",
+                        background: "rgba(6,182,212,0.12)",
+                        border: "1px solid rgba(6,182,212,0.25)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: "24px",
+                      }}
                     >
-                      <div
-                        className="p-5 sm:p-7"
-                        style={{
-                          borderRadius: "16px",
-                          background: "rgba(17, 18, 25, 0.9)",
-                          border: "1px solid rgba(255,255,255,0.07)",
-                          height: "100%",
-                          transition: "all 0.3s ease",
-                          cursor: "pointer",
-                        }}
-                        onMouseEnter={(e) => {
-                          const el = e.currentTarget;
-                          el.style.borderColor = "rgba(34,211,238,0.25)";
-                          el.style.background = "rgba(22, 26, 36, 0.95)";
-                          el.style.transform = "translateY(-3px)";
-                          el.style.boxShadow = "0 20px 40px rgba(0,0,0,0.3)";
-                        }}
-                        onMouseLeave={(e) => {
-                          const el = e.currentTarget;
-                          el.style.borderColor = "rgba(255,255,255,0.07)";
-                          el.style.background = "rgba(17, 18, 25, 0.9)";
-                          el.style.transform = "translateY(0)";
-                          el.style.boxShadow = "none";
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: "44px",
-                            height: "44px",
-                            borderRadius: "11px",
-                            background: "rgba(6,182,212,0.1)",
-                            border: "1px solid rgba(6,182,212,0.2)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            marginBottom: "16px",
-                          }}
-                        >
-                          <Icon size={20} color="#22d3ee" />
-                        </div>
-                        <h3
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: 700,
-                            color: "#f1f5f9",
-                            marginBottom: "8px",
-                            letterSpacing: "-0.3px",
-                          }}
-                        >
-                          {service.title}
-                        </h3>
-                        <p style={{ fontSize: "14px", color: "#64748b", lineHeight: 1.7, margin: "0 0 16px 0" }}>
-                          {service.shortDescription}
-                        </p>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "4px",
-                            fontSize: "13px",
-                            color: "#22d3ee",
-                            fontWeight: 600,
-                          }}
-                        >
-                          Detaylar <ChevronRight size={14} />
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </AnimatedSection>
-        )}
+                      <Icon size={24} color="#22d3ee" />
+                    </div>
+                    <h3
+                      style={{
+                        fontSize: "18px",
+                        fontWeight: 700,
+                        color: "#f1f5f9",
+                        marginBottom: "12px",
+                        letterSpacing: "-0.3px",
+                      }}
+                    >
+                      {service.title}
+                    </h3>
+                    <p style={{ fontSize: "15px", color: "#64748b", lineHeight: 1.8, margin: 0, flex: 1 }}>
+                      {service.description}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <motion.div variants={fadeUp} style={{ textAlign: "center" }}>
+            <Link
+              href="/hizmetler"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "13px 32px",
+                borderRadius: "12px",
+                fontSize: "15px",
+                fontWeight: 600,
+                color: "#a78bfa",
+                background: "rgba(124,58,237,0.1)",
+                border: "1px solid rgba(124,58,237,0.3)",
+                textDecoration: "none",
+                transition: "all 0.2s",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(124,58,237,0.18)";
+                e.currentTarget.style.borderColor = "rgba(124,58,237,0.5)";
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(124,58,237,0.1)";
+                e.currentTarget.style.borderColor = "rgba(124,58,237,0.3)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              Tüm Hizmetleri Gör <ArrowRight size={15} />
+            </Link>
+          </motion.div>
+        </AnimatedSection>
       </div>
     </section>
   );
 }
 
 // ─────────────────────────────────────────────
-// Tech Stack Section
+// Sectoral Software Section
 // ─────────────────────────────────────────────
-function TechSection() {
+function SectoralSoftwareSection() {
   return (
-    <section className="py-10 sm:py-14 lg:py-20">
-      <div style={{ maxWidth: "1280px", margin: "0 auto" }} className="px-5 sm:px-6">
+    <section style={{ position: "relative" }} className="py-16 sm:py-20 lg:py-28">
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "rgba(255,255,255,0.01)",
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+        }}
+      />
+      <div style={{ maxWidth: "1280px", margin: "0 auto", position: "relative" }} className="px-5 sm:px-6">
         <AnimatedSection>
-          <motion.div variants={fadeUp} style={{ textAlign: "center", marginBottom: "48px" }}>
-            <p
-              style={{
-                fontSize: "13px",
-                color: "#475569",
-                fontWeight: 600,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                marginBottom: "32px",
-              }}
-            >
-              Kullandığımız Teknolojiler
-            </p>
+          <motion.div variants={fadeUp} style={{ textAlign: "center", marginBottom: "64px" }}>
             <div
               style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                gap: "10px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 14px",
+                borderRadius: "100px",
+                background: "rgba(16,185,129,0.1)",
+                border: "1px solid rgba(16,185,129,0.25)",
+                fontSize: "12px",
+                fontWeight: 700,
+                color: "#6ee7b7",
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+                marginBottom: "20px",
               }}
             >
-              {TECH_STACK.map((tech) => (
-                <div
-                  key={tech}
-                  style={{
-                    padding: "7px 16px",
-                    borderRadius: "100px",
-                    fontSize: "13px",
-                    fontWeight: 600,
-                    color: "#64748b",
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.07)",
-                    transition: "all 0.2s",
-                    cursor: "default",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#a78bfa";
-                    e.currentTarget.style.borderColor = "rgba(124,58,237,0.3)";
-                    e.currentTarget.style.background = "rgba(124,58,237,0.07)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "#64748b";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
-                    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                  }}
-                >
-                  {tech}
-                </div>
-              ))}
+              <QrCode size={12} />
+              Sektörel Yazılımlar
             </div>
+            <h2
+              style={{
+                fontSize: "clamp(24px, 5vw, 48px)",
+                fontWeight: 800,
+                color: "#f1f5f9",
+                letterSpacing: "-1px",
+                lineHeight: 1.15,
+                margin: "0 0 16px 0",
+                wordBreak: "break-word",
+              }}
+            >
+              Sektörünüze Özel{" "}
+              <span style={{ color: "#00ffb3", fontWeight: 900 }}>Yazılım Çözümleri</span>
+            </h2>
+            <p
+              style={{
+                fontSize: "clamp(15px, 2.5vw, 17px)",
+                color: "#64748b",
+                maxWidth: "520px",
+                margin: "0 auto",
+                lineHeight: 1.7,
+              }}
+            >
+              Restoranlar, salonlar, klinikler ve farklı sektörlerin ihtiyaçlarına özel tasarlanmış, hemen kullanıma hazır yazılım çözümleri.
+            </p>
+          </motion.div>
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7 mb-12">
+            {SECTORAL_SOFTWARE.map((service) => {
+              const Icon = SERVICE_ICON_MAP[service.icon] ?? Code2;
+              return (
+                <motion.div key={service.id} variants={fadeUp}>
+                  <div
+                    className="p-6 sm:p-8 lg:p-10"
+                    style={{
+                      borderRadius: "20px",
+                      background: "rgba(17, 18, 25, 0.95)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      transition: "all 0.3s ease",
+                      cursor: "default",
+                      boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget;
+                      el.style.borderColor = "rgba(16,185,129,0.35)";
+                      el.style.background = "rgba(22, 26, 36, 0.98)";
+                      el.style.transform = "translateY(-4px)";
+                      el.style.boxShadow = "0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(16,185,129,0.1)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget;
+                      el.style.borderColor = "rgba(255,255,255,0.08)";
+                      el.style.background = "rgba(17, 18, 25, 0.95)";
+                      el.style.transform = "translateY(0)";
+                      el.style.boxShadow = "0 8px 24px rgba(0,0,0,0.2)";
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "52px",
+                        height: "52px",
+                        borderRadius: "14px",
+                        background: "rgba(16,185,129,0.12)",
+                        border: "1px solid rgba(16,185,129,0.25)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: "24px",
+                      }}
+                    >
+                      <Icon size={24} color="#6ee7b7" />
+                    </div>
+                    <h3
+                      style={{
+                        fontSize: "18px",
+                        fontWeight: 700,
+                        color: "#f1f5f9",
+                        marginBottom: "12px",
+                        letterSpacing: "-0.3px",
+                      }}
+                    >
+                      {service.title}
+                    </h3>
+                    <p style={{ fontSize: "15px", color: "#64748b", lineHeight: 1.8, margin: 0, flex: 1 }}>
+                      {service.description}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <motion.div variants={fadeUp} style={{ textAlign: "center" }}>
+            <Link
+              href="/sektorel-yazilimlar"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "13px 32px",
+                borderRadius: "12px",
+                fontSize: "15px",
+                fontWeight: 600,
+                color: "#6ee7b7",
+                background: "rgba(16,185,129,0.1)",
+                border: "1px solid rgba(16,185,129,0.3)",
+                textDecoration: "none",
+                transition: "all 0.2s",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(16,185,129,0.18)";
+                e.currentTarget.style.borderColor = "rgba(16,185,129,0.5)";
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(16,185,129,0.1)";
+                e.currentTarget.style.borderColor = "rgba(16,185,129,0.3)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              Tüm Sektörel Yazılımları Gör <ArrowRight size={15} />
+            </Link>
           </motion.div>
         </AnimatedSection>
       </div>
@@ -1157,6 +983,51 @@ type HomeBlogPost = {
   category: string; date: string; readTime: string; title: string; description: string;
 };
 
+const FALLBACK_BLOG_POSTS: HomeBlogPost[] = [
+  {
+    slug: "dijital-donusum-neden-onemlidir",
+    title: "İşletmeler İçin Dijital Dönüşüm Neden Önemlidir?",
+    description: "Dijital dönüşüm artık isteğe bağlı değil, zorunludur. İşletmenizi nasıl dönüştürebilir ve rekabetçi avantaj sağlayabilirsiniz?",
+    category: "Dijital Dönüşüm",
+    date: "2024-12-01",
+    readTime: "5 dk",
+    emoji: "🚀",
+    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    accentColor: "#667eea",
+    categoryColor: "#a78bfa",
+    categoryBg: "rgba(102, 126, 234, 0.1)",
+    categoryBorder: "rgba(102, 126, 234, 0.3)",
+  },
+  {
+    slug: "kurumsal-web-sitesi-neden-gerekli",
+    title: "Kurumsal Web Sitesi İşletmeye Ne Kazandırır?",
+    description: "Profesyonel bir web sitesi, müşteri güveni, marka imajı ve satışları arttırır. İşletmeniz için neden gerekli olduğunu öğrenin.",
+    category: "Web Tasarımı",
+    date: "2024-11-25",
+    readTime: "6 dk",
+    emoji: "💻",
+    gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    accentColor: "#f093fb",
+    categoryColor: "#f472b6",
+    categoryBg: "rgba(240, 147, 251, 0.1)",
+    categoryBorder: "rgba(240, 147, 251, 0.3)",
+  },
+  {
+    slug: "ozel-yazilim-ne-zaman-gerekli",
+    title: "Özel Yazılım Ne Zaman Gerekli Hale Gelir?",
+    description: "Off-the-shelf çözümler her zaman yeterli olmayabilir. Özel yazılıma ihtiyacınız olduğunu nasıl anlayabilirsiniz?",
+    category: "Yazılım Geliştirme",
+    date: "2024-11-18",
+    readTime: "7 dk",
+    emoji: "⚙️",
+    gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+    accentColor: "#4facfe",
+    categoryColor: "#06b6d4",
+    categoryBg: "rgba(79, 172, 254, 0.1)",
+    categoryBorder: "rgba(79, 172, 254, 0.3)",
+  },
+];
+
 function BlogSection() {
   const [posts, setPosts] = useState<HomeBlogPost[]>([]);
 
@@ -1233,7 +1104,7 @@ function BlogSection() {
                   margin: "0 0 14px 0",
                 }}
               >
-                Son <span className="gradient-text">Yazılar</span>
+                Son <span style={{ color: "#d8b4fe", fontWeight: 900 }}>Yazılar</span>
               </h2>
               <p
                 style={{
@@ -1285,8 +1156,8 @@ function BlogSection() {
         </AnimatedSection>
 
         {/* Cards grid */}
-        <AnimatedSection className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post, i) => (
+        <AnimatedSection className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+          {(posts.length > 0 ? posts : FALLBACK_BLOG_POSTS).map((post, i) => (
             <motion.div
               key={post.slug}
               variants={scaleIn}
@@ -1496,7 +1367,7 @@ function BlogSection() {
         </AnimatedSection>
 
         {/* View all — mobile */}
-        <AnimatedSection className="mt-10 flex justify-center sm:hidden">
+        <AnimatedSection className="flex justify-center sm:hidden">
           <motion.div variants={fadeUp}>
             <Link
               href="/kurumsal/blog"
@@ -1525,221 +1396,6 @@ function BlogSection() {
 }
 
 // ─────────────────────────────────────────────
-// Footer
-// ─────────────────────────────────────────────
-function Footer() {
-  const year = new Date().getFullYear();
-
-  return (
-    <footer
-      style={{
-        background: "rgba(255,255,255,0.015)",
-        borderTop: "1px solid rgba(255,255,255,0.07)",
-      }}
-    >
-      <div style={{ maxWidth: "1280px", margin: "0 auto" }} className="px-5 sm:px-6 pt-12 sm:pt-16 pb-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
-          {/* Brand */}
-          <div>
-            <Link
-              href="/"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "10px",
-                textDecoration: "none",
-                marginBottom: "16px",
-              }}
-            >
-              <div
-                style={{
-                  width: "34px",
-                  height: "34px",
-                  borderRadius: "9px",
-                  background: "linear-gradient(135deg, #7c3aed, #06b6d4)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Code2 size={16} color="white" />
-              </div>
-              <span style={{ fontWeight: 700, fontSize: "17px", color: "#f1f5f9" }}>
-                Arilla<span style={{ color: "#8b5cf6" }}>soft</span>
-              </span>
-            </Link>
-            <p style={{ fontSize: "14px", color: "#475569", lineHeight: 1.8, marginBottom: "20px" }}>
-              Modern yazılım çözümleri ile işletmenizi dijital geleceğe taşıyoruz. Web, mobil ve kurumsal yazılım geliştirme.
-            </p>
-            <div style={{ display: "flex", gap: "10px" }}>
-              {[
-                { icon: Linkedin, href: "https://linkedin.com/company/arillasoft" },
-                { icon: Github, href: "https://github.com/arillasoft" },
-                { icon: Instagram, href: "https://instagram.com/arillasoft" },
-                { icon: Twitter, href: "https://twitter.com/arillasoft" },
-              ].map(({ icon: Icon, href }) => (
-                <a
-                  key={href}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    width: "36px",
-                    height: "36px",
-                    borderRadius: "9px",
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#475569",
-                    textDecoration: "none",
-                    transition: "all 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "#a78bfa";
-                    e.currentTarget.style.borderColor = "rgba(124,58,237,0.3)";
-                    e.currentTarget.style.background = "rgba(124,58,237,0.1)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "#475569";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                    e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-                  }}
-                >
-                  <Icon size={15} />
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Hizmetler */}
-          <div>
-            <h4 style={{ fontWeight: 700, fontSize: "14px", color: "#e2e8f0", marginBottom: "16px" }}>
-              Hizmetler
-            </h4>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
-              {[
-                { label: "Web Geliştirme", href: "/hizmetler/web-uygulama-gelistirme" },
-                { label: "Mobil Uygulama", href: "/hizmetler/mobil-uygulama-gelistirme" },
-                { label: "QR Menü Sistemi", href: "/hizmetler/qr-menu" },
-                { label: "UI/UX Tasarımı", href: "/hizmetler/ui-ux-tasarimi" },
-                { label: "Backend & API", href: "/hizmetler/backend-ve-api-gelistirme" },
-              ].map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    style={{ fontSize: "14px", color: "#475569", textDecoration: "none", transition: "color 0.2s" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "#94a3b8")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "#475569")}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Şirket */}
-          <div>
-            <h4 style={{ fontWeight: 700, fontSize: "14px", color: "#e2e8f0", marginBottom: "16px" }}>
-              Şirket
-            </h4>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
-              {[
-                { label: "Hakkımızda", href: "/kurumsal/hakkimizda" },
-                { label: "Blog", href: "/kurumsal/blog" },
-                { label: "Kariyer", href: "/kurumsal/kariyer" },
-                { label: "İletişim", href: "/kurumsal/iletisim" },
-              ].map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    style={{ fontSize: "14px", color: "#475569", textDecoration: "none", transition: "color 0.2s" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "#94a3b8")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "#475569")}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* İletişim */}
-          <div>
-            <h4 style={{ fontWeight: 700, fontSize: "14px", color: "#e2e8f0", marginBottom: "16px" }}>
-              İletişim
-            </h4>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "12px" }}>
-              <li style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <Mail size={14} color="#7c3aed" style={{ marginTop: "2px", flexShrink: 0 }} />
-                <a
-                  href="mailto:iletisim@arillasoft.com"
-                  style={{ fontSize: "13px", color: "#475569", textDecoration: "none" }}
-                >
-                  iletisim@arillasoft.com
-                </a>
-              </li>
-              <li style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <Phone size={14} color="#7c3aed" style={{ marginTop: "2px", flexShrink: 0 }} />
-                <a
-                  href="tel:+902125550101"
-                  style={{ fontSize: "13px", color: "#475569", textDecoration: "none" }}
-                >
-                  +90 (212) 555 01 01
-                </a>
-              </li>
-              <li style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <MapPin size={14} color="#7c3aed" style={{ marginTop: "2px", flexShrink: 0 }} />
-                <span style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6 }}>
-                  Maslak, Büyükdere Cad.<br />
-                  Sarıyer / İstanbul
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div
-          style={{
-            borderTop: "1px solid rgba(255,255,255,0.06)",
-            marginTop: "48px",
-            paddingTop: "24px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "12px",
-          }}
-        >
-          <p style={{ fontSize: "13px", color: "#334155" }}>
-            © {year} Arillasoft. Tüm hakları saklıdır.
-          </p>
-          <div style={{ display: "flex", gap: "20px" }}>
-            {[
-              { label: "Gizlilik Politikası", href: "/gizlilik-politikasi" },
-              { label: "Kullanım Koşulları", href: "/kullanim-kosullari" },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                style={{ fontSize: "13px", color: "#334155", textDecoration: "none", transition: "color 0.2s" }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#64748b")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#334155")}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-// ─────────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────────
 export default function HomePage() {
@@ -1759,13 +1415,11 @@ export default function HomePage() {
   return (
     <div style={{ background: "#ffffff", minHeight: "100vh", color: "#0f172a", overflowX: "hidden" }}>
       <HeroSection />
-      <StatsSection />
-      <QRMenuSection settings={settings} />
       <ServicesSection settings={settings} />
-      <TechSection />
+      <SectoralSoftwareSection />
       <BlogSection />
       <CTASection settings={settings} />
-      <Footer />
+      <SupportChatWidget />
     </div>
   );
 }
