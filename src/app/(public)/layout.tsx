@@ -1,4 +1,5 @@
 import Navbar from '@/components/layout/Navbar';
+import FAQSection from '@/components/layout/FAQSection';
 import Footer from '@/components/layout/Footer';
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -6,6 +7,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-1">{children}</main>
+      <FAQSection />
       <Footer />
     </div>
   );

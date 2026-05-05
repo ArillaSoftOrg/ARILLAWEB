@@ -45,18 +45,18 @@ export default function Navbar() {
 
   return (
     <header
+      className="bg-slate-900 md:bg-white"
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         zIndex: 50,
-        background: 'rgba(255,255,255,0.97)',
         backdropFilter: 'blur(6px)',
         WebkitBackdropFilter: 'blur(6px)',
-        borderBottom: '1px solid rgba(0,0,0,0.07)',
-        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.07)' : 'none',
-        transition: 'box-shadow 0.3s ease',
+        borderBottom: scrolled ? '1px solid rgba(0,0,0,0.2)' : '1px solid rgba(0,0,0,0.1)',
+        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.15)' : 'none',
+        transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
       }}
     >
       <div className="max-w-[1440px] mx-auto px-4 lg:px-10 xl:px-14">
@@ -71,16 +71,15 @@ export default function Navbar() {
                 className="h-10 lg:h-[56px] w-auto flex-shrink-0"
               />
               <span
-                className="text-[15px] tracking-[0.20em] lg:text-[22px] lg:tracking-[0.18em]"
+                className="text-[15px] tracking-[0.20em] lg:text-[22px] lg:tracking-[0.18em] text-white md:text-slate-900"
                 style={{
                   fontWeight: 700,
                   textTransform: 'uppercase',
-                  color: '#0F172A',
                   userSelect: 'none',
                 }}
               >
                 ARILLA{' '}
-                <span style={{ color: '#64748B', fontWeight: 500 }}>SOFT</span>
+                <span className="text-slate-300 md:text-slate-600" style={{ fontWeight: 500 }}>SOFT</span>
               </span>
             </Link>
           </div>
@@ -296,19 +295,19 @@ export default function Navbar() {
                 fontWeight: 600,
                 textDecoration: 'none',
                 color: '#FFFFFF',
-                background: '#0F172A',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                background: '#7c3aed',
+                boxShadow: '0 1px 3px rgba(124,58,237,0.25)',
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)';
-                (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 14px rgba(0,0,0,0.2), 0 0 0 1.5px #2563EB';
+                (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 14px rgba(124,58,237,0.35)';
                 const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
                 if (arrow) arrow.style.transform = 'translateX(3px)';
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)';
-                (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 1px 3px rgba(0,0,0,0.15)';
+                (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 1px 3px rgba(124,58,237,0.25)';
                 const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
                 if (arrow) arrow.style.transform = 'translateX(0)';
               }}
@@ -320,13 +319,12 @@ export default function Navbar() {
             </Link>
 
             <button
-              className="flex items-center justify-center lg:hidden"
+              className="flex items-center justify-center lg:hidden text-slate-100 md:text-slate-700"
               onClick={() => setIsOpen(!isOpen)}
               style={{
                 background: 'transparent',
                 border: 'none',
                 padding: '6px',
-                color: '#334155',
                 cursor: 'pointer',
               }}
               aria-label="Menüyü aç/kapat"
@@ -348,13 +346,13 @@ export default function Navbar() {
             left: '12px',
             right: '12px',
             zIndex: 100,
-            background: '#FFFFFF',
-            border: '1px solid rgba(0,0,0,0.08)',
+            background: '#1a1a1a',
+            border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: '16px',
-            boxShadow: '0 12px 40px rgba(0,0,0,0.12)',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.3)',
             padding: '12px',
           }}
-          className="lg:hidden top-14"
+          className="lg:hidden top-14 text-slate-100 md:bg-white md:border-slate-200 md:text-slate-900"
         >
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             {NAV_LINKS.map((item, mobileIndex) => {
@@ -376,8 +374,8 @@ export default function Navbar() {
                         borderRadius: '8px',
                         fontSize: '15px',
                         fontWeight: active ? 600 : 500,
-                        color: active ? '#1E40AF' : '#334155',
-                        background: active ? 'rgba(37,99,235,0.08)' : 'transparent',
+                        color: active ? '#60a5fa' : '#cbd5e1',
+                        background: active ? 'rgba(96,165,250,0.1)' : 'transparent',
                         border: 'none',
                         cursor: 'pointer',
                         textAlign: 'left',
@@ -389,7 +387,7 @@ export default function Navbar() {
                         style={{
                           transition: 'transform 0.2s ease',
                           transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                          color: '#64748B',
+                          color: active ? '#60a5fa' : '#cbd5e1',
                           flexShrink: 0,
                         }}
                       />
@@ -410,8 +408,8 @@ export default function Navbar() {
                                   borderRadius: '7px',
                                   fontSize: '14px',
                                   fontWeight: pathname === child.href ? 600 : 400,
-                                  color: pathname === child.href ? '#1E40AF' : '#475569',
-                                  background: pathname === child.href ? 'rgba(37,99,235,0.08)' : 'transparent',
+                                  color: pathname === child.href ? '#60a5fa' : '#cbd5e1',
+                                  background: pathname === child.href ? 'rgba(96,165,250,0.1)' : 'transparent',
                                   textDecoration: 'none',
                                 }}
                               >
@@ -429,7 +427,7 @@ export default function Navbar() {
                                 borderRadius: '7px',
                                 fontSize: '14px',
                                 fontWeight: 400,
-                                color: '#475569',
+                                color: '#cbd5e1',
                                 background: 'transparent',
                               }}
                             >
@@ -456,8 +454,8 @@ export default function Navbar() {
                       borderRadius: '8px',
                       fontSize: '15px',
                       fontWeight: active ? 600 : 500,
-                      color: active ? '#1E40AF' : '#334155',
-                      background: active ? 'rgba(37,99,235,0.08)' : 'transparent',
+                      color: active ? '#60a5fa' : '#cbd5e1',
+                      background: active ? 'rgba(96,165,250,0.1)' : 'transparent',
                       textDecoration: 'none',
                       transition: 'color 0.2s ease',
                     }}
@@ -483,7 +481,7 @@ export default function Navbar() {
                 fontSize: '15px',
                 textDecoration: 'none',
                 color: '#FFFFFF',
-                background: '#0F172A',
+                background: '#7c3aed',
               }}
             >
               Teklif Al
