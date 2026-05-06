@@ -25,6 +25,9 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: SITE_DESCRIPTION,
     metadataBase: new URL(SITE_URL),
+    alternates: {
+      canonical: '/',
+    },
     openGraph: {
       type: 'website',
       locale: 'tr_TR',
