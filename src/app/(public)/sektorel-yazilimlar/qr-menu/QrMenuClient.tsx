@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
 import ProductHero from '@/components/sections/ProductHero';
+import HeroBookingForm from '@/components/hero/HeroBookingForm';
 import FeatureGrid from '@/components/sections/FeatureGrid';
 import HowItWorks from '@/components/sections/HowItWorks';
 import FAQSection from '@/components/sections/FAQSection';
@@ -473,6 +474,11 @@ export default function QrMenuClient() {
           href: '#features',
         }}
         accentColor="#7c3aed"
+        image={
+          <div className="flex w-full justify-center">
+            <HeroBookingForm defaultService="QR Menü Sistemi" />
+          </div>
+        }
       />
 
       {/* Problem Section */}

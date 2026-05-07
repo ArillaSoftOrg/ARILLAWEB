@@ -138,6 +138,27 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
 
   const cells = [...prevOverflow, ...currentDays, ...nextOverflow];
 
+  // Determine which week row to start rendering from (for current month, skip past weeks)
+  const isCurrentMonth = calendarYear === todayYear && calendarMonth === todayMonth;
+  let startRowIndex = 0;
+  if (isCurrentMonth) {
+    // Find which row contains today
+    for (let i = 0; i < cells.length; i++) {
+      const cellDateStr = toDateStr(cells[i].year, cells[i].month, cells[i].day);
+      if (cellDateStr === todayDateStr) {
+        startRowIndex = Math.floor(i / 7);
+        break;
+      }
+    }
+  }
+
+  // Split cells into weeks (rows of 7)
+  const weeks: (typeof cells[0])[][] = [];
+  for (let i = 0; i < cells.length; i += 7) {
+    weeks.push(cells.slice(i, i + 7));
+  }
+  const visibleWeeks = weeks.slice(startRowIndex);
+
   // Day click handler
   const handleDayClick = (cell: typeof cells[0]) => {
     const dateStr = toDateStr(cell.year, cell.month, cell.day);
@@ -182,8 +203,9 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
         border: isDark ? cardBorder : undefined,
         borderTop: borderTop,
         borderRadius: 20,
-        padding: 28,
-        maxWidth: 460,
+        padding: 'clamp(16px, 4vw, 28px)',
+        maxWidth: 'clamp(340px, 100%, 460px)',
+        width: '100%',
         boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
       }}
     >
@@ -282,7 +304,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
 
         {/* Calendar grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 16 }}>
-          {cells.map((cell, idx) => {
+          {visibleWeeks.flat().map((cell, idx) => {
             const cellDateStr = toDateStr(cell.year, cell.month, cell.day);
             const isPast = cellDateStr < todayDateStr;
             const isToday = cellDateStr === todayDateStr;
@@ -330,13 +352,13 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                 onClick={() => handleDayClick(cell)}
                 disabled={isPast || isBooked}
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 'clamp(24px, 7vw, 32px)',
+                  height: 'clamp(24px, 7vw, 32px)',
                   borderRadius: '50%',
                   border: cellBorder || (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0'),
                   background: cellBg,
                   color: cellColor,
-                  fontSize: 12,
+                  fontSize: 'clamp(10px, 2vw, 12px)',
                   fontWeight: isSelected ? 700 : 500,
                   cursor: cellCursor,
                   opacity: cellOpacity,

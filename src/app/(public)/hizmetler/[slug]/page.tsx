@@ -14,12 +14,14 @@ import {
     Code2,
     Zap,
     Lock,
+    ArrowRight,
 } from "lucide-react";
 import { getServiceBySlug } from "@/lib/service-actions";
 import type { LucideProps } from "lucide-react";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
 import ServiceJsonLd from "@/components/seo/ServiceJsonLd";
+import HeroBookingForm from "@/components/hero/HeroBookingForm";
 
 export async function generateMetadata({
     params,
@@ -116,30 +118,40 @@ export default async function ServiceDetailPage({ params }: PageProps) {
                 </div>
 
                 <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]">
-                    {/* Hero banner */}
-                    <div className="flex min-h-[220px] flex-col items-center justify-center gap-5 border-b border-white/10 bg-gradient-to-br from-cyan-500/10 via-slate-900 to-violet-500/10 px-8 py-12 text-center">
-                        <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-cyan-500/20 bg-cyan-500/10">
-                            <Icon className="h-11 w-11 text-cyan-300" />
-                        </div>
-                        <div>
-                            <div className="flex flex-wrap items-center justify-center gap-3">
-                                {service.isFeatured && (
-                                    <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
-                                        <Star className="h-3 w-3" />
-                                        Öne Çıkan
-                                    </span>
-                                )}
+                    {/* Hero banner — two-column on lg */}
+                    <div className="flex min-h-[220px] border-b border-white/10 bg-gradient-to-br from-cyan-500/10 via-slate-900 to-violet-500/10 px-8 py-12">
+                        <div className="w-full flex flex-col lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
+                            {/* Left: icon + title + description — center on mobile, left-align on lg */}
+                            <div className="flex flex-col items-center lg:items-start gap-5 text-center lg:text-left">
+                                <div className="flex h-24 w-24 items-center justify-center rounded-2xl border border-cyan-500/20 bg-cyan-500/10">
+                                    <Icon className="h-11 w-11 text-cyan-300" />
+                                </div>
+                                <div>
+                                    <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+                                        {service.isFeatured && (
+                                            <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-300">
+                                                <Star className="h-3 w-3" />
+                                                Öne Çıkan
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h1 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
+                                        {service.title}
+                                    </h1>
+                                    <div className="mt-4 max-w-2xl rounded-2xl border border-cyan-500/15 bg-cyan-500/5 px-5 py-4">
+                                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/90">
+                                            Kısa Özet
+                                        </p>
+                                        <p className="mt-2 text-sm leading-7 text-slate-300 sm:text-base">
+                                            {service.shortDescription}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <h1 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
-                                {service.title}
-                            </h1>
-                            <div className="mt-4 max-w-2xl rounded-2xl border border-cyan-500/15 bg-cyan-500/5 px-5 py-4">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/90">
-                                    Kısa Özet
-                                </p>
-                                <p className="mt-2 text-sm leading-7 text-slate-300 sm:text-base">
-                                    {service.shortDescription}
-                                </p>
+
+                            {/* Right: form (both mobile and desktop) */}
+                            <div className="flex justify-center">
+                                <HeroBookingForm theme="dark" />
                             </div>
                         </div>
                     </div>

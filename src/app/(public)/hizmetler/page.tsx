@@ -4,6 +4,7 @@ import { ArrowRight, Star, Wrench, Globe, Smartphone, Cpu, Layers, Palette, Shie
 import { getPublishedServicesForPublic, type PublicService } from "@/lib/service-actions";
 import type { LucideProps } from "lucide-react";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
+import HeroBookingForm from "@/components/hero/HeroBookingForm";
 
 export const metadata: Metadata = {
     title: "Hizmetler",
@@ -50,18 +51,25 @@ export default async function ServicesPage() {
     return (
         <main className="min-h-screen bg-[#08090d] px-5 pt-28 pb-16 text-slate-100 sm:px-6 sm:pt-32 sm:pb-20">
             <div className="mx-auto max-w-7xl">
-                {/* Header */}
-                <div className="mb-10 sm:mb-12">
-                    <p className="mb-3 inline-flex rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-1 text-sm text-cyan-300">
-                        Hizmetlerimiz
-                    </p>
-                    <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
-                        İşletmeniz İçin Dijital Çözümler
-                    </h1>
-                    <p className="mt-4 max-w-2xl text-base text-slate-400 md:text-lg">
-                        İşletmenizin ihtiyaçlarına özel web, mobil ve yazılım çözümleri geliştiriyoruz.
-                        Süreçlerinizi hızlandıran ve büyümenizi destekleyen sistemler kuruyoruz.
-                    </p>
+                {/* Header — two-column on lg */}
+                <div className="mb-10 sm:mb-12 flex flex-col lg:grid lg:grid-cols-2 lg:gap-16 lg:items-center">
+                    <div>
+                        <p className="mb-3 inline-flex rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-1 text-sm text-cyan-300">
+                            Hizmetlerimiz
+                        </p>
+                        <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
+                            İşletmeniz İçin Dijital Çözümler
+                        </h1>
+                        <p className="mt-4 max-w-2xl text-base text-slate-400 md:text-lg">
+                            İşletmenizin ihtiyaçlarına özel web, mobil ve yazılım çözümleri geliştiriyoruz.
+                            Süreçlerinizi hızlandıran ve büyümenizi destekleyen sistemler kuruyoruz.
+                        </p>
+                    </div>
+
+                    {/* Right column: form (both mobile and desktop) */}
+                    <div className="flex justify-center">
+                        <HeroBookingForm theme="dark" />
+                    </div>
                 </div>
 
                 {/* Empty state */}

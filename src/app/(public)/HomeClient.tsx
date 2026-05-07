@@ -5,6 +5,7 @@ import SupportChatWidget from "@/components/SupportChatWidget";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import HomeBlogPreview from "@/components/HomeBlogPreview";
+import HeroBookingForm from "@/components/hero/HeroBookingForm";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import {
   QrCode,
@@ -202,90 +203,6 @@ function renderGradientText(text: string) {
   );
 }
 
-// ─────────────────────────────────────────────
-// QR Phone Mockup
-// ─────────────────────────────────────────────
-function QRPhoneMockup() {
-  const cards = [
-    { title: "Web Geliştirme", text: "Modern, hızlı ve ölçeklenebilir web projeleri.", Icon: Globe, accent: "#7c3aed" },
-    { title: "Mobil Uygulama", text: "iOS ve Android uyumlu kullanıcı odaklı deneyimler.", Icon: Smartphone, accent: "#06b6d4" },
-    { title: "Özel Yazılım", text: "İşletmenize özel operasyon ve yönetim sistemleri.", Icon: Code2, accent: "#7c3aed" },
-    { title: "API & Altyapı", text: "Güvenli, performanslı ve sürdürülebilir backend yapıları.", Icon: Zap, accent: "#06b6d4" },
-  ];
-
-  return (
-    <div style={{ width: "100%", maxWidth: "520px" }}>
-      <div
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "6px",
-          padding: "6px 14px",
-          borderRadius: "999px",
-          background: "rgba(124,58,237,0.06)",
-          border: "1px solid rgba(124,58,237,0.15)",
-          color: "#7c3aed",
-          fontSize: "12px",
-          fontWeight: 600,
-          marginBottom: "20px",
-        }}
-      >
-        Web • Mobil • Özel Yazılım
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {cards.map((card) => (
-          <div
-            key={card.title}
-            style={{
-              borderRadius: "16px",
-              padding: "22px",
-              background: "#ffffff",
-              border: "1px solid #e2e8f0",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-              transition: "transform 0.2s ease, box-shadow 0.2s ease",
-              cursor: "default",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-4px)";
-              e.currentTarget.style.boxShadow = "0 10px 28px rgba(0,0,0,0.09)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.05)";
-            }}
-          >
-            <div
-              style={{
-                width: "42px",
-                height: "42px",
-                borderRadius: "10px",
-                background: `${card.accent}0d`,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <card.Icon size={19} color={card.accent} />
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#0f172a", margin: 0, letterSpacing: "-0.2px" }}>
-                {card.title}
-              </h3>
-              <p style={{ fontSize: "13px", lineHeight: 1.7, color: "#64748b", margin: 0 }}>
-                {card.text}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 // ─────────────────────────────────────────────
 // Hero Section
@@ -415,17 +332,17 @@ function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* Right: Service cards — desktop only */}
+        {/* Right: Booking form — both mobile and desktop */}
         <motion.div
           variants={scaleIn}
           initial="hidden"
           animate="visible"
-          className="hidden lg:flex justify-center items-center w-full"
+          className="flex justify-center items-center w-full"
           style={{
             overflow: "hidden",
           }}
         >
-          <QRPhoneMockup />
+          <HeroBookingForm />
         </motion.div>
       </div>
 

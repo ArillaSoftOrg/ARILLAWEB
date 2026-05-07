@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { QrCode, Clock, Smile, Stethoscope, Palette, ArrowRight, CheckCircle2 } from "lucide-react";
+import HeroBookingForm from "@/components/hero/HeroBookingForm";
 
 const products = [
   {
@@ -136,6 +137,11 @@ export default function SektorelYazilimlarClient() {
                 <ArrowRight size={14} />
               </Link>
             </motion.div>
+
+            {/* Form — both mobile and desktop */}
+            <div className="mt-8">
+              <HeroBookingForm />
+            </div>
           </div>
         </div>
       </section>
