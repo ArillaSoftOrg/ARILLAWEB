@@ -5,14 +5,12 @@ import { prisma } from '@/lib/prisma';
 import PageTransition from "@/components/PageTransition";
 
 export async function generateMetadata(): Promise<Metadata> {
-  let faviconHref = '/favicon.ico';
   let ogImage = '/og-default.png';
 
   try {
     const setting = await prisma.siteSetting.findFirst({
-      select: { faviconPath: true, logoPath: true },
+      select: { logoPath: true },
     });
-    if (setting?.faviconPath) faviconHref = setting.faviconPath;
     if (setting?.logoPath) ogImage = setting.logoPath;
   } catch {
     // DB not yet seeded – fall back to static defaults
@@ -49,9 +47,9 @@ export async function generateMetadata(): Promise<Metadata> {
       googleBot: { index: true, follow: true },
     },
     icons: {
-      icon: faviconHref,
-      shortcut: faviconHref,
-      apple: faviconHref,
+      icon: '/favicon.ico',
+      shortcut: '/favicon.ico',
+      apple: '/web-app-manifest-192x192.png',
     },
   };
 }
