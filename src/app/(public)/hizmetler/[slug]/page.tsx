@@ -18,6 +18,8 @@ import {
 import { getServiceBySlug } from "@/lib/service-actions";
 import type { LucideProps } from "lucide-react";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
+import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
+import ServiceJsonLd from "@/components/seo/ServiceJsonLd";
 
 export async function generateMetadata({
     params,
@@ -36,6 +38,9 @@ export async function generateMetadata({
     return {
         title: service.title,
         description: service.shortDescription,
+        alternates: {
+            canonical: `/hizmetler/${slug}`,
+        },
         openGraph: {
             title: `${service.title} | ${SITE_NAME}`,
             description: service.shortDescription,
@@ -86,6 +91,18 @@ export default async function ServiceDetailPage({ params }: PageProps) {
 
     return (
         <main className="min-h-screen bg-[#08090d] px-5 pt-28 pb-16 text-slate-100 sm:px-6 sm:pt-32 sm:pb-20">
+            <BreadcrumbJsonLd
+                items={[
+                    { label: 'Anasayfa', href: '/' },
+                    { label: 'Hizmetler', href: '/hizmetler' },
+                    { label: service.title },
+                ]}
+            />
+            <ServiceJsonLd
+                name={service.title}
+                description={service.shortDescription}
+                url={`/hizmetler/${slug}`}
+            />
             <div className="mx-auto max-w-4xl">
                 {/* Back link */}
                 <div className="mb-10">

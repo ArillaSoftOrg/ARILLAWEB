@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import BlogDetailClient from "./BlogDetailClient";
 import { prisma } from "@/lib/prisma";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
+import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
 
 export async function generateMetadata({
   params,
@@ -13,7 +14,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await prisma.blogPost.findUnique({
     where: { slug },
-    select: { title: true, excerpt: true, coverImage: true, publishedAt: true },
+    select: {
+      title: true,
+      excerpt: true,
+      coverImage: true,
+      publishedAt: true,
+      updatedAt: true,
+      category: {
+        select: { name: true },
+      },
+    },
   });
   if (!post) return { title: "Yazı Bulunamadı" };
 
@@ -24,12 +34,17 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `/kurumsal/blog/${slug}`,
+    },
     openGraph: {
       title: `${post.title} | ${SITE_NAME}`,
       description: post.excerpt,
       type: "article",
       url: `${SITE_URL}/kurumsal/blog/${slug}`,
       publishedTime: post.publishedAt?.toISOString(),
+      modifiedTime: post.updatedAt?.toISOString(),
+      section: post.category?.name,
       images,
     },
     twitter: {
@@ -53,5 +68,16 @@ export default async function BlogDetailPage({
   const allPosts = await getAllPosts();
   const related = allPosts.filter((p) => p.slug !== slug).slice(0, 3);
 
-  return <BlogDetailClient post={post} related={related} />;
+  return (
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { label: 'Anasayfa', href: '/' },
+          { label: 'Blog', href: '/kurumsal/blog' },
+          { label: post.title },
+        ]}
+      />
+      <BlogDetailClient post={post} related={related} />
+    </>
+  );
 }
