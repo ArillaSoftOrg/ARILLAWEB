@@ -292,7 +292,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
 
         {/* Day headers */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 8 }}>
-          {['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((day) => (
+          {['Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct', 'Pa'].map((day) => (
             <div
               key={day}
               style={{ textAlign: 'center', fontSize: 11, fontWeight: 600, color: labelColor }}
@@ -352,8 +352,8 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                 onClick={() => handleDayClick(cell)}
                 disabled={isPast || isBooked}
                 style={{
-                  width: 'clamp(24px, 7vw, 32px)',
-                  height: 'clamp(24px, 7vw, 32px)',
+                  width: 'clamp(28px, 7vw, 32px)',
+                  height: 'clamp(28px, 7vw, 32px)',
                   borderRadius: '50%',
                   border: cellBorder || (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0'),
                   background: cellBg,
