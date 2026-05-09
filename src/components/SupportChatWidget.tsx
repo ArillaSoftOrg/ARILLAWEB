@@ -39,10 +39,10 @@ export default function SupportChatWidget() {
         onClick={() => setIsOpen(!isOpen)}
         style={{
           position: "fixed",
-          bottom: "24px",
-          right: "24px",
-          width: "56px",
-          height: "56px",
+          bottom: "20px",
+          right: "20px",
+          width: "52px",
+          height: "52px",
           borderRadius: "50%",
           background: "linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)",
           border: "none",
@@ -52,7 +52,7 @@ export default function SupportChatWidget() {
           alignItems: "center",
           justifyContent: "center",
           boxShadow: "0 8px 24px rgba(124,58,237,0.35)",
-          zIndex: 40,
+          zIndex: 50,
           transition: "all 0.3s ease",
           opacity: isOpen ? 0 : 1,
           pointerEvents: isOpen ? "none" : "auto",

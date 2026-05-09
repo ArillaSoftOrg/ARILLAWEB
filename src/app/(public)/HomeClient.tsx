@@ -199,6 +199,363 @@ function renderGradientText(text: string) {
 
 
 // ─────────────────────────────────────────────
+// Trust Strip
+// ─────────────────────────────────────────────
+function TrustStrip() {
+  const items = [
+    "Özel Yazılım",
+    "Kurumsal Web Sitesi",
+    "Yönetim Paneli",
+    "Randevu Sistemi",
+    "Teknik Destek",
+  ];
+
+  return (
+    <section
+      style={{
+        background: "#f8fafc",
+        borderTop: "1px solid #e2e8f0",
+        borderBottom: "1px solid #e2e8f0",
+      }}
+      className="py-5"
+    >
+      <div
+        style={{
+          maxWidth: "1280px",
+          margin: "0 auto",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "0 20px",
+        }}
+      >
+        {items.map((item, idx) => (
+          <div key={item}>
+            <span
+              style={{
+                fontSize: "13px",
+                color: "#475569",
+                padding: "4px 12px",
+                borderRadius: "999px",
+                background: "#fff",
+                border: "1px solid #e2e8f0",
+                display: "inline-block",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {item}
+            </span>
+            {idx < items.length - 1 && (
+              <span style={{ marginLeft: "-4px", color: "#cbd5e1" }}>•</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Why Us Section
+// ─────────────────────────────────────────────
+function WhyUsSection() {
+  const items = [
+    {
+      title: "İhtiyaca göre özel geliştirme",
+      description:
+        "Her proje sıfırdan, işletmenizin gerçek ihtiyaçlarına göre tasarlanır.",
+      icon: Wrench,
+    },
+    {
+      title: "Mobil uyumlu ve hızlı arayüzler",
+      description:
+        "Tüm cihazlarda sorunsuz çalışan, hızlı yüklenen arayüzler üretiyoruz.",
+      icon: Smartphone,
+    },
+    {
+      title: "Yönetilebilir panel altyapısı",
+      description:
+        "Teknik bilgiye ihtiyaç duymadan yönetebileceğiniz sistemler kuruyoruz.",
+      icon: Layers,
+    },
+    {
+      title: "Yayın sonrası teknik destek",
+      description:
+        "Projeniz yayına geçtikten sonra da yanınızda olmaya devam ediyoruz.",
+      icon: RefreshCw,
+    },
+  ];
+
+  return (
+    <section
+      style={{ position: "relative" }}
+      className="py-16 sm:py-20 lg:py-28"
+    >
+      <div
+        style={{
+          maxWidth: "1280px",
+          margin: "0 auto",
+          position: "relative",
+        }}
+        className="px-5 sm:px-6"
+      >
+        <AnimatedSection>
+          <motion.div
+            variants={fadeUp}
+            style={{
+              textAlign: "center",
+              marginBottom: "64px",
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "clamp(24px, 5vw, 48px)",
+                fontWeight: 800,
+                color: "#f1f5f9",
+                letterSpacing: "-1px",
+                lineHeight: 1.15,
+                margin: "0 0 16px 0",
+              }}
+            >
+              Neden Arilla Soft?
+            </h2>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#94a3b8",
+                maxWidth: "600px",
+                margin: "0 auto",
+                lineHeight: 1.6,
+              }}
+            >
+              Kurumlar ve işletmeler için özel tasarlanmış, güvenilir yazılım çözümleri.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={stagger}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+            style={{ maxWidth: "900px", margin: "0 auto" }}
+          >
+            {items.map((item) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.title}
+                  variants={fadeUp}
+                  style={{
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    borderRadius: "16px",
+                    padding: "24px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "12px",
+                  }}
+                >
+                  <Icon size={24} color="#7c3aed" strokeWidth={2} />
+                  <h3
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: 600,
+                      color: "#f1f5f9",
+                      margin: "0",
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      color: "#94a3b8",
+                      margin: "0",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {item.description}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </AnimatedSection>
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Example Solutions Section
+// ─────────────────────────────────────────────
+function ExampleSolutionsSection() {
+  const solutions = [
+    "Klinik Randevu Sistemi",
+    "Kurumsal Web Sitesi",
+    "Eğitim Yönetim Paneli",
+    "Stok ve Sipariş Takip Sistemi",
+  ];
+
+  return (
+    <section
+      style={{ position: "relative" }}
+      className="py-16 sm:py-20 lg:py-28"
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "rgba(255,255,255,0.015)",
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+        }}
+      />
+      <div
+        style={{
+          maxWidth: "1280px",
+          margin: "0 auto",
+          position: "relative",
+        }}
+        className="px-5 sm:px-6"
+      >
+        <AnimatedSection>
+          <motion.div
+            variants={fadeUp}
+            style={{
+              textAlign: "center",
+              marginBottom: "64px",
+            }}
+          >
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "6px 14px",
+                borderRadius: "100px",
+                background: "rgba(6,182,212,0.1)",
+                border: "1px solid rgba(6,182,212,0.25)",
+                fontSize: "12px",
+                fontWeight: 700,
+                color: "#22d3ee",
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+                marginBottom: "20px",
+              }}
+            >
+              <Sparkles size={12} />
+              Örnek Çözüm Türleri
+            </div>
+            <h2
+              style={{
+                fontSize: "clamp(24px, 5vw, 48px)",
+                fontWeight: 800,
+                color: "#f1f5f9",
+                letterSpacing: "-1px",
+                lineHeight: 1.15,
+                margin: "0 0 16px 0",
+              }}
+            >
+              Geliştirdiğimiz Çözüm Türleri
+            </h2>
+            <p
+              style={{
+                fontSize: "16px",
+                color: "#94a3b8",
+                maxWidth: "600px",
+                margin: "0 auto",
+                lineHeight: 1.6,
+              }}
+            >
+              Bunlar örnek çözüm türleridir. Her proje ihtiyaca göre özel olarak geliştirilir.
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={stagger}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+          >
+            {solutions.map((solution) => (
+              <motion.div
+                key={solution}
+                variants={fadeUp}
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: "12px",
+                  padding: "20px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
+                  gap: "12px",
+                  minHeight: "160px",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "8px",
+                    background: "rgba(124,58,237,0.1)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Code2 size={20} color="#7c3aed" />
+                </div>
+                <h3
+                  style={{
+                    fontSize: "15px",
+                    fontWeight: 600,
+                    color: "#f1f5f9",
+                    margin: "0",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {solution}
+                </h3>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            style={{
+              textAlign: "center",
+              marginTop: "48px",
+            }}
+          >
+            <Link
+              href="/randevual"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                padding: "12px 24px",
+                borderRadius: "10px",
+                fontSize: "14px",
+                fontWeight: 600,
+                textDecoration: "none",
+                color: "white",
+                background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
+                boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
+              }}
+            >
+              Projenizi Görüşelim <ArrowRight size={14} />
+            </Link>
+          </motion.div>
+        </AnimatedSection>
+      </div>
+    </section>
+  );
+}
+
+// ─────────────────────────────────────────────
 // Hero Section
 // ─────────────────────────────────────────────
 function HeroSection() {
@@ -224,6 +581,23 @@ function HeroSection() {
           animate="visible"
           className="flex flex-col gap-6 items-start text-left"
         >
+          {/* Eyebrow */}
+          <motion.div variants={fadeUp}>
+            <span
+              style={{
+                fontSize: "12px",
+                fontWeight: 600,
+                letterSpacing: "0.08em",
+                color: "#7c3aed",
+                textTransform: "uppercase",
+                marginBottom: "10px",
+                display: "inline-block",
+              }}
+            >
+              Özel Yazılım ve Web Çözümleri
+            </span>
+          </motion.div>
+
           {/* Headline */}
 <motion.div
   variants={fadeUp}
@@ -238,7 +612,7 @@ function HeroSection() {
       maxWidth: "100%",
     }}
   >
-    Kişisel ya da kurumsal dijital çözümünüzü bugün hayata geçirin.
+    İşletmenize özel web sitesi, yazılım ve yönetim sistemleri geliştirin.
   </h2>
 </motion.div>
 
@@ -248,13 +622,13 @@ function HeroSection() {
             style={{
               color: "#64748b",
               maxWidth: "480px",
-              fontSize: "clamp(14px, 1.4vw, 16px)",
+              fontSize: "clamp(15px, 1.4vw, 16px)",
               lineHeight: 1.65,
               margin: 0,
               marginBottom: "24px",
             }}
           >
-            Arilla Soft; kişisel ve kurumsal ihtiyaçlara özel web siteleri, yazılımlar ve yönetim sistemleri geliştirir. Daha profesyonel görünmenizi, daha düzenli çalışmanızı ve dijital süreçlerinizi daha kolay yönetmenizi sağlar.
+            Arilla Soft; kurumlar, işletmeler ve girişimciler için yönetilebilir web siteleri, randevu sistemleri, özel yazılım çözümleri ve dijital süreç altyapıları geliştirir.
           </motion.p>
 
           {/* Value items */}
@@ -282,14 +656,19 @@ function HeroSection() {
           </motion.div>
 
           {/* CTAs */}
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-3 justify-start">
+          <motion.div
+            variants={fadeUp}
+            className="flex flex-col sm:flex-row gap-3 justify-start w-full sm:w-auto"
+          >
             <Link
-              href="/"
+              href="/randevual"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: "8px",
                 padding: "12px 24px",
+                minHeight: "48px",
                 borderRadius: "10px",
                 fontSize: "14px",
                 fontWeight: 600,
@@ -297,17 +676,21 @@ function HeroSection() {
                 color: "white",
                 background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
                 boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
+                width: "100%",
               }}
+              className="sm:w-auto"
             >
-              Ön Görüşme Al <ArrowRight size={14} />
+              Ücretsiz Ön Görüşme Planla <ArrowRight size={14} />
             </Link>
             <Link
-              href="/kurumsal/iletisim"
+              href="/hizmetler"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
                 gap: "8px",
                 padding: "12px 24px",
+                minHeight: "48px",
                 borderRadius: "10px",
                 fontSize: "14px",
                 fontWeight: 600,
@@ -315,11 +698,27 @@ function HeroSection() {
                 color: "#1e293b",
                 background: "#ffffff",
                 border: "1.5px solid #cbd5e1",
+                width: "100%",
               }}
+              className="sm:w-auto"
             >
               Hizmetleri İncele <ArrowRight size={14} />
             </Link>
           </motion.div>
+
+          {/* Trust note */}
+          <motion.p
+            variants={fadeUp}
+            style={{
+              fontSize: "12px",
+              color: "#94a3b8",
+              margin: 0,
+              marginTop: "8px",
+              lineHeight: 1.5,
+            }}
+          >
+            15 dakikalık ücretsiz analiz görüşmesi. Projeniz için net ihtiyaç ve kapsam belirlenir.
+          </motion.p>
         </motion.div>
 
         {/* Right: Booking form — both mobile and desktop */}
@@ -1319,6 +1718,9 @@ export default function HomeClient() {
   return (
     <div style={{ background: "#ffffff", minHeight: "100vh", color: "#0f172a", overflowX: "hidden" }}>
       <HeroSection />
+      <TrustStrip />
+      <WhyUsSection />
+      <ExampleSolutionsSection />
       <ServicesSection settings={settings} />
       <SectoralSoftwareSection />
       <BlogSection />
