@@ -31,19 +31,13 @@ import {
   Clock,
   DollarSign,
   Package,
-  Linkedin,
-  Github,
-  Instagram,
-  Twitter,
-  Mail,
-  Phone,
-  MapPin,
   ExternalLink,
   Sparkles,
   MonitorSmartphone,
   Calendar,
   BookOpen,
   Wrench,
+  CheckCircle2,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────
@@ -212,7 +206,7 @@ function HeroSection() {
     <section
       style={{
         position: "relative",
-        minHeight: "100svh",
+        minHeight: "auto",
         display: "flex",
         alignItems: "center",
         overflowX: "hidden",
@@ -221,7 +215,7 @@ function HeroSection() {
         background: "#F4FAF7",
       }}
     >
-      <div className="w-full max-w-[1280px] mx-auto flex flex-col lg:grid lg:grid-cols-2 items-center gap-10 lg:gap-20 px-4 sm:px-6 lg:px-8 pt-6 pb-16 sm:pt-10 sm:pb-20 lg:py-28">
+      <div className="w-full max-w-[1280px] mx-auto flex flex-col lg:grid lg:grid-cols-2 items-center gap-10 lg:gap-12 px-4 sm:px-6 lg:px-8 pt-6 pb-10 sm:pt-8 sm:pb-14 lg:py-20">
 
         {/* Left: Text */}
         <motion.div
@@ -237,12 +231,11 @@ function HeroSection() {
 >
   <h2
     style={{
-      fontSize: "clamp(36px, 9vw, 56px)",
-      fontWeight: 800,
+      fontSize: "clamp(28px, 4.5vw, 46px)",
+      fontWeight: 700,
       color: "#050505",
-      marginTop: "8px",
       lineHeight: 1.15,
-      maxWidth: "clamp(520px, 100%, 720px)",
+      maxWidth: "100%",
     }}
   >
     Kişisel ya da kurumsal dijital çözümünüzü bugün hayata geçirin.
@@ -264,35 +257,32 @@ function HeroSection() {
             Arilla Soft; kişisel ve kurumsal ihtiyaçlara özel web siteleri, yazılımlar ve yönetim sistemleri geliştirir. Daha profesyonel görünmenizi, daha düzenli çalışmanızı ve dijital süreçlerinizi daha kolay yönetmenizi sağlar.
           </motion.p>
 
-          {/* Feature bullets */}
+          {/* Value items */}
           <motion.div
             variants={fadeUp}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-xl mx-auto lg:mx-0"
+            className="flex flex-col gap-3 sm:flex-row sm:gap-6 sm:flex-wrap w-full lg:mx-0"
           >
             {[
-              { title: "İhtiyaca Özel Sistemler", text: "İşletmenize uygun, sade ve etkili dijital çözümler geliştiriyoruz." },
-              { title: "Verimli İş Süreçleri", text: "Operasyonları kolaylaştıran, zaman kazandıran modern yapılar sunuyoruz." },
-              { title: "Güvenilir Dijital Altyapı", text: "Ölçeklenebilir ve uzun vadeli kullanıma uygun yazılım altyapıları kuruyoruz." },
-            ].map((item) => (
+              "İhtiyaca Özel Sistemler",
+              "Verimli İş Süreçleri",
+              "Güvenilir Dijital Altyapı",
+            ].map((title) => (
               <div
-                key={item.title}
+                key={title}
                 style={{
-                  borderRadius: "12px",
-                  border: "1px solid #e2e8f0",
-                  borderTop: "3px solid #7c3aed",
-                  background: "#ffffff",
-                  padding: "20px",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
                 }}
               >
-                <p style={{ color: "#0f172a", fontWeight: 600, fontSize: "14px", margin: "0 0 6px 0" }}>{item.title}</p>
-                <p style={{ color: "#64748b", fontSize: "13px", lineHeight: 1.7, margin: 0 }}>{item.text}</p>
+                <CheckCircle2 size={15} color="#7c3aed" strokeWidth={2.5} />
+                <span style={{ fontSize: "13px", color: "#475569", fontWeight: 500 }}>{title}</span>
               </div>
             ))}
           </motion.div>
 
           {/* CTAs */}
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-3 justify-center lg:justify-start">
+          <motion.div variants={fadeUp} className="flex flex-wrap gap-3 justify-start">
             <Link
               href="/"
               style={{
@@ -338,9 +328,6 @@ function HeroSection() {
           initial="hidden"
           animate="visible"
           className="flex justify-center items-center w-full"
-          style={{
-            overflow: "hidden",
-          }}
         >
           <HeroBookingForm />
         </motion.div>
