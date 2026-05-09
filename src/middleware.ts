@@ -1,12 +1,23 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { jwtVerify } from 'jose';
 
-export function middleware(request: NextRequest) {
-  const isAdmin = request.cookies.get("admin-auth");
+const secret = () =>
+  new TextEncoder().encode(process.env.ADMIN_AUTH_SECRET!);
 
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    if (!isAdmin && request.nextUrl.pathname !== "/admin/login") {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
+export async function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith('/admin')) {
+    if (request.nextUrl.pathname === '/admin/login')
+      return NextResponse.next();
+
+    const token = request.cookies.get('admin-auth')?.value;
+    if (!token)
+      return NextResponse.redirect(new URL('/admin/login', request.url));
+
+    try {
+      await jwtVerify(token, secret());
+    } catch {
+      return NextResponse.redirect(new URL('/admin/login', request.url));
     }
   }
 
@@ -14,5 +25,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ['/admin/:path*'],
 };

@@ -3,23 +3,28 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, ShieldCheck } from "lucide-react";
+import { adminLogin } from "@/lib/admin-auth-actions";
 
 export default function AdminLoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setIsLoading(true);
 
-        if (email === "arillasoft@gmail.com" && password === "Arilla!1") {
-            document.cookie = "admin-auth=true; path=/";
+        const result = await adminLogin(email, password);
+        if (result.ok) {
             router.push("/admin");
         } else {
             setError("Email veya şifre hatalı.");
         }
+
+        setIsLoading(false);
     };
 
     return (
@@ -81,9 +86,10 @@ export default function AdminLoginPage() {
 
                     <button
                         type="submit"
-                        className="w-full rounded-2xl bg-white py-3 font-semibold text-black transition hover:scale-[1.01] hover:bg-gray-200"
+                        disabled={isLoading}
+                        className="w-full rounded-2xl bg-white py-3 font-semibold text-black transition hover:scale-[1.01] hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Giriş Yap
+                        {isLoading ? "Kontrol ediliyor..." : "Giriş Yap"}
                     </button>
                 </form>
 

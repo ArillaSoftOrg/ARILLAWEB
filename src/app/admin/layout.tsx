@@ -9,6 +9,7 @@ import {
   FolderKanban,
   Lightbulb,
   Mail,
+  Calendar,
   Settings,
   ChevronRight,
   Menu,
@@ -52,6 +53,12 @@ const navItems = [
     label: "İletişim",
     href: "/admin/contact",
     icon: Mail,
+    exact: false,
+  },
+  {
+    label: "Randevular",
+    href: "/admin/appointments",
+    icon: Calendar,
     exact: false,
   },
   {
