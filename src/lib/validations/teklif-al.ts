@@ -14,7 +14,7 @@ export const teklifAlSchema = z.object({
     'WEB_GELISTIRME',
     'MOBIL_UYGULAMA',
     'OZEL_YAZILIM',
-  ], { required_error: 'Lütfen ilgilenilen çözümü seçiniz' }),
+  ]).describe('Lütfen ilgilenilen çözümü seçiniz'),
   message: z.string().min(20, 'Proje detayı en az 20 karakter olmalıdır').max(2000),
 });
 

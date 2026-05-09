@@ -14,7 +14,7 @@ export const quoteSchema = z.object({
     'ECOMMERCE',
     'SAAS',
     'OTHER',
-  ], { required_error: 'Proje türü seçiniz' }),
+  ]).describe('Proje türü seçiniz'),
   budgetRange: z.enum([
     'UNDER_10K',
     'RANGE_10K_25K',
@@ -22,7 +22,7 @@ export const quoteSchema = z.object({
     'RANGE_50K_100K',
     'ABOVE_100K',
     'UNDECIDED',
-  ], { required_error: 'Bütçe aralığı seçiniz' }),
+  ]).describe('Bütçe aralığı seçiniz'),
   targetPlatform: z.enum([
     'WEB',
     'IOS',
@@ -30,11 +30,11 @@ export const quoteSchema = z.object({
     'BOTH_MOBILE',
     'DESKTOP',
     'ALL_PLATFORMS',
-  ], { required_error: 'Hedef platform seçiniz' }),
+  ]).describe('Hedef platform seçiniz'),
   deliveryExpectation: z.string().optional(),
   description: z.string().min(20, 'Proje açıklaması en az 20 karakter olmalıdır').max(5000),
   integrations: z.string().optional(),
-  hasExistingSystem: z.boolean().default(false),
+  hasExistingSystem: z.boolean(),
 });
 
 export type QuoteFormValues = z.infer<typeof quoteSchema>;

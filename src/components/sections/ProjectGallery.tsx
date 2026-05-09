@@ -56,7 +56,7 @@ export default function ProjectGallery({ images, projectTitle }: ProjectGalleryP
     const handleTouchEnd = (x: number, onPrev: () => void, onNext: () => void) => {
         if (touchStart === null) return;
         const diff = touchStart - x;
-        if (Math.abs(diff) > 40) diff > 0 ? onNext() : onPrev();
+        if (Math.abs(diff) > 40) (diff > 0 ? onNext() : onPrev());
         setTouchStart(null);
     };
 

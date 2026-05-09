@@ -8,7 +8,7 @@ export default function AnimatedBrand() {
             <motion.div
                 initial={{ opacity: 0, scale: 0.96, y: 18, filter: "blur(12px)" }}
                 animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 1 }}
                 className="relative"
             >
                 <h1 className="relative text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none tracking-[-0.05em]">

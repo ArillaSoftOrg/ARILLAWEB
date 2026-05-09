@@ -15,7 +15,7 @@ const fadeUp = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6 },
   },
 };
 
@@ -28,7 +28,7 @@ const scaleIn = {
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.5 },
   },
 };
 
@@ -438,7 +438,7 @@ export default function BlogDetailClient({
           <motion.div
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5 }}
             style={{ paddingTop: "32px", marginBottom: "36px" }}
           >
             <Link
