@@ -10,6 +10,7 @@ import {
   Lightbulb,
   Mail,
   Calendar,
+  Clock,
   Settings,
   ChevronRight,
   Menu,
@@ -59,6 +60,12 @@ const navItems = [
     label: "Randevular",
     href: "/admin/appointments",
     icon: Calendar,
+    exact: false,
+  },
+  {
+    label: "Müsaitlik",
+    href: "/admin/availability",
+    icon: Clock,
     exact: false,
   },
   {

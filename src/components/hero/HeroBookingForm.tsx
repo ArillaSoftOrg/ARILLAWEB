@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -19,49 +19,20 @@ const SERVICE_OPTIONS = [
   'Bakım & Destek',
 ];
 
-const TIME_SLOTS = [
-  '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
-  '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-  '17:00', '17:30', '18:00',
-];
+type DayStatus = 'available' | 'closed' | 'fully_booked' | 'blocked' | 'past';
+type SlotStatus = 'available' | 'booked' | 'blocked';
 
-type SlotStatus = 'available' | 'booked';
-
-const MOCK_AVAILABILITY: Record<string, Record<string, SlotStatus>> = {
-  '2026-05-09': {
-    '09:00': 'booked', '09:30': 'booked', '10:00': 'booked', '10:30': 'booked',
-    '11:00': 'booked', '11:30': 'booked', '12:00': 'booked', '12:30': 'booked',
-    '13:00': 'booked', '13:30': 'booked', '14:00': 'booked', '14:30': 'booked',
-    '15:00': 'booked', '15:30': 'booked', '16:00': 'booked', '16:30': 'booked',
-    '17:00': 'booked', '17:30': 'booked', '18:00': 'booked',
-  },
-  '2026-05-13': {
-    '09:00': 'booked', '09:30': 'booked', '10:00': 'available', '10:30': 'available',
-    '11:00': 'booked', '11:30': 'available', '14:00': 'booked', '14:30': 'booked',
-  },
-  '2026-05-19': {
-    '09:00': 'booked', '10:00': 'booked', '11:00': 'booked', '14:00': 'available',
-    '15:00': 'available', '16:00': 'booked',
-  },
-  '2026-05-22': {
-    '09:00': 'booked', '09:30': 'booked', '10:00': 'booked', '10:30': 'booked',
-    '11:00': 'booked', '11:30': 'booked', '12:00': 'booked', '12:30': 'booked',
-    '13:00': 'booked', '13:30': 'booked', '14:00': 'booked', '14:30': 'booked',
-    '15:00': 'booked', '15:30': 'booked', '16:00': 'booked', '16:30': 'booked',
-    '17:00': 'booked', '17:30': 'booked', '18:00': 'booked',
-  },
-};
-
-function getSlotStatus(dateStr: string, slot: string): SlotStatus {
-  return MOCK_AVAILABILITY[dateStr]?.[slot] ?? 'available';
-}
-
-function isFullyBooked(dateStr: string): boolean {
-  return TIME_SLOTS.every((slot) => getSlotStatus(dateStr, slot) === 'booked');
+interface DaySlot {
+  time: string;
+  status: SlotStatus;
 }
 
 function toDateStr(year: number, month: number, day: number): string {
   return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+function getMonthStr(year: number, month: number): string {
+  return `${year}-${String(month + 1).padStart(2, '0')}`;
 }
 
 export default function HeroBookingForm({ defaultService, theme = 'light' }: HeroBookingFormProps) {
@@ -73,6 +44,12 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
   const [time, setTime] = useState('');
   const [error, setError] = useState(false);
 
+  // Availability state
+  const [dayStatuses, setDayStatuses] = useState<Record<string, DayStatus>>({});
+  const [slots, setSlots] = useState<DaySlot[]>([]);
+  const [loadingDays, setLoadingDays] = useState(false);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+
   const today = new Date();
   const todayDateStr = today.toISOString().split('T')[0];
   const todayYear = today.getFullYear();
@@ -80,6 +57,46 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
 
   const [calendarYear, setCalendarYear] = useState(todayYear);
   const [calendarMonth, setCalendarMonth] = useState(todayMonth);
+
+  // Fetch day statuses when month or service changes
+  useEffect(() => {
+    if (!service) return;
+
+    const monthStr = getMonthStr(calendarYear, calendarMonth);
+    setLoadingDays(true);
+
+    fetch(`/api/availability/days?month=${monthStr}&service=${encodeURIComponent(service)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setDayStatuses(data);
+        setLoadingDays(false);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch day statuses:', err);
+        setLoadingDays(false);
+      });
+  }, [service, calendarYear, calendarMonth]);
+
+  // Fetch slots when date or service changes
+  useEffect(() => {
+    if (!date || !service) {
+      setSlots([]);
+      return;
+    }
+
+    setLoadingSlots(true);
+
+    fetch(`/api/availability/slots?date=${date}&service=${encodeURIComponent(service)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setSlots(data.slots || []);
+        setLoadingSlots(false);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch slots:', err);
+        setLoadingSlots(false);
+      });
+  }, [date, service]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,6 +124,11 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
     setDate('');
     setTime('');
   };
+
+  // Get day status from API response
+  function getDayStatus(dateStr: string): DayStatus {
+    return dayStatuses[dateStr] || 'past';
+  }
 
   // Build calendar grid
   const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
@@ -162,10 +184,10 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
   // Day click handler
   const handleDayClick = (cell: typeof cells[0]) => {
     const dateStr = toDateStr(cell.year, cell.month, cell.day);
-    const isPast = dateStr < todayDateStr;
-    const isBooked = isFullyBooked(dateStr);
+    const dayStatus = getDayStatus(dateStr);
 
-    if (isPast || isBooked) {
+    // Only allow clicking on available days
+    if (dayStatus !== 'available') {
       return;
     }
 
@@ -306,12 +328,11 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 16 }}>
           {visibleWeeks.flat().map((cell, idx) => {
             const cellDateStr = toDateStr(cell.year, cell.month, cell.day);
-            const isPast = cellDateStr < todayDateStr;
             const isToday = cellDateStr === todayDateStr;
             const isSelected = cellDateStr === date;
-            const isBooked = isFullyBooked(cellDateStr);
             const isOverflow = cell.overflow !== null;
-            const isValidOverflow = !isPast && !isBooked && isOverflow;
+            const dayStatus = getDayStatus(cellDateStr);
+            const isClickable = dayStatus === 'available';
 
             let cellBg = 'transparent';
             let cellColor = inputColor;
@@ -320,29 +341,42 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
             let cellBorder = 'none';
             let cellTextDecoration = 'none';
 
-            if (isOverflow && isPast) {
-              cellOpacity = 0.2;
-              cellCursor = 'default';
-              cellColor = isDark ? 'rgba(255,255,255,0.2)' : '#94a3b8';
-            } else if (isValidOverflow) {
+            // Determine styling based on day status
+            if (isOverflow) {
               cellOpacity = 0.35;
               cellColor = isDark ? 'rgba(255,255,255,0.35)' : '#94a3b8';
-            } else if (!isOverflow && isPast) {
+              if (dayStatus === 'past') {
+                cellOpacity = 0.2;
+                cellCursor = 'default';
+              }
+            } else if (dayStatus === 'past') {
               cellOpacity = 0.3;
               cellCursor = 'default';
               cellColor = isDark ? 'rgba(255,255,255,0.3)' : '#cbd5e1';
-            } else if (isToday && !isSelected && !isBooked) {
-              cellBorder = '1.5px solid #7c3aed';
-              cellColor = '#7c3aed';
-            } else if (isBooked) {
+            } else if (dayStatus === 'closed') {
+              cellColor = isDark ? 'rgba(255,255,255,0.4)' : '#94a3b8';
+              cellOpacity = 0.5;
+              cellCursor = 'not-allowed';
+            } else if (dayStatus === 'fully_booked') {
               cellColor = isDark ? 'rgba(255,255,255,0.3)' : '#94a3b8';
               cellOpacity = 0.5;
               cellCursor = 'not-allowed';
               cellTextDecoration = 'line-through';
               cellBg = isDark ? 'rgba(239,68,68,0.12)' : 'rgba(239,68,68,0.07)';
-            } else if (isSelected) {
+            } else if (dayStatus === 'blocked') {
+              cellColor = isDark ? 'rgba(255,255,255,0.3)' : '#94a3b8';
+              cellOpacity = 0.4;
+              cellCursor = 'not-allowed';
+              cellTextDecoration = 'line-through';
+            } else if (isToday && !isSelected && isClickable) {
+              cellBorder = '1.5px solid #7c3aed';
+              cellColor = '#7c3aed';
+            }
+
+            if (isSelected) {
               cellBg = '#7c3aed';
               cellColor = 'white';
+              cellCursor = 'pointer';
             }
 
             return (
@@ -350,7 +384,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                 key={idx}
                 type="button"
                 onClick={() => handleDayClick(cell)}
-                disabled={isPast || isBooked}
+                disabled={!isClickable}
                 style={{
                   width: 'clamp(28px, 7vw, 32px)',
                   height: 'clamp(28px, 7vw, 32px)',
@@ -366,7 +400,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                   transition: 'all 0.2s ease',
                 }}
                 onMouseEnter={(e) => {
-                  if (cellCursor === 'pointer' && !isSelected && !isBooked) {
+                  if (cellCursor === 'pointer' && !isSelected) {
                     e.currentTarget.style.background = isDark ? 'rgba(124,58,237,0.15)' : 'rgba(124,58,237,0.08)';
                   }
                 }}
@@ -377,6 +411,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                     e.currentTarget.style.background = cellBg;
                   }
                 }}
+                title={dayStatus === 'closed' ? 'Kapalı' : dayStatus === 'fully_booked' ? 'Dolu' : dayStatus === 'blocked' ? 'Bloke' : ''}
               >
                 {cell.day}
               </button>
@@ -399,53 +434,61 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
           >
             Saat
           </label>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {TIME_SLOTS.map((slot) => {
-              const slotStatus = getSlotStatus(date, slot);
-              const isSlotSelected = time === slot;
-              const isSlotBooked = slotStatus === 'booked';
+          {loadingSlots ? (
+            <div style={{ color: labelColor, fontSize: 12 }}>Saatler yükleniyor...</div>
+          ) : slots.length === 0 ? (
+            <div style={{ color: isDark ? '#fca5a5' : '#ef4444', fontSize: 12 }}>
+              Bu tarih için müsait saat yok
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {slots.map((slot) => {
+                const isSlotSelected = time === slot.time;
+                const isAvailable = slot.status === 'available';
 
-              return (
-                <button
-                  key={slot}
-                  type="button"
-                  onClick={() => {
-                    if (!isSlotBooked) {
-                      setTime(slot);
-                      setError(false);
-                    }
-                  }}
-                  disabled={isSlotBooked}
-                  style={{
-                    padding: '5px 10px',
-                    fontSize: 12,
-                    borderRadius: 8,
-                    border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0'}`,
-                    background: isSlotSelected ? '#7c3aed' : inputBg,
-                    color: isSlotSelected ? 'white' : inputColor,
-                    cursor: isSlotBooked ? 'not-allowed' : 'pointer',
-                    opacity: isSlotBooked ? 0.4 : 1,
-                    textDecoration: isSlotBooked ? 'line-through' : 'none',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isSlotBooked && !isSlotSelected) {
-                      e.currentTarget.style.background = isDark
-                        ? 'rgba(124,58,237,0.15)'
-                        : 'rgba(124,58,237,0.08)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isSlotSelected) {
-                      e.currentTarget.style.background = inputBg;
-                    }
-                  }}
-                >
-                  {slot}
-                </button>
-              );
-            })}
-          </div>
+                return (
+                  <button
+                    key={slot.time}
+                    type="button"
+                    onClick={() => {
+                      if (isAvailable) {
+                        setTime(slot.time);
+                        setError(false);
+                      }
+                    }}
+                    disabled={!isAvailable}
+                    style={{
+                      padding: '5px 10px',
+                      fontSize: 12,
+                      borderRadius: 8,
+                      border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0'}`,
+                      background: isSlotSelected ? '#7c3aed' : inputBg,
+                      color: isSlotSelected ? 'white' : inputColor,
+                      cursor: isAvailable ? 'pointer' : 'not-allowed',
+                      opacity: isAvailable ? 1 : 0.4,
+                      textDecoration: isAvailable ? 'none' : 'line-through',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (isAvailable && !isSlotSelected) {
+                        e.currentTarget.style.background = isDark
+                          ? 'rgba(124,58,237,0.15)'
+                          : 'rgba(124,58,237,0.08)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isSlotSelected) {
+                        e.currentTarget.style.background = inputBg;
+                      }
+                    }}
+                    title={!isAvailable ? (slot.status === 'booked' ? 'Dolu' : 'Bloke') : ''}
+                  >
+                    {slot.time}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
@@ -487,7 +530,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
         onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
         onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
       >
-        Ön Görüşme Planla
+        Uygun Zamanı Seç ve Görüşme Planla
       </button>
     </form>
   );

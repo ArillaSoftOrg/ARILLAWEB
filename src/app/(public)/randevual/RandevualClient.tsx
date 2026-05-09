@@ -1,6 +1,6 @@
 'use client';
 
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
@@ -8,6 +8,11 @@ interface DraftData {
   service?: string;
   date?: string;
   time?: string;
+}
+
+interface DaySlot {
+  time: string;
+  status: 'available' | 'booked' | 'blocked';
 }
 
 const SERVICE_OPTIONS = [
@@ -38,6 +43,10 @@ export default function RandevualClient() {
   const [status, setStatus] = useState<'idle' | 'error'>('idle');
   const [showSuccess, setShowSuccess] = useState(false);
 
+  // Availability state
+  const [slots, setSlots] = useState<DaySlot[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+
   // Load draft from sessionStorage on mount
   useLayoutEffect(() => {
     const stored = sessionStorage.getItem('randevuDraft');
@@ -53,6 +62,27 @@ export default function RandevualClient() {
     }
     setIsHydrated(true);
   }, []);
+
+  // Fetch slots when date or service changes
+  useEffect(() => {
+    if (!date || !service) {
+      setSlots([]);
+      return;
+    }
+
+    setLoadingSlots(true);
+
+    fetch(`/api/availability/slots?date=${date}&service=${encodeURIComponent(service)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setSlots(data.slots || []);
+        setLoadingSlots(false);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch slots:', err);
+        setLoadingSlots(false);
+      });
+  }, [date, service]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -361,38 +391,74 @@ export default function RandevualClient() {
             >
               Saat
             </label>
-            <select
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              style={{
-                width: '100%',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                borderRadius: 10,
-                color: '#0f172a',
-                fontSize: 14,
-                padding: '10px 12px',
-                fontFamily: 'inherit',
-                cursor: 'pointer',
-                appearance: 'none',
-                backgroundImage:
-                  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 10px center',
-                paddingRight: 32,
-              }}
-            >
-              <option value="">Saat seçiniz</option>
-              {[
-                '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
-                '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-                '17:00', '17:30', '18:00',
-              ].map((slot) => (
-                <option key={slot} value={slot}>
-                  {slot}
-                </option>
-              ))}
-            </select>
+            {loadingSlots ? (
+              <div
+                style={{
+                  width: '100%',
+                  background: '#f8fafc',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: 10,
+                  color: '#0f172a',
+                  fontSize: 14,
+                  padding: '10px 12px',
+                  fontFamily: 'inherit',
+                }}
+              >
+                Saatler yükleniyor...
+              </div>
+            ) : slots.length === 0 ? (
+              <div
+                style={{
+                  width: '100%',
+                  background: '#f8fafc',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: 10,
+                  color: '#dc2626',
+                  fontSize: 14,
+                  padding: '10px 12px',
+                  fontFamily: 'inherit',
+                }}
+              >
+                Bu tarih için müsait saat yok
+              </div>
+            ) : (
+              <select
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                style={{
+                  width: '100%',
+                  background: '#f8fafc',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: 10,
+                  color: '#0f172a',
+                  fontSize: 14,
+                  padding: '10px 12px',
+                  fontFamily: 'inherit',
+                  cursor: 'pointer',
+                  appearance: 'none',
+                  backgroundImage:
+                    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 10px center',
+                  paddingRight: 32,
+                }}
+              >
+                <option value="">Saat seçiniz</option>
+                {slots.map((slot) => (
+                  <option
+                    key={slot.time}
+                    value={slot.time}
+                    disabled={slot.status !== 'available'}
+                    style={{
+                      color: slot.status === 'available' ? '#0f172a' : '#94a3b8',
+                      textDecoration: slot.status !== 'available' ? 'line-through' : 'none',
+                    }}
+                  >
+                    {slot.time} {slot.status === 'booked' ? '(Dolu)' : slot.status === 'blocked' ? '(Bloke)' : ''}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           {/* Name field */}
