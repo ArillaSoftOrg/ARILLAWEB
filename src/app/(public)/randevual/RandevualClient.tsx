@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
 interface DraftData {
@@ -20,7 +21,7 @@ const SERVICE_OPTIONS = [
 ];
 
 export default function RandevualClient() {
-  const [draft, setDraft] = useState<DraftData | null>(null);
+  const router = useRouter();
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Pre-filled from sessionStorage
@@ -38,12 +39,11 @@ export default function RandevualClient() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   // Load draft from sessionStorage on mount
-  useEffect(() => {
+  useLayoutEffect(() => {
     const stored = sessionStorage.getItem('randevuDraft');
     if (stored) {
       try {
         const parsed = JSON.parse(stored) as DraftData;
-        setDraft(parsed);
         setService(parsed.service || '');
         setDate(parsed.date || '');
         setTime(parsed.time || '');
@@ -54,7 +54,7 @@ export default function RandevualClient() {
     setIsHydrated(true);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate
@@ -63,21 +63,22 @@ export default function RandevualClient() {
       return;
     }
 
+    // Submit to API
+    const res = await fetch('/api/appointment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ service, date, time, name, contact, message }),
+    });
+
+    if (!res.ok) {
+      setStatus('error');
+      return;
+    }
+
     // Clear the draft and show success
     sessionStorage.removeItem('randevuDraft');
     setShowSuccess(true);
     setStatus('idle');
-
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setService('');
-      setDate('');
-      setTime('');
-      setName('');
-      setContact('');
-      setMessage('');
-      setShowSuccess(false);
-    }, 3000);
   };
 
   // Wait for hydration to avoid SSR mismatch
@@ -101,6 +102,10 @@ export default function RandevualClient() {
 
   // Success state
   if (showSuccess) {
+    const handleHomeClick = () => {
+      router.push('/');
+    };
+
     return (
       <div
         style={{
@@ -115,14 +120,29 @@ export default function RandevualClient() {
       >
         <CheckCircle size={48} style={{ color: '#10b981', marginBottom: 16 }} />
         <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>
-          Randevu Talebiniz Alındı!
+          Randevu talebiniz alındı.
         </h2>
-        <p style={{ color: '#64748b', marginBottom: 4 }}>
-          En kısa sürede size ulaşacağız ve randevu tarihini onaylayacağız.
+        <p style={{ color: '#64748b', marginBottom: 24 }}>
+          En kısa sürede sizinle iletişime geçeceğiz.
         </p>
-        <p style={{ color: '#94a3b8', fontSize: 14 }}>
-          E-posta adresinize bir onay mesajı gönderilecektir.
-        </p>
+        <button
+          onClick={handleHomeClick}
+          style={{
+            background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+            color: 'white',
+            border: 'none',
+            borderRadius: 10,
+            padding: '12px 24px',
+            fontSize: 14,
+            fontWeight: 600,
+            cursor: 'pointer',
+            transition: 'opacity 0.2s ease',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.9')}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+        >
+          Ana Sayfaya Dön
+        </button>
       </div>
     );
   }
