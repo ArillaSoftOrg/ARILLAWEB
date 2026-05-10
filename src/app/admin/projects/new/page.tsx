@@ -100,7 +100,7 @@ export default function NewProjectPage() {
                     <div>
                         <Link
                             href="/admin/projects"
-                            className="mb-4 inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white"
+                            className="mb-4 inline-flex items-center gap-2 text-sm text-slate-600 transition hover:text-white"
                         >
                             <ArrowLeft className="h-4 w-4" />
                             Projelere Dön
@@ -112,7 +112,7 @@ export default function NewProjectPage() {
                             </div>
                             <div>
                                 <h1 className="text-3xl font-bold text-white">Yeni Proje</h1>
-                                <p className="mt-1 text-sm text-slate-400">
+                                <p className="mt-1 text-sm text-slate-600">
                                     Yeni bir proje ekleyerek portföyünü genişlet.
                                 </p>
                             </div>
@@ -122,7 +122,7 @@ export default function NewProjectPage() {
 
                 <form
                     onSubmit={handleSubmit}
-                    className="space-y-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]"
+                    className="space-y-6 rounded-2xl border border-slate-200 bg-white/[0.03] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]"
                 >
                     <div className="grid gap-6 md:grid-cols-2">
                         <div>
@@ -133,7 +133,7 @@ export default function NewProjectPage() {
                                 type="text"
                                 value={form.title}
                                 onChange={(e) => updateField("title", e.target.value)}
-                                className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
+                                className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
                                 placeholder="Örn: Arilla CRM Platformu"
                                 required
                             />
@@ -147,7 +147,7 @@ export default function NewProjectPage() {
                                 type="text"
                                 value={form.slug}
                                 onChange={(e) => updateField("slug", e.target.value)}
-                                className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
+                                className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
                                 placeholder="arilla-crm-platformu"
                             />
                         </div>
@@ -160,7 +160,7 @@ export default function NewProjectPage() {
                         <textarea
                             value={form.summary}
                             onChange={(e) => updateField("summary", e.target.value)}
-                            className="min-h-[110px] w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
+                            className="min-h-[110px] w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
                             placeholder="Projenin kısa özeti..."
                             required
                         />
@@ -173,7 +173,7 @@ export default function NewProjectPage() {
                         <textarea
                             value={form.content}
                             onChange={(e) => updateField("content", e.target.value)}
-                            className="min-h-[180px] w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
+                            className="min-h-[180px] w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
                             placeholder="Projenin detaylı açıklamasını yaz..."
                             required
                         />
@@ -197,7 +197,7 @@ export default function NewProjectPage() {
                             type="text"
                             value={form.clientName}
                             onChange={(e) => updateField("clientName", e.target.value)}
-                            className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
+                            className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
                             placeholder="Örn: Tart Cafe"
                         />
                     </div>
@@ -221,7 +221,7 @@ export default function NewProjectPage() {
                                 type="text"
                                 value={form.videoUrl}
                                 onChange={(e) => updateField("videoUrl", e.target.value)}
-                                className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
+                                className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
                                 placeholder="https://youtube.com/watch?v=..."
                             />
                         </div>
@@ -234,7 +234,7 @@ export default function NewProjectPage() {
                                 type="text"
                                 value={form.projectUrl}
                                 onChange={(e) => updateField("projectUrl", e.target.value)}
-                                className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
+                                className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
                                 placeholder="https://proje-sitesi.com"
                             />
                         </div>
@@ -249,7 +249,7 @@ export default function NewProjectPage() {
                                 type="text"
                                 value={form.sector}
                                 onChange={(e) => updateField("sector", e.target.value)}
-                                className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
+                                className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
                                 placeholder="Örn: Restoran / SaaS / E-Ticaret"
                             />
                         </div>
@@ -262,7 +262,7 @@ export default function NewProjectPage() {
                                 type="text"
                                 value={form.resultMetrics}
                                 onChange={(e) => updateField("resultMetrics", e.target.value)}
-                                className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
+                                className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
                                 placeholder="Örn: %40 hız artışı"
                             />
                         </div>
@@ -276,7 +276,7 @@ export default function NewProjectPage() {
                             type="text"
                             value={form.technologies}
                             onChange={(e) => updateField("technologies", e.target.value)}
-                            className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
+                            className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-violet-500"
                             placeholder="Next.js, Prisma, PostgreSQL, Tailwind"
                         />
                         <p className="mt-2 text-xs text-slate-500">
@@ -285,7 +285,7 @@ export default function NewProjectPage() {
                     </div>
 
                     <div className="grid gap-6 md:grid-cols-2">
-                        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3">
+                        <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3">
                             <input
                                 type="checkbox"
                                 checked={form.isFeatured}
@@ -294,7 +294,7 @@ export default function NewProjectPage() {
                             <span className="text-sm text-slate-300">Öne çıkan proje</span>
                         </label>
 
-                        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3">
+                        <label className="flex items-center gap-3 rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3">
                             <input
                                 type="checkbox"
                                 checked={form.published}
@@ -313,7 +313,7 @@ export default function NewProjectPage() {
                     <div className="flex items-center justify-end gap-3 pt-4">
                         <Link
                             href="/admin/projects"
-                            className="rounded-xl border border-white/10 px-4 py-3 text-sm text-slate-300 transition hover:bg-white/5"
+                            className="rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-300 transition hover:bg-white/5"
                         >
                             İptal
                         </Link>

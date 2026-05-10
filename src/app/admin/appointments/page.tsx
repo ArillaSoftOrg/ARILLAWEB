@@ -27,7 +27,8 @@ interface Appointment {
   date: string;
   time: string;
   name: string;
-  contact: string;
+  phone: string | null;
+  email: string | null;
   message: string | null;
   isRead: boolean;
   createdAt: string | Date;
@@ -63,7 +64,8 @@ export default function AdminAppointmentsPage() {
     const matchesSearch =
       !q ||
       a.name.toLowerCase().includes(q) ||
-      a.contact.toLowerCase().includes(q) ||
+      (a.phone?.toLowerCase().includes(q)) ||
+      (a.email?.toLowerCase().includes(q)) ||
       a.service.toLowerCase().includes(q);
     return matchesFilter && matchesSearch;
   });
@@ -132,7 +134,7 @@ export default function AdminAppointmentsPage() {
         >
           <div
             className="w-full max-w-sm rounded-xl p-6"
-            style={{ background: '#111219', border: '1px solid rgba(255,255,255,0.1)' }}
+            style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.1)' }}
           >
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
@@ -140,18 +142,18 @@ export default function AdminAppointmentsPage() {
             >
               <Trash2 size={20} style={{ color: '#ef4444' }} />
             </div>
-            <h3 className="text-base font-semibold mb-2" style={{ color: '#f1f5f9' }}>
+            <h3 className="text-base font-semibold mb-2" style={{ color: '#0f172a' }}>
               Randevuyu Sil
             </h3>
-            <p className="text-sm mb-6" style={{ color: '#64748b' }}>
-              <span style={{ color: '#94a3b8' }}>{deleteTarget.name}</span> adlı
+            <p className="text-sm mb-6" style={{ color: '#94a3b8' }}>
+              <span style={{ color: '#475569' }}>{deleteTarget.name}</span> adlı
               kişinin randevu talebini sileceksiniz. Bu işlem geri alınamaz.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}
                 className="flex-1 py-2 text-sm rounded-lg hover:bg-white/5 transition-colors"
-                style={{ color: '#64748b', border: '1px solid rgba(255,255,255,0.08)' }}
+                style={{ color: '#94a3b8', border: '1px solid rgba(255,255,255,0.08)' }}
               >
                 İptal
               </button>
@@ -170,10 +172,10 @@ export default function AdminAppointmentsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: '#f1f5f9' }}>
+          <h1 className="text-2xl font-bold" style={{ color: '#0f172a' }}>
             Randevu Talepleri
           </h1>
-          <p className="text-sm mt-1" style={{ color: '#64748b' }}>
+          <p className="text-sm mt-1" style={{ color: '#94a3b8' }}>
             {appointments.length} randevu
             {unreadCount > 0 && (
               <span
@@ -191,7 +193,7 @@ export default function AdminAppointmentsPage() {
       {/* Toolbar */}
       <div
         className="flex flex-col sm:flex-row gap-3 p-4 rounded-xl"
-        style={{ background: '#111219', border: '1px solid rgba(255,255,255,0.07)' }}
+        style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.05)' }}
       >
         {/* Search */}
         <div className="relative flex-1">
@@ -206,16 +208,16 @@ export default function AdminAppointmentsPage() {
             placeholder="İsim, telefon veya hizmet ara..."
             className="w-full pl-9 pr-4 py-2 text-sm rounded-lg"
             style={{
-              background: '#08090d',
+              background: '#f8fafc',
               border: '1px solid rgba(255,255,255,0.08)',
-              color: '#f1f5f9',
+              color: '#0f172a',
               outline: 'none',
             }}
           />
         </div>
 
         {/* Filter tabs */}
-        <div className="flex gap-1 rounded-lg p-1" style={{ background: '#08090d', border: '1px solid rgba(255,255,255,0.07)' }}>
+        <div className="flex gap-1 rounded-lg p-1" style={{ background: '#f8fafc', border: '1px solid rgba(0,0,0,0.05)' }}>
           {(['all', 'unread', 'read'] as Filter[]).map((f) => {
             const labels: Record<Filter, string> = { all: 'Tümü', unread: 'Okunmamış', read: 'Okunmuş' };
             return (
@@ -226,7 +228,7 @@ export default function AdminAppointmentsPage() {
                 style={
                   filter === f
                     ? { background: 'rgba(124,58,237,0.2)', color: '#a78bfa', border: '1px solid rgba(124,58,237,0.3)' }
-                    : { color: '#64748b' }
+                    : { color: '#94a3b8' }
                 }
               >
                 {labels[f]}
@@ -248,11 +250,11 @@ export default function AdminAppointmentsPage() {
       {filtered.length === 0 ? (
         <div
           className="flex flex-col items-center justify-center py-20 rounded-xl"
-          style={{ background: '#111219', border: '1px solid rgba(255,255,255,0.07)' }}
+          style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.05)' }}
         >
           <div
             className="w-14 h-14 rounded-xl flex items-center justify-center mb-4"
-            style={{ background: 'rgba(255,255,255,0.04)' }}
+            style={{ background: 'rgba(0,0,0,0.04)' }}
           >
             <Inbox size={24} style={{ color: '#334155' }} />
           </div>
@@ -269,9 +271,9 @@ export default function AdminAppointmentsPage() {
         <div
           className="rounded-xl overflow-hidden divide-y"
           style={{
-            background: '#111219',
-            border: '1px solid rgba(255,255,255,0.07)',
-            borderColor: 'rgba(255,255,255,0.07)',
+            background: '#ffffff',
+            border: '1px solid rgba(0,0,0,0.05)',
+            borderColor: 'rgba(0,0,0,0.05)',
           }}
         >
           {filtered.map((appt) => {
@@ -280,7 +282,7 @@ export default function AdminAppointmentsPage() {
               <div
                 key={appt.id}
                 className="transition-colors"
-                style={{ borderColor: 'rgba(255,255,255,0.04)' }}
+                style={{ borderColor: 'rgba(0,0,0,0.04)' }}
               >
                 {/* Row header — always visible */}
                 <div
@@ -293,7 +295,7 @@ export default function AdminAppointmentsPage() {
                       className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                       style={
                         appt.isRead
-                          ? { background: 'rgba(255,255,255,0.04)' }
+                          ? { background: 'rgba(0,0,0,0.04)' }
                           : { background: 'rgba(6,182,212,0.1)', border: '1px solid rgba(6,182,212,0.2)' }
                       }
                     >
@@ -316,12 +318,12 @@ export default function AdminAppointmentsPage() {
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                       <span
                         className="text-sm font-semibold"
-                        style={{ color: appt.isRead ? '#94a3b8' : '#f1f5f9' }}
+                        style={{ color: appt.isRead ? '#475569' : '#0f172a' }}
                       >
                         {appt.name}
                       </span>
                       <span className="text-xs" style={{ color: '#475569' }}>
-                        {appt.contact}
+                        {appt.phone || appt.email}
                       </span>
                       <span className="hidden sm:inline-flex items-center gap-1 text-xs" style={{ color: '#475569' }}>
                         <Inbox size={10} />
@@ -330,7 +332,7 @@ export default function AdminAppointmentsPage() {
                     </div>
                     <p
                       className="mt-1 text-sm font-medium"
-                      style={{ color: appt.isRead ? '#64748b' : '#cbd5e1' }}
+                      style={{ color: appt.isRead ? '#94a3b8' : '#cbd5e1' }}
                     >
                       {formatAppointmentDate(appt.date, appt.time)}
                     </p>
@@ -380,43 +382,47 @@ export default function AdminAppointmentsPage() {
                 {isExpanded && (
                   <div
                     className="px-5 pb-5"
-                    style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
+                    style={{ borderTop: '1px solid rgba(0,0,0,0.04)' }}
                   >
                     <div
                       className="mt-4 rounded-xl p-5 space-y-4"
-                      style={{ background: '#08090d', border: '1px solid rgba(255,255,255,0.06)' }}
+                      style={{ background: '#f8fafc', border: '1px solid rgba(0,0,0,0.05)' }}
                     >
                       {/* Meta row */}
-                      <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs" style={{ color: '#64748b' }}>
+                      <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs" style={{ color: '#94a3b8' }}>
                         <span>
                           <span className="uppercase tracking-wider mr-1" style={{ color: '#475569' }}>
                             İsim:
                           </span>
-                          <span style={{ color: '#94a3b8' }}>{appt.name}</span>
+                          <span style={{ color: '#475569' }}>{appt.name}</span>
                         </span>
                         <span>
                           <span className="uppercase tracking-wider mr-1" style={{ color: '#475569' }}>
                             Tel:
                           </span>
-                          <a
-                            href={`tel:${appt.contact}`}
-                            className="hover:text-cyan-400 transition-colors"
-                            style={{ color: '#94a3b8' }}
-                          >
-                            {appt.contact}
-                          </a>
+                          {appt.phone ? (
+                            <a
+                              href={`tel:${appt.phone}`}
+                              className="hover:text-cyan-400 transition-colors"
+                              style={{ color: '#475569' }}
+                            >
+                              {appt.phone}
+                            </a>
+                          ) : (
+                            <span style={{ color: '#475569' }}>{appt.email}</span>
+                          )}
                         </span>
                         <span>
                           <span className="uppercase tracking-wider mr-1" style={{ color: '#475569' }}>
                             Hizmet:
                           </span>
-                          <span style={{ color: '#94a3b8' }}>{appt.service}</span>
+                          <span style={{ color: '#475569' }}>{appt.service}</span>
                         </span>
                         <span>
                           <span className="uppercase tracking-wider mr-1" style={{ color: '#475569' }}>
                             Talep Tarihi:
                           </span>
-                          <span style={{ color: '#94a3b8' }}>{formatDate(appt.createdAt)}</span>
+                          <span style={{ color: '#475569' }}>{formatDate(appt.createdAt)}</span>
                         </span>
                       </div>
 

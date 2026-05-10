@@ -58,7 +58,7 @@ const FIELD_META: {
 
 const inputBase: React.CSSProperties = {
     background: "#08090d",
-    border: "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid rgba(0,0,0,0.1)",
     borderRadius: 8,
     color: "#f1f5f9",
     padding: "10px 14px",
@@ -157,7 +157,7 @@ export default function AdminSettingsPage() {
             {!form ? (
                 <div
                     className="rounded-xl py-16 text-center text-sm"
-                    style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.07)", color: "#475569" }}
+                    style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.05)", color: "#475569" }}
                 >
                     Yükleniyor...
                 </div>
@@ -166,15 +166,15 @@ export default function AdminSettingsPage() {
                     className="rounded-xl divide-y"
                     style={{
                         background: "#111219",
-                        border: "1px solid rgba(255,255,255,0.07)",
-                        borderColor: "rgba(255,255,255,0.07)",
+                        border: "1px solid rgba(0,0,0,0.05)",
+                        borderColor: "rgba(0,0,0,0.05)",
                     }}
                 >
                     {FIELD_META.map(({ key, label, hint, multiline }, i) => (
                         <div
                             key={key}
                             className="px-6 py-5"
-                            style={{ borderColor: "rgba(255,255,255,0.05)" }}
+                            style={{ borderColor: "rgba(0,0,0,0.05)" }}
                         >
                             <div className="flex items-start gap-3 mb-2">
                                 <div className="flex-1">
@@ -207,7 +207,7 @@ export default function AdminSettingsPage() {
                                     rows={3}
                                     style={{ ...inputBase, resize: "vertical" }}
                                     onFocus={(e) => (e.target.style.borderColor = "rgba(124,58,237,0.5)")}
-                                    onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.1)")}
+                                    onBlur={(e) => (e.target.style.borderColor = "rgba(0,0,0,0.1)")}
                                 />
                             ) : (
                                 <input
@@ -217,7 +217,7 @@ export default function AdminSettingsPage() {
                                     onChange={(e) => setField(key, e.target.value)}
                                     style={inputBase}
                                     onFocus={(e) => (e.target.style.borderColor = "rgba(124,58,237,0.5)")}
-                                    onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.1)")}
+                                    onBlur={(e) => (e.target.style.borderColor = "rgba(0,0,0,0.1)")}
                                 />
                             )}
                         </div>

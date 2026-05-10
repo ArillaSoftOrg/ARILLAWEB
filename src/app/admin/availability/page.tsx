@@ -12,7 +12,7 @@ import {
 } from '@/lib/availability-actions';
 import type { AvailabilityRuleRecord, BlockedDateRecord, BlockedTimeSlotRecord } from '@/lib/availability';
 
-const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const DAYS = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
 const DAY_NUMS = [0, 1, 2, 3, 4, 5, 6];
 const SERVICES = ['all', 'Web Geliştirme', 'Mobil Uygulama', 'Özel Yazılım', 'API & Backend', 'QR Menü Sistemi', 'Randevu Yönetim Sistemi', 'Bakım & Destek'];
 
@@ -29,7 +29,7 @@ function DayRow({ dayNum, rule, onSave }: DayRowProps) {
   const [isOpen, setIsOpen] = useState(rule?.isOpen ?? true);
 
   return (
-    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+    <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
       <td style={{ padding: '12px' }}>{DAYS[dayNum]}</td>
       <td style={{ padding: '12px' }}>
         <label className="flex items-center gap-2 cursor-pointer">
@@ -39,8 +39,8 @@ function DayRow({ dayNum, rule, onSave }: DayRowProps) {
             onChange={(e) => setIsOpen(e.target.checked)}
             style={{ cursor: 'pointer' }}
           />
-          <span style={{ color: isOpen ? '#86efac' : '#ef5350' }}>
-            {isOpen ? 'Open' : 'Closed'}
+          <span style={{ color: isOpen ? '#10b981' : '#ef5350' }}>
+            {isOpen ? 'Açık' : 'Kapalı'}
           </span>
         </label>
       </td>
@@ -52,9 +52,9 @@ function DayRow({ dayNum, rule, onSave }: DayRowProps) {
           disabled={!isOpen}
           className="px-2 py-1 rounded text-sm"
           style={{
-            background: '#1e293b',
-            color: '#f1f5f9',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: '#f1f5f9',
+            color: '#0f172a',
+            border: '1px solid rgba(0,0,0,0.1)',
             cursor: isOpen ? 'text' : 'not-allowed',
             opacity: isOpen ? 1 : 0.5,
           }}
@@ -68,9 +68,9 @@ function DayRow({ dayNum, rule, onSave }: DayRowProps) {
           disabled={!isOpen}
           className="px-2 py-1 rounded text-sm"
           style={{
-            background: '#1e293b',
-            color: '#f1f5f9',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: '#f1f5f9',
+            color: '#0f172a',
+            border: '1px solid rgba(0,0,0,0.1)',
             cursor: isOpen ? 'text' : 'not-allowed',
             opacity: isOpen ? 1 : 0.5,
           }}
@@ -83,9 +83,9 @@ function DayRow({ dayNum, rule, onSave }: DayRowProps) {
           disabled={!isOpen}
           className="px-2 py-1 rounded text-sm"
           style={{
-            background: '#1e293b',
-            color: '#f1f5f9',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: '#f1f5f9',
+            color: '#0f172a',
+            border: '1px solid rgba(0,0,0,0.1)',
             cursor: isOpen ? 'pointer' : 'not-allowed',
             opacity: isOpen ? 1 : 0.5,
           }}
@@ -101,7 +101,7 @@ function DayRow({ dayNum, rule, onSave }: DayRowProps) {
           className="px-3 py-1 rounded text-sm font-semibold"
           style={{ background: '#3b82f6', color: '#fff' }}
         >
-          Save
+          Kaydet
         </button>
       </td>
     </tr>
@@ -134,7 +134,7 @@ export default function AvailabilityPage() {
       setBlockedSlots(data.blockedSlots);
       setError('');
     } catch (err) {
-      setError('Failed to load availability config');
+      setError('Müsaitlik yapılandırması yüklenemedi');
       console.error(err);
     } finally {
       setLoading(false);
@@ -146,7 +146,7 @@ export default function AvailabilityPage() {
       await initializeDefaultSchedule();
       await loadConfig();
     } catch (err) {
-      setError('Failed to initialize defaults');
+      setError('Varsayılanlar başlatılamadı');
       console.error(err);
     }
   }
@@ -169,14 +169,14 @@ export default function AvailabilityPage() {
       });
       await loadConfig();
     } catch (err) {
-      setError('Failed to save rule');
+      setError('Kural kaydedilemedi');
       console.error(err);
     }
   }
 
   async function handleBlockDate() {
     if (!blockDateInput.date) {
-      setError('Please select a date');
+      setError('Lütfen bir tarih seçin');
       return;
     }
     try {
@@ -188,7 +188,7 @@ export default function AvailabilityPage() {
       setBlockDateInput({ date: '', service: 'all', reason: '' });
       await loadConfig();
     } catch (err) {
-      setError('Failed to block date');
+      setError('Tarih engellenemedi');
       console.error(err);
     }
   }
@@ -198,14 +198,14 @@ export default function AvailabilityPage() {
       await unblockDate(id);
       await loadConfig();
     } catch (err) {
-      setError('Failed to unblock date');
+      setError('Tarih engeli kaldırılamadı');
       console.error(err);
     }
   }
 
   async function handleBlockSlot() {
     if (!blockSlotInput.date || !blockSlotInput.time) {
-      setError('Please select a date and time');
+      setError('Lütfen tarih ve saat seçin');
       return;
     }
     try {
@@ -218,7 +218,7 @@ export default function AvailabilityPage() {
       setBlockSlotInput({ date: '', time: '', service: 'all', reason: '' });
       await loadConfig();
     } catch (err) {
-      setError('Failed to block slot');
+      setError('Saat dilimi engellenemedi');
       console.error(err);
     }
   }
@@ -228,7 +228,7 @@ export default function AvailabilityPage() {
       await unblockTimeSlot(id);
       await loadConfig();
     } catch (err) {
-      setError('Failed to unblock slot');
+      setError('Saat dilimi engeli kaldırılamadı');
       console.error(err);
     }
   }
@@ -240,7 +240,7 @@ export default function AvailabilityPage() {
   if (loading) {
     return (
       <div className="p-6">
-        <div style={{ color: '#94a3b8' }}>Loading...</div>
+        <div style={{ color: '#475569' }}>Yükleniyor...</div>
       </div>
     );
   }
@@ -248,18 +248,18 @@ export default function AvailabilityPage() {
   const hasRules = rules.length > 0;
 
   return (
-    <div className="p-6" style={{ background: '#08090d', color: '#f1f5f9' }}>
+    <div className="p-6" style={{ background: '#f8fafc', color: '#0f172a' }}>
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold">Müsaitlik Yönetimi</h1>
-          <p style={{ color: '#94a3b8' }}>Appointment availability configuration</p>
+          <p style={{ color: '#475569' }}>Randevu müsaitlik yapılandırması</p>
         </div>
 
         {error && (
           <div
             className="p-4 rounded-lg"
-            style={{ background: 'rgba(220,38,38,0.1)', color: '#fca5a5', border: '1px solid rgba(220,38,38,0.3)' }}
+            style={{ background: 'rgba(220,38,38,0.05)', color: '#dc2626', border: '1px solid rgba(220,38,38,0.2)' }}
           >
             {error}
           </div>
@@ -268,34 +268,34 @@ export default function AvailabilityPage() {
         {!hasRules && (
           <div
             className="p-6 rounded-lg flex items-center justify-between"
-            style={{ background: 'rgba(59,130,246,0.1)', border: '1px solid rgba(59,130,246,0.3)' }}
+            style={{ background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.2)' }}
           >
             <div>
-              <p className="font-semibold">No availability rules configured</p>
-              <p style={{ color: '#94a3b8' }}>Initialize default schedule to get started</p>
+              <p className="font-semibold">Müsaitlik kuralı tanımlanmamış</p>
+              <p style={{ color: '#475569' }}>Başlamak için varsayılan takvimi başlatın</p>
             </div>
             <button
               onClick={handleInitializeDefaults}
               className="px-4 py-2 rounded-lg font-semibold transition-colors"
               style={{ background: '#3b82f6', color: '#fff' }}
             >
-              Initialize Defaults
+              Varsayılanları Başlat
             </button>
           </div>
         )}
 
         {/* Service selector */}
         <div>
-          <label className="block text-sm font-semibold mb-2">Service</label>
+          <label className="block text-sm font-semibold mb-2">Hizmet</label>
           <select
             value={selectedService}
             onChange={(e) => setSelectedService(e.target.value)}
             className="w-full px-4 py-2 rounded-lg"
-            style={{ background: '#1e293b', color: '#f1f5f9', border: '1px solid rgba(255,255,255,0.1)' }}
+            style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
           >
             {SERVICES.map((svc) => (
               <option key={svc} value={svc}>
-                {svc === 'all' ? 'All Services' : svc}
+                {svc === 'all' ? 'Tüm Hizmetler' : svc}
               </option>
             ))}
           </select>
@@ -304,16 +304,16 @@ export default function AvailabilityPage() {
         {/* Section 1: Weekly Schedule */}
         {hasRules && (
           <div>
-            <h2 className="text-xl font-bold mb-4">Weekly Schedule</h2>
+            <h2 className="text-xl font-bold mb-4">Haftalık Program</h2>
             <div className="overflow-x-auto">
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    <th style={{ textAlign: 'left', padding: '12px', color: '#94a3b8' }}>Day</th>
-                    <th style={{ textAlign: 'left', padding: '12px', color: '#94a3b8' }}>Status</th>
-                    <th style={{ textAlign: 'left', padding: '12px', color: '#94a3b8' }}>Start Time</th>
-                    <th style={{ textAlign: 'left', padding: '12px', color: '#94a3b8' }}>End Time</th>
-                    <th style={{ textAlign: 'left', padding: '12px', color: '#94a3b8' }}>Slot Duration (min)</th>
+                  <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
+                    <th style={{ textAlign: 'left', padding: '12px', color: '#475569' }}>Gün</th>
+                    <th style={{ textAlign: 'left', padding: '12px', color: '#475569' }}>Durum</th>
+                    <th style={{ textAlign: 'left', padding: '12px', color: '#475569' }}>Başlangıç Saati</th>
+                    <th style={{ textAlign: 'left', padding: '12px', color: '#475569' }}>Bitiş Saati</th>
+                    <th style={{ textAlign: 'left', padding: '12px', color: '#475569' }}>Dilim Süresi (dk)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -337,44 +337,44 @@ export default function AvailabilityPage() {
         {/* Section 2: Block Full Date */}
         <div
           className="p-6 rounded-lg"
-          style={{ background: '#111219', border: '1px solid rgba(255,255,255,0.05)' }}
+          style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.05)' }}
         >
-          <h2 className="text-xl font-bold mb-4">Block a Full Date</h2>
+          <h2 className="text-xl font-bold mb-4">Tüm Günü Engelle</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold mb-1">Date</label>
+              <label className="block text-sm font-semibold mb-1">Tarih</label>
               <input
                 type="date"
                 value={blockDateInput.date}
                 onChange={(e) => setBlockDateInput({ ...blockDateInput, date: e.target.value })}
                 className="w-full px-4 py-2 rounded-lg"
-                style={{ background: '#1e293b', color: '#f1f5f9', border: '1px solid rgba(255,255,255,0.1)' }}
+                style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-1">Service</label>
+              <label className="block text-sm font-semibold mb-1">Hizmet</label>
               <select
                 value={blockDateInput.service}
                 onChange={(e) => setBlockDateInput({ ...blockDateInput, service: e.target.value })}
                 className="w-full px-4 py-2 rounded-lg"
-                style={{ background: '#1e293b', color: '#f1f5f9', border: '1px solid rgba(255,255,255,0.1)' }}
+                style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
               >
                 {SERVICES.map((svc) => (
                   <option key={svc} value={svc}>
-                    {svc === 'all' ? 'All Services' : svc}
+                    {svc === 'all' ? 'Tüm Hizmetler' : svc}
                   </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-1">Reason (optional)</label>
+              <label className="block text-sm font-semibold mb-1">Sebep (isteğe bağlı)</label>
               <input
                 type="text"
                 value={blockDateInput.reason}
                 onChange={(e) => setBlockDateInput({ ...blockDateInput, reason: e.target.value })}
-                placeholder="e.g., Holiday, Maintenance"
+                placeholder="örn. Tatil, Bakım"
                 className="w-full px-4 py-2 rounded-lg"
-                style={{ background: '#1e293b', color: '#f1f5f9', border: '1px solid rgba(255,255,255,0.1)' }}
+                style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
               />
             </div>
             <div className="flex items-end">
@@ -383,33 +383,33 @@ export default function AvailabilityPage() {
                 className="w-full px-4 py-2 rounded-lg font-semibold"
                 style={{ background: '#ef5350', color: '#fff' }}
               >
-                Block Date
+                Günü Engelle
               </button>
             </div>
           </div>
 
           {blockedDates.length > 0 && (
-            <div className="mt-6 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-              <p className="text-sm font-semibold mb-3">Blocked Dates</p>
+            <div className="mt-6 pt-6" style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+              <p className="text-sm font-semibold mb-3">Engelli Günler</p>
               <div className="space-y-2">
                 {blockedDates.map((bd) => (
                   <div
                     key={bd.id}
                     className="flex items-center justify-between p-3 rounded-lg"
-                    style={{ background: 'rgba(239,83,80,0.1)' }}
+                    style={{ background: 'rgba(239,83,80,0.05)' }}
                   >
                     <div>
                       <p className="text-sm font-semibold">{bd.date}</p>
-                      <p style={{ fontSize: '12px', color: '#94a3b8' }}>
-                        {bd.service === 'all' ? 'All Services' : bd.service} {bd.reason && `· ${bd.reason}`}
+                      <p style={{ fontSize: '12px', color: '#475569' }}>
+                        {bd.service === 'all' ? 'Tüm Hizmetler' : bd.service} {bd.reason && `· ${bd.reason}`}
                       </p>
                     </div>
                     <button
                       onClick={() => handleUnblockDate(bd.id)}
                       className="px-3 py-1 rounded text-sm"
-                      style={{ background: 'rgba(255,255,255,0.1)', color: '#f87171' }}
+                      style={{ background: 'rgba(0,0,0,0.05)', color: '#ef5350' }}
                     >
-                      Unblock
+                      Engeli Kaldır
                     </button>
                   </div>
                 ))}
@@ -421,54 +421,54 @@ export default function AvailabilityPage() {
         {/* Section 3: Block Time Slot */}
         <div
           className="p-6 rounded-lg"
-          style={{ background: '#111219', border: '1px solid rgba(255,255,255,0.05)' }}
+          style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.05)' }}
         >
-          <h2 className="text-xl font-bold mb-4">Block a Time Slot</h2>
+          <h2 className="text-xl font-bold mb-4">Saat Dilimi Engelle</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold mb-1">Date</label>
+              <label className="block text-sm font-semibold mb-1">Tarih</label>
               <input
                 type="date"
                 value={blockSlotInput.date}
                 onChange={(e) => setBlockSlotInput({ ...blockSlotInput, date: e.target.value })}
                 className="w-full px-4 py-2 rounded-lg"
-                style={{ background: '#1e293b', color: '#f1f5f9', border: '1px solid rgba(255,255,255,0.1)' }}
+                style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-1">Time</label>
+              <label className="block text-sm font-semibold mb-1">Saat</label>
               <input
                 type="time"
                 value={blockSlotInput.time}
                 onChange={(e) => setBlockSlotInput({ ...blockSlotInput, time: e.target.value })}
                 className="w-full px-4 py-2 rounded-lg"
-                style={{ background: '#1e293b', color: '#f1f5f9', border: '1px solid rgba(255,255,255,0.1)' }}
+                style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-1">Service</label>
+              <label className="block text-sm font-semibold mb-1">Hizmet</label>
               <select
                 value={blockSlotInput.service}
                 onChange={(e) => setBlockSlotInput({ ...blockSlotInput, service: e.target.value })}
                 className="w-full px-4 py-2 rounded-lg"
-                style={{ background: '#1e293b', color: '#f1f5f9', border: '1px solid rgba(255,255,255,0.1)' }}
+                style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
               >
                 {SERVICES.map((svc) => (
                   <option key={svc} value={svc}>
-                    {svc === 'all' ? 'All Services' : svc}
+                    {svc === 'all' ? 'Tüm Hizmetler' : svc}
                   </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-1">Reason (optional)</label>
+              <label className="block text-sm font-semibold mb-1">Sebep (isteğe bağlı)</label>
               <input
                 type="text"
                 value={blockSlotInput.reason}
                 onChange={(e) => setBlockSlotInput({ ...blockSlotInput, reason: e.target.value })}
-                placeholder="e.g., Lunch break"
+                placeholder="örn. Öğle molası"
                 className="w-full px-4 py-2 rounded-lg"
-                style={{ background: '#1e293b', color: '#f1f5f9', border: '1px solid rgba(255,255,255,0.1)' }}
+                style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
               />
             </div>
             <div className="flex items-end">
@@ -477,33 +477,33 @@ export default function AvailabilityPage() {
                 className="w-full px-4 py-2 rounded-lg font-semibold"
                 style={{ background: '#ef5350', color: '#fff' }}
               >
-                Block Slot
+                Saati Engelle
               </button>
             </div>
           </div>
 
           {blockedSlots.length > 0 && (
-            <div className="mt-6 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-              <p className="text-sm font-semibold mb-3">Blocked Slots</p>
+            <div className="mt-6 pt-6" style={{ borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+              <p className="text-sm font-semibold mb-3">Engelli Saatler</p>
               <div className="space-y-2">
                 {blockedSlots.map((bs) => (
                   <div
                     key={bs.id}
                     className="flex items-center justify-between p-3 rounded-lg"
-                    style={{ background: 'rgba(239,83,80,0.1)' }}
+                    style={{ background: 'rgba(239,83,80,0.05)' }}
                   >
                     <div>
-                      <p className="text-sm font-semibold">{bs.date} at {bs.time}</p>
-                      <p style={{ fontSize: '12px', color: '#94a3b8' }}>
-                        {bs.service === 'all' ? 'All Services' : bs.service} {bs.reason && `· ${bs.reason}`}
+                      <p className="text-sm font-semibold">{bs.date} - {bs.time}</p>
+                      <p style={{ fontSize: '12px', color: '#475569' }}>
+                        {bs.service === 'all' ? 'Tüm Hizmetler' : bs.service} {bs.reason && `· ${bs.reason}`}
                       </p>
                     </div>
                     <button
                       onClick={() => handleUnblockSlot(bs.id)}
                       className="px-3 py-1 rounded text-sm"
-                      style={{ background: 'rgba(255,255,255,0.1)', color: '#f87171' }}
+                      style={{ background: 'rgba(0,0,0,0.05)', color: '#ef5350' }}
                     >
-                      Unblock
+                      Engeli Kaldır
                     </button>
                   </div>
                 ))}

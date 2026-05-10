@@ -92,7 +92,7 @@ export default function AdminLayout({
   return (
     <div
       className="flex min-h-screen"
-      style={{ background: "#08090d", color: "#f1f5f9" }}
+      style={{ background: "#f8fafc", color: "#0f172a" }}
     >
       {/* Mobile overlay */}
       {sidebarOpen && (
@@ -107,14 +107,14 @@ export default function AdminLayout({
         className={`fixed top-0 left-0 z-30 h-full w-64 flex flex-col transition-transform duration-300 lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         style={{
-          background: "#111219",
-          borderRight: "1px solid rgba(255,255,255,0.07)",
+          background: "#ffffff",
+          borderRight: "1px solid rgba(0,0,0,0.06)",
         }}
       >
         {/* Brand */}
         <div
           className="flex items-center gap-3 px-6 py-5"
-          style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}
         >
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
@@ -125,11 +125,11 @@ export default function AdminLayout({
             A
           </div>
           <div>
-            <p className="text-sm font-bold" style={{ color: "#f1f5f9" }}>
+            <p className="text-sm font-bold" style={{ color: "#0f172a" }}>
               ArilaSoft
             </p>
-            <p className="text-xs" style={{ color: "#64748b" }}>
-              Admin Panel
+            <p className="text-xs" style={{ color: "#94a3b8" }}>
+              Yönetim Paneli
             </p>
           </div>
         </div>
@@ -138,9 +138,9 @@ export default function AdminLayout({
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
           <p
             className="text-xs font-semibold uppercase tracking-wider px-3 mb-3"
-            style={{ color: "#475569" }}
+            style={{ color: "#cbd5e1" }}
           >
-            Navigation
+            Navigasyon
           </p>
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -150,19 +150,19 @@ export default function AdminLayout({
                 {item.disabled ? (
                   <div
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-not-allowed select-none"
-                    style={{ color: "#334155" }}
+                    style={{ color: "#9ca3af" }}
                   >
                     <Icon size={16} />
                     <span className="text-sm">{item.label}</span>
                     <span
                       className="ml-auto text-xs px-1.5 py-0.5 rounded"
                       style={{
-                        background: "rgba(255,255,255,0.04)",
-                        color: "#475569",
-                        border: "1px solid rgba(255,255,255,0.06)",
+                        background: "rgba(0,0,0,0.04)",
+                        color: "#cbd5e1",
+                        border: "1px solid rgba(0,0,0,0.06)",
                       }}
                     >
-                      Soon
+                      Yakında
                     </span>
                   </div>
                 ) : (
@@ -174,18 +174,18 @@ export default function AdminLayout({
                       active
                         ? {
                           background:
-                            "linear-gradient(135deg, rgba(124,58,237,0.2), rgba(6,182,212,0.1))",
-                          color: "#a78bfa",
-                          border: "1px solid rgba(124,58,237,0.25)",
+                            "linear-gradient(135deg, rgba(124,58,237,0.1), rgba(6,182,212,0.08))",
+                          color: "#7c3aed",
+                          border: "1px solid rgba(124,58,237,0.2)",
                         }
                         : {
-                          color: "#94a3b8",
+                          color: "#475569",
                         }
                     }
                   >
                     <Icon
                       size={16}
-                      style={active ? { color: "#a78bfa" } : undefined}
+                      style={active ? { color: "#7c3aed" } : undefined}
                     />
                     <span className="text-sm font-medium">{item.label}</span>
                     {active && (
@@ -205,19 +205,19 @@ export default function AdminLayout({
         {/* Footer */}
         <div
           className="px-4 py-4"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ borderTop: "1px solid rgba(0,0,0,0.06)" }}
         >
           <div className="flex items-center gap-3 px-3 py-2">
             <div
               className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
-              style={{ background: "rgba(124,58,237,0.2)", color: "#a78bfa" }}
+              style={{ background: "rgba(124,58,237,0.1)", color: "#7c3aed" }}
             >
               A
             </div>
             <div className="flex-1 min-w-0">
               <p
                 className="text-xs font-medium truncate"
-                style={{ color: "#94a3b8" }}
+                style={{ color: "#475569" }}
               >
                 Admin
               </p>
@@ -231,17 +231,17 @@ export default function AdminLayout({
         {/* Top bar */}
         <header
           className="flex items-center gap-4 px-6 py-4 lg:hidden"
-          style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ borderBottom: "1px solid rgba(0,0,0,0.06)" }}
         >
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 rounded-lg transition-colors"
-            style={{ color: "#94a3b8" }}
+            style={{ color: "#475569" }}
           >
             <Menu size={20} />
           </button>
-          <span className="text-sm font-semibold" style={{ color: "#f1f5f9" }}>
-            ArilaSoft Admin
+          <span className="text-sm font-semibold" style={{ color: "#0f172a" }}>
+            Arilla Soft Yönetim
           </span>
         </header>
 

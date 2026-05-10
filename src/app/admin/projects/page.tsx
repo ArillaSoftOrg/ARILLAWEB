@@ -40,7 +40,7 @@ export default function AdminProjectsPage() {
                 >
                     <div
                         className="rounded-xl p-6"
-                        style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.1)" }}
+                        style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.1)" }}
                     >
                         <p className="mb-4 text-white">
                             &quot;{deleteTarget.title}&quot; silinsin mi?
@@ -49,7 +49,7 @@ export default function AdminProjectsPage() {
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setDeleteTarget(null)}
-                                className="px-4 py-2 bg-gray-700 text-white rounded"
+                                className="px-4 py-2 bg-slate-200 text-white rounded"
                             >
                                 İptal
                             </button>
@@ -69,7 +69,7 @@ export default function AdminProjectsPage() {
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight text-white">Proje Yönetimi</h1>
-                        <p className="mt-2 text-sm text-slate-400">
+                        <p className="mt-2 text-sm text-slate-600">
                             {projects.length} proje • {projects.length} gösteriliyor
                         </p>
                     </div>
@@ -83,8 +83,8 @@ export default function AdminProjectsPage() {
                     </Link>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                    <div className="grid grid-cols-12 gap-4 border-b border-white/10 px-4 py-3 text-xs uppercase tracking-wider text-slate-500">
+                <div className="rounded-2xl border border-slate-200 bg-white/[0.03] p-4">
+                    <div className="grid grid-cols-12 gap-4 border-b border-slate-200 px-4 py-3 text-xs uppercase tracking-wider text-slate-500">
                         <div className="col-span-6">Başlık</div>
                         <div className="col-span-2">Durum</div>
                         <div className="col-span-2">Tarih</div>
@@ -94,12 +94,12 @@ export default function AdminProjectsPage() {
                     <div className="divide-y divide-white/10">
                         {projects.length === 0 ? (
                             <div className="flex flex-col items-center justify-center gap-4 px-6 py-16 text-center">
-                                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                                    <FolderKanban className="h-8 w-8 text-slate-400" />
+                                <div className="rounded-2xl border border-slate-200 bg-white/[0.03] p-4">
+                                    <FolderKanban className="h-8 w-8 text-slate-600" />
                                 </div>
                                 <div>
                                     <h2 className="text-lg font-semibold text-white">Henüz proje yok</h2>
-                                    <p className="mt-1 text-sm text-slate-400">
+                                    <p className="mt-1 text-sm text-slate-600">
                                         İlk projeni ekleyerek başlayabilirsin.
                                     </p>
                                 </div>
@@ -134,7 +134,7 @@ export default function AdminProjectsPage() {
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="mt-1 line-clamp-2 text-sm text-slate-400">
+                                            <p className="mt-1 line-clamp-2 text-sm text-slate-600">
                                                 {project.summary}
                                             </p>
                                         </div>
@@ -152,7 +152,7 @@ export default function AdminProjectsPage() {
                                         )}
                                     </div>
 
-                                    <div className="col-span-2 flex items-center text-slate-400">
+                                    <div className="col-span-2 flex items-center text-slate-600">
                                         {new Date(project.createdAt).toLocaleDateString("tr-TR")}
                                     </div>
 

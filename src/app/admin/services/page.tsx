@@ -60,7 +60,7 @@ function EditModal({
 
   const inputStyle: React.CSSProperties = {
     background: "#08090d",
-    border: "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid rgba(0,0,0,0.1)",
     borderRadius: 8,
     color: "#f1f5f9",
     padding: "10px 14px",
@@ -98,12 +98,12 @@ function EditModal({
     >
       <div
         className="w-full max-w-lg rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
-        style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.1)" }}
+        style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.1)" }}
       >
         {/* Header */}
         <div
           className="flex items-center justify-between px-6 py-4 flex-shrink-0"
-          style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}
         >
           <div className="flex items-center gap-2">
             <Wrench size={16} style={{ color: "#22d3ee" }} />
@@ -210,7 +210,7 @@ function EditModal({
         {/* Footer */}
         <div
           className="flex items-center justify-end gap-3 px-6 py-4 flex-shrink-0"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}
         >
           <button
             onClick={onClose}
@@ -252,7 +252,7 @@ function DeleteDialog({
     >
       <div
         className="w-full max-w-sm rounded-xl p-6"
-        style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.1)" }}
+        style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.1)" }}
       >
         <div
           className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
@@ -377,7 +377,7 @@ export default function AdminServicesPage() {
       {/* Search */}
       <div
         className="flex items-center gap-3 p-4 rounded-xl"
-        style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.07)" }}
+        style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.05)" }}
       >
         <div className="relative flex-1">
           <Search
@@ -404,11 +404,11 @@ export default function AdminServicesPage() {
       {filtered.length === 0 ? (
         <div
           className="flex flex-col items-center justify-center py-20 rounded-xl"
-          style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.05)" }}
         >
           <div
             className="w-14 h-14 rounded-xl flex items-center justify-center mb-4"
-            style={{ background: "rgba(255,255,255,0.04)" }}
+            style={{ background: "rgba(0,0,0,0.04)" }}
           >
             <Wrench size={24} style={{ color: "#334155" }} />
           </div>
@@ -422,14 +422,14 @@ export default function AdminServicesPage() {
       ) : (
         <div
           className="rounded-xl overflow-hidden"
-          style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.05)" }}
         >
           {/* Table header */}
           <div
             className="hidden sm:grid sm:grid-cols-[auto_1fr_auto_auto_auto] gap-4 px-6 py-3 text-xs font-semibold uppercase tracking-wider"
             style={{
               color: "#475569",
-              borderBottom: "1px solid rgba(255,255,255,0.06)",
+              borderBottom: "1px solid rgba(0,0,0,0.05)",
               background: "rgba(255,255,255,0.02)",
             }}
           >
@@ -440,7 +440,7 @@ export default function AdminServicesPage() {
             <span>İşlemler</span>
           </div>
 
-          <div className="divide-y" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
+          <div className="divide-y" style={{ borderColor: "rgba(0,0,0,0.04)" }}>
             {filtered.map((service) => {
               const Icon = ICON_MAP[service.icon] ?? Code2;
               const date = new Date(service.createdAt).toLocaleDateString("tr-TR", {

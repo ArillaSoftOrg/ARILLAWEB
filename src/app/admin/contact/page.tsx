@@ -110,7 +110,7 @@ export default function AdminContactPage() {
                 >
                     <div
                         className="w-full max-w-sm rounded-xl p-6"
-                        style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.1)" }}
+                        style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.1)" }}
                     >
                         <div
                             className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
@@ -169,7 +169,7 @@ export default function AdminContactPage() {
             {/* Toolbar */}
             <div
                 className="flex flex-col sm:flex-row gap-3 p-4 rounded-xl"
-                style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.07)" }}
+                style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.05)" }}
             >
                 {/* Search */}
                 <div className="relative flex-1">
@@ -193,7 +193,7 @@ export default function AdminContactPage() {
                 </div>
 
                 {/* Filter tabs */}
-                <div className="flex gap-1 rounded-lg p-1" style={{ background: "#08090d", border: "1px solid rgba(255,255,255,0.07)" }}>
+                <div className="flex gap-1 rounded-lg p-1" style={{ background: "#08090d", border: "1px solid rgba(0,0,0,0.05)" }}>
                     {(["all", "unread", "read"] as Filter[]).map((f) => {
                         const labels: Record<Filter, string> = { all: "Tümü", unread: "Okunmamış", read: "Okunmuş" };
                         return (
@@ -226,11 +226,11 @@ export default function AdminContactPage() {
             {filtered.length === 0 ? (
                 <div
                     className="flex flex-col items-center justify-center py-20 rounded-xl"
-                    style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.07)" }}
+                    style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.05)" }}
                 >
                     <div
                         className="w-14 h-14 rounded-xl flex items-center justify-center mb-4"
-                        style={{ background: "rgba(255,255,255,0.04)" }}
+                        style={{ background: "rgba(0,0,0,0.04)" }}
                     >
                         <Inbox size={24} style={{ color: "#334155" }} />
                     </div>
@@ -248,8 +248,8 @@ export default function AdminContactPage() {
                     className="rounded-xl overflow-hidden divide-y"
                     style={{
                         background: "#111219",
-                        border: "1px solid rgba(255,255,255,0.07)",
-                        borderColor: "rgba(255,255,255,0.07)",
+                        border: "1px solid rgba(0,0,0,0.05)",
+                        borderColor: "rgba(0,0,0,0.05)",
                         // divide color via CSS:
                     }}
                 >
@@ -259,7 +259,7 @@ export default function AdminContactPage() {
                             <div
                                 key={msg.id}
                                 className="transition-colors"
-                                style={{ borderColor: "rgba(255,255,255,0.04)" }}
+                                style={{ borderColor: "rgba(0,0,0,0.04)" }}
                             >
                                 {/* Row header — always visible */}
                                 <div
@@ -272,7 +272,7 @@ export default function AdminContactPage() {
                                             className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
                                             style={
                                                 msg.isRead
-                                                    ? { background: "rgba(255,255,255,0.04)" }
+                                                    ? { background: "rgba(0,0,0,0.04)" }
                                                     : { background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }
                                             }
                                         >
@@ -367,11 +367,11 @@ export default function AdminContactPage() {
                                 {isExpanded && (
                                     <div
                                         className="px-5 pb-5"
-                                        style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
+                                        style={{ borderTop: "1px solid rgba(0,0,0,0.04)" }}
                                     >
                                         <div
                                             className="mt-4 rounded-xl p-5 space-y-4"
-                                            style={{ background: "#08090d", border: "1px solid rgba(255,255,255,0.06)" }}
+                                            style={{ background: "#08090d", border: "1px solid rgba(0,0,0,0.05)" }}
                                         >
                                             {/* Meta row */}
                                             <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs" style={{ color: "#64748b" }}>

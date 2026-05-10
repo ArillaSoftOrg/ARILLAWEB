@@ -152,7 +152,7 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="p-6 text-center text-gray-400">
+      <div className="p-6 text-center text-slate-600">
         Yükleniyor...
       </div>
     );
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
 
   if (error) {
     return (
-      <div className="p-6 text-center text-red-400">
+      <div className="p-6 text-center text-red-600">
         {error}
       </div>
     );
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: "#f1f5f9" }}>
+          <h1 className="text-2xl font-bold" style={{ color: "#0f172a" }}>
             Dashboard
           </h1>
           <p className="text-sm mt-1" style={{ color: "#64748b" }}>
@@ -192,7 +192,7 @@ export default function AdminDashboard() {
               key={stat.label}
               className="rounded-xl p-5"
               style={{
-                background: "#111219",
+                background: "#ffffff",
                 border: `1px solid ${stat.border}`,
               }}
             >
@@ -204,7 +204,7 @@ export default function AdminDashboard() {
                   <Icon size={18} style={{ color: stat.color }} />
                 </div>
               </div>
-              <p className="text-3xl font-bold mb-1" style={{ color: "#f1f5f9" }}>
+              <p className="text-3xl font-bold mb-1" style={{ color: "#0f172a" }}>
                 {stat.value}
               </p>
               <p className="text-sm" style={{ color: "#64748b" }}>
@@ -221,15 +221,15 @@ export default function AdminDashboard() {
         <div
           className="lg:col-span-2 rounded-xl"
           style={{
-            background: "#111219",
-            border: "1px solid rgba(255,255,255,0.07)",
+            background: "#ffffff",
+            border: "1px solid rgba(0,0,0,0.05)",
           }}
         >
           <div
             className="flex items-center justify-between px-6 py-4"
-            style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+            style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}
           >
-            <h2 className="text-base font-semibold" style={{ color: "#f1f5f9" }}>
+            <h2 className="text-base font-semibold" style={{ color: "#0f172a" }}>
               Son Blog Yazıları
             </h2>
             <Link
@@ -240,7 +240,7 @@ export default function AdminDashboard() {
               Tümünü gör <ArrowRight size={12} />
             </Link>
           </div>
-          <div className="divide-y" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
+          <div className="divide-y" style={{ borderColor: "rgba(0,0,0,0.04)" }}>
             {recentPosts.length === 0 ? (
               <p className="px-6 py-8 text-sm text-center" style={{ color: "#475569" }}>
                 Henüz blog yazısı yok.
@@ -253,14 +253,14 @@ export default function AdminDashboard() {
                 >
                   <div
                     className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0 mt-0.5"
-                    style={{ background: "rgba(255,255,255,0.05)" }}
+                    style={{ background: "rgba(0,0,0,0.05)" }}
                   >
                     {post.emoji}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p
                       className="text-sm font-medium leading-snug truncate"
-                      style={{ color: "#f1f5f9" }}
+                      style={{ color: "#0f172a" }}
                     >
                       {post.title}
                     </p>
@@ -295,15 +295,15 @@ export default function AdminDashboard() {
           <div
             className="rounded-xl"
             style={{
-              background: "#111219",
-              border: "1px solid rgba(255,255,255,0.07)",
+              background: "#ffffff",
+              border: "1px solid rgba(0,0,0,0.05)",
             }}
           >
             <div
               className="px-6 py-4"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+              style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}
             >
-              <h2 className="text-base font-semibold" style={{ color: "#f1f5f9" }}>
+              <h2 className="text-base font-semibold" style={{ color: "#0f172a" }}>
                 Hızlı Erişim
               </h2>
             </div>
@@ -314,7 +314,7 @@ export default function AdminDashboard() {
                   <Link key={action.label} href={action.href}>
                     <div
                       className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/[0.04] cursor-pointer transition-all"
-                      style={{ border: "1px solid rgba(255,255,255,0.06)" }}
+                      style={{ border: "1px solid rgba(0,0,0,0.05)" }}
                     >
                       <div
                         className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -323,7 +323,7 @@ export default function AdminDashboard() {
                         <Icon size={16} style={{ color: action.color }} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium" style={{ color: "#f1f5f9" }}>
+                        <p className="text-sm font-medium" style={{ color: "#0f172a" }}>
                           {action.label}
                         </p>
                         <p className="text-xs mt-0.5 truncate" style={{ color: "#475569" }}>
@@ -342,15 +342,15 @@ export default function AdminDashboard() {
           <div
             className="rounded-xl flex-1"
             style={{
-              background: "#111219",
-              border: "1px solid rgba(255,255,255,0.07)",
+              background: "#ffffff",
+              border: "1px solid rgba(0,0,0,0.05)",
             }}
           >
             <div
               className="flex items-center justify-between px-6 py-4"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+              style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}
             >
-              <h2 className="text-base font-semibold" style={{ color: "#f1f5f9" }}>
+              <h2 className="text-base font-semibold" style={{ color: "#0f172a" }}>
                 Son Mesajlar
               </h2>
               <Link
@@ -362,7 +362,7 @@ export default function AdminDashboard() {
               </Link>
             </div>
 
-            <div className="divide-y" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
+            <div className="divide-y" style={{ borderColor: "rgba(0,0,0,0.04)" }}>
               {recentMessages.length === 0 ? (
                 <p className="px-6 py-8 text-sm text-center" style={{ color: "#475569" }}>
                   Henüz mesaj yok.
@@ -378,7 +378,7 @@ export default function AdminDashboard() {
                       className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
                       style={
                         msg.isRead
-                          ? { background: "rgba(255,255,255,0.04)" }
+                          ? { background: "rgba(0,0,0,0.04)" }
                           : { background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)" }
                       }
                     >
@@ -392,7 +392,7 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-2">
                         <p
                           className="text-xs font-semibold truncate"
-                          style={{ color: msg.isRead ? "#94a3b8" : "#f1f5f9" }}
+                          style={{ color: msg.isRead ? "#9ca3af" : "#0f172a" }}
                         >
                           {msg.fullName}
                         </p>
@@ -406,7 +406,7 @@ export default function AdminDashboard() {
                       <p className="text-xs mt-0.5 truncate" style={{ color: "#475569" }}>
                         {msg.subject}
                       </p>
-                      <p className="text-xs mt-0.5" style={{ color: "#334155" }}>
+                      <p className="text-xs mt-0.5" style={{ color: "#cbd5e1" }}>
                         {new Date(msg.createdAt).toLocaleDateString("tr-TR", {
                           day: "numeric",
                           month: "short",

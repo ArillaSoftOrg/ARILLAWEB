@@ -47,7 +47,7 @@ export default function NewServicePage() {
 
   const inputStyle: React.CSSProperties = {
     background: "#08090d",
-    border: "1px solid rgba(255,255,255,0.1)",
+    border: "1px solid rgba(0,0,0,0.1)",
     borderRadius: 8,
     color: "#f1f5f9",
     padding: "10px 14px",
@@ -111,11 +111,11 @@ export default function NewServicePage() {
       {/* Form */}
       <div
         className="rounded-xl overflow-hidden"
-        style={{ background: "#111219", border: "1px solid rgba(255,255,255,0.07)" }}
+        style={{ background: "#111219", border: "1px solid rgba(0,0,0,0.05)" }}
       >
         <div
           className="flex items-center gap-2 px-6 py-4"
-          style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ borderBottom: "1px solid rgba(0,0,0,0.05)" }}
         >
           <Wrench size={16} style={{ color: "#22d3ee" }} />
           <h2 className="text-sm font-semibold" style={{ color: "#f1f5f9" }}>
@@ -212,7 +212,7 @@ export default function NewServicePage() {
         {/* Footer */}
         <div
           className="flex items-center justify-end gap-3 px-6 py-4"
-          style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}
         >
           <button
             onClick={() => router.push("/admin/services")}
