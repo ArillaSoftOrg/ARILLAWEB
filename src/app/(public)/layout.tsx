@@ -4,6 +4,8 @@ import Footer from '@/components/layout/Footer';
 import AnnouncementBar from '@/components/layout/AnnouncementBar';
 import { getAnnouncementConfig } from '@/lib/announcement-actions';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const announcementConfig = await getAnnouncementConfig();
 

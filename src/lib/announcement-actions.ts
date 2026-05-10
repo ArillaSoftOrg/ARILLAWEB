@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from './prisma';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { z } from 'zod';
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -118,6 +118,7 @@ const announcementSchema = z
 // ── Read ───────────────────────────────────────────────────────────────────
 
 export async function getAnnouncementDebugData(): Promise<AnnouncementDebugData | null> {
+  noStore();
   const row = await prisma.announcementBar.findFirst();
   if (!row) return null;
   return {
@@ -138,6 +139,7 @@ export async function getAnnouncementDebugData(): Promise<AnnouncementDebugData 
 }
 
 export async function getAnnouncementConfig(): Promise<AnnouncementConfig> {
+  noStore();
   let row = await prisma.announcementBar.findFirst();
   if (!row) {
     row = await prisma.announcementBar.create({ data: {} });
