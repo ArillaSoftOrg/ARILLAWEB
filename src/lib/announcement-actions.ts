@@ -131,33 +131,54 @@ export async function getAnnouncementConfig(): Promise<AnnouncementConfig> {
 export async function updateAnnouncementConfig(
   data: Partial<AnnouncementConfig>
 ): Promise<{ success: boolean; errors?: Record<string, string[]> }> {
-  const parsed = announcementSchema.partial().safeParse(data);
-  if (!parsed.success) {
+  try {
+    const parsed = announcementSchema.partial().safeParse(data);
+    if (!parsed.success) {
+      const flatErrors = parsed.error.flatten().fieldErrors as Record<string, string[]>;
+      console.error('[AnnouncementBar Save Error] Zod validation failed:', flatErrors);
+      return {
+        success: false,
+        errors: flatErrors,
+      };
+    }
+
+    const { startsAt, expiresAt, ...rest } = parsed.data;
+    const existing = await prisma.announcementBar.findFirst();
+
+    const dbData = {
+      ...rest,
+      ...(startsAt !== undefined ? { startsAt: startsAt ? new Date(startsAt) : null } : {}),
+      ...(expiresAt !== undefined ? { expiresAt: expiresAt ? new Date(expiresAt) : null } : {}),
+    };
+
+    if (existing) {
+      await prisma.announcementBar.update({ where: { id: existing.id }, data: dbData });
+    } else {
+      await prisma.announcementBar.create({ data: dbData as any });
+    }
+
+    revalidatePath('/');
+    revalidatePath('/sektorel-yazilimlar');
+    revalidatePath('/hizmetler');
+    revalidatePath('/admin/announcements');
+
+    return { success: true };
+  } catch (error) {
+    const err = error as any;
+    const errorLog = {
+      message: '[AnnouncementBar Save Error]',
+      name: err?.name || 'Unknown',
+      errorMessage: err?.message || 'Unknown error',
+      ...(err?.code && { prismaCode: err.code }),
+    };
+
+    console.error(JSON.stringify(errorLog));
+
     return {
       success: false,
-      errors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
+      errors: {
+        _form: ['Duyuru ayarları kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.'],
+      },
     };
   }
-
-  const { startsAt, expiresAt, ...rest } = parsed.data;
-  const existing = await prisma.announcementBar.findFirst();
-
-  const dbData = {
-    ...rest,
-    ...(startsAt !== undefined ? { startsAt: startsAt ? new Date(startsAt) : null } : {}),
-    ...(expiresAt !== undefined ? { expiresAt: expiresAt ? new Date(expiresAt) : null } : {}),
-  };
-
-  if (existing) {
-    await prisma.announcementBar.update({ where: { id: existing.id }, data: dbData });
-  } else {
-    await prisma.announcementBar.create({ data: dbData as any });
-  }
-
-  revalidatePath('/');
-  revalidatePath('/sektorel-yazilimlar');
-  revalidatePath('/hizmetler');
-  revalidatePath('/admin/announcements');
-
-  return { success: true };
 }
