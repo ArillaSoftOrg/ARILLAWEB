@@ -4,6 +4,10 @@ import { prisma } from './prisma';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { z } from 'zod';
 
+// ── Constants ──────────────────────────────────────────────────────────────
+
+const SINGLETON_ID = 'default';
+
 // ── Types ──────────────────────────────────────────────────────────────────
 
 export type AnnouncementDebugData = {
@@ -41,27 +45,6 @@ export type AnnouncementConfig = {
   targetRoutes: string[];
 };
 
-// ── Defaults ───────────────────────────────────────────────────────────────
-
-const DEFAULTS: AnnouncementConfig = {
-  enabled: false,
-  text: '',
-  description: null,
-  backgroundColor: '#dc2626',
-  textColor: '#ffffff',
-  dismissible: false,
-  countdownEnabled: false,
-  countdownMode: 'fixed',
-  startsAt: null,
-  expiresAt: null,
-  dailyResetHour: 0,
-  dailyResetMinute: 0,
-  scrollEnabled: false,
-  scrollSpeed: 'normal',
-  targetMode: 'all',
-  targetRoutes: [],
-};
-
 // ── Zod Validation Schema ──────────────────────────────────────────────────
 
 // Field-level validation only — no superRefine so .partial() is safe to call on this
@@ -86,7 +69,6 @@ const announcementBaseSchema = z.object({
 
 // Full save schema — adds cross-field rules on top of the base
 const announcementSaveSchema = announcementBaseSchema.superRefine((data, ctx) => {
-  // expiresAt must be after startsAt when both exist
   if (data.startsAt && data.expiresAt) {
     if (new Date(data.expiresAt) <= new Date(data.startsAt)) {
       ctx.addIssue({
@@ -97,7 +79,6 @@ const announcementSaveSchema = announcementBaseSchema.superRefine((data, ctx) =>
     }
   }
 
-  // expiresAt required when countdownEnabled AND countdownMode is "fixed"
   if (data.countdownEnabled && data.countdownMode === 'fixed' && !data.expiresAt) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
@@ -106,7 +87,6 @@ const announcementSaveSchema = announcementBaseSchema.superRefine((data, ctx) =>
     });
   }
 
-  // targetRoutes non-empty when mode is selected/exclude
   if (
     (data.targetMode === 'selected' || data.targetMode === 'exclude') &&
     data.targetRoutes.length === 0
@@ -119,11 +99,66 @@ const announcementSaveSchema = announcementBaseSchema.superRefine((data, ctx) =>
   }
 });
 
+// ── Singleton migration ────────────────────────────────────────────────────
+//
+// Ensures there is exactly one AnnouncementBar row with id = SINGLETON_ID.
+// On first call after deploy, promotes the most-recently-updated legacy row
+// and deletes all others.
+
+async function getSingleton() {
+  const row = await prisma.announcementBar.findUnique({ where: { id: SINGLETON_ID } });
+  if (row) return row;
+
+  // Find all legacy rows ordered by most recently updated
+  const legacyRows = await prisma.announcementBar.findMany({
+    orderBy: { updatedAt: 'desc' },
+  });
+
+  if (legacyRows.length === 0) {
+    // No rows at all — create fresh singleton with schema defaults
+    return await prisma.announcementBar.create({ data: { id: SINGLETON_ID } });
+  }
+
+  const latest = legacyRows[0];
+
+  // Create the canonical singleton from the most-recent legacy row's data
+  const singleton = await prisma.announcementBar.create({
+    data: {
+      id: SINGLETON_ID,
+      enabled: latest.enabled,
+      text: latest.text,
+      description: latest.description,
+      backgroundColor: latest.backgroundColor,
+      textColor: latest.textColor,
+      dismissible: latest.dismissible,
+      countdownEnabled: latest.countdownEnabled,
+      countdownMode: latest.countdownMode,
+      startsAt: latest.startsAt,
+      expiresAt: latest.expiresAt,
+      dailyResetHour: latest.dailyResetHour,
+      dailyResetMinute: latest.dailyResetMinute,
+      scrollEnabled: latest.scrollEnabled,
+      scrollSpeed: latest.scrollSpeed,
+      targetMode: latest.targetMode,
+      targetRoutes: latest.targetRoutes,
+    },
+  });
+
+  // Delete all legacy rows
+  await prisma.announcementBar.deleteMany({
+    where: { id: { in: legacyRows.map((r) => r.id) } },
+  });
+
+  console.log(`[AnnouncementBar] Migrated ${legacyRows.length} legacy row(s) into singleton "${SINGLETON_ID}"`);
+
+  return singleton;
+}
+
 // ── Read ───────────────────────────────────────────────────────────────────
 
 export async function getAnnouncementDebugData(): Promise<AnnouncementDebugData | null> {
   noStore();
-  const row = await prisma.announcementBar.findFirst();
+  const row = await prisma.announcementBar.findUnique({ where: { id: SINGLETON_ID } });
   if (!row) return null;
   return {
     enabled: row.enabled,
@@ -144,10 +179,7 @@ export async function getAnnouncementDebugData(): Promise<AnnouncementDebugData 
 
 export async function getAnnouncementConfig(): Promise<AnnouncementConfig> {
   noStore();
-  let row = await prisma.announcementBar.findFirst();
-  if (!row) {
-    row = await prisma.announcementBar.create({ data: {} });
-  }
+  const row = await getSingleton();
   return {
     enabled: row.enabled,
     text: row.text,
@@ -196,27 +228,57 @@ export async function updateAnnouncementConfig(
     }
 
     const { startsAt, expiresAt, ...rest } = parsed.data;
-    const existing = await prisma.announcementBar.findFirst();
 
     const dbData = {
-      ...rest,
-      ...(startsAt !== undefined ? { startsAt: startsAt ? new Date(startsAt) : null } : {}),
-      ...(expiresAt !== undefined ? { expiresAt: expiresAt ? new Date(expiresAt) : null } : {}),
+      enabled: rest.enabled,
+      text: rest.text,
+      description: rest.description ?? null,
+      backgroundColor: rest.backgroundColor,
+      textColor: rest.textColor,
+      dismissible: rest.dismissible,
+      countdownEnabled: rest.countdownEnabled,
+      countdownMode: rest.countdownMode,
+      dailyResetHour: rest.dailyResetHour,
+      dailyResetMinute: rest.dailyResetMinute,
+      scrollEnabled: rest.scrollEnabled,
+      scrollSpeed: rest.scrollSpeed,
+      targetMode: rest.targetMode,
+      targetRoutes: rest.targetRoutes,
+      startsAt: startsAt ? new Date(startsAt) : null,
+      expiresAt: expiresAt ? new Date(expiresAt) : null,
     };
 
-    if (existing) {
-      await prisma.announcementBar.update({ where: { id: existing.id }, data: dbData });
-    } else {
-      await prisma.announcementBar.create({ data: dbData as any });
-    }
+    await prisma.announcementBar.upsert({
+      where: { id: SINGLETON_ID },
+      update: dbData,
+      create: { id: SINGLETON_ID, ...dbData },
+    });
 
     revalidatePath('/');
     revalidatePath('/sektorel-yazilimlar');
     revalidatePath('/hizmetler');
     revalidatePath('/admin/announcements');
 
-    const savedConfig = await getAnnouncementDebugData();
-    return { success: true, data: savedConfig ?? undefined };
+    const savedRow = await prisma.announcementBar.findUnique({ where: { id: SINGLETON_ID } });
+    const savedConfig: AnnouncementDebugData | undefined = savedRow
+      ? {
+          enabled: savedRow.enabled,
+          text: savedRow.text,
+          description: savedRow.description,
+          countdownEnabled: savedRow.countdownEnabled,
+          countdownMode: savedRow.countdownMode,
+          startsAt: savedRow.startsAt?.toISOString() ?? null,
+          expiresAt: savedRow.expiresAt?.toISOString() ?? null,
+          scrollEnabled: savedRow.scrollEnabled,
+          scrollSpeed: savedRow.scrollSpeed,
+          targetMode: savedRow.targetMode,
+          targetRoutes: savedRow.targetRoutes,
+          dismissible: savedRow.dismissible,
+          updatedAt: savedRow.updatedAt.toISOString(),
+        }
+      : undefined;
+
+    return { success: true, data: savedConfig };
   } catch (error) {
     const err = error as any;
     console.error(JSON.stringify({

@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   noStore();
   try {
-    const row = await prisma.announcementBar.findFirst();
+    const row = await prisma.announcementBar.findUnique({ where: { id: 'default' } });
     if (!row) {
       return NextResponse.json({ found: false });
     }
