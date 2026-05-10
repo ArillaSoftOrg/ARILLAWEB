@@ -166,17 +166,28 @@ export async function getAnnouncementConfig(): Promise<AnnouncementConfig> {
 
 // ── Write ──────────────────────────────────────────────────────────────────
 
+type UpdateResult =
+  | { success: true; savedConfig?: AnnouncementDebugData }
+  | {
+      success: false;
+      errors?: Record<string, string[]>;
+      formErrors?: string[];
+      debugMessage?: string;
+      prismaCode?: string;
+    };
+
 export async function updateAnnouncementConfig(
   data: Partial<AnnouncementConfig>
-): Promise<{ success: boolean; savedConfig?: AnnouncementDebugData; errors?: Record<string, string[]> }> {
+): Promise<UpdateResult> {
   try {
     const parsed = announcementSchema.partial().safeParse(data);
     if (!parsed.success) {
-      const flatErrors = parsed.error.flatten().fieldErrors as Record<string, string[]>;
-      console.error('[AnnouncementBar Save Error] Zod validation failed:', flatErrors);
+      const flat = parsed.error.flatten();
+      console.error('[AnnouncementBar Save Error] Zod validation failed:', JSON.stringify(flat));
       return {
         success: false,
-        errors: flatErrors,
+        errors: flat.fieldErrors as Record<string, string[]>,
+        formErrors: flat.formErrors,
       };
     }
 
@@ -204,20 +215,18 @@ export async function updateAnnouncementConfig(
     return { success: true, savedConfig: savedConfig ?? undefined };
   } catch (error) {
     const err = error as any;
-    const errorLog = {
+    console.error(JSON.stringify({
       message: '[AnnouncementBar Save Error]',
       name: err?.name || 'Unknown',
       errorMessage: err?.message || 'Unknown error',
       ...(err?.code && { prismaCode: err.code }),
-    };
-
-    console.error(JSON.stringify(errorLog));
+    }));
 
     return {
       success: false,
-      errors: {
-        _form: ['Duyuru ayarları kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.'],
-      },
+      errors: { _form: ['Duyuru ayarları kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.'] },
+      debugMessage: err?.message || 'Unknown error',
+      ...(err?.code && { prismaCode: err.code }),
     };
   }
 }

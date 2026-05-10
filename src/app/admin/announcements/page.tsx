@@ -16,6 +16,11 @@ type SaveStatus = {
   success: boolean;
   hasData: boolean;
   updatedAt: string | null;
+  errors: Record<string, string[]> | null;
+  formErrors: string[] | null;
+  debugMessage: string | null;
+  prismaCode: string | null;
+  payload: Record<string, unknown> | null;
 };
 
 export default function AnnouncementsPage() {
@@ -82,16 +87,36 @@ export default function AnnouncementsPage() {
   const handleSave = () => {
     if (!form) return;
     startTransition(async () => {
-      const result = await updateAnnouncementConfig({
-        ...form,
+      // Build payload with explicit type coercion
+      const payload = {
+        enabled: Boolean(form.enabled),
+        text: String(form.text ?? ''),
+        description: form.description != null ? String(form.description) : null,
+        backgroundColor: String(form.backgroundColor ?? '#dc2626'),
+        textColor: String(form.textColor ?? '#ffffff'),
+        dismissible: Boolean(form.dismissible),
+        countdownEnabled: Boolean(form.countdownEnabled),
+        countdownMode: form.countdownMode,
         startsAt: form.startsAt ? new Date(form.startsAt).toISOString() : null,
         expiresAt: form.expiresAt ? new Date(form.expiresAt).toISOString() : null,
-      });
+        dailyResetHour: Number(form.dailyResetHour ?? 0),
+        dailyResetMinute: Number(form.dailyResetMinute ?? 0),
+        scrollEnabled: Boolean(form.scrollEnabled),
+        scrollSpeed: form.scrollSpeed,
+        targetMode: form.targetMode,
+        targetRoutes: Array.isArray(form.targetRoutes) ? form.targetRoutes : [],
+      };
+
+      console.log('[Announcement Save Payload]', payload);
+
+      const result = await updateAnnouncementConfig(payload);
+
+      console.log('[Announcement Save Result]', result);
+
       if (result.success) {
         setSaved(true);
         setErrors({});
         setTimeout(() => setSaved(false), 3000);
-        // Re-fetch from DB to update both form and debug panel
         const [freshConfig, freshDebug] = await Promise.all([
           getAnnouncementConfig(),
           getAnnouncementDebugData(),
@@ -102,10 +127,24 @@ export default function AnnouncementsPage() {
           success: true,
           hasData: freshDebug !== null,
           updatedAt: freshDebug?.updatedAt ?? null,
+          errors: null,
+          formErrors: null,
+          debugMessage: null,
+          prismaCode: null,
+          payload,
         });
       } else {
         setErrors(result.errors ?? {});
-        setSaveStatus({ success: false, hasData: false, updatedAt: null });
+        setSaveStatus({
+          success: false,
+          hasData: false,
+          updatedAt: null,
+          errors: result.errors ?? null,
+          formErrors: result.formErrors ?? null,
+          debugMessage: result.debugMessage ?? null,
+          prismaCode: result.prismaCode ?? null,
+          payload,
+        });
       }
     });
   };
@@ -613,28 +652,69 @@ export default function AnnouncementsPage() {
               [DEBUG] Son Kayıt Durumu
             </h2>
             {saveStatus ? (
-              <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
-                <tbody>
-                  <tr style={{ borderBottom: '1px solid #334155' }}>
-                    <td className="py-1 pr-4 font-mono" style={{ color: '#64748b', width: '160px' }}>success</td>
-                    <td className="py-1 font-mono font-bold" style={{ color: saveStatus.success ? '#4ade80' : '#f87171' }}>
-                      {String(saveStatus.success)}
-                    </td>
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid #334155' }}>
-                    <td className="py-1 pr-4 font-mono" style={{ color: '#64748b' }}>returned data exists</td>
-                    <td className="py-1 font-mono font-bold" style={{ color: saveStatus.hasData ? '#4ade80' : '#f87171' }}>
-                      {String(saveStatus.hasData)}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="py-1 pr-4 font-mono" style={{ color: '#64748b' }}>updatedAt</td>
-                    <td className="py-1 font-mono" style={{ color: '#e2e8f0' }}>
-                      {saveStatus.updatedAt ?? '(null)'}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div className="space-y-3">
+                <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
+                  <tbody>
+                    <tr style={{ borderBottom: '1px solid #334155' }}>
+                      <td className="py-1 pr-4 font-mono" style={{ color: '#64748b', width: '180px' }}>success</td>
+                      <td className="py-1 font-mono font-bold" style={{ color: saveStatus.success ? '#4ade80' : '#f87171' }}>
+                        {String(saveStatus.success)}
+                      </td>
+                    </tr>
+                    <tr style={{ borderBottom: '1px solid #334155' }}>
+                      <td className="py-1 pr-4 font-mono" style={{ color: '#64748b' }}>returned data exists</td>
+                      <td className="py-1 font-mono font-bold" style={{ color: saveStatus.hasData ? '#4ade80' : '#f87171' }}>
+                        {String(saveStatus.hasData)}
+                      </td>
+                    </tr>
+                    <tr style={{ borderBottom: '1px solid #334155' }}>
+                      <td className="py-1 pr-4 font-mono" style={{ color: '#64748b' }}>updatedAt</td>
+                      <td className="py-1 font-mono" style={{ color: '#e2e8f0' }}>
+                        {saveStatus.updatedAt ?? '(null)'}
+                      </td>
+                    </tr>
+                    {saveStatus.debugMessage && (
+                      <tr style={{ borderBottom: '1px solid #334155' }}>
+                        <td className="py-1 pr-4 font-mono" style={{ color: '#64748b' }}>debugMessage</td>
+                        <td className="py-1 font-mono" style={{ color: '#f87171' }}>{saveStatus.debugMessage}</td>
+                      </tr>
+                    )}
+                    {saveStatus.prismaCode && (
+                      <tr style={{ borderBottom: '1px solid #334155' }}>
+                        <td className="py-1 pr-4 font-mono" style={{ color: '#64748b' }}>prismaCode</td>
+                        <td className="py-1 font-mono" style={{ color: '#f87171' }}>{saveStatus.prismaCode}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+
+                {saveStatus.formErrors && saveStatus.formErrors.length > 0 && (
+                  <div>
+                    <p className="text-xs font-mono mb-1" style={{ color: '#94a3b8' }}>formErrors:</p>
+                    <pre className="text-xs p-2 rounded overflow-auto" style={{ background: '#0f172a', color: '#f87171' }}>
+                      {JSON.stringify(saveStatus.formErrors, null, 2)}
+                    </pre>
+                  </div>
+                )}
+
+                {saveStatus.errors && (
+                  <div>
+                    <p className="text-xs font-mono mb-1" style={{ color: '#94a3b8' }}>errors (fieldErrors):</p>
+                    <pre className="text-xs p-2 rounded overflow-auto" style={{ background: '#0f172a', color: '#fbbf24' }}>
+                      {JSON.stringify(saveStatus.errors, null, 2)}
+                    </pre>
+                  </div>
+                )}
+
+                {saveStatus.payload && (
+                  <div>
+                    <p className="text-xs font-mono mb-1" style={{ color: '#94a3b8' }}>submitted payload:</p>
+                    <pre className="text-xs p-2 rounded overflow-auto" style={{ background: '#0f172a', color: '#7dd3fc' }}>
+                      {JSON.stringify(saveStatus.payload, null, 2)}
+                    </pre>
+                  </div>
+                )}
+              </div>
             ) : (
               <p className="text-sm font-mono" style={{ color: '#475569' }}>Henüz kayıt yapılmadı.</p>
             )}
