@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, RefObject } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
 import type { AnnouncementConfig } from '@/lib/announcement-actions';
@@ -8,7 +8,7 @@ import type { AnnouncementConfig } from '@/lib/announcement-actions';
 // ── Type ───────────────────────────────────────────────────────────────────
 
 interface AnnouncementBarProps {
-  config: AnnouncementConfig;
+  configs: AnnouncementConfig[];
 }
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -21,7 +21,7 @@ const SCROLL_DURATION: Record<'slow' | 'normal' | 'fast', string> = {
 
 // ── Component ──────────────────────────────────────────────────────────────
 
-export default function AnnouncementBar({ config }: AnnouncementBarProps) {
+export default function AnnouncementBar({ configs }: AnnouncementBarProps) {
   const pathname = usePathname();
   const barRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +31,17 @@ export default function AnnouncementBar({ config }: AnnouncementBarProps) {
   const [countdown, setCountdown] = useState<string | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
 
+  // Derived on each render — pure, no state needed
+  const config = selectBestConfig(configs, pathname, dismissed);
+
+  // ── Effect 0: Clear --bar-h when no config matches ─────────────────────────
+
+  useEffect(() => {
+    if (!config) {
+      document.documentElement.style.setProperty('--bar-h', '0px');
+    }
+  }, [config]);
+
   // ── Effect 1: Mount guard ──────────────────────────────────────────────────
 
   useEffect(() => {
@@ -38,19 +49,20 @@ export default function AnnouncementBar({ config }: AnnouncementBarProps) {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setReducedMotion(prefersReduced);
 
-    if (config.dismissible) {
+    if (config?.dismissible) {
       const key = `announcement-dismissed-${config.text.slice(0, 20)}`;
       const wasDismissed = !!sessionStorage.getItem(key);
       setDismissed(wasDismissed);
     }
-  }, [config.dismissible, config.text]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ── Effect 2: Visibility + CSS variable ────────────────────────────────────
 
   useEffect(() => {
     if (!mounted) return;
 
-    const shouldShow = computeVisibility(config, pathname, dismissed);
+    const shouldShow = config ? computeVisibility(config, pathname, dismissed) : false;
     setVisible(shouldShow);
 
     if (shouldShow && barRef.current) {
@@ -59,12 +71,12 @@ export default function AnnouncementBar({ config }: AnnouncementBarProps) {
     } else {
       document.documentElement.style.setProperty('--bar-h', '0px');
     }
-  }, [mounted, pathname, dismissed, config.enabled, config.startsAt, config.expiresAt, config.countdownMode, config.countdownEnabled, config.targetMode, config.targetRoutes]);
+  }, [mounted, pathname, dismissed, config]);
 
   // ── Effect 3: Countdown ticker ─────────────────────────────────────────────
 
   useEffect(() => {
-    if (!visible || !config.countdownEnabled) {
+    if (!visible || !config?.countdownEnabled) {
       setCountdown(null);
       return;
     }
@@ -85,12 +97,12 @@ export default function AnnouncementBar({ config }: AnnouncementBarProps) {
     return () => clearInterval(id);
   }, [
     visible,
-    config.countdownEnabled,
-    config.countdownMode,
-    config.startsAt,
-    config.expiresAt,
-    config.dailyResetHour,
-    config.dailyResetMinute,
+    config?.countdownEnabled,
+    config?.countdownMode,
+    config?.startsAt,
+    config?.expiresAt,
+    config?.dailyResetHour,
+    config?.dailyResetMinute,
   ]);
 
   // ── Effect 4: ResizeObserver ───────────────────────────────────────────────
@@ -110,6 +122,7 @@ export default function AnnouncementBar({ config }: AnnouncementBarProps) {
   // ── Handlers ───────────────────────────────────────────────────────────────
 
   const handleDismiss = () => {
+    if (!config) return;
     const key = `announcement-dismissed-${config.text.slice(0, 20)}`;
     sessionStorage.setItem(key, '1');
     setDismissed(true);
@@ -119,12 +132,18 @@ export default function AnnouncementBar({ config }: AnnouncementBarProps) {
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
-  if (!mounted || !visible) return null;
+  if (!mounted || !visible || !config) return null;
 
   const useMarquee = config.scrollEnabled && !reducedMotion;
 
   if (useMarquee) {
-    // Marquee layout
+    // Compose the full scrolling string: text — description — ⏱ countdown
+    const scrollParts = [
+      config.text,
+      config.description || null,
+      countdown ? `⏱ ${countdown}` : null,
+    ].filter(Boolean).join(' — ');
+
     return (
       <div
         ref={barRef}
@@ -137,52 +156,36 @@ export default function AnnouncementBar({ config }: AnnouncementBarProps) {
           color: config.textColor,
         }}
       >
-        {/* Fixed right-side: countdown + dismiss */}
-        {(countdown || config.dismissible) && (
-          <div
-            className="absolute right-0 top-0 h-full flex items-center gap-2 pr-4 lg:pr-6 z-10"
-            style={{
-              background: `linear-gradient(to right, transparent, ${config.backgroundColor} 25%)`,
-            }}
-          >
-            {countdown && (
-              <span
-                className="text-xs font-mono font-bold px-2 py-0.5 rounded whitespace-nowrap"
-                style={{ background: 'rgba(0,0,0,0.2)' }}
-              >
-                Kalan Süre: {countdown}
-              </span>
-            )}
-            {config.dismissible && (
-              <button
-                onClick={handleDismiss}
-                aria-label="Duyuruyu kapat"
-                className="p-1 rounded hover:opacity-70 flex-shrink-0"
-              >
-                <X size={14} />
-              </button>
-            )}
-          </div>
-        )}
-
         {/* Scrolling text track */}
         <div
           className="flex py-2.5 announcement-marquee-track"
           style={{ animationDuration: SCROLL_DURATION[config.scrollSpeed] }}
         >
-          <span className="text-sm font-semibold whitespace-nowrap px-12">
-            {config.text}
-            {config.description && (
-              <span className="ml-4 text-xs opacity-80">{config.description}</span>
-            )}
+          <span className="text-sm md:text-base font-semibold tracking-wide whitespace-nowrap px-12">
+            {scrollParts}
           </span>
-          <span className="text-sm font-semibold whitespace-nowrap px-12" aria-hidden>
-            {config.text}
-            {config.description && (
-              <span className="ml-4 text-xs opacity-80">{config.description}</span>
-            )}
+          <span className="text-sm md:text-base font-semibold tracking-wide whitespace-nowrap px-12" aria-hidden>
+            {scrollParts}
           </span>
         </div>
+
+        {/* Dismiss button overlay — outside scroll track */}
+        {config.dismissible && (
+          <div
+            className="absolute right-0 top-0 h-full flex items-center pr-4 lg:pr-6 z-10"
+            style={{
+              background: `linear-gradient(to right, transparent, ${config.backgroundColor} 25%)`,
+            }}
+          >
+            <button
+              onClick={handleDismiss}
+              aria-label="Duyuruyu kapat"
+              className="p-1 rounded hover:opacity-70 flex-shrink-0"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -202,7 +205,7 @@ export default function AnnouncementBar({ config }: AnnouncementBarProps) {
     >
       <div className="max-w-[1440px] mx-auto px-4 lg:px-10 xl:px-14 py-2.5 flex flex-col lg:flex-row items-center justify-center gap-1 lg:gap-3">
         <div className="flex items-center gap-2 text-center">
-          <span className="text-sm font-semibold">{config.text}</span>
+          <span className="text-sm md:text-base font-semibold tracking-wide">{config.text}</span>
           {config.description && (
             <span className="text-xs opacity-80">{config.description}</span>
           )}
@@ -287,7 +290,6 @@ function computeCountdown(
   }
 
   if (config.countdownMode === 'fixed') {
-    // expiresAt is required in fixed mode (enforced by Zod)
     const end = new Date(config.expiresAt!).getTime();
     const remaining = end - now;
     if (remaining <= 0) return { display: null, hide: true };
@@ -299,7 +301,6 @@ function computeCountdown(
     return { display: null, hide: true };
   }
 
-  // Calculate next reset time in visitor's local timezone
   const target = nextDailyReset(config.dailyResetHour, config.dailyResetMinute, now);
   const remaining = target - now;
   return { display: formatMs(remaining), hide: false };
@@ -307,10 +308,8 @@ function computeCountdown(
 
 function nextDailyReset(hour: number, minute: number, now: number): number {
   const d = new Date(now);
-  // Build today's reset time in local timezone
   const today = new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, minute, 0, 0);
   if (today.getTime() > now) return today.getTime();
-  // Reset already passed today — return tomorrow's
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
   return tomorrow.getTime();
@@ -322,4 +321,24 @@ function formatMs(ms: number): string {
   const m = Math.floor((totalSeconds % 3600) / 60);
   const s = totalSeconds % 60;
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function selectBestConfig(
+  configs: AnnouncementConfig[],
+  pathname: string,
+  dismissed: boolean
+): AnnouncementConfig | null {
+  const candidates = configs
+    .filter((c) => matchesRoute(pathname, c))
+    .filter((c) => computeVisibility(c, pathname, dismissed));
+
+  if (candidates.length === 0) return null;
+
+  // Sort: priority DESC, then updatedAt DESC (ISO strings sort correctly)
+  candidates.sort((a, b) => {
+    if (b.priority !== a.priority) return b.priority - a.priority;
+    return b.updatedAt.localeCompare(a.updatedAt);
+  });
+
+  return candidates[0];
 }

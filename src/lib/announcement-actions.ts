@@ -4,29 +4,12 @@ import { prisma } from './prisma';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 import { z } from 'zod';
 
-// ── Constants ──────────────────────────────────────────────────────────────
-
-const SINGLETON_ID = 'default';
-
 // ── Types ──────────────────────────────────────────────────────────────────
 
-export type AnnouncementDebugData = {
-  enabled: boolean;
-  text: string;
-  description: string | null;
-  countdownEnabled: boolean;
-  countdownMode: string;
-  startsAt: string | null;
-  expiresAt: string | null;
-  scrollEnabled: boolean;
-  scrollSpeed: string;
-  targetMode: string;
-  targetRoutes: string[];
-  dismissible: boolean;
-  updatedAt: string;
-};
-
 export type AnnouncementConfig = {
+  id: string;
+  name: string;
+  priority: number;
   enabled: boolean;
   text: string;
   description: string | null;
@@ -43,12 +26,28 @@ export type AnnouncementConfig = {
   scrollSpeed: 'slow' | 'normal' | 'fast';
   targetMode: string;
   targetRoutes: string[];
+  updatedAt: string;
 };
+
+export type CampaignBarSummary = {
+  id: string;
+  name: string;
+  enabled: boolean;
+  priority: number;
+  startsAt: string | null;
+  expiresAt: string | null;
+  updatedAt: string;
+};
+
+export type ActionResult =
+  | { success: true }
+  | { success: false; errors?: Record<string, string[]>; formErrors?: string[]; message?: string };
 
 // ── Zod Validation Schema ──────────────────────────────────────────────────
 
-// Field-level validation only — no superRefine so .partial() is safe to call on this
 const announcementBaseSchema = z.object({
+  name: z.string().min(1, 'Kampanya adı gereklidir').max(100),
+  priority: z.number().int().min(0).max(9999),
   enabled: z.boolean(),
   text: z.string().min(1, 'Duyuru metni gereklidir'),
   description: z.string().nullable().optional(),
@@ -67,7 +66,6 @@ const announcementBaseSchema = z.object({
   targetRoutes: z.array(z.string()),
 });
 
-// Full save schema — adds cross-field rules on top of the base
 const announcementSaveSchema = announcementBaseSchema.superRefine((data, ctx) => {
   if (data.startsAt && data.expiresAt) {
     if (new Date(data.expiresAt) <= new Date(data.startsAt)) {
@@ -99,88 +97,14 @@ const announcementSaveSchema = announcementBaseSchema.superRefine((data, ctx) =>
   }
 });
 
-// ── Singleton migration ────────────────────────────────────────────────────
-//
-// Ensures there is exactly one AnnouncementBar row with id = SINGLETON_ID.
-// On first call after deploy, promotes the most-recently-updated legacy row
-// and deletes all others.
+// ── Private mapper ─────────────────────────────────────────────────────────
 
-async function getSingleton() {
-  const row = await prisma.announcementBar.findUnique({ where: { id: SINGLETON_ID } });
-  if (row) return row;
-
-  // Find all legacy rows ordered by most recently updated
-  const legacyRows = await prisma.announcementBar.findMany({
-    orderBy: { updatedAt: 'desc' },
-  });
-
-  if (legacyRows.length === 0) {
-    // No rows at all — create fresh singleton with schema defaults
-    return await prisma.announcementBar.create({ data: { id: SINGLETON_ID } });
-  }
-
-  const latest = legacyRows[0];
-
-  // Create the canonical singleton from the most-recent legacy row's data
-  const singleton = await prisma.announcementBar.create({
-    data: {
-      id: SINGLETON_ID,
-      enabled: latest.enabled,
-      text: latest.text,
-      description: latest.description,
-      backgroundColor: latest.backgroundColor,
-      textColor: latest.textColor,
-      dismissible: latest.dismissible,
-      countdownEnabled: latest.countdownEnabled,
-      countdownMode: latest.countdownMode,
-      startsAt: latest.startsAt,
-      expiresAt: latest.expiresAt,
-      dailyResetHour: latest.dailyResetHour,
-      dailyResetMinute: latest.dailyResetMinute,
-      scrollEnabled: latest.scrollEnabled,
-      scrollSpeed: latest.scrollSpeed,
-      targetMode: latest.targetMode,
-      targetRoutes: latest.targetRoutes,
-    },
-  });
-
-  // Delete all legacy rows
-  await prisma.announcementBar.deleteMany({
-    where: { id: { in: legacyRows.map((r) => r.id) } },
-  });
-
-  console.log(`[AnnouncementBar] Migrated ${legacyRows.length} legacy row(s) into singleton "${SINGLETON_ID}"`);
-
-  return singleton;
-}
-
-// ── Read ───────────────────────────────────────────────────────────────────
-
-export async function getAnnouncementDebugData(): Promise<AnnouncementDebugData | null> {
-  noStore();
-  const row = await prisma.announcementBar.findUnique({ where: { id: SINGLETON_ID } });
-  if (!row) return null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function rowToConfig(row: any): AnnouncementConfig {
   return {
-    enabled: row.enabled,
-    text: row.text,
-    description: row.description,
-    countdownEnabled: row.countdownEnabled,
-    countdownMode: row.countdownMode,
-    startsAt: row.startsAt?.toISOString() ?? null,
-    expiresAt: row.expiresAt?.toISOString() ?? null,
-    scrollEnabled: row.scrollEnabled,
-    scrollSpeed: row.scrollSpeed,
-    targetMode: row.targetMode,
-    targetRoutes: row.targetRoutes,
-    dismissible: row.dismissible,
-    updatedAt: row.updatedAt.toISOString(),
-  };
-}
-
-export async function getAnnouncementConfig(): Promise<AnnouncementConfig> {
-  noStore();
-  const row = await getSingleton();
-  return {
+    id: row.id,
+    name: row.name,
+    priority: row.priority,
     enabled: row.enabled,
     text: row.text,
     description: row.description,
@@ -197,102 +121,138 @@ export async function getAnnouncementConfig(): Promise<AnnouncementConfig> {
     scrollSpeed: row.scrollSpeed as 'slow' | 'normal' | 'fast',
     targetMode: row.targetMode,
     targetRoutes: row.targetRoutes,
+    updatedAt: row.updatedAt.toISOString(),
   };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function rowToSummary(row: any): CampaignBarSummary {
+  return {
+    id: row.id,
+    name: row.name,
+    enabled: row.enabled,
+    priority: row.priority,
+    startsAt: row.startsAt?.toISOString() ?? null,
+    expiresAt: row.expiresAt?.toISOString() ?? null,
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+function revalidateAll() {
+  revalidatePath('/', 'layout');
+  revalidatePath('/admin/announcements');
+}
+
+// ── Read ───────────────────────────────────────────────────────────────────
+
+export async function getCampaignBars(): Promise<CampaignBarSummary[]> {
+  noStore();
+  const rows = await prisma.announcementBar.findMany({
+    orderBy: [{ priority: 'desc' }, { updatedAt: 'desc' }],
+  });
+  return rows.map(rowToSummary);
+}
+
+export async function getCampaignBarById(id: string): Promise<AnnouncementConfig | null> {
+  noStore();
+  const row = await prisma.announcementBar.findUnique({ where: { id } });
+  if (!row) return null;
+  return rowToConfig(row);
+}
+
+export async function getActiveCampaignBars(): Promise<AnnouncementConfig[]> {
+  noStore();
+  const rows = await prisma.announcementBar.findMany({
+    where: { enabled: true },
+    orderBy: [{ priority: 'desc' }, { updatedAt: 'desc' }],
+  });
+  return rows.map(rowToConfig);
 }
 
 // ── Write ──────────────────────────────────────────────────────────────────
 
-type UpdateResult =
-  | { success: true; data?: AnnouncementDebugData }
-  | {
-      success: false;
-      errors?: Record<string, string[]>;
-      formErrors?: string[];
-      debugMessage?: string;
-      prismaCode?: string;
-    };
+function buildDbData(parsed: z.infer<typeof announcementBaseSchema>) {
+  const { startsAt, expiresAt, ...rest } = parsed;
+  return {
+    name: rest.name,
+    priority: rest.priority,
+    enabled: rest.enabled,
+    text: rest.text,
+    description: rest.description ?? null,
+    backgroundColor: rest.backgroundColor,
+    textColor: rest.textColor,
+    dismissible: rest.dismissible,
+    countdownEnabled: rest.countdownEnabled,
+    countdownMode: rest.countdownMode,
+    dailyResetHour: rest.dailyResetHour,
+    dailyResetMinute: rest.dailyResetMinute,
+    scrollEnabled: rest.scrollEnabled,
+    scrollSpeed: rest.scrollSpeed,
+    targetMode: rest.targetMode,
+    targetRoutes: rest.targetRoutes,
+    startsAt: startsAt ? new Date(startsAt) : null,
+    expiresAt: expiresAt ? new Date(expiresAt) : null,
+  };
+}
 
-export async function updateAnnouncementConfig(
-  data: Partial<AnnouncementConfig>
-): Promise<UpdateResult> {
+export async function createCampaignBar(data: unknown): Promise<ActionResult> {
   try {
     const parsed = announcementSaveSchema.safeParse(data);
     if (!parsed.success) {
       const flat = parsed.error.flatten();
-      console.error('[AnnouncementBar Save Error] Zod validation failed:', JSON.stringify(flat));
       return {
         success: false,
         errors: flat.fieldErrors as Record<string, string[]>,
         formErrors: flat.formErrors,
       };
     }
-
-    const { startsAt, expiresAt, ...rest } = parsed.data;
-
-    const dbData = {
-      enabled: rest.enabled,
-      text: rest.text,
-      description: rest.description ?? null,
-      backgroundColor: rest.backgroundColor,
-      textColor: rest.textColor,
-      dismissible: rest.dismissible,
-      countdownEnabled: rest.countdownEnabled,
-      countdownMode: rest.countdownMode,
-      dailyResetHour: rest.dailyResetHour,
-      dailyResetMinute: rest.dailyResetMinute,
-      scrollEnabled: rest.scrollEnabled,
-      scrollSpeed: rest.scrollSpeed,
-      targetMode: rest.targetMode,
-      targetRoutes: rest.targetRoutes,
-      startsAt: startsAt ? new Date(startsAt) : null,
-      expiresAt: expiresAt ? new Date(expiresAt) : null,
-    };
-
-    await prisma.announcementBar.upsert({
-      where: { id: SINGLETON_ID },
-      update: dbData,
-      create: { id: SINGLETON_ID, ...dbData },
-    });
-
-    revalidatePath('/');
-    revalidatePath('/sektorel-yazilimlar');
-    revalidatePath('/hizmetler');
-    revalidatePath('/admin/announcements');
-
-    const savedRow = await prisma.announcementBar.findUnique({ where: { id: SINGLETON_ID } });
-    const savedConfig: AnnouncementDebugData | undefined = savedRow
-      ? {
-          enabled: savedRow.enabled,
-          text: savedRow.text,
-          description: savedRow.description,
-          countdownEnabled: savedRow.countdownEnabled,
-          countdownMode: savedRow.countdownMode,
-          startsAt: savedRow.startsAt?.toISOString() ?? null,
-          expiresAt: savedRow.expiresAt?.toISOString() ?? null,
-          scrollEnabled: savedRow.scrollEnabled,
-          scrollSpeed: savedRow.scrollSpeed,
-          targetMode: savedRow.targetMode,
-          targetRoutes: savedRow.targetRoutes,
-          dismissible: savedRow.dismissible,
-          updatedAt: savedRow.updatedAt.toISOString(),
-        }
-      : undefined;
-
-    return { success: true, data: savedConfig };
+    await prisma.announcementBar.create({ data: buildDbData(parsed.data) });
+    revalidateAll();
+    return { success: true };
   } catch (error) {
-    const err = error as any;
-    console.error(JSON.stringify({
-      message: '[AnnouncementBar Save Error]',
-      name: err?.name || 'Unknown',
-      errorMessage: err?.message || 'Unknown error',
-      ...(err?.code && { prismaCode: err.code }),
-    }));
+    const err = error as Error;
+    return { success: false, message: err?.message ?? 'Bilinmeyen hata' };
+  }
+}
 
-    return {
-      success: false,
-      errors: { _form: ['Duyuru ayarları kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.'] },
-      debugMessage: err?.message || 'Unknown error',
-      ...(err?.code && { prismaCode: err.code }),
-    };
+export async function updateCampaignBar(id: string, data: unknown): Promise<ActionResult> {
+  try {
+    const parsed = announcementSaveSchema.safeParse(data);
+    if (!parsed.success) {
+      const flat = parsed.error.flatten();
+      return {
+        success: false,
+        errors: flat.fieldErrors as Record<string, string[]>,
+        formErrors: flat.formErrors,
+      };
+    }
+    await prisma.announcementBar.update({ where: { id }, data: buildDbData(parsed.data) });
+    revalidateAll();
+    return { success: true };
+  } catch (error) {
+    const err = error as Error;
+    return { success: false, message: err?.message ?? 'Bilinmeyen hata' };
+  }
+}
+
+export async function deleteCampaignBar(id: string): Promise<ActionResult> {
+  try {
+    await prisma.announcementBar.delete({ where: { id } });
+    revalidateAll();
+    return { success: true };
+  } catch (error) {
+    const err = error as Error;
+    return { success: false, message: err?.message ?? 'Bilinmeyen hata' };
+  }
+}
+
+export async function toggleCampaignBar(id: string, enabled: boolean): Promise<ActionResult> {
+  try {
+    await prisma.announcementBar.update({ where: { id }, data: { enabled } });
+    revalidateAll();
+    return { success: true };
+  } catch (error) {
+    const err = error as Error;
+    return { success: false, message: err?.message ?? 'Bilinmeyen hata' };
   }
 }

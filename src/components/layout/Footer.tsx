@@ -177,20 +177,6 @@ export default function Footer() {
           <p style={{ fontSize: '13px', color: '#64748b' }}>
             © {currentYear} Arillasoft. Tüm hakları saklıdır.
           </p>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <Link
-              href="/"
-              className="text-xs text-slate-600 no-underline transition-colors duration-200 hover:text-slate-500"
-            >
-              Gizlilik Politikası
-            </Link>
-            <Link
-              href="/"
-              className="text-xs text-slate-600 no-underline transition-colors duration-200 hover:text-slate-500"
-            >
-              Kullanım Koşulları
-            </Link>
-          </div>
         </div>
       </div>
     </footer>

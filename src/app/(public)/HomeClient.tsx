@@ -313,7 +313,7 @@ function WhyUsSection() {
               style={{
                 fontSize: "clamp(24px, 5vw, 48px)",
                 fontWeight: 800,
-                color: "#f1f5f9",
+                color: "#0f172a",
                 letterSpacing: "-1px",
                 lineHeight: 1.15,
                 margin: "0 0 16px 0",
@@ -324,7 +324,7 @@ function WhyUsSection() {
             <p
               style={{
                 fontSize: "16px",
-                color: "#94a3b8",
+                color: "#475569",
                 maxWidth: "600px",
                 margin: "0 auto",
                 lineHeight: 1.6,
@@ -346,8 +346,8 @@ function WhyUsSection() {
                   key={item.title}
                   variants={fadeUp}
                   style={{
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.06)",
+                    background: "#f8fafc",
+                    border: "1px solid #e2e8f0",
                     borderRadius: "16px",
                     padding: "24px",
                     display: "flex",
@@ -360,7 +360,7 @@ function WhyUsSection() {
                     style={{
                       fontSize: "16px",
                       fontWeight: 600,
-                      color: "#f1f5f9",
+                      color: "#0f172a",
                       margin: "0",
                     }}
                   >
@@ -369,7 +369,7 @@ function WhyUsSection() {
                   <p
                     style={{
                       fontSize: "14px",
-                      color: "#94a3b8",
+                      color: "#64748b",
                       margin: "0",
                       lineHeight: 1.6,
                     }}
@@ -451,7 +451,7 @@ function ExampleSolutionsSection() {
               style={{
                 fontSize: "clamp(24px, 5vw, 48px)",
                 fontWeight: 800,
-                color: "#f1f5f9",
+                color: "#0f172a",
                 letterSpacing: "-1px",
                 lineHeight: 1.15,
                 margin: "0 0 16px 0",
@@ -462,7 +462,7 @@ function ExampleSolutionsSection() {
             <p
               style={{
                 fontSize: "16px",
-                color: "#94a3b8",
+                color: "#475569",
                 maxWidth: "600px",
                 margin: "0 auto",
                 lineHeight: 1.6,
@@ -481,8 +481,8 @@ function ExampleSolutionsSection() {
                 key={solution}
                 variants={fadeUp}
                 style={{
-                  background: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.06)",
+                  background: "#f8fafc",
+                  border: "1px solid #e2e8f0",
                   borderRadius: "12px",
                   padding: "20px",
                   display: "flex",
@@ -511,7 +511,7 @@ function ExampleSolutionsSection() {
                   style={{
                     fontSize: "15px",
                     fontWeight: 600,
-                    color: "#f1f5f9",
+                    color: "#0f172a",
                     margin: "0",
                     lineHeight: 1.4,
                   }}
@@ -603,7 +603,7 @@ function HeroSection() {
   variants={fadeUp}
   className="flex flex-col items-start"
 >
-  <h2
+  <h1
     style={{
       fontSize: "clamp(28px, 4.5vw, 46px)",
       fontWeight: 700,
@@ -613,7 +613,7 @@ function HeroSection() {
     }}
   >
     İşletmenize özel web sitesi, yazılım ve yönetim sistemleri geliştirin.
-  </h2>
+  </h1>
 </motion.div>
 
           {/* Subtext */}
@@ -826,10 +826,10 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
                 padding: "6px 14px",
                 borderRadius: "100px",
                 background: "rgba(6,182,212,0.1)",
-                border: "1px solid rgba(6,182,212,0.25)",
+                border: "1px solid rgba(6,182,212,0.35)",
                 fontSize: "12px",
                 fontWeight: 700,
-                color: "#22d3ee",
+                color: "#0891b2",
                 letterSpacing: "0.05em",
                 textTransform: "uppercase",
                 marginBottom: "20px",
@@ -842,7 +842,7 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
               style={{
                 fontSize: "clamp(24px, 5vw, 48px)",
                 fontWeight: 800,
-                color: "#f1f5f9",
+                color: "#0f172a",
                 letterSpacing: "-1px",
                 lineHeight: 1.15,
                 margin: "0 0 16px 0",
@@ -850,7 +850,7 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
               }}
             >
               Her İhtiyacınız İçin{" "}
-              <span style={{ color: "#00f0ff", fontWeight: 900 }}>Yazılım Çözümü</span>
+              <span style={{ color: "#0891b2", fontWeight: 900 }}>Yazılım Çözümü</span>
             </h2>
             <p
               style={{
@@ -926,7 +926,7 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
                     >
                       {service.title}
                     </h3>
-                    <p style={{ fontSize: "15px", color: "#64748b", lineHeight: 1.8, margin: 0, flex: 1 }}>
+                    <p style={{ fontSize: "15px", color: "#94a3b8", lineHeight: 1.8, margin: 0, flex: 1 }}>
                       {service.description}
                     </p>
                   </div>
@@ -999,10 +999,10 @@ function SectoralSoftwareSection() {
                 padding: "6px 14px",
                 borderRadius: "100px",
                 background: "rgba(16,185,129,0.1)",
-                border: "1px solid rgba(16,185,129,0.25)",
+                border: "1px solid rgba(16,185,129,0.40)",
                 fontSize: "12px",
                 fontWeight: 700,
-                color: "#6ee7b7",
+                color: "#059669",
                 letterSpacing: "0.05em",
                 textTransform: "uppercase",
                 marginBottom: "20px",
@@ -1015,7 +1015,7 @@ function SectoralSoftwareSection() {
               style={{
                 fontSize: "clamp(24px, 5vw, 48px)",
                 fontWeight: 800,
-                color: "#f1f5f9",
+                color: "#0f172a",
                 letterSpacing: "-1px",
                 lineHeight: 1.15,
                 margin: "0 0 16px 0",
@@ -1023,7 +1023,7 @@ function SectoralSoftwareSection() {
               }}
             >
               Sektörünüze Özel{" "}
-              <span style={{ color: "#00ffb3", fontWeight: 900 }}>Yazılım Çözümleri</span>
+              <span style={{ color: "#059669", fontWeight: 900 }}>Yazılım Çözümleri</span>
             </h2>
             <p
               style={{
@@ -1099,7 +1099,7 @@ function SectoralSoftwareSection() {
                     >
                       {service.title}
                     </h3>
-                    <p style={{ fontSize: "15px", color: "#64748b", lineHeight: 1.8, margin: 0, flex: 1 }}>
+                    <p style={{ fontSize: "15px", color: "#94a3b8", lineHeight: 1.8, margin: 0, flex: 1 }}>
                       {service.description}
                     </p>
                   </div>
@@ -1229,7 +1229,7 @@ function CTASection({ settings }: { settings: SiteSettings }) {
               <p
                 style={{
                   fontSize: "clamp(15px, 2.5vw, 18px)",
-                  color: "#64748b",
+                  color: "#94a3b8",
                   maxWidth: "500px",
                   margin: "0 auto 32px",
                   lineHeight: 1.7,
@@ -1240,7 +1240,7 @@ function CTASection({ settings }: { settings: SiteSettings }) {
 
               <div className="flex flex-wrap gap-3 sm:gap-4 justify-center">
                 <Link
-                  href="/kurumsal/iletisim"
+                  href="/teklif-al"
                   className="inline-flex items-center gap-2 rounded-xl font-bold text-white transition-all"
                   style={{
                     padding: "12px 24px",
@@ -1385,10 +1385,10 @@ function BlogSection() {
                   padding: "6px 14px",
                   borderRadius: "100px",
                   background: "rgba(124,58,237,0.1)",
-                  border: "1px solid rgba(124,58,237,0.25)",
+                  border: "1px solid rgba(124,58,237,0.40)",
                   fontSize: "12px",
                   fontWeight: 700,
-                  color: "#a78bfa",
+                  color: "#7c3aed",
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
                   marginBottom: "20px",
@@ -1401,13 +1401,13 @@ function BlogSection() {
                 style={{
                   fontSize: "clamp(26px, 5vw, 52px)",
                   fontWeight: 800,
-                  color: "#f1f5f9",
+                  color: "#0f172a",
                   letterSpacing: "-1px",
                   lineHeight: 1.15,
                   margin: "0 0 14px 0",
                 }}
               >
-                Son <span style={{ color: "#d8b4fe", fontWeight: 900 }}>Yazılar</span>
+                Son <span style={{ color: "#7c3aed", fontWeight: 900 }}>Yazılar</span>
               </h2>
               <p
                 style={{
@@ -1434,9 +1434,9 @@ function BlogSection() {
                   borderRadius: "100px",
                   fontSize: "14px",
                   fontWeight: 600,
-                  color: "#a78bfa",
+                  color: "#7c3aed",
                   background: "rgba(124,58,237,0.08)",
-                  border: "1px solid rgba(124,58,237,0.22)",
+                  border: "1px solid rgba(124,58,237,0.35)",
                   textDecoration: "none",
                   transition: "all 0.2s",
                   whiteSpace: "nowrap",

@@ -114,8 +114,8 @@ export default function Navbar() {
                         borderRadius: '7px',
                         fontSize: '15px',
                         fontWeight: active ? 600 : 500,
-                        color: active ? '#1E40AF' : isDropdownOpen ? '#3B82F6' : '#334155',
-                        background: active ? 'rgba(37,99,235,0.06)' : isDropdownOpen ? 'rgba(37,99,235,0.10)' : 'transparent',
+                        color: active ? '#7c3aed' : isDropdownOpen ? '#7c3aed' : '#334155',
+                        background: active ? 'rgba(124,58,237,0.06)' : isDropdownOpen ? 'rgba(124,58,237,0.10)' : 'transparent',
                         border: 'none',
                         cursor: 'pointer',
                         transition: 'color 0.2s ease, background 0.2s ease',
@@ -128,7 +128,7 @@ export default function Navbar() {
                         style={{
                           transition: 'transform 0.2s ease',
                           transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                          color: active ? '#1E40AF' : isDropdownOpen ? '#3B82F6' : '#64748B',
+                          color: active ? '#7c3aed' : isDropdownOpen ? '#7c3aed' : '#64748B',
                         }}
                       />
                       {active && (
@@ -142,7 +142,7 @@ export default function Navbar() {
                             right: '14px',
                             height: '2px',
                             borderRadius: '1px',
-                            background: '#2563EB',
+                            background: '#7c3aed',
                           }}
                         />
                       )}
@@ -182,16 +182,16 @@ export default function Navbar() {
                                   borderRadius: '8px',
                                   fontSize: '14px',
                                   fontWeight: pathname === child.href ? 600 : 400,
-                                  color: pathname === child.href ? '#1E40AF' : '#334155',
-                                  background: pathname === child.href ? 'rgba(37,99,235,0.08)' : 'transparent',
+                                  color: pathname === child.href ? '#7c3aed' : '#334155',
+                                  background: pathname === child.href ? 'rgba(124,58,237,0.08)' : 'transparent',
                                   textDecoration: 'none',
                                   transition: 'background 0.15s ease, color 0.15s ease',
                                   whiteSpace: 'nowrap',
                                 }}
                                 onMouseEnter={(e) => {
                                   if (pathname !== child.href) {
-                                    e.currentTarget.style.background = 'rgba(37,99,235,0.06)';
-                                    e.currentTarget.style.color = '#3B82F6';
+                                    e.currentTarget.style.background = 'rgba(124,58,237,0.06)';
+                                    e.currentTarget.style.color = '#7c3aed';
                                   }
                                 }}
                                 onMouseLeave={(e) => {
@@ -244,14 +244,14 @@ export default function Navbar() {
                       borderRadius: '7px',
                       fontSize: '15px',
                       fontWeight: active ? 600 : 500,
-                      color: active ? '#1E40AF' : '#334155',
+                      color: active ? '#7c3aed' : '#334155',
                       textDecoration: 'none',
                       transition: 'color 0.2s ease',
                       whiteSpace: 'nowrap',
-                      background: active ? 'rgba(37,99,235,0.06)' : 'transparent',
+                      background: active ? 'rgba(124,58,237,0.06)' : 'transparent',
                     }}
                     onMouseEnter={(e) => {
-                      if (!active) e.currentTarget.style.color = '#3B82F6';
+                      if (!active) e.currentTarget.style.color = '#7c3aed';
                     }}
                     onMouseLeave={(e) => {
                       if (!active) e.currentTarget.style.color = '#334155';
@@ -269,7 +269,7 @@ export default function Navbar() {
                           right: '14px',
                           height: '2px',
                           borderRadius: '1px',
-                          background: '#2563EB',
+                          background: '#7c3aed',
                         }}
                       />
                     )}
@@ -374,8 +374,8 @@ export default function Navbar() {
                         borderRadius: '8px',
                         fontSize: '15px',
                         fontWeight: active ? 600 : 500,
-                        color: active ? '#60a5fa' : '#cbd5e1',
-                        background: active ? 'rgba(96,165,250,0.1)' : 'transparent',
+                        color: active ? '#a78bfa' : '#cbd5e1',
+                        background: active ? 'rgba(124,58,237,0.15)' : 'transparent',
                         border: 'none',
                         cursor: 'pointer',
                         textAlign: 'left',
@@ -387,7 +387,7 @@ export default function Navbar() {
                         style={{
                           transition: 'transform 0.2s ease',
                           transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                          color: active ? '#60a5fa' : '#cbd5e1',
+                          color: active ? '#a78bfa' : '#cbd5e1',
                           flexShrink: 0,
                         }}
                       />
@@ -408,8 +408,8 @@ export default function Navbar() {
                                   borderRadius: '7px',
                                   fontSize: '14px',
                                   fontWeight: pathname === child.href ? 600 : 400,
-                                  color: pathname === child.href ? '#60a5fa' : '#cbd5e1',
-                                  background: pathname === child.href ? 'rgba(96,165,250,0.1)' : 'transparent',
+                                  color: pathname === child.href ? '#a78bfa' : '#cbd5e1',
+                                  background: pathname === child.href ? 'rgba(124,58,237,0.15)' : 'transparent',
                                   textDecoration: 'none',
                                 }}
                               >
@@ -454,8 +454,8 @@ export default function Navbar() {
                       borderRadius: '8px',
                       fontSize: '15px',
                       fontWeight: active ? 600 : 500,
-                      color: active ? '#60a5fa' : '#cbd5e1',
-                      background: active ? 'rgba(96,165,250,0.1)' : 'transparent',
+                      color: active ? '#a78bfa' : '#cbd5e1',
+                      background: active ? 'rgba(124,58,237,0.15)' : 'transparent',
                       textDecoration: 'none',
                       transition: 'color 0.2s ease',
                     }}

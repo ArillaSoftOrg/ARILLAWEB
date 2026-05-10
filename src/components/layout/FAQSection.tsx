@@ -9,12 +9,12 @@ const FAQs = [
     answer: 'QR Menü sistemi restoranlar, kafeler ve catering hizmetlerine; Randevu sistemi güzellik merkezleri, klinikler ve kuaförlere; Web ve mobil uygulamalar ise tüm sektörlere uygun çözümler sunmaktadır.',
   },
   {
-    question: 'Kaç yıllık deneyime sahibsiniz?',
+    question: 'Kaç yıllık deneyime sahipsiniz?',
     answer: 'Arilla Soft, yazılım geliştirme ve dijital çözümlerde geniş deneyime sahip bir ekiple hizmet sunmaktadır. Onlarca işletmeyi başarılı bir şekilde dijitalleştirmişiz.',
   },
   {
     question: 'Destek ve bakım hizmetleri nelerdir?',
-    answer: 'Yazılım tesliminden sonra sürükli teknik destek, sistem güncellemeleri, güvenlik yama ve periyodik bakım hizmetleri sunmaktayız.',
+    answer: 'Yazılım tesliminden sonra sürekli teknik destek, sistem güncellemeleri, güvenlik yama ve periyodik bakım hizmetleri sunmaktayız.',
   },
   {
     question: 'Özel ihtiyaçlar için nasıl çözüm geliştirirsiniz?',
@@ -22,7 +22,7 @@ const FAQs = [
   },
   {
     question: 'Proje başlangıcında danışmanlık hizmetleri sunuyor musunuz?',
-    answer: 'Evet, projelerinizin başlangıcında stratejik danışmanlık sunarak, en uygun çözümü belirlenmesinde yardımcı oluyoruz.',
+    answer: 'Evet, projelerinizin başlangıcında stratejik danışmanlık sunarak, en uygun çözümü belirlemenize yardımcı oluyoruz.',
   },
 ];
 

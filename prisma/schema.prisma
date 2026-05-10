@@ -240,6 +240,8 @@ model SiteSetting {
 
 model AnnouncementBar {
   id                 String    @id @default(cuid())
+  name               String    @default("Campaign")
+  priority           Int       @default(0)
   enabled            Boolean   @default(false)
   text               String    @default("")
   description        String?
