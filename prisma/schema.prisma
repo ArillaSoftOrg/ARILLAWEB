@@ -172,7 +172,8 @@ model AppointmentRequest {
   date      String
   time      String
   name      String
-  contact   String
+  phone     String?
+  email     String?
   message   String?
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())

@@ -1,18 +1,22 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { appointmentSchema } from '@/lib/validations/appointment';
 import { generateSlots } from '@/lib/availability';
 
 const CONFLICT_ERROR = 'Seçtiğiniz saat artık uygun değil. Lütfen farklı bir saat seçiniz.';
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const result = appointmentSchema.safeParse(body);
 
     if (!result.success) {
+      const errors = result.error.flatten();
       return NextResponse.json(
-        { error: result.error.flatten() },
+        {
+          error: 'Validation failed',
+          fieldErrors: errors.fieldErrors
+        },
         { status: 400 }
       );
     }
@@ -99,7 +103,18 @@ export async function POST(req: Request) {
     }
 
     // All checks passed — create the appointment
-    await prisma.appointmentRequest.create({ data });
+    // Combine phone and email into single contact field for database
+    const contact = data.email || data.phone || '';
+    await prisma.appointmentRequest.create({
+      data: {
+        service: data.service,
+        date: data.date,
+        time: data.time,
+        name: data.name,
+        contact,
+        message: data.message,
+      },
+    });
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error('Error creating appointment:', error);

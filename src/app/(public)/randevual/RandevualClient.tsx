@@ -36,12 +36,13 @@ export default function RandevualClient() {
 
   // Form fields
   const [name, setName] = useState('');
-  const [contact, setContact] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
   // State management
-  const [status, setStatus] = useState<'idle' | 'error'>('idle');
   const [showSuccess, setShowSuccess] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   // Availability state
   const [slots, setSlots] = useState<DaySlot[]>([]);
@@ -84,31 +85,67 @@ export default function RandevualClient() {
       });
   }, [date, service]);
 
+  const validatePhoneFormat = (value: string): boolean => {
+    if (!value) return true; // Optional field
+    const phoneRegex = /^(\+90|0)?5\d{9}$/;
+    return phoneRegex.test(value.replace(/[\s-]/g, ''));
+  };
+
+  const validateEmailFormat = (value: string): boolean => {
+    if (!value) return true; // Optional field
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const newErrors: Record<string, string> = {};
 
-    // Validate
-    if (!service || !date || !time || !name || !contact) {
-      setStatus('error');
+    // Validate required fields
+    if (!service) newErrors.service = 'Hizmet seçiniz';
+    if (!date) newErrors.date = 'Tarih seçiniz';
+    if (!time) newErrors.time = 'Saat seçiniz';
+    if (!name) newErrors.name = 'Ad soyad zorunludur';
+
+    // Validate phone/email
+    if (!phone && !email) {
+      newErrors.contact = 'Telefon veya e-postadan en az biri zorunludur';
+    } else {
+      if (phone && !validatePhoneFormat(phone)) {
+        newErrors.phone = 'Geçerli telefon numarası giriniz (05XX XXX XX XX)';
+      }
+      if (email && !validateEmailFormat(email)) {
+        newErrors.email = 'Geçerli e-posta adresi giriniz';
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setFieldErrors(newErrors);
       return;
     }
+
+    setFieldErrors({});
 
     // Submit to API
     const res = await fetch('/api/appointment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ service, date, time, name, contact, message }),
+      body: JSON.stringify({ service, date, time, name, phone: phone || undefined, email: email || undefined, message }),
     });
 
     if (!res.ok) {
-      setStatus('error');
+      const data = await res.json();
+      if (data.error?.fieldErrors) {
+        setFieldErrors(data.error.fieldErrors);
+      } else {
+        setFieldErrors({ submit: data.error || 'Randevu oluşturulamadı. Lütfen tekrar deneyiniz.' });
+      }
       return;
     }
 
     // Clear the draft and show success
     sessionStorage.removeItem('randevuDraft');
     setShowSuccess(true);
-    setStatus('idle');
   };
 
   // Wait for hydration to avoid SSR mismatch
@@ -152,9 +189,14 @@ export default function RandevualClient() {
         <h2 style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>
           Randevu talebiniz alındı.
         </h2>
-        <p style={{ color: '#64748b', marginBottom: 24 }}>
-          En kısa sürede sizinle iletişime geçeceğiz.
-        </p>
+        <div style={{ marginBottom: 24 }}>
+          <p style={{ color: '#64748b', marginBottom: 8 }}>
+            Randevu bilgileriniz size e-posta ile gönderildi.
+          </p>
+          <p style={{ color: '#64748b' }}>
+            Yanlış bir bilgi varsa daha sonra buradan düzenleyebilirsiniz.
+          </p>
+        </div>
         <button
           onClick={handleHomeClick}
           style={{
@@ -285,22 +327,24 @@ export default function RandevualClient() {
             </p>
           </div>
 
-          {/* Error state */}
-          {status === 'error' && (
+          {/* Error state - general submit error */}
+          {fieldErrors.submit && (
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: 12,
-                padding: 12,
+                padding: '12px 14px',
                 borderRadius: 8,
                 background: 'rgba(239, 68, 68, 0.1)',
                 color: '#dc2626',
                 fontSize: 13,
+                fontWeight: 500,
+                border: '1px solid rgba(220, 38, 38, 0.2)',
               }}
             >
               <AlertCircle size={16} style={{ flexShrink: 0 }} />
-              <span>Lütfen tüm gerekli alanları doldurunuz</span>
+              <span>{fieldErrors.submit}</span>
             </div>
           )}
 
@@ -311,7 +355,7 @@ export default function RandevualClient() {
                 display: 'block',
                 fontSize: 13,
                 fontWeight: 600,
-                color: '#475569',
+                color: fieldErrors.service ? '#dc2626' : '#475569',
                 marginBottom: 8,
               }}
             >
@@ -319,11 +363,19 @@ export default function RandevualClient() {
             </label>
             <select
               value={service}
-              onChange={(e) => setService(e.target.value)}
+              onChange={(e) => {
+                setService(e.target.value);
+                if (e.target.value) {
+                  setFieldErrors((prev) => {
+                    const { service: _, ...rest } = prev;
+                    return rest;
+                  });
+                }
+              }}
               style={{
                 width: '100%',
                 background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                border: fieldErrors.service ? '1px solid #dc2626' : '1px solid #e2e8f0',
                 borderRadius: 10,
                 color: '#0f172a',
                 fontSize: 14,
@@ -345,6 +397,9 @@ export default function RandevualClient() {
                 </option>
               ))}
             </select>
+            {fieldErrors.service && (
+              <p style={{ fontSize: 12, fontWeight: 500, color: '#dc2626', marginTop: 6, lineHeight: '1.4' }}>{fieldErrors.service}</p>
+            )}
           </div>
 
           {/* Date field */}
@@ -354,7 +409,7 @@ export default function RandevualClient() {
                 display: 'block',
                 fontSize: 13,
                 fontWeight: 600,
-                color: '#475569',
+                color: fieldErrors.date ? '#dc2626' : '#475569',
                 marginBottom: 8,
               }}
             >
@@ -363,12 +418,20 @@ export default function RandevualClient() {
             <input
               type="date"
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(e) => {
+                setDate(e.target.value);
+                if (e.target.value) {
+                  setFieldErrors((prev) => {
+                    const { date: _, ...rest } = prev;
+                    return rest;
+                  });
+                }
+              }}
               min={new Date().toISOString().split('T')[0]}
               style={{
                 width: '100%',
                 background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                border: fieldErrors.date ? '1px solid #dc2626' : '1px solid #e2e8f0',
                 borderRadius: 10,
                 color: '#0f172a',
                 fontSize: 14,
@@ -376,6 +439,9 @@ export default function RandevualClient() {
                 fontFamily: 'inherit',
               }}
             />
+            {fieldErrors.date && (
+              <p style={{ fontSize: 12, fontWeight: 500, color: '#dc2626', marginTop: 6, lineHeight: '1.4' }}>{fieldErrors.date}</p>
+            )}
           </div>
 
           {/* Time field */}
@@ -385,7 +451,7 @@ export default function RandevualClient() {
                 display: 'block',
                 fontSize: 13,
                 fontWeight: 600,
-                color: '#475569',
+                color: fieldErrors.time ? '#dc2626' : '#475569',
                 marginBottom: 8,
               }}
             >
@@ -422,42 +488,55 @@ export default function RandevualClient() {
                 Bu tarih için müsait saat yok
               </div>
             ) : (
-              <select
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                style={{
-                  width: '100%',
-                  background: '#f8fafc',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: 10,
-                  color: '#0f172a',
-                  fontSize: 14,
-                  padding: '10px 12px',
-                  fontFamily: 'inherit',
-                  cursor: 'pointer',
-                  appearance: 'none',
-                  backgroundImage:
-                    "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'right 10px center',
-                  paddingRight: 32,
-                }}
-              >
-                <option value="">Saat seçiniz</option>
-                {slots.map((slot) => (
-                  <option
-                    key={slot.time}
-                    value={slot.time}
-                    disabled={slot.status !== 'available'}
-                    style={{
-                      color: slot.status === 'available' ? '#0f172a' : '#94a3b8',
-                      textDecoration: slot.status !== 'available' ? 'line-through' : 'none',
-                    }}
-                  >
-                    {slot.time} {slot.status === 'booked' ? '(Dolu)' : slot.status === 'blocked' ? '(Bloke)' : ''}
-                  </option>
-                ))}
-              </select>
+              <>
+                <select
+                  value={time}
+                  onChange={(e) => {
+                    setTime(e.target.value);
+                    if (e.target.value) {
+                      setFieldErrors((prev) => {
+                        const { time: _, ...rest } = prev;
+                        return rest;
+                      });
+                    }
+                  }}
+                  style={{
+                    width: '100%',
+                    background: '#f8fafc',
+                    border: fieldErrors.time ? '1px solid #dc2626' : '1px solid #e2e8f0',
+                    borderRadius: 10,
+                    color: '#0f172a',
+                    fontSize: 14,
+                    padding: '10px 12px',
+                    fontFamily: 'inherit',
+                    cursor: 'pointer',
+                    appearance: 'none',
+                    backgroundImage:
+                      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 10px center',
+                    paddingRight: 32,
+                  }}
+                >
+                  <option value="">Saat seçiniz</option>
+                  {slots.map((slot) => (
+                    <option
+                      key={slot.time}
+                      value={slot.time}
+                      disabled={slot.status !== 'available'}
+                      style={{
+                        color: slot.status === 'available' ? '#0f172a' : '#94a3b8',
+                        textDecoration: slot.status !== 'available' ? 'line-through' : 'none',
+                      }}
+                    >
+                      {slot.time} {slot.status === 'booked' ? '(Dolu)' : slot.status === 'blocked' ? '(Bloke)' : ''}
+                    </option>
+                  ))}
+                </select>
+                {fieldErrors.time && (
+                  <p style={{ fontSize: 12, fontWeight: 500, color: '#dc2626', marginTop: 6, lineHeight: '1.4' }}>{fieldErrors.time}</p>
+                )}
+              </>
             )}
           </div>
 
@@ -468,7 +547,7 @@ export default function RandevualClient() {
                 display: 'block',
                 fontSize: 13,
                 fontWeight: 600,
-                color: '#475569',
+                color: fieldErrors.name ? '#dc2626' : '#475569',
                 marginBottom: 8,
               }}
             >
@@ -477,12 +556,20 @@ export default function RandevualClient() {
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (e.target.value) {
+                  setFieldErrors((prev) => {
+                    const { name: _, ...rest } = prev;
+                    return rest;
+                  });
+                }
+              }}
               placeholder="Adınız Soyadınız"
               style={{
                 width: '100%',
                 background: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                border: fieldErrors.name ? '1px solid #dc2626' : '1px solid #e2e8f0',
                 borderRadius: 10,
                 color: '#0f172a',
                 fontSize: 14,
@@ -490,37 +577,163 @@ export default function RandevualClient() {
                 fontFamily: 'inherit',
               }}
             />
+            {fieldErrors.name && (
+              <p style={{ fontSize: 12, fontWeight: 500, color: '#dc2626', marginTop: 6, lineHeight: '1.4' }}>{fieldErrors.name}</p>
+            )}
           </div>
 
-          {/* Contact field */}
-          <div>
-            <label
+          {/* Contact fields - Phone and Email */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {/* Shared requirement text above phone/email fields */}
+            <div
               style={{
-                display: 'block',
-                fontSize: 13,
-                fontWeight: 600,
-                color: '#475569',
-                marginBottom: 8,
+                padding: '8px 12px',
+                borderLeft: '3px solid #f59e0b',
+                background: 'rgba(245, 158, 11, 0.08)',
+                borderRadius: '0 6px 6px 0',
               }}
             >
-              Telefon veya E-posta
-            </label>
-            <input
-              type="text"
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              placeholder="05XX XXX XX XX veya email@example.com"
-              style={{
-                width: '100%',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                borderRadius: 10,
-                color: '#0f172a',
-                fontSize: 14,
-                padding: '10px 12px',
-                fontFamily: 'inherit',
-              }}
-            />
+              <p
+                style={{
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: '#b45309',
+                  margin: 0,
+                  lineHeight: '1.5',
+                }}
+              >
+                Telefon veya e-postadan en az biri zorunludur.
+              </p>
+            </div>
+
+            {/* Phone field */}
+            <div>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: fieldErrors.phone ? '#dc2626' : '#475569',
+                  marginBottom: 8,
+                }}
+              >
+                Telefon
+              </label>
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  if (!e.target.value && !email) {
+                    setFieldErrors((prev) => {
+                      const { phone: _, ...rest } = prev;
+                      return rest;
+                    });
+                  } else if (e.target.value) {
+                    setFieldErrors((prev) => {
+                      const { phone: _, contact: __, ...rest } = prev;
+                      return rest;
+                    });
+                  }
+                }}
+                placeholder="05XX XXX XX XX"
+                style={{
+                  width: '100%',
+                  background: '#f8fafc',
+                  border: fieldErrors.phone ? '1px solid #dc2626' : '1px solid #e2e8f0',
+                  borderRadius: 10,
+                  color: '#0f172a',
+                  fontSize: 14,
+                  padding: '10px 12px',
+                  fontFamily: 'inherit',
+                }}
+              />
+              {fieldErrors.phone && (
+                <p
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: '#dc2626',
+                    marginTop: 6,
+                    lineHeight: '1.4',
+                  }}
+                >
+                  {fieldErrors.phone}
+                </p>
+              )}
+            </div>
+
+            {/* Email field */}
+            <div>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: fieldErrors.email ? '#dc2626' : '#475569',
+                  marginBottom: 8,
+                }}
+              >
+                E-posta
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (!e.target.value && !phone) {
+                    setFieldErrors((prev) => {
+                      const { email: _, ...rest } = prev;
+                      return rest;
+                    });
+                  } else if (e.target.value) {
+                    setFieldErrors((prev) => {
+                      const { email: _, contact: __, ...rest } = prev;
+                      return rest;
+                    });
+                  }
+                }}
+                placeholder="email@example.com"
+                style={{
+                  width: '100%',
+                  background: '#f8fafc',
+                  border: fieldErrors.email ? '1px solid #dc2626' : '1px solid #e2e8f0',
+                  borderRadius: 10,
+                  color: '#0f172a',
+                  fontSize: 14,
+                  padding: '10px 12px',
+                  fontFamily: 'inherit',
+                }}
+              />
+              {fieldErrors.email && (
+                <p
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 500,
+                    color: '#dc2626',
+                    marginTop: 6,
+                    lineHeight: '1.4',
+                  }}
+                >
+                  {fieldErrors.email}
+                </p>
+              )}
+            </div>
+
+            {/* Display contact error if neither phone nor email is filled */}
+            {fieldErrors.contact && (
+              <p
+                style={{
+                  fontSize: 12,
+                  fontWeight: 500,
+                  color: '#dc2626',
+                  marginTop: 4,
+                  lineHeight: '1.4',
+                }}
+              >
+                {fieldErrors.contact}
+              </p>
+            )}
           </div>
 
           {/* Message field */}
