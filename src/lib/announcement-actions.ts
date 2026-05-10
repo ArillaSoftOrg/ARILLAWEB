@@ -64,56 +64,60 @@ const DEFAULTS: AnnouncementConfig = {
 
 // ── Zod Validation Schema ──────────────────────────────────────────────────
 
-const announcementSchema = z
-  .object({
-    enabled: z.boolean(),
-    text: z.string().min(1, 'Duyuru metni gereklidir'),
-    description: z.string().nullable().optional(),
-    backgroundColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Geçerli hex rengi girin'),
-    textColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Geçerli hex rengi girin'),
-    dismissible: z.boolean(),
-    countdownEnabled: z.boolean(),
-    countdownMode: z.enum(['fixed', 'daily']),
-    startsAt: z.string().datetime({ offset: true }).nullable().optional(),
-    expiresAt: z.string().datetime({ offset: true }).nullable().optional(),
-    dailyResetHour: z.number().int().min(0).max(23),
-    dailyResetMinute: z.number().int().min(0).max(59),
-    scrollEnabled: z.boolean(),
-    scrollSpeed: z.enum(['slow', 'normal', 'fast']),
-    targetMode: z.enum(['all', 'sectoral', 'selected', 'exclude']),
-    targetRoutes: z.array(z.string()),
-  })
-  .superRefine((data, ctx) => {
-    // expiresAt must be after startsAt when both exist
-    if (data.startsAt && data.expiresAt) {
-      if (new Date(data.expiresAt) <= new Date(data.startsAt)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Bitiş tarihi başlangıç tarihinden sonra olmalıdır',
-          path: ['expiresAt'],
-        });
-      }
-    }
+// Field-level validation only — no superRefine so .partial() is safe to call on this
+const announcementBaseSchema = z.object({
+  enabled: z.boolean(),
+  text: z.string().min(1, 'Duyuru metni gereklidir'),
+  description: z.string().nullable().optional(),
+  backgroundColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Geçerli hex rengi girin'),
+  textColor: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Geçerli hex rengi girin'),
+  dismissible: z.boolean(),
+  countdownEnabled: z.boolean(),
+  countdownMode: z.enum(['fixed', 'daily']),
+  startsAt: z.string().datetime({ offset: true }).nullable().optional(),
+  expiresAt: z.string().datetime({ offset: true }).nullable().optional(),
+  dailyResetHour: z.number().int().min(0).max(23),
+  dailyResetMinute: z.number().int().min(0).max(59),
+  scrollEnabled: z.boolean(),
+  scrollSpeed: z.enum(['slow', 'normal', 'fast']),
+  targetMode: z.enum(['all', 'sectoral', 'selected', 'exclude']),
+  targetRoutes: z.array(z.string()),
+});
 
-    // expiresAt required when countdownEnabled AND countdownMode is "fixed"
-    if (data.countdownEnabled && data.countdownMode === 'fixed' && !data.expiresAt) {
+// Full save schema — adds cross-field rules on top of the base
+const announcementSaveSchema = announcementBaseSchema.superRefine((data, ctx) => {
+  // expiresAt must be after startsAt when both exist
+  if (data.startsAt && data.expiresAt) {
+    if (new Date(data.expiresAt) <= new Date(data.startsAt)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Sabit bitiş modu için bitiş tarihi zorunludur',
+        message: 'Bitiş tarihi başlangıç tarihinden sonra olmalıdır',
         path: ['expiresAt'],
       });
     }
+  }
 
-    // targetRoutes non-empty when mode is selected/exclude
-    if ((data.targetMode === 'selected' || data.targetMode === 'exclude') &&
-        data.targetRoutes.length === 0) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Bu hedefleme modu için en az bir rota gereklidir',
-        path: ['targetRoutes'],
-      });
-    }
-  });
+  // expiresAt required when countdownEnabled AND countdownMode is "fixed"
+  if (data.countdownEnabled && data.countdownMode === 'fixed' && !data.expiresAt) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Sabit bitiş modu için bitiş tarihi zorunludur',
+      path: ['expiresAt'],
+    });
+  }
+
+  // targetRoutes non-empty when mode is selected/exclude
+  if (
+    (data.targetMode === 'selected' || data.targetMode === 'exclude') &&
+    data.targetRoutes.length === 0
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Bu hedefleme modu için en az bir rota gereklidir',
+      path: ['targetRoutes'],
+    });
+  }
+});
 
 // ── Read ───────────────────────────────────────────────────────────────────
 
@@ -167,7 +171,7 @@ export async function getAnnouncementConfig(): Promise<AnnouncementConfig> {
 // ── Write ──────────────────────────────────────────────────────────────────
 
 type UpdateResult =
-  | { success: true; savedConfig?: AnnouncementDebugData }
+  | { success: true; data?: AnnouncementDebugData }
   | {
       success: false;
       errors?: Record<string, string[]>;
@@ -180,7 +184,7 @@ export async function updateAnnouncementConfig(
   data: Partial<AnnouncementConfig>
 ): Promise<UpdateResult> {
   try {
-    const parsed = announcementSchema.partial().safeParse(data);
+    const parsed = announcementSaveSchema.safeParse(data);
     if (!parsed.success) {
       const flat = parsed.error.flatten();
       console.error('[AnnouncementBar Save Error] Zod validation failed:', JSON.stringify(flat));
@@ -212,7 +216,7 @@ export async function updateAnnouncementConfig(
     revalidatePath('/admin/announcements');
 
     const savedConfig = await getAnnouncementDebugData();
-    return { success: true, savedConfig: savedConfig ?? undefined };
+    return { success: true, data: savedConfig ?? undefined };
   } catch (error) {
     const err = error as any;
     console.error(JSON.stringify({
