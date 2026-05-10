@@ -6,44 +6,20 @@ import { useState, useEffect, useTransition } from 'react';
 import { Save } from 'lucide-react';
 import {
   getAnnouncementConfig,
-  getAnnouncementDebugData,
   updateAnnouncementConfig,
   type AnnouncementConfig,
-  type AnnouncementDebugData,
 } from '@/lib/announcement-actions';
-
-type SaveStatus = {
-  success: boolean;
-  hasData: boolean;
-  updatedAt: string | null;
-  errors: Record<string, string[]> | null;
-  formErrors: string[] | null;
-  debugMessage: string | null;
-  prismaCode: string | null;
-  payload: Record<string, unknown> | null;
-};
 
 export default function AnnouncementsPage() {
   const [form, setForm] = useState<AnnouncementConfig | null>(null);
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [saved, setSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [dbConfig, setDbConfig] = useState<AnnouncementDebugData | null>(null);
-  const [isReloading, setIsReloading] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<SaveStatus | null>(null);
 
   // ── Load on mount ──────────────────────────────────────────────────────────
 
   useEffect(() => {
-    const load = async () => {
-      const [config, debug] = await Promise.all([
-        getAnnouncementConfig(),
-        getAnnouncementDebugData(),
-      ]);
-      setForm(config);
-      setDbConfig(debug);
-    };
-    load();
+    getAnnouncementConfig().then(setForm);
   }, []);
 
   // ── Helpers ────────────────────────────────────────────────────────────────
@@ -107,44 +83,15 @@ export default function AnnouncementsPage() {
         targetRoutes: Array.isArray(form.targetRoutes) ? form.targetRoutes : [],
       };
 
-      console.log('[Announcement Save Payload]', payload);
-
       const result = await updateAnnouncementConfig(payload);
-
-      console.log('[Announcement Save Result]', result);
 
       if (result.success) {
         setSaved(true);
         setErrors({});
         setTimeout(() => setSaved(false), 3000);
-        const [freshConfig, freshDebug] = await Promise.all([
-          getAnnouncementConfig(),
-          getAnnouncementDebugData(),
-        ]);
-        setForm(freshConfig);
-        setDbConfig(freshDebug);
-        setSaveStatus({
-          success: true,
-          hasData: freshDebug !== null,
-          updatedAt: freshDebug?.updatedAt ?? null,
-          errors: null,
-          formErrors: null,
-          debugMessage: null,
-          prismaCode: null,
-          payload,
-        });
+        getAnnouncementConfig().then(setForm);
       } else {
         setErrors(result.errors ?? {});
-        setSaveStatus({
-          success: false,
-          hasData: false,
-          updatedAt: null,
-          errors: result.errors ?? null,
-          formErrors: result.formErrors ?? null,
-          debugMessage: result.debugMessage ?? null,
-          prismaCode: result.prismaCode ?? null,
-          payload,
-        });
       }
     });
   };
@@ -152,13 +99,6 @@ export default function AnnouncementsPage() {
   const getFieldError = (field: string): string | undefined => {
     const errs = errors[field];
     return errs && errs.length > 0 ? errs[0] : undefined;
-  };
-
-  const handleReloadDebug = async () => {
-    setIsReloading(true);
-    const data = await getAnnouncementDebugData();
-    setDbConfig(data);
-    setIsReloading(false);
   };
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -644,131 +584,6 @@ export default function AnnouncementsPage() {
           <div className="p-8 text-center" style={{ color: '#64748b' }}>Form yükleniyor...</div>
         )}
 
-        {/* DEBUG PANEL — always visible, remove after investigation */}
-        <div className="mt-8 space-y-4">
-          {/* Son kayıt durumu */}
-          <section style={{ background: '#1e293b', padding: '16px', borderRadius: '8px', border: '2px solid #f59e0b' }}>
-            <h2 className="text-base font-bold mb-3" style={{ color: '#f59e0b' }}>
-              [DEBUG] Son Kayıt Durumu
-            </h2>
-            {saveStatus ? (
-              <div className="space-y-3">
-                <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
-                  <tbody>
-                    <tr style={{ borderBottom: '1px solid #334155' }}>
-                      <td className="py-1 pr-4 font-mono" style={{ color: '#64748b', width: '180px' }}>success</td>
-                      <td className="py-1 font-mono font-bold" style={{ color: saveStatus.success ? '#4ade80' : '#f87171' }}>
-                        {String(saveStatus.success)}
-                      </td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid #334155' }}>
-                      <td className="py-1 pr-4 font-mono" style={{ color: '#64748b' }}>returned data exists</td>
-                      <td className="py-1 font-mono font-bold" style={{ color: saveStatus.hasData ? '#4ade80' : '#f87171' }}>
-                        {String(saveStatus.hasData)}
-                      </td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid #334155' }}>
-                      <td className="py-1 pr-4 font-mono" style={{ color: '#64748b' }}>updatedAt</td>
-                      <td className="py-1 font-mono" style={{ color: '#e2e8f0' }}>
-                        {saveStatus.updatedAt ?? '(null)'}
-                      </td>
-                    </tr>
-                    {saveStatus.debugMessage && (
-                      <tr style={{ borderBottom: '1px solid #334155' }}>
-                        <td className="py-1 pr-4 font-mono" style={{ color: '#64748b' }}>debugMessage</td>
-                        <td className="py-1 font-mono" style={{ color: '#f87171' }}>{saveStatus.debugMessage}</td>
-                      </tr>
-                    )}
-                    {saveStatus.prismaCode && (
-                      <tr style={{ borderBottom: '1px solid #334155' }}>
-                        <td className="py-1 pr-4 font-mono" style={{ color: '#64748b' }}>prismaCode</td>
-                        <td className="py-1 font-mono" style={{ color: '#f87171' }}>{saveStatus.prismaCode}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-
-                {saveStatus.formErrors && saveStatus.formErrors.length > 0 && (
-                  <div>
-                    <p className="text-xs font-mono mb-1" style={{ color: '#94a3b8' }}>formErrors:</p>
-                    <pre className="text-xs p-2 rounded overflow-auto" style={{ background: '#0f172a', color: '#f87171' }}>
-                      {JSON.stringify(saveStatus.formErrors, null, 2)}
-                    </pre>
-                  </div>
-                )}
-
-                {saveStatus.errors && (
-                  <div>
-                    <p className="text-xs font-mono mb-1" style={{ color: '#94a3b8' }}>errors (fieldErrors):</p>
-                    <pre className="text-xs p-2 rounded overflow-auto" style={{ background: '#0f172a', color: '#fbbf24' }}>
-                      {JSON.stringify(saveStatus.errors, null, 2)}
-                    </pre>
-                  </div>
-                )}
-
-                {saveStatus.payload && (
-                  <div>
-                    <p className="text-xs font-mono mb-1" style={{ color: '#94a3b8' }}>submitted payload:</p>
-                    <pre className="text-xs p-2 rounded overflow-auto" style={{ background: '#0f172a', color: '#7dd3fc' }}>
-                      {JSON.stringify(saveStatus.payload, null, 2)}
-                    </pre>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="text-sm font-mono" style={{ color: '#475569' }}>Henüz kayıt yapılmadı.</p>
-            )}
-          </section>
-
-          {/* Kayıtlı DB verisi */}
-          <section style={{ background: '#0f172a', padding: '24px', borderRadius: '8px', border: '2px solid #f59e0b' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold" style={{ color: '#f59e0b' }}>
-                [DEBUG] Kayıtlı Duyuru Verisi
-              </h2>
-              <button
-                onClick={handleReloadDebug}
-                disabled={isReloading}
-                className="px-3 py-1 rounded text-sm font-medium disabled:opacity-50"
-                style={{ background: '#1e293b', color: '#94a3b8', border: '1px solid #334155' }}
-              >
-                {isReloading ? 'Yükleniyor...' : 'Yeniden Yükle'}
-              </button>
-            </div>
-            {dbConfig ? (
-              <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
-                <tbody>
-                  {(
-                    [
-                      ['enabled', String(dbConfig.enabled)],
-                      ['text', dbConfig.text || '(boş)'],
-                      ['description', dbConfig.description ?? '(null)'],
-                      ['dismissible', String(dbConfig.dismissible)],
-                      ['countdownEnabled', String(dbConfig.countdownEnabled)],
-                      ['countdownMode', dbConfig.countdownMode],
-                      ['startsAt', dbConfig.startsAt ?? '(null)'],
-                      ['expiresAt', dbConfig.expiresAt ?? '(null)'],
-                      ['scrollEnabled', String(dbConfig.scrollEnabled)],
-                      ['scrollSpeed', dbConfig.scrollSpeed],
-                      ['targetMode', dbConfig.targetMode],
-                      ['targetRoutes', JSON.stringify(dbConfig.targetRoutes)],
-                      ['updatedAt', dbConfig.updatedAt],
-                    ] as [string, string][]
-                  ).map(([key, val]) => (
-                    <tr key={key} style={{ borderBottom: '1px solid #1e293b' }}>
-                      <td className="py-1 pr-4 font-mono" style={{ color: '#64748b', width: '160px' }}>{key}</td>
-                      <td className="py-1 font-mono" style={{ color: '#e2e8f0' }}>{val}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="text-sm font-mono" style={{ color: '#475569' }}>
-                {form === null ? 'Yükleniyor...' : 'DB\'de kayıt bulunamadı.'}
-              </p>
-            )}
-          </section>
-        </div>
       </div>
     </div>
   );
