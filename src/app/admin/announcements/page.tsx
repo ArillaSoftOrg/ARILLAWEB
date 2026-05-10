@@ -4,8 +4,10 @@ import { useState, useEffect, useTransition } from 'react';
 import { Save } from 'lucide-react';
 import {
   getAnnouncementConfig,
+  getAnnouncementDebugData,
   updateAnnouncementConfig,
   type AnnouncementConfig,
+  type AnnouncementDebugData,
 } from '@/lib/announcement-actions';
 
 export default function AnnouncementsPage() {
@@ -13,6 +15,8 @@ export default function AnnouncementsPage() {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [saved, setSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [dbConfig, setDbConfig] = useState<AnnouncementDebugData | null>(null);
+  const [isReloading, setIsReloading] = useState(false);
 
   // ── Load on mount ──────────────────────────────────────────────────────────
 
@@ -74,6 +78,7 @@ export default function AnnouncementsPage() {
       if (result.success) {
         setSaved(true);
         setErrors({});
+        if (result.savedConfig) setDbConfig(result.savedConfig);
         setTimeout(() => setSaved(false), 3000);
       } else {
         setErrors(result.errors ?? {});
@@ -84,6 +89,13 @@ export default function AnnouncementsPage() {
   const getFieldError = (field: string): string | undefined => {
     const errs = errors[field];
     return errs && errs.length > 0 ? errs[0] : undefined;
+  };
+
+  const handleReloadDebug = async () => {
+    setIsReloading(true);
+    const data = await getAnnouncementDebugData();
+    setDbConfig(data);
+    setIsReloading(false);
   };
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -574,6 +586,51 @@ export default function AnnouncementsPage() {
               {isPending ? 'Kaydediliyor...' : 'Kaydet'}
             </button>
           </div>
+
+          {/* DEBUG PANEL — remove after investigation */}
+          {dbConfig && (
+            <section style={{ background: '#0f172a', padding: '24px', borderRadius: '8px', border: '2px solid #f59e0b' }}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold" style={{ color: '#f59e0b' }}>
+                  [DEBUG] Kayıtlı Duyuru Verisi
+                </h2>
+                <button
+                  onClick={handleReloadDebug}
+                  disabled={isReloading}
+                  className="px-3 py-1 rounded text-sm font-medium disabled:opacity-50"
+                  style={{ background: '#1e293b', color: '#94a3b8', border: '1px solid #334155' }}
+                >
+                  {isReloading ? 'Yükleniyor...' : 'Yeniden Yükle'}
+                </button>
+              </div>
+              <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
+                <tbody>
+                  {(
+                    [
+                      ['enabled', String(dbConfig.enabled)],
+                      ['text', dbConfig.text],
+                      ['description', dbConfig.description ?? '(null)'],
+                      ['dismissible', String(dbConfig.dismissible)],
+                      ['countdownEnabled', String(dbConfig.countdownEnabled)],
+                      ['countdownMode', dbConfig.countdownMode],
+                      ['startsAt', dbConfig.startsAt ?? '(null)'],
+                      ['expiresAt', dbConfig.expiresAt ?? '(null)'],
+                      ['scrollEnabled', String(dbConfig.scrollEnabled)],
+                      ['scrollSpeed', dbConfig.scrollSpeed],
+                      ['targetMode', dbConfig.targetMode],
+                      ['targetRoutes', JSON.stringify(dbConfig.targetRoutes)],
+                      ['updatedAt', dbConfig.updatedAt],
+                    ] as [string, string][]
+                  ).map(([key, val]) => (
+                    <tr key={key} style={{ borderBottom: '1px solid #1e293b' }}>
+                      <td className="py-1 pr-4 font-mono" style={{ color: '#64748b', width: '160px' }}>{key}</td>
+                      <td className="py-1 font-mono" style={{ color: '#e2e8f0' }}>{val}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )}
         </div>
       </div>
     </div>

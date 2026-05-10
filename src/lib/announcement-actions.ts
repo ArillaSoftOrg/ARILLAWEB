@@ -6,6 +6,22 @@ import { z } from 'zod';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
+export type AnnouncementDebugData = {
+  enabled: boolean;
+  text: string;
+  description: string | null;
+  countdownEnabled: boolean;
+  countdownMode: string;
+  startsAt: string | null;
+  expiresAt: string | null;
+  scrollEnabled: boolean;
+  scrollSpeed: string;
+  targetMode: string;
+  targetRoutes: string[];
+  dismissible: boolean;
+  updatedAt: string;
+};
+
 export type AnnouncementConfig = {
   enabled: boolean;
   text: string;
@@ -101,6 +117,26 @@ const announcementSchema = z
 
 // ── Read ───────────────────────────────────────────────────────────────────
 
+export async function getAnnouncementDebugData(): Promise<AnnouncementDebugData | null> {
+  const row = await prisma.announcementBar.findFirst();
+  if (!row) return null;
+  return {
+    enabled: row.enabled,
+    text: row.text,
+    description: row.description,
+    countdownEnabled: row.countdownEnabled,
+    countdownMode: row.countdownMode,
+    startsAt: row.startsAt?.toISOString() ?? null,
+    expiresAt: row.expiresAt?.toISOString() ?? null,
+    scrollEnabled: row.scrollEnabled,
+    scrollSpeed: row.scrollSpeed,
+    targetMode: row.targetMode,
+    targetRoutes: row.targetRoutes,
+    dismissible: row.dismissible,
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
 export async function getAnnouncementConfig(): Promise<AnnouncementConfig> {
   let row = await prisma.announcementBar.findFirst();
   if (!row) {
@@ -130,7 +166,7 @@ export async function getAnnouncementConfig(): Promise<AnnouncementConfig> {
 
 export async function updateAnnouncementConfig(
   data: Partial<AnnouncementConfig>
-): Promise<{ success: boolean; errors?: Record<string, string[]> }> {
+): Promise<{ success: boolean; savedConfig?: AnnouncementDebugData; errors?: Record<string, string[]> }> {
   try {
     const parsed = announcementSchema.partial().safeParse(data);
     if (!parsed.success) {
@@ -162,7 +198,8 @@ export async function updateAnnouncementConfig(
     revalidatePath('/hizmetler');
     revalidatePath('/admin/announcements');
 
-    return { success: true };
+    const savedConfig = await getAnnouncementDebugData();
+    return { success: true, savedConfig: savedConfig ?? undefined };
   } catch (error) {
     const err = error as any;
     const errorLog = {
