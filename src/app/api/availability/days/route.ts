@@ -79,7 +79,8 @@ export async function GET(req: Request) {
         bookedSlots,
         dayBlockedDates,
         dayRules,
-        generatedSlots
+        generatedSlots,
+        dayBlockedSlots
       );
 
       result[dateStr] = status;

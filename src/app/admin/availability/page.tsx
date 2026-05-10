@@ -11,10 +11,11 @@ import {
   unblockTimeSlot,
 } from '@/lib/availability-actions';
 import type { AvailabilityRuleRecord, BlockedDateRecord, BlockedTimeSlotRecord } from '@/lib/availability';
+import { SERVICE_SLUGS, SERVICE_LABELS, getServicesForForm } from '@/lib/services';
 
 const DAYS = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
 const DAY_NUMS = [0, 1, 2, 3, 4, 5, 6];
-const SERVICES = ['all', 'Web Geliştirme', 'Mobil Uygulama', 'Özel Yazılım', 'API & Backend', 'QR Menü Sistemi', 'Randevu Yönetim Sistemi', 'Bakım & Destek'];
+const SERVICES_FOR_FORM = getServicesForForm(true);
 
 interface DayRowProps {
   dayNum: number;
@@ -114,12 +115,12 @@ export default function AvailabilityPage() {
   const [blockedSlots, setBlockedSlots] = useState<BlockedTimeSlotRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedService, setSelectedService] = useState('all');
+  const [selectedService, setSelectedService] = useState<string>(SERVICE_SLUGS.ALL);
 
   // Block date form state
-  const [blockDateInput, setBlockDateInput] = useState({ date: '', service: 'all', reason: '' });
+  const [blockDateInput, setBlockDateInput] = useState<{ date: string; service: string; reason: string }>({ date: '', service: SERVICE_SLUGS.ALL, reason: '' });
   // Block slot form state
-  const [blockSlotInput, setBlockSlotInput] = useState({ date: '', time: '', service: 'all', reason: '' });
+  const [blockSlotInput, setBlockSlotInput] = useState<{ date: string; time: string; service: string; reason: string }>({ date: '', time: '', service: SERVICE_SLUGS.ALL, reason: '' });
 
   useEffect(() => {
     loadConfig();
@@ -185,7 +186,7 @@ export default function AvailabilityPage() {
         service: blockDateInput.service,
         reason: blockDateInput.reason || undefined,
       });
-      setBlockDateInput({ date: '', service: 'all', reason: '' });
+      setBlockDateInput({ date: '', service: SERVICE_SLUGS.ALL, reason: '' });
       await loadConfig();
     } catch (err) {
       setError('Tarih engellenemedi');
@@ -215,7 +216,7 @@ export default function AvailabilityPage() {
         service: blockSlotInput.service,
         reason: blockSlotInput.reason || undefined,
       });
-      setBlockSlotInput({ date: '', time: '', service: 'all', reason: '' });
+      setBlockSlotInput({ date: '', time: '', service: SERVICE_SLUGS.ALL, reason: '' });
       await loadConfig();
     } catch (err) {
       setError('Saat dilimi engellenemedi');
@@ -293,9 +294,9 @@ export default function AvailabilityPage() {
             className="w-full px-4 py-2 rounded-lg"
             style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
           >
-            {SERVICES.map((svc) => (
-              <option key={svc} value={svc}>
-                {svc === 'all' ? 'Tüm Hizmetler' : svc}
+            {SERVICES_FOR_FORM.map((svc) => (
+              <option key={svc.slug} value={svc.slug}>
+                {svc.label}
               </option>
             ))}
           </select>
@@ -359,9 +360,9 @@ export default function AvailabilityPage() {
                 className="w-full px-4 py-2 rounded-lg"
                 style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
               >
-                {SERVICES.map((svc) => (
-                  <option key={svc} value={svc}>
-                    {svc === 'all' ? 'Tüm Hizmetler' : svc}
+                {SERVICES_FOR_FORM.map((svc) => (
+                  <option key={svc.slug} value={svc.slug}>
+                    {svc.label}
                   </option>
                 ))}
               </select>
@@ -401,7 +402,7 @@ export default function AvailabilityPage() {
                     <div>
                       <p className="text-sm font-semibold">{bd.date}</p>
                       <p style={{ fontSize: '12px', color: '#475569' }}>
-                        {bd.service === 'all' ? 'Tüm Hizmetler' : bd.service} {bd.reason && `· ${bd.reason}`}
+                        {SERVICE_LABELS[bd.service as keyof typeof SERVICE_LABELS] || bd.service} {bd.reason && `· ${bd.reason}`}
                       </p>
                     </div>
                     <button
@@ -453,9 +454,9 @@ export default function AvailabilityPage() {
                 className="w-full px-4 py-2 rounded-lg"
                 style={{ background: '#f1f5f9', color: '#0f172a', border: '1px solid rgba(0,0,0,0.1)' }}
               >
-                {SERVICES.map((svc) => (
-                  <option key={svc} value={svc}>
-                    {svc === 'all' ? 'Tüm Hizmetler' : svc}
+                {SERVICES_FOR_FORM.map((svc) => (
+                  <option key={svc.slug} value={svc.slug}>
+                    {svc.label}
                   </option>
                 ))}
               </select>
@@ -495,7 +496,7 @@ export default function AvailabilityPage() {
                     <div>
                       <p className="text-sm font-semibold">{bs.date} - {bs.time}</p>
                       <p style={{ fontSize: '12px', color: '#475569' }}>
-                        {bs.service === 'all' ? 'Tüm Hizmetler' : bs.service} {bs.reason && `· ${bs.reason}`}
+                        {SERVICE_LABELS[bs.service as keyof typeof SERVICE_LABELS] || bs.service} {bs.reason && `· ${bs.reason}`}
                       </p>
                     </div>
                     <button

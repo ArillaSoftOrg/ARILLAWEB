@@ -1,8 +1,9 @@
 'use client';
 
-import { useLayoutEffect, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, AlertCircle } from 'lucide-react';
+import { getServicesForForm, SERVICE_LABELS } from '@/lib/services';
 
 interface DraftData {
   service?: string;
@@ -15,15 +16,7 @@ interface DaySlot {
   status: 'available' | 'booked' | 'blocked';
 }
 
-const SERVICE_OPTIONS = [
-  'Web Geliştirme',
-  'Mobil Uygulama',
-  'Özel Yazılım',
-  'API & Backend',
-  'QR Menü Sistemi',
-  'Randevu Yönetim Sistemi',
-  'Bakım & Destek',
-];
+const SERVICES_FOR_FORM = getServicesForForm(false);
 
 export default function RandevualClient() {
   const router = useRouter();
@@ -49,7 +42,7 @@ export default function RandevualClient() {
   const [loadingSlots, setLoadingSlots] = useState(false);
 
   // Load draft from sessionStorage on mount
-  useLayoutEffect(() => {
+  useEffect(() => {
     const stored = sessionStorage.getItem('randevuDraft');
     if (stored) {
       try {
@@ -262,7 +255,7 @@ export default function RandevualClient() {
                 <p style={{ fontSize: 12, color: '#64748b', fontWeight: 600, marginBottom: 4 }}>
                   HİZMET
                 </p>
-                <p style={{ fontSize: 14, color: '#0f172a', fontWeight: 500 }}>{service}</p>
+                <p style={{ fontSize: 14, color: '#0f172a', fontWeight: 500 }}>{SERVICE_LABELS[service as keyof typeof SERVICE_LABELS] || service}</p>
               </div>
             )}
 
@@ -391,9 +384,9 @@ export default function RandevualClient() {
               }}
             >
               <option value="">Hizmet seçiniz</option>
-              {SERVICE_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
+              {SERVICES_FOR_FORM.map((opt) => (
+                <option key={opt.slug} value={opt.slug}>
+                  {opt.label}
                 </option>
               ))}
             </select>

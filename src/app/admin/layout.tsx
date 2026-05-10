@@ -12,6 +12,7 @@ import {
   Calendar,
   Clock,
   Settings,
+  Megaphone,
   ChevronRight,
   Menu,
   X,
@@ -72,6 +73,12 @@ const navItems = [
     label: "Site Ayarları",
     href: "/admin/settings",
     icon: Settings,
+    exact: false,
+  },
+  {
+    label: "Duyurular",
+    href: "/admin/announcements",
+    icon: Megaphone,
     exact: false,
   },
 ];

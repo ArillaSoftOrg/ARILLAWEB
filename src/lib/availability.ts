@@ -107,7 +107,8 @@ export function getDayStatus(
   bookedSlots: string[], // slots booked for this date
   blockedDates: BlockedDateRecord[],
   rules: AvailabilityRuleRecord[],
-  generatedSlots: string[] // slots that would be available if day were open
+  generatedSlots: string[], // slots that would be available if day were open
+  blockedTimeSlots?: BlockedTimeSlotRecord[] // blocked time slots for this date
 ): DayStatus {
   // Check if date is in the past
   const today = new Date().toISOString().split('T')[0];
@@ -150,7 +151,7 @@ export function getDayStatus(
 
   const availableSlots = generatedSlots.filter(
     (slot) =>
-      isSlotAvailable(slot, dateStr, service, bookedSlots, [], rules) === 'available'
+      isSlotAvailable(slot, dateStr, service, bookedSlots, blockedTimeSlots || [], rules) === 'available'
   );
 
   if (availableSlots.length === 0) {

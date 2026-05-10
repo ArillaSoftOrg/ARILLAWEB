@@ -103,15 +103,14 @@ export async function POST(req: NextRequest) {
     }
 
     // All checks passed — create the appointment
-    // Combine phone and email into single contact field for database
-    const contact = data.email || data.phone || '';
     await prisma.appointmentRequest.create({
       data: {
         service: data.service,
         date: data.date,
         time: data.time,
         name: data.name,
-        contact,
+        phone: data.phone ?? null,
+        email: data.email ?? null,
         message: data.message,
       },
     });

@@ -3,21 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { getServicesForForm, SERVICE_LABELS } from '@/lib/services';
 
 interface HeroBookingFormProps {
   defaultService?: string;
   theme?: 'light' | 'dark';
 }
 
-const SERVICE_OPTIONS = [
-  'Web Geliştirme',
-  'Mobil Uygulama',
-  'Özel Yazılım',
-  'API & Backend',
-  'QR Menü Sistemi',
-  'Randevu Yönetim Sistemi',
-  'Bakım & Destek',
-];
+const SERVICES_FOR_FORM = getServicesForForm(false);
 
 type DayStatus = 'available' | 'closed' | 'fully_booked' | 'blocked' | 'past';
 type SlotStatus = 'available' | 'booked' | 'blocked';
@@ -38,7 +31,7 @@ function getMonthStr(year: number, month: number): string {
 export default function HeroBookingForm({ defaultService, theme = 'light' }: HeroBookingFormProps) {
   const router = useRouter();
   const [service, setService] = useState<string>(
-    SERVICE_OPTIONS.includes(defaultService || '') ? defaultService! : ''
+    SERVICES_FOR_FORM.some((s) => s.slug === defaultService) ? defaultService! : ''
   );
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
@@ -270,9 +263,9 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
           <option value="" disabled>
             Hizmet seçiniz
           </option>
-          {SERVICE_OPTIONS.map((opt) => (
-            <option key={opt} value={opt}>
-              {opt}
+          {SERVICES_FOR_FORM.map((opt) => (
+            <option key={opt.slug} value={opt.slug}>
+              {opt.label}
             </option>
           ))}
         </select>

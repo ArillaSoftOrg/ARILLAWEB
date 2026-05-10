@@ -238,6 +238,27 @@ model SiteSetting {
   updatedAt           DateTime @updatedAt
 }
 
+model AnnouncementBar {
+  id                 String    @id @default(cuid())
+  enabled            Boolean   @default(false)
+  text               String    @default("")
+  description        String?
+  backgroundColor    String    @default("#dc2626")
+  textColor          String    @default("#ffffff")
+  dismissible        Boolean   @default(false)
+  countdownEnabled   Boolean   @default(false)
+  countdownMode      String    @default("fixed")
+  startsAt           DateTime?
+  expiresAt          DateTime?
+  dailyResetHour     Int       @default(0)
+  dailyResetMinute   Int       @default(0)
+  scrollEnabled      Boolean   @default(false)
+  scrollSpeed        String    @default("normal")
+  targetMode         String    @default("all")
+  targetRoutes       String[]  @default([])
+  updatedAt          DateTime  @updatedAt
+}
+
 model PartnerLogo {
   id         String   @id @default(cuid())
   name       String
