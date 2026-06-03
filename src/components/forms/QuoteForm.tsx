@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,6 +15,10 @@ import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function QuoteForm() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const t = useTranslations('forms.quote');
+  const tTypes = useTranslations('projectTypes');
+  const tBudget = useTranslations('budgetRanges');
+  const tPlatforms = useTranslations('platforms');
 
   const {
     register,
@@ -46,11 +51,11 @@ export default function QuoteForm() {
     return (
       <div className="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
         <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-green-800 mb-2">Teklif Talebiniz Alındı!</h3>
-        <p className="text-green-600 mb-2">1-2 iş günü içinde size detaylı teklif sunacağız.</p>
-        <p className="text-sm text-green-500 mb-4">E-posta adresinize onay mesajı gönderildi.</p>
+        <h3 className="text-lg font-semibold text-green-800 mb-2">{t('successTitle')}</h3>
+        <p className="text-green-600 mb-2">{t('successBody')}</p>
+        <p className="text-sm text-green-500 mb-4">{t('successEmail')}</p>
         <Button variant="secondary" onClick={() => setStatus('idle')}>
-          Yeni Teklif Talebi
+          {t('newRequest')}
         </Button>
       </div>
     );
@@ -61,56 +66,56 @@ export default function QuoteForm() {
       {status === 'error' && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
           <AlertCircle className="h-5 w-5 text-red-500 shrink-0" />
-          <p className="text-sm text-red-600">Form gönderilemedi. Lütfen tekrar deneyin.</p>
+          <p className="text-sm text-red-600">{t('error')}</p>
         </div>
       )}
 
-      {/* Kişisel Bilgiler */}
+      {/* Contact Information */}
       <div>
         <h3 className="text-base font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-100">
-          İletişim Bilgileri
+          {t('contactSection')}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label htmlFor="fullName">Ad Soyad *</Label>
-            <Input id="fullName" placeholder="Ahmet Yılmaz" {...register('fullName')} />
+            <Label htmlFor="fullName">{t('fullName')}</Label>
+            <Input id="fullName" placeholder={t('fullNamePlaceholder')} {...register('fullName')} />
             {errors.fullName && <p className="text-xs text-red-500">{errors.fullName.message}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="email">E-posta *</Label>
+            <Label htmlFor="email">{t('email')}</Label>
             <Input id="email" type="email" placeholder="ahmet@sirket.com" {...register('email')} />
             {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="phone">Telefon</Label>
+            <Label htmlFor="phone">{t('phone')}</Label>
             <Input id="phone" placeholder="+90 500 000 00 00" {...register('phone')} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="company">Şirket</Label>
-            <Input id="company" placeholder="Şirket Adı" {...register('company')} />
+            <Label htmlFor="company">{t('company')}</Label>
+            <Input id="company" placeholder={t('companyPlaceholder')} {...register('company')} />
           </div>
         </div>
       </div>
 
-      {/* Proje Detayları */}
+      {/* Project Details */}
       <div>
         <h3 className="text-base font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-100">
-          Proje Detayları
+          {t('projectSection')}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label>Proje Türü *</Label>
+            <Label>{t('projectType')}</Label>
             <Controller
               name="projectType"
               control={control}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Seçiniz" />
+                    <SelectValue placeholder={t('selectPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(PROJECT_TYPE_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>{label}</SelectItem>
+                    {Object.keys(PROJECT_TYPE_LABELS).map((value) => (
+                      <SelectItem key={value} value={value}>{tTypes(value)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -120,18 +125,18 @@ export default function QuoteForm() {
           </div>
 
           <div className="space-y-1.5">
-            <Label>Bütçe Aralığı *</Label>
+            <Label>{t('budgetRange')}</Label>
             <Controller
               name="budgetRange"
               control={control}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Seçiniz" />
+                    <SelectValue placeholder={t('selectPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(BUDGET_RANGE_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>{label}</SelectItem>
+                    {Object.keys(BUDGET_RANGE_LABELS).map((value) => (
+                      <SelectItem key={value} value={value}>{tBudget(value)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -141,18 +146,18 @@ export default function QuoteForm() {
           </div>
 
           <div className="space-y-1.5">
-            <Label>Hedef Platform *</Label>
+            <Label>{t('targetPlatform')}</Label>
             <Controller
               name="targetPlatform"
               control={control}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Seçiniz" />
+                    <SelectValue placeholder={t('selectPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(PLATFORM_LABELS).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>{label}</SelectItem>
+                    {Object.keys(PLATFORM_LABELS).map((value) => (
+                      <SelectItem key={value} value={value}>{tPlatforms(value)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -162,32 +167,32 @@ export default function QuoteForm() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="deliveryExpectation">Beklenen Teslim Süresi</Label>
-            <Input id="deliveryExpectation" placeholder="Örn: 3 ay, 6 ay..." {...register('deliveryExpectation')} />
+            <Label htmlFor="deliveryExpectation">{t('delivery')}</Label>
+            <Input id="deliveryExpectation" placeholder={t('deliveryPlaceholder')} {...register('deliveryExpectation')} />
           </div>
         </div>
       </div>
 
-      {/* Proje Açıklaması */}
+      {/* Project Description */}
       <div>
         <h3 className="text-base font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-100">
-          Proje Açıklaması
+          {t('descriptionSection')}
         </h3>
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="description">Proje Açıklaması *</Label>
+            <Label htmlFor="description">{t('description')}</Label>
             <Textarea
               id="description"
               rows={5}
-              placeholder="Projenizi, hedeflerinizi ve temel gereksinimlerinizi açıklayın..."
+              placeholder={t('descriptionPlaceholder')}
               {...register('description')}
             />
             {errors.description && <p className="text-xs text-red-500">{errors.description.message}</p>}
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="integrations">Entegrasyon İhtiyaçları</Label>
-            <Input id="integrations" placeholder="Ödeme sistemi, CRM, ERP, API..." {...register('integrations')} />
+            <Label htmlFor="integrations">{t('integrations')}</Label>
+            <Input id="integrations" placeholder={t('integrationsPlaceholder')} {...register('integrations')} />
           </div>
 
           <div className="flex items-center gap-3">
@@ -198,7 +203,7 @@ export default function QuoteForm() {
               {...register('hasExistingSystem')}
             />
             <Label htmlFor="hasExistingSystem" className="font-normal cursor-pointer">
-              Mevcut bir sistemim var, entegrasyon gerekiyor
+              {t('hasExistingSystem')}
             </Label>
           </div>
         </div>
@@ -208,10 +213,10 @@ export default function QuoteForm() {
         {status === 'loading' ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Gönderiliyor...
+            {t('sending')}
           </>
         ) : (
-          'Teklif Talebini Gönder'
+          t('submit')
         )}
       </Button>
     </form>

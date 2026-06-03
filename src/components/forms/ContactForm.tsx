@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,6 +13,7 @@ import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const t = useTranslations('forms.contact');
 
   const {
     register,
@@ -42,10 +44,10 @@ export default function ContactForm() {
     return (
       <div className="bg-green-50 border border-green-200 rounded-xl p-8 text-center">
         <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-green-800 mb-2">Mesajınız Alındı!</h3>
-        <p className="text-green-600 mb-4">En kısa sürede size dönüş yapacağız.</p>
+        <h3 className="text-lg font-semibold text-green-800 mb-2">{t('successTitle')}</h3>
+        <p className="text-green-600 mb-4">{t('successBody')}</p>
         <Button variant="secondary" onClick={() => setStatus('idle')}>
-          Yeni Mesaj Gönder
+          {t('newMessage')}
         </Button>
       </div>
     );
@@ -56,18 +58,18 @@ export default function ContactForm() {
       {status === 'error' && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
           <AlertCircle className="h-5 w-5 text-red-500 shrink-0" />
-          <p className="text-sm text-red-600">Mesaj gönderilemedi. Lütfen tekrar deneyin.</p>
+          <p className="text-sm text-red-600">{t('error')}</p>
         </div>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="fullName">Ad Soyad *</Label>
-          <Input id="fullName" placeholder="Ahmet Yılmaz" {...register('fullName')} />
+          <Label htmlFor="fullName">{t('fullName')}</Label>
+          <Input id="fullName" placeholder={t('fullNamePlaceholder')} {...register('fullName')} />
           {errors.fullName && <p className="text-xs text-red-500">{errors.fullName.message}</p>}
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="email">E-posta *</Label>
+          <Label htmlFor="email">{t('email')}</Label>
           <Input id="email" type="email" placeholder="ahmet@sirket.com" {...register('email')} />
           {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
         </div>
@@ -75,27 +77,27 @@ export default function ContactForm() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label htmlFor="phone">Telefon</Label>
+          <Label htmlFor="phone">{t('phone')}</Label>
           <Input id="phone" placeholder="+90 500 000 00 00" {...register('phone')} />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="company">Şirket</Label>
-          <Input id="company" placeholder="Şirket Adı" {...register('company')} />
+          <Label htmlFor="company">{t('company')}</Label>
+          <Input id="company" placeholder={t('companyPlaceholder')} {...register('company')} />
         </div>
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="subject">Konu *</Label>
-        <Input id="subject" placeholder="Nasıl yardımcı olabiliriz?" {...register('subject')} />
+        <Label htmlFor="subject">{t('subject')}</Label>
+        <Input id="subject" placeholder={t('subjectPlaceholder')} {...register('subject')} />
         {errors.subject && <p className="text-xs text-red-500">{errors.subject.message}</p>}
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="message">Mesaj *</Label>
+        <Label htmlFor="message">{t('message')}</Label>
         <Textarea
           id="message"
           rows={5}
-          placeholder="Projeniz veya sorunuz hakkında bilgi verin..."
+          placeholder={t('messagePlaceholder')}
           {...register('message')}
         />
         {errors.message && <p className="text-xs text-red-500">{errors.message.message}</p>}
@@ -105,10 +107,10 @@ export default function ContactForm() {
         {status === 'loading' ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Gönderiliyor...
+            {t('sending')}
           </>
         ) : (
-          'Mesajı Gönder'
+          t('submit')
         )}
       </Button>
     </form>

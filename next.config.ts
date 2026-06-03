@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   images: {
@@ -12,48 +15,48 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // Services → Hizmetler
+      // Services → /tr/hizmetler (default locale)
       {
         source: "/services",
-        destination: "/hizmetler",
+        destination: "/tr/hizmetler",
         permanent: true,
       },
       {
         source: "/services/:slug",
-        destination: "/hizmetler/:slug",
+        destination: "/tr/hizmetler/:slug",
         permanent: true,
       },
-      // Blog → Kurumsal/Blog
+      // Blog → /tr/kurumsal/blog
       {
         source: "/blog",
-        destination: "/kurumsal/blog",
+        destination: "/tr/kurumsal/blog",
         permanent: true,
       },
       {
         source: "/blog/:slug",
-        destination: "/kurumsal/blog/:slug",
+        destination: "/tr/kurumsal/blog/:slug",
         permanent: true,
       },
-      // Hakkımızda → Kurumsal/Hakkımızda
+      // Hakkımızda → /tr/kurumsal/hakkimizda
       {
         source: "/hakkimizda",
-        destination: "/kurumsal/hakkimizda",
+        destination: "/tr/kurumsal/hakkimizda",
         permanent: true,
       },
-      // İletişim → Kurumsal/İletişim
+      // İletişim → /tr/kurumsal/iletisim
       {
         source: "/iletisim",
-        destination: "/kurumsal/iletisim",
+        destination: "/tr/kurumsal/iletisim",
         permanent: true,
       },
-      // Projects → Homepage
+      // Projects → /tr (homepage)
       {
         source: "/projects",
-        destination: "/",
+        destination: "/tr",
         permanent: true,
       },
     ];
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

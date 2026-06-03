@@ -1,0 +1,207 @@
+{
+  "site": {
+    "name": "Arillasoft",
+    "description": "Modern yazılım çözümleri ile işletmenizi dijital geleceğe taşıyoruz. Web, mobil ve kurumsal yazılım geliştirme."
+  },
+  "nav": {
+    "sektorelYazilimlar": "Sektörel Yazılımlar",
+    "tumSektorelYazilimlar": "Tüm Sektörel Yazılımlar",
+    "qrMenu": "QR Menü",
+    "randevuSistemi": "Randevu Sistemi",
+    "kuaforRandevu": "Kuaför Randevu Sistemi",
+    "klinikRandevu": "Klinik Randevu Sistemi",
+    "guzellikRandevu": "Güzellik Merkezi Randevu Sistemi",
+    "hizmetler": "Hizmetler",
+    "tumHizmetler": "Tüm Hizmetler",
+    "kurumsal": "Kurumsal",
+    "hakkimizda": "Hakkımızda",
+    "blog": "Blog",
+    "kariyer": "Kariyer",
+    "iletisim": "İletişim",
+    "teklifAl": "Teklif Al",
+    "menuToggle": "Menüyü aç/kapat"
+  },
+  "footer": {
+    "tagline": "Modern yazılım çözümleri ile işletmenizi dijital geleceğe taşıyoruz.",
+    "servicesHeading": "Hizmetler",
+    "webApp": "Web Uygulama Geliştirme",
+    "mobileApp": "Mobil Uygulama",
+    "qrMenu": "QR Menü Sistemi",
+    "uiux": "UI/UX Tasarımı",
+    "backend": "Backend & API",
+    "maintenance": "Bakım & Destek",
+    "companyHeading": "Şirket",
+    "about": "Hakkımızda",
+    "blog": "Blog",
+    "career": "Kariyer",
+    "contact": "İletişim",
+    "contactHeading": "İletişim",
+    "location": "Konyaaltı / Antalya",
+    "contactCta": "Teklif Al",
+    "copyright": "Tüm hakları saklıdır.",
+    "cookiePrefs": "Çerez Tercihleri"
+  },
+  "forms": {
+    "contact": {
+      "fullName": "Ad Soyad *",
+      "fullNamePlaceholder": "Ahmet Yılmaz",
+      "email": "E-posta *",
+      "phone": "Telefon",
+      "company": "Şirket",
+      "companyPlaceholder": "Şirket Adı",
+      "subject": "Konu *",
+      "subjectPlaceholder": "Nasıl yardımcı olabiliriz?",
+      "message": "Mesaj *",
+      "messagePlaceholder": "Projeniz veya sorunuz hakkında bilgi verin...",
+      "submit": "Mesajı Gönder",
+      "sending": "Gönderiliyor...",
+      "successTitle": "Mesajınız Alındı!",
+      "successBody": "En kısa sürede size dönüş yapacağız.",
+      "newMessage": "Yeni Mesaj Gönder",
+      "error": "Mesaj gönderilemedi. Lütfen tekrar deneyin."
+    },
+    "quote": {
+      "contactSection": "İletişim Bilgileri",
+      "projectSection": "Proje Detayları",
+      "descriptionSection": "Proje Açıklaması",
+      "fullName": "Ad Soyad *",
+      "fullNamePlaceholder": "Ahmet Yılmaz",
+      "email": "E-posta *",
+      "phone": "Telefon",
+      "company": "Şirket",
+      "companyPlaceholder": "Şirket Adı",
+      "projectType": "Proje Türü *",
+      "budgetRange": "Bütçe Aralığı *",
+      "targetPlatform": "Hedef Platform *",
+      "delivery": "Beklenen Teslim Süresi",
+      "deliveryPlaceholder": "Örn: 3 ay, 6 ay...",
+      "description": "Proje Açıklaması *",
+      "descriptionPlaceholder": "Projenizi, hedeflerinizi ve temel gereksinimlerinizi açıklayın...",
+      "integrations": "Entegrasyon İhtiyaçları",
+      "integrationsPlaceholder": "Ödeme sistemi, CRM, ERP, API...",
+      "hasExistingSystem": "Mevcut bir sistemim var, entegrasyon gerekiyor",
+      "selectPlaceholder": "Seçiniz",
+      "submit": "Teklif Talebini Gönder",
+      "sending": "Gönderiliyor...",
+      "successTitle": "Teklif Talebiniz Alındı!",
+      "successBody": "1-2 iş günü içinde size detaylı teklif sunacağız.",
+      "successEmail": "E-posta adresinize onay mesajı gönderildi.",
+      "newRequest": "Yeni Teklif Talebi",
+      "error": "Form gönderilemedi. Lütfen tekrar deneyin."
+    },
+    "appointment": {
+      "service": "Hizmet",
+      "time": "Saat",
+      "allFieldsRequired": "Lütfen tüm alanları doldurunuz",
+      "submit": "Uygun Zamanı Seç ve Görüşme Planla",
+      "loadingSlots": "Saatler yükleniyor...",
+      "noSlots": "Bu tarih için müsait saat yok",
+      "closed": "Kapalı",
+      "full": "Dolu",
+      "blocked": "Bloke",
+      "dayMon": "Pt",
+      "dayTue": "Sa",
+      "dayWed": "Ça",
+      "dayThu": "Pe",
+      "dayFri": "Cu",
+      "daySat": "Ct",
+      "daySun": "Pa"
+    }
+  },
+  "chat": {
+    "title": "Arilla Soft Destek",
+    "today": "Bugün",
+    "greeting": "Merhaba. Ben Arilla Soft sanal destek asistanıyım. Size doğru şekilde yardımcı olabilmem için aşağıdaki seçeneklerden birini seçebilir veya mesajınızı yazabilirsiniz.",
+    "messagePlaceholder": "Mesajınızı yazın...",
+    "consultationLabel": "Ön Görüşme Al",
+    "consultationMsg": "Merhaba, ön görüşme almak istiyorum.",
+    "infoLabel": "Hizmet Hakkında Bilgi",
+    "infoMsg": "Hizmetleriniz hakkında detaylı bilgi almak istiyorum.",
+    "priceLabel": "Fiyat Talep Et",
+    "priceMsg": "Lütfen hizmetlerinizin fiyatlandırması hakkında bilgi veriniz."
+  },
+  "projectTypes": {
+    "WEB_APPLICATION": "Web Uygulaması",
+    "MOBILE_APPLICATION": "Mobil Uygulama",
+    "CUSTOM_SOFTWARE": "Özel Yazılım",
+    "UI_UX_DESIGN": "UI/UX Tasarımı",
+    "BACKEND_API": "Backend / API",
+    "ECOMMERCE": "E-Ticaret",
+    "SAAS": "SaaS Ürün",
+    "OTHER": "Diğer"
+  },
+  "budgetRanges": {
+    "UNDER_10K": "10.000 TL'nin altında",
+    "RANGE_10K_25K": "10.000 - 25.000 TL",
+    "RANGE_25K_50K": "25.000 - 50.000 TL",
+    "RANGE_50K_100K": "50.000 - 100.000 TL",
+    "ABOVE_100K": "100.000 TL'nin üzerinde",
+    "UNDECIDED": "Henüz karar vermedim"
+  },
+  "platforms": {
+    "WEB": "Web Tarayıcısı",
+    "IOS": "iOS",
+    "ANDROID": "Android",
+    "BOTH_MOBILE": "iOS ve Android",
+    "DESKTOP": "Masaüstü",
+    "ALL_PLATFORMS": "Tüm Platformlar"
+  },
+  "pages": {
+    "home": {
+      "title": "Web, Mobil ve Özel Yazılım Çözümleri",
+      "description": "Modern yazılım çözümleri ile işletmenizi dijital geleceğe taşıyoruz. Web, mobil ve kurumsal yazılım geliştirme."
+    },
+    "hizmetler": {
+      "title": "Hizmetler",
+      "description": "Web geliştirme, mobil uygulama, UI/UX tasarımı ve daha fazlası — uçtan uca yazılım çözümleri."
+    },
+    "sektorelYazilimlar": {
+      "title": "Sektörel Yazılımlar",
+      "description": "Farklı sektörlere özel geliştirilen yazılım çözümleri. QR Menü, randevu sistemleri ve işletmelere özel dijital çözümler."
+    },
+    "qrMenu": {
+      "title": "QR Menü Sistemi",
+      "description": "Restoran, kafe ve işletmeler için dijital QR menü sistemi. Anlık güncelleme, çoklu dil, gerçek zamanlı analitik."
+    },
+    "randevuSistemi": {
+      "title": "Online Randevu Sistemi",
+      "description": "İşletmeler için online randevu sistemi, randevu yönetimi ve müşteri randevu takibi çözümü."
+    },
+    "kuaforRandevu": {
+      "title": "Kuaför Randevu Sistemi",
+      "description": "Kuaför ve berber salonları için online randevu yönetim sistemi. 7/24 müşteri randevu alma, otomatik hatırlatmalar, performans raporları."
+    },
+    "klinikRandevu": {
+      "title": "Klinik Randevu Sistemi",
+      "description": "Klinikler için online randevu yönetim sistemi. Hasta takibi, doktor programı yönetimi ve randevu bildirimleri."
+    },
+    "guzellikRandevu": {
+      "title": "Güzellik Merkezi Randevu Sistemi",
+      "description": "Güzellik merkezleri için online randevu sistemi. Personel yönetimi, müşteri takibi ve otomatik hatırlatmalar."
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "Yazılım, dijital dönüşüm, QR Menü ve teknoloji hakkında güncel içerikler."
+    },
+    "hakkimizda": {
+      "title": "Hakkımızda",
+      "description": "Arilla Soft hakkında. Misyonumuz, vizyonumuz ve ekibimiz."
+    },
+    "iletisim": {
+      "title": "İletişim",
+      "description": "Bizimle iletişime geçin. Sorularınızı ve projelerinizi paylaşın."
+    },
+    "kariyer": {
+      "title": "Kariyer",
+      "description": "ArillaSoft ekibine katılın. Yazılım geliştirme alanında kariyer fırsatları. Uzaktan çalışma, esnek saatler."
+    },
+    "teklifAl": {
+      "title": "Teklif Al",
+      "description": "Yazılım projeniz veya sektörel yazılım ihtiyacınız için ArillaSoft'tan teklif alın. Hızlı, şeffaf ve ihtiyaca özel çözümler."
+    },
+    "randevual": {
+      "title": "Ön Görüşme Planla",
+      "description": "İşletmeniz için uygun bir ön görüşme zamanı belirleyin."
+    }
+  }
+}

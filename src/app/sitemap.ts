@@ -1,8 +1,25 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/constants';
 import { prisma } from '@/lib/prisma';
+import { routing } from '@/i18n/routing';
 
 const STATIC_LAST_MODIFIED = new Date('2026-05-06T00:00:00+03:00');
+
+const STATIC_PATHS = [
+  { path: '', priority: 1.0, changeFrequency: 'weekly' as const },
+  { path: '/hizmetler', priority: 0.9, changeFrequency: 'weekly' as const },
+  { path: '/sektorel-yazilimlar', priority: 0.9, changeFrequency: 'weekly' as const },
+  { path: '/sektorel-yazilimlar/qr-menu', priority: 0.8, changeFrequency: 'weekly' as const },
+  { path: '/sektorel-yazilimlar/randevu-sistemi', priority: 0.8, changeFrequency: 'weekly' as const },
+  { path: '/sektorel-yazilimlar/randevu-sistemi/kuafor-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
+  { path: '/sektorel-yazilimlar/randevu-sistemi/klinik-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
+  { path: '/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
+  { path: '/kurumsal/blog', priority: 0.8, changeFrequency: 'weekly' as const },
+  { path: '/kurumsal/hakkimizda', priority: 0.7, changeFrequency: 'monthly' as const },
+  { path: '/kurumsal/kariyer', priority: 0.5, changeFrequency: 'monthly' as const },
+  { path: '/kurumsal/iletisim', priority: 0.6, changeFrequency: 'monthly' as const },
+  { path: '/teklif-al', priority: 0.7, changeFrequency: 'monthly' as const },
+];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let posts: { slug: string; updatedAt: Date }[] = [];
@@ -19,112 +36,49 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         select: { slug: true, updatedAt: true },
       }),
     ]);
-
     posts = blogPosts;
     services = publishedServices;
   } catch {
-    // Database unavailable during build is expected.
-    // Static routes are always present; dynamic routes load when DB is available.
+    // Database unavailable during build — static routes still present
   }
 
-  const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url: SITE_URL,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'weekly',
-      priority: 1.0,
-    },
-    {
-      url: `${SITE_URL}/hizmetler`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/sektorel-yazilimlar`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/sektorel-yazilimlar/qr-menu`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/sektorel-yazilimlar/randevu-sistemi`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/sektorel-yazilimlar/randevu-sistemi/kuafor-randevu-sistemi`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/sektorel-yazilimlar/randevu-sistemi/klinik-randevu-sistemi`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/kurumsal/blog`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/kurumsal/hakkimizda`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/kurumsal/kariyer`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${SITE_URL}/kurumsal/iletisim`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${SITE_URL}/teklif-al`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-  ];
+  const entries: MetadataRoute.Sitemap = [];
 
-  const blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${SITE_URL}/kurumsal/blog/${post.slug}`,
-    lastModified: post.updatedAt,
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-  }));
+  // Static routes — one entry per locale
+  for (const { path, priority, changeFrequency } of STATIC_PATHS) {
+    for (const locale of routing.locales) {
+      entries.push({
+        url: `${SITE_URL}/${locale}${path}`,
+        lastModified: STATIC_LAST_MODIFIED,
+        changeFrequency,
+        priority,
+      });
+    }
+  }
 
-  const serviceRoutes: MetadataRoute.Sitemap = services.map((service) => ({
-    url: `${SITE_URL}/hizmetler/${service.slug}`,
-    lastModified: service.updatedAt,
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }));
+  // Dynamic blog posts
+  for (const post of posts) {
+    for (const locale of routing.locales) {
+      entries.push({
+        url: `${SITE_URL}/${locale}/kurumsal/blog/${post.slug}`,
+        lastModified: post.updatedAt,
+        changeFrequency: 'weekly',
+        priority: 0.7,
+      });
+    }
+  }
 
-  const routes = [...staticRoutes, ...blogRoutes, ...serviceRoutes];
+  // Dynamic service pages
+  for (const service of services) {
+    for (const locale of routing.locales) {
+      entries.push({
+        url: `${SITE_URL}/${locale}/hizmetler/${service.slug}`,
+        lastModified: service.updatedAt,
+        changeFrequency: 'monthly',
+        priority: 0.7,
+      });
+    }
+  }
 
-  return Array.from(
-    new Map(routes.map((route) => [route.url, route])).values()
-  );
+  return Array.from(new Map(entries.map((e) => [e.url, e])).values());
 }

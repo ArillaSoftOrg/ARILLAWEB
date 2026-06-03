@@ -1,11 +1,22 @@
 'use client';
 
 import { useState, useEffect, useRef, startTransition } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, Link } from '@/i18n/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Menu, X, ArrowRight, ChevronDown } from 'lucide-react';
-import { NAV_LINKS, type NavItem } from '@/lib/constants';
+
+type NavChild = {
+  labelKey: string;
+  href?: string;
+  children?: NavChild[];
+};
+
+type NavItem = {
+  labelKey: string;
+  href?: string;
+  children?: NavChild[];
+};
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +24,38 @@ export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const pathname = usePathname();
+  const locale = useLocale();
+  const t = useTranslations('nav');
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const NAV_ITEMS: NavItem[] = [
+    {
+      labelKey: 'sektorelYazilimlar',
+      children: [
+        { labelKey: 'tumSektorelYazilimlar', href: '/sektorel-yazilimlar' },
+        { labelKey: 'qrMenu', href: '/sektorel-yazilimlar/qr-menu' },
+        { labelKey: 'randevuSistemi', href: '/sektorel-yazilimlar/randevu-sistemi' },
+        { labelKey: 'kuaforRandevu', href: '/sektorel-yazilimlar/randevu-sistemi/kuafor-randevu-sistemi' },
+        { labelKey: 'klinikRandevu', href: '/sektorel-yazilimlar/randevu-sistemi/klinik-randevu-sistemi' },
+        { labelKey: 'guzellikRandevu', href: '/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi' },
+      ],
+    },
+    {
+      labelKey: 'hizmetler',
+      children: [
+        { labelKey: 'tumHizmetler', href: '/hizmetler' },
+      ],
+    },
+    {
+      labelKey: 'kurumsal',
+      children: [
+        { labelKey: 'hakkimizda', href: '/kurumsal/hakkimizda' },
+        { labelKey: 'blog', href: '/kurumsal/blog' },
+        { labelKey: 'kariyer', href: '/kurumsal/kariyer' },
+        { labelKey: 'iletisim', href: '/kurumsal/iletisim' },
+      ],
+    },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -28,9 +70,9 @@ export default function Navbar() {
     });
   }, [pathname]);
 
-  function handleMouseEnter(label: string) {
+  function handleMouseEnter(key: string) {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    setOpenDropdown(label);
+    setOpenDropdown(key);
   }
 
   function handleMouseLeave() {
@@ -42,6 +84,8 @@ export default function Navbar() {
     if (item.children) return item.children.some((c) => pathname === c.href);
     return false;
   }
+
+  const otherLocale = locale === 'tr' ? 'en' : 'tr';
 
   return (
     <header
@@ -72,11 +116,7 @@ export default function Navbar() {
               />
               <span
                 className="text-[15px] tracking-[0.20em] lg:text-[22px] lg:tracking-[0.18em] text-white md:text-slate-900"
-                style={{
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  userSelect: 'none',
-                }}
+                style={{ fontWeight: 700, textTransform: 'uppercase', userSelect: 'none' }}
               >
                 ARILLA{' '}
                 <span className="text-slate-300 md:text-slate-600" style={{ fontWeight: 500 }}>SOFT</span>
@@ -85,24 +125,20 @@ export default function Navbar() {
           </div>
 
           {/* Nav links — center */}
-          <nav
-            className="hidden lg:flex items-center"
-            style={{ gap: '2px' }}
-          >
-            {NAV_LINKS.map((item, navIndex) => {
+          <nav className="hidden lg:flex items-center" style={{ gap: '2px' }}>
+            {NAV_ITEMS.map((item) => {
               const active = isItemActive(item);
               const hasChildren = Boolean(item.children?.length);
-              const isDropdownOpen = openDropdown === item.label;
+              const isDropdownOpen = openDropdown === item.labelKey;
 
               if (hasChildren) {
                 return (
                   <div
-                    key={`${item.label}-${navIndex}`}
+                    key={item.labelKey}
                     style={{ position: 'relative' }}
-                    onMouseEnter={() => handleMouseEnter(item.label)}
+                    onMouseEnter={() => handleMouseEnter(item.labelKey)}
                     onMouseLeave={handleMouseLeave}
                   >
-                    {/* Dropdown trigger */}
                     <button
                       style={{
                         position: 'relative',
@@ -122,7 +158,7 @@ export default function Navbar() {
                         whiteSpace: 'nowrap',
                       }}
                     >
-                      {item.label}
+                      {t(item.labelKey)}
                       <ChevronDown
                         size={14}
                         style={{
@@ -148,7 +184,6 @@ export default function Navbar() {
                       )}
                     </button>
 
-                    {/* Dropdown panel */}
                     {isDropdownOpen && (
                       <motion.div
                         initial={{ opacity: 0, y: 6 }}
@@ -166,15 +201,14 @@ export default function Navbar() {
                           padding: '6px',
                           zIndex: 200,
                         }}
-                        onMouseEnter={() => handleMouseEnter(item.label)}
+                        onMouseEnter={() => handleMouseEnter(item.labelKey)}
                         onMouseLeave={handleMouseLeave}
                       >
-                        {item.children!.map((child, childIndex) => {
-                          // If child has href, render as Link, otherwise as div
+                        {item.children!.map((child) => {
                           if (child.href) {
                             return (
                               <Link
-                                key={`${child.label}-${childIndex}`}
+                                key={child.labelKey}
                                 href={child.href}
                                 style={{
                                   display: 'block',
@@ -201,14 +235,13 @@ export default function Navbar() {
                                   }
                                 }}
                               >
-                                {child.label}
+                                {t(child.labelKey)}
                               </Link>
                             );
                           }
-                          // If no href, render as div (for parent categories)
                           return (
                             <div
-                              key={`${child.label}-${childIndex}`}
+                              key={child.labelKey}
                               style={{
                                 display: 'block',
                                 padding: '9px 14px',
@@ -220,7 +253,7 @@ export default function Navbar() {
                                 whiteSpace: 'nowrap',
                               }}
                             >
-                              {child.label}
+                              {t(child.labelKey)}
                             </div>
                           );
                         })}
@@ -230,12 +263,10 @@ export default function Navbar() {
                 );
               }
 
-              // Plain link (no children)
-              // Only render as Link if item has href
               if (item.href) {
                 return (
                   <Link
-                    key={`${item.label}-${navIndex}`}
+                    key={item.labelKey}
                     href={item.href}
                     style={{
                       position: 'relative',
@@ -257,7 +288,7 @@ export default function Navbar() {
                       if (!active) e.currentTarget.style.color = '#334155';
                     }}
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                     {active && (
                       <motion.span
                         layoutId="active-underline"
@@ -277,13 +308,41 @@ export default function Navbar() {
                 );
               }
 
-              // If item has no href and no children (shouldn't happen), render empty
               return null;
             })}
           </nav>
 
-          {/* CTA + mobile toggle — right */}
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '12px' }}>
+          {/* CTA + locale switcher + mobile toggle — right */}
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
+            {/* Locale switcher */}
+            <Link
+              href={pathname}
+              locale={otherLocale}
+              className="hidden lg:inline-flex items-center"
+              style={{
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '13px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                color: '#64748b',
+                background: 'transparent',
+                border: '1px solid #e2e8f0',
+                transition: 'color 0.2s ease, border-color 0.2s ease',
+                textTransform: 'uppercase',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#7c3aed';
+                e.currentTarget.style.borderColor = '#7c3aed';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#64748b';
+                e.currentTarget.style.borderColor = '#e2e8f0';
+              }}
+            >
+              {otherLocale.toUpperCase()}
+            </Link>
+
             <Link
               href="/teklif-al"
               className="hidden lg:inline-flex items-center"
@@ -312,7 +371,7 @@ export default function Navbar() {
                 if (arrow) arrow.style.transform = 'translateX(0)';
               }}
             >
-              Teklif Al{' '}
+              {t('teklifAl')}{' '}
               <span data-arrow="" style={{ display: 'inline-flex', transition: 'transform 0.2s ease' }}>
                 <ArrowRight size={14} />
               </span>
@@ -321,13 +380,8 @@ export default function Navbar() {
             <button
               className="flex items-center justify-center lg:hidden text-slate-100 md:text-slate-700"
               onClick={() => setIsOpen(!isOpen)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                padding: '6px',
-                cursor: 'pointer',
-              }}
-              aria-label="Menüyü aç/kapat"
+              style={{ background: 'transparent', border: 'none', padding: '6px', cursor: 'pointer' }}
+              aria-label={t('menuToggle')}
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -355,16 +409,16 @@ export default function Navbar() {
           className="lg:hidden top-14 text-slate-100 md:bg-white md:border-slate-200 md:text-slate-900"
         >
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            {NAV_LINKS.map((item, mobileIndex) => {
+            {NAV_ITEMS.map((item) => {
               const active = isItemActive(item);
               const hasChildren = Boolean(item.children?.length);
-              const isExpanded = mobileExpanded === item.label;
+              const isExpanded = mobileExpanded === item.labelKey;
 
               if (hasChildren) {
                 return (
-                  <div key={`${item.label}-${mobileIndex}`}>
+                  <div key={item.labelKey}>
                     <button
-                      onClick={() => setMobileExpanded(isExpanded ? null : item.label)}
+                      onClick={() => setMobileExpanded(isExpanded ? null : item.labelKey)}
                       style={{
                         width: '100%',
                         display: 'flex',
@@ -381,7 +435,7 @@ export default function Navbar() {
                         textAlign: 'left',
                       }}
                     >
-                      {item.label}
+                      {t(item.labelKey)}
                       <ChevronDown
                         size={15}
                         style={{
@@ -394,12 +448,11 @@ export default function Navbar() {
                     </button>
                     {isExpanded && (
                       <div style={{ paddingLeft: '12px', paddingBottom: '4px', display: 'flex', flexDirection: 'column', gap: '1px' }}>
-                        {item.children!.map((child, childMobileIndex) => {
-                          // If child has href, render as Link, otherwise as div
+                        {item.children!.map((child) => {
                           if (child.href) {
                             return (
                               <Link
-                                key={`${child.label}-${childMobileIndex}`}
+                                key={child.labelKey}
                                 href={child.href}
                                 onClick={() => setIsOpen(false)}
                                 style={{
@@ -413,14 +466,13 @@ export default function Navbar() {
                                   textDecoration: 'none',
                                 }}
                               >
-                                {child.label}
+                                {t(child.labelKey)}
                               </Link>
                             );
                           }
-                          // If no href, render as div
                           return (
                             <div
-                              key={`${child.label}-${childMobileIndex}`}
+                              key={child.labelKey}
                               style={{
                                 display: 'block',
                                 padding: '8px 14px',
@@ -431,7 +483,7 @@ export default function Navbar() {
                                 background: 'transparent',
                               }}
                             >
-                              {child.label}
+                              {t(child.labelKey)}
                             </div>
                           );
                         })}
@@ -441,12 +493,10 @@ export default function Navbar() {
                 );
               }
 
-              // Plain link (no children)
-              // Only render as Link if item has href
               if (item.href) {
                 return (
                   <Link
-                    key={`${item.label}-${mobileIndex}`}
+                    key={item.labelKey}
                     href={item.href}
                     onClick={() => setIsOpen(false)}
                     style={{
@@ -460,14 +510,35 @@ export default function Navbar() {
                       transition: 'color 0.2s ease',
                     }}
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                   </Link>
                 );
               }
 
-              // If item has no href and no children (shouldn't happen), render empty
               return null;
             })}
+
+            {/* Locale switcher in mobile */}
+            <Link
+              href={pathname}
+              locale={otherLocale}
+              onClick={() => setIsOpen(false)}
+              style={{
+                marginTop: '4px',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: 500,
+                color: '#94a3b8',
+                background: 'transparent',
+                border: '1px solid rgba(255,255,255,0.1)',
+                textDecoration: 'none',
+                textAlign: 'center',
+                textTransform: 'uppercase',
+              }}
+            >
+              {otherLocale.toUpperCase()}
+            </Link>
 
             <Link
               href="/teklif-al"
@@ -484,7 +555,7 @@ export default function Navbar() {
                 background: '#7c3aed',
               }}
             >
-              Teklif Al
+              {t('teklifAl')}
             </Link>
           </nav>
         </motion.div>

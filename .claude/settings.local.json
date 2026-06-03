@@ -4,7 +4,12 @@
       "Bash(npx tsc:*)",
       "Bash(npx prisma:*)",
       "Bash(timeout 180 npx next build)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\YUSUF\\\\Documents\\\\GitHub\\\\arillaweb\\\\ARILLAWEB\" -Directory)",
+      "Bash(Select-Object Name)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\YUSUF\\\\Documents\\\\GitHub\\\\arillaweb\\\\ARILLAWEB\\\\src\" -Recurse -Directory | Select-Object -ExpandProperty FullName | % { $_.Replace\\('C:\\\\Users\\\\YUSUF\\\\Documents\\\\GitHub\\\\arillaweb\\\\ARILLAWEB\\\\', ''\\) } | Sort-Object)",
+      "Bash(xargs wc -l)",
+      "Bash(npm run *)"
     ]
   }
 }

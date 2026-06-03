@@ -286,3 +286,28 @@ body {
     animation: none;
   }
 }
+
+/* ── Blog reading theme ── */
+[data-blog-theme="dark"] {
+  --blog-bg:       #08090d;
+  --blog-title:    #f1f5f9;
+  --blog-h2:       #f1f5f9;
+  --blog-h3:       #e2e8f0;
+  --blog-text:     #94a3b8;
+  --blog-border:   rgba(255, 255, 255, 0.06);
+  --blog-card-bg:  rgba(255, 255, 255, 0.03);
+  --blog-meta:     #475569;
+  --blog-divider:  rgba(255, 255, 255, 0.06);
+}
+
+[data-blog-theme="light"] {
+  --blog-bg:       #f8fafc;
+  --blog-title:    #0f172a;
+  --blog-h2:       #0f172a;
+  --blog-h3:       #1e293b;
+  --blog-text:     #475569;
+  --blog-border:   rgba(0, 0, 0, 0.08);
+  --blog-card-bg:  rgba(0, 0, 0, 0.03);
+  --blog-meta:     #64748b;
+  --blog-divider:  rgba(0, 0, 0, 0.08);
+}

@@ -2,17 +2,19 @@
 
 import { useState, useRef } from "react";
 import { MessageCircle, Send, X } from "lucide-react";
-
-const QUICK_OPTIONS = [
-  { label: "Ön Görüşme Al", message: "Merhaba, ön görüşme almak istiyorum." },
-  { label: "Hizmet Hakkında Bilgi", message: "Hizmetleriniz hakkında detaylı bilgi almak istiyorum." },
-  { label: "Fiyat Talep Et", message: "Lütfen hizmetlerinizin fiyatlandırması hakkında bilgi veriniz." },
-];
+import { useTranslations } from 'next-intl';
 
 export default function SupportChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const t = useTranslations('chat');
+
+  const quickOptions = [
+    { label: t('consultationLabel'), message: t('consultationMsg') },
+    { label: t('infoLabel'), message: t('infoMsg') },
+    { label: t('priceLabel'), message: t('priceMsg') },
+  ];
 
   const sendToWhatsApp = (text: string) => {
     const encoded = encodeURIComponent(text);
@@ -26,10 +28,6 @@ export default function SupportChatWidget() {
     if (message.trim()) {
       sendToWhatsApp(message);
     }
-  };
-
-  const handleQuickOption = (text: string) => {
-    sendToWhatsApp(text);
   };
 
   return (
@@ -99,21 +97,11 @@ export default function SupportChatWidget() {
               justifyContent: "space-between",
             }}
           >
-            <h3
-              style={{
-                margin: 0,
-                fontSize: "16px",
-                fontWeight: 700,
-                color: "#ffffff",
-              }}
-            >
-              Arilla Soft Destek
+            <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#ffffff" }}>
+              {t('title')}
             </h3>
             <button
-              onClick={() => {
-                setIsOpen(false);
-                setMessage("");
-              }}
+              onClick={() => { setIsOpen(false); setMessage(""); }}
               style={{
                 background: "transparent",
                 border: "none",
@@ -125,12 +113,8 @@ export default function SupportChatWidget() {
                 justifyContent: "center",
                 transition: "color 0.2s",
               }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.color = "#ffffff";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.color = "#d1d5db";
-              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#ffffff"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#d1d5db"; }}
             >
               <X size={18} />
             </button>
@@ -148,19 +132,10 @@ export default function SupportChatWidget() {
               background: "#ffffff",
             }}
           >
-            {/* Timestamp */}
-            <div
-              style={{
-                textAlign: "center",
-                fontSize: "11px",
-                color: "#9ca3af",
-                marginBottom: "4px",
-              }}
-            >
-              Bugün
+            <div style={{ textAlign: "center", fontSize: "11px", color: "#9ca3af", marginBottom: "4px" }}>
+              {t('today')}
             </div>
 
-            {/* Assistant bubble */}
             <div
               style={{
                 padding: "12px 14px",
@@ -172,15 +147,14 @@ export default function SupportChatWidget() {
                 marginBottom: "4px",
               }}
             >
-              Merhaba. Ben Arilla Soft sanal destek asistanıyım. Size doğru şekilde yardımcı olabilmem için aşağıdaki seçeneklerden birini seçebilir veya mesajınızı yazabilirsiniz.
+              {t('greeting')}
             </div>
 
-            {/* Quick option buttons */}
             <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "8px" }}>
-              {QUICK_OPTIONS.map((option) => (
+              {quickOptions.map((option) => (
                 <button
                   key={option.label}
-                  onClick={() => handleQuickOption(option.message)}
+                  onClick={() => sendToWhatsApp(option.message)}
                   style={{
                     padding: "9px 14px",
                     borderRadius: "20px",
@@ -227,12 +201,8 @@ export default function SupportChatWidget() {
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handleSend();
-                }
-              }}
-              placeholder="Mesajınızı yazın..."
+              onKeyPress={(e) => { if (e.key === "Enter") handleSend(); }}
+              placeholder={t('messagePlaceholder')}
               style={{
                 flex: 1,
                 padding: "10px 12px",
