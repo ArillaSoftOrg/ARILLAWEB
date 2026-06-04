@@ -18,7 +18,11 @@ type NavItem = {
   children?: NavChild[];
 };
 
-export default function Navbar() {
+type NavbarProps = {
+  developerLoginOnly?: boolean;
+};
+
+export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -86,6 +90,79 @@ export default function Navbar() {
   }
 
   const otherLocale = locale === 'tr' ? 'en' : 'tr';
+
+  if (developerLoginOnly) {
+    return (
+      <header
+        className="bg-slate-900 md:bg-white"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
+          borderBottom: scrolled ? '1px solid rgba(0,0,0,0.2)' : '1px solid rgba(0,0,0,0.1)',
+          boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.15)' : 'none',
+          transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
+        }}
+      >
+        <div className="max-w-[1440px] mx-auto px-4 lg:px-10 xl:px-14">
+          <div className="flex items-center justify-between h-14 lg:h-[92px]">
+            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', gap: '12px' }}>
+              <img
+                src="/logoarilla.png"
+                alt="Arilla Soft"
+                className="h-10 lg:h-[56px] w-auto flex-shrink-0"
+              />
+              <span
+                className="text-[15px] tracking-[0.20em] lg:text-[22px] lg:tracking-[0.18em] text-white md:text-slate-900"
+                style={{ fontWeight: 700, textTransform: 'uppercase', userSelect: 'none' }}
+              >
+                ARILLA{' '}
+                <span className="text-slate-300 md:text-slate-600" style={{ fontWeight: 500 }}>SOFT</span>
+              </span>
+            </Link>
+
+            <a
+              href="/admin/login"
+              className="inline-flex items-center"
+              style={{
+                gap: '6px',
+                padding: '10px 18px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                color: '#FFFFFF',
+                background: '#7c3aed',
+                boxShadow: '0 1px 3px rgba(124,58,237,0.25)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 4px 14px rgba(124,58,237,0.35)';
+                const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
+                if (arrow) arrow.style.transform = 'translateX(3px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 1px 3px rgba(124,58,237,0.25)';
+                const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
+                if (arrow) arrow.style.transform = 'translateX(0)';
+              }}
+            >
+              Geliştirici Girişi
+              <span data-arrow="" style={{ display: 'inline-flex', transition: 'transform 0.2s ease' }}>
+                <ArrowRight size={14} />
+              </span>
+            </a>
+          </div>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header

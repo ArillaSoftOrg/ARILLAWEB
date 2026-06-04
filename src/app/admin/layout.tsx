@@ -91,6 +91,10 @@ export default function AdminLayout({
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
+
   const isActive = (item: (typeof navItems)[number]) => {
     if (item.exact) return pathname === item.href;
     return pathname.startsWith(item.href);

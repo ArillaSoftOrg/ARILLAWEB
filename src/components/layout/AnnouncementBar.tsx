@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { X } from 'lucide-react';
 import type { AnnouncementConfig } from '@/lib/announcement-actions';
+import { useCookieConsentContext } from '@/components/cookie/CookieConsentProvider';
 
 // ── Type ───────────────────────────────────────────────────────────────────
 
@@ -23,6 +24,7 @@ const SCROLL_DURATION: Record<'slow' | 'normal' | 'fast', string> = {
 
 export default function AnnouncementBar({ configs }: AnnouncementBarProps) {
   const pathname = usePathname();
+  const { isMounted, consentRecord } = useCookieConsentContext();
   const barRef = useRef<HTMLDivElement>(null);
 
   const [mounted, setMounted] = useState(false);
@@ -45,17 +47,19 @@ export default function AnnouncementBar({ configs }: AnnouncementBarProps) {
   // ── Effect 1: Mount guard ──────────────────────────────────────────────────
 
   useEffect(() => {
+    if (!isMounted) return;
+
     setMounted(true);
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setReducedMotion(prefersReduced);
 
-    if (config?.dismissible) {
+    if (config?.dismissible && consentRecord.categories.functional) {
       const key = `announcement-dismissed-${config.text.slice(0, 20)}`;
       const wasDismissed = !!sessionStorage.getItem(key);
       setDismissed(wasDismissed);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isMounted, consentRecord.categories.functional]);
 
   // ── Effect 2: Visibility + CSS variable ────────────────────────────────────
 
@@ -123,8 +127,10 @@ export default function AnnouncementBar({ configs }: AnnouncementBarProps) {
 
   const handleDismiss = () => {
     if (!config) return;
-    const key = `announcement-dismissed-${config.text.slice(0, 20)}`;
-    sessionStorage.setItem(key, '1');
+    if (consentRecord.categories.functional) {
+      const key = `announcement-dismissed-${config.text.slice(0, 20)}`;
+      sessionStorage.setItem(key, '1');
+    }
     setDismissed(true);
     setVisible(false);
     document.documentElement.style.setProperty('--bar-h', '0px');

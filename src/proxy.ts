@@ -38,12 +38,14 @@ export async function proxy(request: NextRequest) {
     ? localeFromPath
     : routing.defaultLocale;
   response.headers.set('x-locale', locale);
+  response.headers.set('x-pathname', pathname);
 
   return response;
 }
 
 export const config = {
   matcher: [
+    '/admin/:path*',
     // Match all paths except static files, Next.js internals, api, admin
     '/((?!api|admin|_next/static|_next/image|favicon\\.ico|robots\\.txt|sitemap\\.xml|site\\.webmanifest|apple-touch-icon\\.png|.*\\.(?:png|jpg|jpeg|gif|webp|svg|ico|txt|xml|json)$).*)',
   ],

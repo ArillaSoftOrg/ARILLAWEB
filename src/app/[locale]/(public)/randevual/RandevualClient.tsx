@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 import { getServicesForForm, SERVICE_LABELS } from '@/lib/services';
+import { useCookieConsentContext } from '@/components/cookie/CookieConsentProvider';
 
 interface DraftData {
   service?: string;
@@ -20,6 +21,7 @@ const SERVICES_FOR_FORM = getServicesForForm(false);
 
 export default function RandevualClient() {
   const router = useRouter();
+  const { isMounted, consentRecord } = useCookieConsentContext();
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Pre-filled from sessionStorage
@@ -43,6 +45,14 @@ export default function RandevualClient() {
 
   // Load draft from sessionStorage on mount
   useEffect(() => {
+    if (!isMounted) return;
+
+    if (!consentRecord.categories.functional) {
+      sessionStorage.removeItem('randevuDraft');
+      setIsHydrated(true);
+      return;
+    }
+
     const stored = sessionStorage.getItem('randevuDraft');
     if (stored) {
       try {
@@ -55,7 +65,7 @@ export default function RandevualClient() {
       }
     }
     setIsHydrated(true);
-  }, []);
+  }, [isMounted, consentRecord.categories.functional]);
 
   // Fetch slots when date or service changes
   useEffect(() => {

@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
-import { getServicesForForm, SERVICE_LABELS } from '@/lib/services';
+import { getServicesForForm } from '@/lib/services';
+import { useCookieConsentContext } from '@/components/cookie/CookieConsentProvider';
 
 interface HeroBookingFormProps {
   defaultService?: string;
@@ -30,6 +31,7 @@ function getMonthStr(year: number, month: number): string {
 
 export default function HeroBookingForm({ defaultService, theme = 'light' }: HeroBookingFormProps) {
   const router = useRouter();
+  const { consentRecord } = useCookieConsentContext();
   const [service, setService] = useState<string>(
     SERVICES_FOR_FORM.some((s) => s.slug === defaultService) ? defaultService! : ''
   );
@@ -99,7 +101,11 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
       return;
     }
 
-    sessionStorage.setItem('randevuDraft', JSON.stringify({ service, date, time }));
+    if (consentRecord.categories.functional) {
+      sessionStorage.setItem('randevuDraft', JSON.stringify({ service, date, time }));
+    } else {
+      sessionStorage.removeItem('randevuDraft');
+    }
     router.push('/randevual');
   };
 
