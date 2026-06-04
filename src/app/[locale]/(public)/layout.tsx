@@ -73,12 +73,12 @@ function MaintenanceNotice() {
   return (
     <section
       style={{
-        minHeight: 'calc(100vh - 92px)',
+        minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '120px 20px 56px',
-        background: '#0f172a',
+        background: '#190b03',
         color: '#f8fafc',
         textAlign: 'center',
         position: 'relative',
@@ -91,7 +91,7 @@ function MaintenanceNotice() {
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(180deg, rgba(15,23,42,0.18), rgba(15,23,42,0.72)), radial-gradient(circle at 50% 50%, rgba(15,23,42,0.08), rgba(15,23,42,0.58) 58%, rgba(15,23,42,0.86))',
+            'linear-gradient(180deg, rgba(32,13,3,0.08), rgba(20,8,2,0.34)), radial-gradient(circle at 50% 48%, rgba(255,149,36,0.08), rgba(50,20,4,0.16) 46%, rgba(18,8,3,0.42) 78%)',
           pointerEvents: 'none',
         }}
       />

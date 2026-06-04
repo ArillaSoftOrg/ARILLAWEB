@@ -1,145 +1,366 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import * as THREE from "three";
+import { useEffect, useRef } from "react";
 
-const AnoAI = () => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+const defaultShaderSource = `#version 300 es
+/*********
+* made by Matthias Hurrle (@atzedent)
+*
+* To explore strange new worlds, to seek out new life
+* and new civilizations, to boldly go where no man has
+* gone before.
+*/
+precision highp float;
+out vec4 O;
+uniform vec2 resolution;
+uniform float time;
+#define FC gl_FragCoord.xy
+#define T time
+#define R resolution
+#define MN min(R.x,R.y)
+float rnd(vec2 p) {
+  p=fract(p*vec2(12.9898,78.233));
+  p+=dot(p,p+34.56);
+  return fract(p.x*p.y);
+}
+float noise(in vec2 p) {
+  vec2 i=floor(p), f=fract(p), u=f*f*(3.-2.*f);
+  float
+  a=rnd(i),
+  b=rnd(i+vec2(1,0)),
+  c=rnd(i+vec2(0,1)),
+  d=rnd(i+1.);
+  return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);
+}
+float fbm(vec2 p) {
+  float t=.0, a=1.; mat2 m=mat2(1.,-.5,.2,1.2);
+  for (int i=0; i<5; i++) {
+    t+=a*noise(p);
+    p*=2.*m;
+    a*=.5;
+  }
+  return t;
+}
+float clouds(vec2 p) {
+  float d=1., t=.0;
+  for (float i=.0; i<3.; i++) {
+    float a=d*fbm(i*10.+p.x*.2+.2*(1.+i)*p.y+d+i*i+p);
+    t=mix(t,d,a);
+    d=a;
+    p*=2./(i+1.);
+  }
+  return t;
+}
+void main(void) {
+  vec2 uv=(FC-.5*R)/MN,st=uv*vec2(2,1);
+  vec3 col=vec3(0);
+  float bg=clouds(vec2(st.x+T*.5,-st.y));
+  uv*=1.-.3*(sin(T*.2)*.5+.5);
+  for (float i=1.; i<12.; i++) {
+    uv+=.1*cos(i*vec2(.1+.01*i, .8)+i*i+T*.5+.1*uv.x);
+    vec2 p=uv;
+    float d=length(p);
+    col+=.00125/d*(cos(sin(i)*vec3(1,2,3))+1.);
+    float b=noise(i+p+bg*1.731);
+    col+=.002*b/length(max(p,vec2(b*p.x*.02,p.y)));
+    col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);
+  }
+  O=vec4(col,1);
+}`;
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+class ShaderRenderer {
+  private canvas: HTMLCanvasElement;
+  private gl: WebGL2RenderingContext;
+  private program: WebGLProgram | null = null;
+  private vs: WebGLShader | null = null;
+  private fs: WebGLShader | null = null;
+  private buffer: WebGLBuffer | null = null;
+  private scale: number;
+  private shaderSource = defaultShaderSource;
+  private mouseMove = [0, 0];
+  private mouseCoords = [0, 0];
+  private pointerCoords = [0, 0];
+  private nbrOfPointers = 0;
 
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+  private vertexSrc = `#version 300 es
+precision highp float;
+in vec4 position;
+void main(){gl_Position=position;}`;
 
-    const getSize = () => {
-      const rect = container.getBoundingClientRect();
-      return {
-        width: Math.max(1, Math.floor(rect.width || window.innerWidth)),
-        height: Math.max(1, Math.floor(rect.height || window.innerHeight)),
-      };
-    };
+  private vertices = [-1, 1, -1, -1, 1, 1, 1, -1];
 
-    const initialSize = getSize();
-    renderer.setSize(initialSize.width, initialSize.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.domElement.style.position = "absolute";
-    renderer.domElement.style.inset = "0";
-    renderer.domElement.style.width = "100%";
-    renderer.domElement.style.height = "100%";
-    renderer.domElement.style.display = "block";
-    container.appendChild(renderer.domElement);
+  constructor(canvas: HTMLCanvasElement, scale: number) {
+    const gl = canvas.getContext("webgl2");
+    if (!gl) throw new Error("WebGL2 is not supported");
 
-    const material = new THREE.ShaderMaterial({
-      uniforms: {
-        iTime: { value: 0 },
-        iResolution: { value: new THREE.Vector2(initialSize.width, initialSize.height) },
-      },
-      vertexShader: `
-        void main() {
-          gl_Position = vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        uniform float iTime;
-        uniform vec2 iResolution;
+    this.canvas = canvas;
+    this.scale = scale;
+    this.gl = gl;
+    this.gl.viewport(0, 0, canvas.width * scale, canvas.height * scale);
+  }
 
-        #define NUM_OCTAVES 3
+  updateShader(source: string) {
+    this.reset();
+    this.shaderSource = source;
+    this.setup();
+    this.init();
+  }
 
-        float rand(vec2 n) {
-          return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
-        }
+  updateMove(deltas: number[]) {
+    this.mouseMove = deltas;
+  }
 
-        float noise(vec2 p) {
-          vec2 ip = floor(p);
-          vec2 u = fract(p);
-          u = u*u*(3.0-2.0*u);
+  updateMouse(coords: number[]) {
+    this.mouseCoords = coords;
+  }
 
-          float res = mix(
-            mix(rand(ip), rand(ip + vec2(1.0, 0.0)), u.x),
-            mix(rand(ip + vec2(0.0, 1.0)), rand(ip + vec2(1.0, 1.0)), u.x), u.y);
-          return res * res;
-        }
+  updatePointerCoords(coords: number[]) {
+    this.pointerCoords = coords;
+  }
 
-        float fbm(vec2 x) {
-          float v = 0.0;
-          float a = 0.3;
-          vec2 shift = vec2(100);
-          mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
-          for (int i = 0; i < NUM_OCTAVES; ++i) {
-            v += a * noise(x);
-            x = rot * x * 2.0 + shift;
-            a *= 0.4;
-          }
-          return v;
-        }
+  updatePointerCount(nbr: number) {
+    this.nbrOfPointers = nbr;
+  }
 
-        void main() {
-          vec2 shake = vec2(sin(iTime * 1.2) * 0.005, cos(iTime * 2.1) * 0.005);
-          vec2 p = ((gl_FragCoord.xy + shake * iResolution.xy) - iResolution.xy * 0.5) / iResolution.y * mat2(6.0, -4.0, 4.0, 6.0);
-          vec2 v;
-          vec4 o = vec4(0.0);
+  updateScale(scale: number) {
+    this.scale = scale;
+    this.gl.viewport(0, 0, this.canvas.width * scale, this.canvas.height * scale);
+  }
 
-          float f = 2.0 + fbm(p + vec2(iTime * 5.0, 0.0)) * 0.5;
+  compile(shader: WebGLShader, source: string) {
+    const gl = this.gl;
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
 
-          for (float i = 0.0; i < 35.0; i++) {
-            v = p + cos(i * i + (iTime + p.x * 0.08) * 0.025 + i * vec2(13.0, 11.0)) * 3.5 + vec2(sin(iTime * 3.0 + i) * 0.003, cos(iTime * 3.5 - i) * 0.003);
-            float tailNoise = fbm(v + vec2(iTime * 0.5, i)) * 0.3 * (1.0 - (i / 35.0));
-            vec4 auroraColors = vec4(
-              0.1 + 0.3 * sin(i * 0.2 + iTime * 0.4),
-              0.3 + 0.5 * cos(i * 0.3 + iTime * 0.5),
-              0.7 + 0.3 * sin(i * 0.4 + iTime * 0.3),
-              1.0
-            );
-            vec4 currentContribution = auroraColors * exp(sin(i * i + iTime * 0.8)) / length(max(v, vec2(v.x * f * 0.015, v.y * 1.5)));
-            float thinnessFactor = smoothstep(0.0, 1.0, i / 35.0) * 0.6;
-            o += currentContribution * (1.0 + tailNoise * 0.8) * thinnessFactor;
-          }
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.error("Shader compilation error:", gl.getShaderInfoLog(shader));
+    }
+  }
 
-          o = tanh(pow(o / 100.0, vec4(1.6)));
-          gl_FragColor = o * 1.5;
-        }
-      `,
+  test(source: string) {
+    const gl = this.gl;
+    const shader = gl.createShader(gl.FRAGMENT_SHADER);
+    if (!shader) return "Unable to create fragment shader";
+
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    const result = gl.getShaderParameter(shader, gl.COMPILE_STATUS)
+      ? null
+      : gl.getShaderInfoLog(shader);
+    gl.deleteShader(shader);
+    return result;
+  }
+
+  reset() {
+    const gl = this.gl;
+    if (this.program && !gl.getProgramParameter(this.program, gl.DELETE_STATUS)) {
+      if (this.vs) {
+        gl.detachShader(this.program, this.vs);
+        gl.deleteShader(this.vs);
+      }
+      if (this.fs) {
+        gl.detachShader(this.program, this.fs);
+        gl.deleteShader(this.fs);
+      }
+      gl.deleteProgram(this.program);
+    }
+  }
+
+  setup() {
+    const gl = this.gl;
+    this.vs = gl.createShader(gl.VERTEX_SHADER);
+    this.fs = gl.createShader(gl.FRAGMENT_SHADER);
+    if (!this.vs || !this.fs) return;
+
+    this.compile(this.vs, this.vertexSrc);
+    this.compile(this.fs, this.shaderSource);
+    this.program = gl.createProgram();
+    if (!this.program) return;
+
+    gl.attachShader(this.program, this.vs);
+    gl.attachShader(this.program, this.fs);
+    gl.linkProgram(this.program);
+
+    if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
+      console.error(gl.getProgramInfoLog(this.program));
+    }
+  }
+
+  init() {
+    const gl = this.gl;
+    const program = this.program;
+    if (!program) return;
+
+    this.buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
+
+    const position = gl.getAttribLocation(program, "position");
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+
+    program.resolution = gl.getUniformLocation(program, "resolution");
+    program.time = gl.getUniformLocation(program, "time");
+    program.move = gl.getUniformLocation(program, "move");
+    program.touch = gl.getUniformLocation(program, "touch");
+    program.pointerCount = gl.getUniformLocation(program, "pointerCount");
+    program.pointers = gl.getUniformLocation(program, "pointers");
+  }
+
+  render(now = 0) {
+    const gl = this.gl;
+    const program = this.program;
+    if (!program || gl.getProgramParameter(program, gl.DELETE_STATUS)) return;
+
+    gl.clearColor(0, 0, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(program);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+    gl.uniform2f(program.resolution, this.canvas.width, this.canvas.height);
+    gl.uniform1f(program.time, now * 1e-3);
+    gl.uniform2f(program.move, this.mouseMove[0], this.mouseMove[1]);
+    gl.uniform2f(program.touch, this.mouseCoords[0], this.mouseCoords[1]);
+    gl.uniform1i(program.pointerCount, this.nbrOfPointers);
+    gl.uniform2fv(program.pointers, this.pointerCoords);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  }
+}
+
+class PointerHandler {
+  private scale: number;
+  private active = false;
+  private pointers = new Map<number, number[]>();
+  private lastCoords = [0, 0];
+  private moves = [0, 0];
+
+  constructor(element: HTMLCanvasElement, scale: number) {
+    this.scale = scale;
+
+    const map = (x: number, y: number) => [x * this.scale, element.height - y * this.scale];
+
+    element.addEventListener("pointerdown", (event) => {
+      this.active = true;
+      this.pointers.set(event.pointerId, map(event.clientX, event.clientY));
     });
 
-    const geometry = new THREE.PlaneGeometry(2, 2);
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    element.addEventListener("pointerup", (event) => {
+      if (this.count === 1) this.lastCoords = this.first;
+      this.pointers.delete(event.pointerId);
+      this.active = this.pointers.size > 0;
+    });
 
-    let frameId = 0;
-    const animate = () => {
-      material.uniforms.iTime.value += 0.016;
-      renderer.render(scene, camera);
-      frameId = requestAnimationFrame(animate);
-    };
-    animate();
+    element.addEventListener("pointerleave", (event) => {
+      if (this.count === 1) this.lastCoords = this.first;
+      this.pointers.delete(event.pointerId);
+      this.active = this.pointers.size > 0;
+    });
 
-    const handleResize = () => {
-      const size = getSize();
-      renderer.setSize(size.width, size.height);
-      material.uniforms.iResolution.value.set(size.width, size.height);
+    element.addEventListener("pointermove", (event) => {
+      if (!this.active) return;
+      this.lastCoords = [event.clientX, event.clientY];
+      this.pointers.set(event.pointerId, map(event.clientX, event.clientY));
+      this.moves = [this.moves[0] + event.movementX, this.moves[1] + event.movementY];
+    });
+  }
+
+  updateScale(scale: number) {
+    this.scale = scale;
+  }
+
+  get count() {
+    return this.pointers.size;
+  }
+
+  get move() {
+    return this.moves;
+  }
+
+  get coords() {
+    return this.pointers.size > 0 ? Array.from(this.pointers.values()).flat() : [0, 0];
+  }
+
+  get first() {
+    return this.pointers.values().next().value || this.lastCoords;
+  }
+}
+
+declare global {
+  interface WebGLProgram {
+    resolution: WebGLUniformLocation | null;
+    time: WebGLUniformLocation | null;
+    move: WebGLUniformLocation | null;
+    touch: WebGLUniformLocation | null;
+    pointerCount: WebGLUniformLocation | null;
+    pointers: WebGLUniformLocation | null;
+  }
+}
+
+export default function AnimatedShaderBackground() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const rendererRef = useRef<ShaderRenderer | null>(null);
+  const pointersRef = useRef<PointerHandler | null>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const parent = canvas?.parentElement;
+    if (!canvas || !parent) return;
+
+    const getScale = () => Math.max(1, 0.5 * window.devicePixelRatio);
+
+    const resize = () => {
+      const dpr = getScale();
+      const rect = parent.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+      canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+
+      rendererRef.current?.updateScale(dpr);
+      pointersRef.current?.updateScale(dpr);
     };
-    window.addEventListener("resize", handleResize);
+
+    try {
+      const dpr = getScale();
+      rendererRef.current = new ShaderRenderer(canvas, dpr);
+      pointersRef.current = new PointerHandler(canvas, dpr);
+      rendererRef.current.setup();
+      rendererRef.current.init();
+      resize();
+
+      if (rendererRef.current.test(defaultShaderSource) === null) {
+        rendererRef.current.updateShader(defaultShaderSource);
+      }
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+
+    const loop = (now: number) => {
+      if (!rendererRef.current || !pointersRef.current) return;
+
+      rendererRef.current.updateMouse(pointersRef.current.first);
+      rendererRef.current.updatePointerCount(pointersRef.current.count);
+      rendererRef.current.updatePointerCoords(pointersRef.current.coords);
+      rendererRef.current.updateMove(pointersRef.current.move);
+      rendererRef.current.render(now);
+      animationFrameRef.current = requestAnimationFrame(loop);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(loop);
+    window.addEventListener("resize", resize);
 
     return () => {
-      cancelAnimationFrame(frameId);
-      window.removeEventListener("resize", handleResize);
-      if (renderer.domElement.parentNode === container) {
-        container.removeChild(renderer.domElement);
-      }
-      geometry.dispose();
-      material.dispose();
-      renderer.dispose();
+      window.removeEventListener("resize", resize);
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      rendererRef.current?.reset();
     };
   }, []);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 overflow-hidden">
-      <div className="relative z-10 divider" />
-    </div>
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      className="absolute inset-0 h-full w-full touch-none"
+      style={{ background: "black" }}
+    />
   );
-};
-
-export default AnoAI;
+}
