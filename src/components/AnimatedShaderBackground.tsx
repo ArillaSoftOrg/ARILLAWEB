@@ -1,154 +1,145 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import * as THREE from "three";
 
-const vertexShader = `
-  attribute vec2 position;
-  void main() {
-    gl_Position = vec4(position, 0.0, 1.0);
-  }
-`;
-
-const fragmentShader = `
-  precision highp float;
-
-  uniform vec2 u_resolution;
-  uniform float u_time;
-
-  mat2 rotate2d(float angle) {
-    float s = sin(angle);
-    float c = cos(angle);
-    return mat2(c, -s, s, c);
-  }
-
-  float wave(vec2 uv, float speed, float scale, float offset) {
-    return sin((uv.x * scale + uv.y * (scale * 0.7)) + u_time * speed + offset);
-  }
-
-  void main() {
-    vec2 uv = (gl_FragCoord.xy * 2.0 - u_resolution.xy) / min(u_resolution.x, u_resolution.y);
-    vec2 p = uv;
-    p *= rotate2d(0.28 + sin(u_time * 0.08) * 0.15);
-
-    float a = wave(p, 0.55, 3.2, 0.0);
-    float b = wave(p.yx + a * 0.18, -0.38, 4.7, 1.9);
-    float c = wave(p + vec2(b * 0.12, a * 0.08), 0.24, 7.0, 3.1);
-    float field = a * 0.42 + b * 0.34 + c * 0.24;
-
-    float glow = smoothstep(0.88, 0.05, length(uv - vec2(0.1, -0.08)));
-    float ribbons = smoothstep(0.18, 0.92, field * 0.5 + 0.5);
-
-    vec3 navy = vec3(0.020, 0.035, 0.075);
-    vec3 teal = vec3(0.000, 0.430, 0.430);
-    vec3 violet = vec3(0.420, 0.160, 0.930);
-    vec3 cyan = vec3(0.050, 0.720, 0.860);
-
-    vec3 color = navy;
-    color = mix(color, teal, ribbons * 0.52);
-    color = mix(color, violet, smoothstep(0.38, 1.0, field) * 0.46);
-    color += cyan * glow * 0.18;
-    color += violet * pow(max(0.0, 1.0 - length(uv + vec2(0.55, -0.55))), 3.0) * 0.22;
-
-    float vignette = smoothstep(1.25, 0.35, length(uv));
-    color *= 0.62 + vignette * 0.58;
-
-    gl_FragColor = vec4(color, 1.0);
-  }
-`;
-
-function createShader(gl: WebGLRenderingContext, type: number, source: string) {
-  const shader = gl.createShader(type);
-  if (!shader) return null;
-
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    gl.deleteShader(shader);
-    return null;
-  }
-
-  return shader;
-}
-
-export default function AnimatedShaderBackground() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+const AnoAI = () => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const gl = canvas?.getContext("webgl", { antialias: false, alpha: false });
-    if (!canvas || !gl) return;
-    const targetCanvas = canvas;
-    const targetGl = gl;
+    const container = containerRef.current;
+    if (!container) return;
 
-    const vert = createShader(targetGl, targetGl.VERTEX_SHADER, vertexShader);
-    const frag = createShader(targetGl, targetGl.FRAGMENT_SHADER, fragmentShader);
-    const program = targetGl.createProgram();
-    if (!vert || !frag || !program) return;
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
 
-    targetGl.attachShader(program, vert);
-    targetGl.attachShader(program, frag);
-    targetGl.linkProgram(program);
-    if (!targetGl.getProgramParameter(program, targetGl.LINK_STATUS)) return;
+    const getSize = () => {
+      const rect = container.getBoundingClientRect();
+      return {
+        width: Math.max(1, Math.floor(rect.width || window.innerWidth)),
+        height: Math.max(1, Math.floor(rect.height || window.innerHeight)),
+      };
+    };
 
-    const buffer = targetGl.createBuffer();
-    targetGl.bindBuffer(targetGl.ARRAY_BUFFER, buffer);
-    targetGl.bufferData(
-      targetGl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-      targetGl.STATIC_DRAW
-    );
+    const initialSize = getSize();
+    renderer.setSize(initialSize.width, initialSize.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.domElement.style.position = "absolute";
+    renderer.domElement.style.inset = "0";
+    renderer.domElement.style.width = "100%";
+    renderer.domElement.style.height = "100%";
+    renderer.domElement.style.display = "block";
+    container.appendChild(renderer.domElement);
 
-    const position = targetGl.getAttribLocation(program, "position");
-    const resolution = targetGl.getUniformLocation(program, "u_resolution");
-    const time = targetGl.getUniformLocation(program, "u_time");
-    let raf = 0;
-    const startedAt = performance.now();
+    const material = new THREE.ShaderMaterial({
+      uniforms: {
+        iTime: { value: 0 },
+        iResolution: { value: new THREE.Vector2(initialSize.width, initialSize.height) },
+      },
+      vertexShader: `
+        void main() {
+          gl_Position = vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform float iTime;
+        uniform vec2 iResolution;
 
-    function resize() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const width = Math.floor(targetCanvas.clientWidth * dpr);
-      const height = Math.floor(targetCanvas.clientHeight * dpr);
-      if (targetCanvas.width !== width || targetCanvas.height !== height) {
-        targetCanvas.width = width;
-        targetCanvas.height = height;
-        targetGl.viewport(0, 0, width, height);
-      }
-    }
+        #define NUM_OCTAVES 3
 
-    function render(now: number) {
-      resize();
-      targetGl.useProgram(program);
-      targetGl.enableVertexAttribArray(position);
-      targetGl.vertexAttribPointer(position, 2, targetGl.FLOAT, false, 0, 0);
-      targetGl.uniform2f(resolution, targetCanvas.width, targetCanvas.height);
-      targetGl.uniform1f(time, (now - startedAt) * 0.001);
-      targetGl.drawArrays(targetGl.TRIANGLES, 0, 6);
-      raf = requestAnimationFrame(render);
-    }
+        float rand(vec2 n) {
+          return fract(sin(dot(n, vec2(12.9898, 4.1414))) * 43758.5453);
+        }
 
-    raf = requestAnimationFrame(render);
+        float noise(vec2 p) {
+          vec2 ip = floor(p);
+          vec2 u = fract(p);
+          u = u*u*(3.0-2.0*u);
+
+          float res = mix(
+            mix(rand(ip), rand(ip + vec2(1.0, 0.0)), u.x),
+            mix(rand(ip + vec2(0.0, 1.0)), rand(ip + vec2(1.0, 1.0)), u.x), u.y);
+          return res * res;
+        }
+
+        float fbm(vec2 x) {
+          float v = 0.0;
+          float a = 0.3;
+          vec2 shift = vec2(100);
+          mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
+          for (int i = 0; i < NUM_OCTAVES; ++i) {
+            v += a * noise(x);
+            x = rot * x * 2.0 + shift;
+            a *= 0.4;
+          }
+          return v;
+        }
+
+        void main() {
+          vec2 shake = vec2(sin(iTime * 1.2) * 0.005, cos(iTime * 2.1) * 0.005);
+          vec2 p = ((gl_FragCoord.xy + shake * iResolution.xy) - iResolution.xy * 0.5) / iResolution.y * mat2(6.0, -4.0, 4.0, 6.0);
+          vec2 v;
+          vec4 o = vec4(0.0);
+
+          float f = 2.0 + fbm(p + vec2(iTime * 5.0, 0.0)) * 0.5;
+
+          for (float i = 0.0; i < 35.0; i++) {
+            v = p + cos(i * i + (iTime + p.x * 0.08) * 0.025 + i * vec2(13.0, 11.0)) * 3.5 + vec2(sin(iTime * 3.0 + i) * 0.003, cos(iTime * 3.5 - i) * 0.003);
+            float tailNoise = fbm(v + vec2(iTime * 0.5, i)) * 0.3 * (1.0 - (i / 35.0));
+            vec4 auroraColors = vec4(
+              0.1 + 0.3 * sin(i * 0.2 + iTime * 0.4),
+              0.3 + 0.5 * cos(i * 0.3 + iTime * 0.5),
+              0.7 + 0.3 * sin(i * 0.4 + iTime * 0.3),
+              1.0
+            );
+            vec4 currentContribution = auroraColors * exp(sin(i * i + iTime * 0.8)) / length(max(v, vec2(v.x * f * 0.015, v.y * 1.5)));
+            float thinnessFactor = smoothstep(0.0, 1.0, i / 35.0) * 0.6;
+            o += currentContribution * (1.0 + tailNoise * 0.8) * thinnessFactor;
+          }
+
+          o = tanh(pow(o / 100.0, vec4(1.6)));
+          gl_FragColor = o * 1.5;
+        }
+      `,
+    });
+
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    let frameId = 0;
+    const animate = () => {
+      material.uniforms.iTime.value += 0.016;
+      renderer.render(scene, camera);
+      frameId = requestAnimationFrame(animate);
+    };
+    animate();
+
+    const handleResize = () => {
+      const size = getSize();
+      renderer.setSize(size.width, size.height);
+      material.uniforms.iResolution.value.set(size.width, size.height);
+    };
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      cancelAnimationFrame(raf);
-      targetGl.deleteProgram(program);
-      targetGl.deleteShader(vert);
-      targetGl.deleteShader(frag);
-      targetGl.deleteBuffer(buffer);
+      cancelAnimationFrame(frameId);
+      window.removeEventListener("resize", handleResize);
+      if (renderer.domElement.parentNode === container) {
+        container.removeChild(renderer.domElement);
+      }
+      geometry.dispose();
+      material.dispose();
+      renderer.dispose();
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
-      style={{
-        position: "absolute",
-        inset: 0,
-        width: "100%",
-        height: "100%",
-        display: "block",
-      }}
-    />
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden">
+      <div className="relative z-10 divider" />
+    </div>
   );
-}
+};
+
+export default AnoAI;
