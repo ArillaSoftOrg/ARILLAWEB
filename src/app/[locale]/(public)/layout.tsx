@@ -1,4 +1,5 @@
 import Navbar from '@/components/layout/Navbar';
+import AnimatedShaderBackground from '@/components/AnimatedShaderBackground';
 import FAQSection from '@/components/layout/FAQSection';
 import Footer from '@/components/layout/Footer';
 import AnnouncementBar from '@/components/layout/AnnouncementBar';
@@ -77,25 +78,24 @@ function MaintenanceNotice() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '120px 20px 56px',
-        background:
-          'radial-gradient(circle at 50% 0%, rgba(124,58,237,0.14), transparent 34%), #0f172a',
+        background: '#0f172a',
         color: '#f8fafc',
         textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      <div style={{ maxWidth: '680px' }}>
-        <p
-          style={{
-            color: '#a78bfa',
-            fontSize: '13px',
-            fontWeight: 700,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            marginBottom: '16px',
-          }}
-        >
-          Arilla Soft
-        </p>
+      <AnimatedShaderBackground />
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'linear-gradient(180deg, rgba(15,23,42,0.18), rgba(15,23,42,0.72)), radial-gradient(circle at 50% 50%, rgba(15,23,42,0.08), rgba(15,23,42,0.58) 58%, rgba(15,23,42,0.86))',
+          pointerEvents: 'none',
+        }}
+      />
+      <div style={{ maxWidth: '680px', position: 'relative', zIndex: 1 }}>
         <h1
           style={{
             fontSize: 'clamp(32px, 7vw, 58px)',
@@ -117,6 +117,25 @@ function MaintenanceNotice() {
         >
           Yakında yenilenen deneyimimizle yayında olacağız. Bu süreçte blog yazılarımız erişilebilir kalmaya devam ediyor.
         </p>
+        <a
+          href="/tr/kurumsal/blog"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: '28px',
+            padding: '12px 22px',
+            borderRadius: '10px',
+            background: '#7c3aed',
+            color: '#fff',
+            fontSize: '14px',
+            fontWeight: 700,
+            textDecoration: 'none',
+            boxShadow: '0 10px 24px rgba(124,58,237,0.28)',
+          }}
+        >
+          Blog'a Git
+        </a>
       </div>
     </section>
   );

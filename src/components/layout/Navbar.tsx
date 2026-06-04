@@ -125,6 +125,34 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
               </span>
             </Link>
 
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <Link
+              href="/kurumsal/blog"
+              style={{
+                padding: '10px 16px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                color: '#475569',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
+                transition: 'color 0.2s ease, border-color 0.2s ease, background 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#7c3aed';
+                e.currentTarget.style.borderColor = '#c4b5fd';
+                e.currentTarget.style.background = '#fff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#475569';
+                e.currentTarget.style.borderColor = '#e2e8f0';
+                e.currentTarget.style.background = '#f8fafc';
+              }}
+            >
+              Blog
+            </Link>
+
             <a
               href="/admin/login"
               className="inline-flex items-center"
@@ -158,6 +186,7 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                 <ArrowRight size={14} />
               </span>
             </a>
+            </div>
           </div>
         </div>
       </header>
