@@ -133,11 +133,12 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
     <main style={{ minHeight: "100vh", background: "#f8fafc", color: "#111827" }}>
       <section
         style={{
-          padding: "clamp(92px, 18vw, 132px) 20px clamp(26px, 7vw, 34px)",
+          padding: "clamp(78px, 14vw, 108px) 20px clamp(22px, 5vw, 30px)",
           background: "linear-gradient(135deg, #013f3e 0%, #07515b 58%, #0f172a 100%)",
           color: "#fff",
           overflow: "hidden",
           position: "relative",
+          textAlign: "center",
         }}
       >
         <div
@@ -154,14 +155,14 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
         <div style={{ maxWidth: "1120px", margin: "0 auto", position: "relative" }}>
           <h1
             style={{
-              fontSize: "clamp(34px, 9vw, 68px)",
+              fontSize: "clamp(32px, 7vw, 52px)",
               lineHeight: 1,
               fontWeight: 900,
               margin: 0,
               letterSpacing: "0",
             }}
           >
-            ArillaSoft <span style={{ color: "rgba(255,255,255,0.62)", fontWeight: 500 }}>Blog</span>
+            Blog
           </h1>
         </div>
       </section>

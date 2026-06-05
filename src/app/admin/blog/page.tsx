@@ -59,6 +59,7 @@ type PostDisplay = {
   date: string;
   readTime: string;
   published: boolean;
+  publishedAt: string | null;
   coverImage: string | null;
   content: string;
   seoTitle: string | null;
@@ -84,18 +85,25 @@ function adaptPost(post: AdminPost): PostDisplay {
     categoryColor: catInfo.color,
     categoryBg: catInfo.bg,
     categoryBorder: catInfo.border,
-    date: new Date(post.createdAt).toLocaleDateString("tr-TR", {
+    date: new Date(post.publishedAt ?? post.createdAt).toLocaleDateString("tr-TR", {
       day: "numeric",
       month: "long",
       year: "numeric",
     }),
     readTime: `${post.readingTime} dk`,
     published: post.published,
+    publishedAt: post.publishedAt,
     coverImage: post.coverImage,
     content: post.content,
     seoTitle: post.seoTitle,
     seoDescription: post.seoDescription,
   };
+}
+
+function toDateInputValue(value?: string | null): string {
+  const date = value ? new Date(value) : new Date();
+  if (Number.isNaN(date.getTime())) return new Date().toISOString().slice(0, 10);
+  return date.toISOString().slice(0, 10);
 }
 
 /* ─── Modal ──────────────────────────────────── */
@@ -427,6 +435,11 @@ function PostModal({
             </div>
           </div>
 
+          <div>
+            <label className="block text-xs font-medium mb-1.5" style={{ color: "#64748b" }}>Yayın Tarihi</label>
+            <input type="date" value={draft.publishDate} onChange={set("publishDate")} style={inputStyle} />
+          </div>
+
           {/* Category preview */}
           {selectedCat && (
             <div className="flex items-center gap-2 pt-1">
@@ -684,6 +697,7 @@ export default function AdminBlogPage() {
     readTime: "5 dk",
     emoji: "📝",
     published: true,
+    publishDate: toDateInputValue(),
     coverImage: "",
     sections: [],
     seoTitle: "",
@@ -704,6 +718,7 @@ export default function AdminBlogPage() {
       readTime: editTarget.readTime,
       emoji: editTarget.emoji,
       published: editTarget.published,
+      publishDate: toDateInputValue(editTarget.publishedAt),
       coverImage: editTarget.coverImage ?? "",
       sections: parsedContent.sections ?? [],
       seoTitle: editTarget.seoTitle ?? "",

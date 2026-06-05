@@ -64,6 +64,7 @@ export type PostDraft = {
   readTime: string;
   emoji: string;
   published: boolean;
+  publishDate: string;
   coverImage: string;
   sections: BlogSection[];
   seoTitle: string;
@@ -80,6 +81,7 @@ export type AdminPost = {
   content: string;
   readingTime: number;
   published: boolean;
+  publishedAt: string | null;
   coverImage: string | null;
   createdAt: string;
   seoTitle: string | null;
@@ -100,6 +102,7 @@ export async function getAdminPosts(): Promise<AdminPost[]> {
     content: p.content,
     readingTime: p.readingTime,
     published: p.published,
+    publishedAt: p.publishedAt?.toISOString() ?? null,
     coverImage: p.coverImage,
     createdAt: p.createdAt.toISOString(),
     seoTitle: p.seoTitle,
@@ -113,6 +116,7 @@ export async function createPost(draft: PostDraft): Promise<void> {
   const categoryId = await upsertCategory(draft.category);
   const meta = CATEGORY_META[draft.category] ?? DEFAULT_META;
   const readingTime = parseInt(draft.readTime) || 5;
+  const publishedAt = draft.publishDate ? new Date(`${draft.publishDate}T12:00:00`) : new Date();
 
   await prisma.blogPost.create({
     data: {
@@ -131,7 +135,7 @@ export async function createPost(draft: PostDraft): Promise<void> {
       }),
       readingTime,
       published: draft.published,
-      publishedAt: draft.published ? new Date() : null,
+      publishedAt: draft.published ? publishedAt : null,
       coverImage: draft.coverImage || null,
       seoTitle: draft.seoTitle || null,
       seoDescription: draft.seoDescription || null,
@@ -147,6 +151,7 @@ export async function updatePost(id: string, draft: PostDraft): Promise<void> {
   const categoryId = await upsertCategory(draft.category);
   const meta = CATEGORY_META[draft.category] ?? DEFAULT_META;
   const readingTime = parseInt(draft.readTime) || 5;
+  const publishedAt = draft.publishDate ? new Date(`${draft.publishDate}T12:00:00`) : new Date();
 
   await prisma.blogPost.update({
     where: { id },
@@ -165,7 +170,7 @@ export async function updatePost(id: string, draft: PostDraft): Promise<void> {
       }),
       readingTime,
       published: draft.published,
-      publishedAt: draft.published ? new Date() : null,
+      publishedAt: draft.published ? publishedAt : null,
       coverImage: draft.coverImage || null,
       seoTitle: draft.seoTitle || null,
       seoDescription: draft.seoDescription || null,
