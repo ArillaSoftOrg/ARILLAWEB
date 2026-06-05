@@ -23,6 +23,10 @@ export default async function PublicLayout({ children }: { children: React.React
   const isBlogPath = publicPath === '/kurumsal/blog' || publicPath.startsWith('/kurumsal/blog/');
   const isAdminPreview = await hasValidAdminSession();
   const showMaintenance = PUBLIC_DEVELOPMENT_MODE && !isAdminPreview && !isBlogPath;
+  const pathSegments = pathname.split('/').filter(Boolean);
+  const locale = routing.locales.includes(pathSegments[0] as (typeof routing.locales)[number])
+    ? pathSegments[0]
+    : routing.defaultLocale;
   const announcementConfigs = showMaintenance ? [] : await getActiveCampaignBars();
 
   return (
@@ -31,7 +35,7 @@ export default async function PublicLayout({ children }: { children: React.React
         <Navbar developerLoginOnly={PUBLIC_DEVELOPMENT_MODE && !isAdminPreview} />
         {!showMaintenance && <AnnouncementBar configs={announcementConfigs} />}
         <main className="flex-1" style={{ paddingTop: 'var(--bar-h, 0px)' }}>
-          {showMaintenance ? <MaintenanceNotice /> : children}
+          {showMaintenance ? <MaintenanceNotice locale={locale} /> : children}
         </main>
         {!showMaintenance && !isBlogPath && <FAQSection />}
         {!showMaintenance && !isBlogPath && <Footer />}
@@ -69,7 +73,7 @@ function stripLocale(pathname: string): string {
   return pathname.replace(/\/$/, '') || '/';
 }
 
-function MaintenanceNotice() {
+function MaintenanceNotice({ locale }: { locale: string }) {
   return (
     <section
       style={{
@@ -77,7 +81,7 @@ function MaintenanceNotice() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '120px 20px 56px',
+        padding: 'clamp(80px, 12vw, 120px) 20px 56px',
         background: '#190b03',
         color: '#f8fafc',
         textAlign: 'center',
@@ -91,7 +95,7 @@ function MaintenanceNotice() {
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(180deg, rgba(32,13,3,0.08), rgba(20,8,2,0.34)), radial-gradient(circle at 50% 48%, rgba(255,149,36,0.08), rgba(50,20,4,0.16) 46%, rgba(18,8,3,0.42) 78%)',
+            'linear-gradient(180deg, rgba(15,5,0,0.62) 0%, rgba(25,11,3,0.28) 50%, rgba(15,5,0,0.52) 100%), radial-gradient(circle at 50% 48%, rgba(255,149,36,0.06), rgba(50,20,4,0.18) 46%, rgba(18,8,3,0.50) 78%)',
           pointerEvents: 'none',
         }}
       />
@@ -108,8 +112,8 @@ function MaintenanceNotice() {
         </h1>
         <p
           style={{
-            color: '#cbd5e1',
-            fontSize: 'clamp(16px, 3vw, 19px)',
+            color: 'rgba(248,230,210,0.78)',
+            fontSize: 'clamp(15px, 2.5vw, 18px)',
             lineHeight: 1.7,
             margin: '0 auto',
             maxWidth: '560px',
@@ -118,7 +122,7 @@ function MaintenanceNotice() {
           Yakında yenilenen deneyimimizle yayında olacağız. Bu süreçte blog yazılarımız erişilebilir kalmaya devam ediyor.
         </p>
         <a
-          href="/tr/kurumsal/blog"
+          href={`/${locale}/kurumsal/blog`}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -134,8 +138,18 @@ function MaintenanceNotice() {
             boxShadow: '0 10px 24px rgba(124,58,237,0.28)',
           }}
         >
-          Blog'a Git
+          Blog&apos;a Git
         </a>
+        <p
+          style={{
+            marginTop: '40px',
+            fontSize: '13px',
+            color: 'rgba(248,230,210,0.42)',
+            letterSpacing: '0.02em',
+          }}
+        >
+          İletişim için: hello@arillasoft.com
+        </p>
       </div>
     </section>
   );

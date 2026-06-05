@@ -94,7 +94,7 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
   if (developerLoginOnly) {
     return (
       <header
-        className="bg-slate-900 md:bg-white"
+        className="bg-[#190b03] md:bg-white"
         style={{
           position: 'fixed',
           top: 0,
@@ -125,70 +125,142 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
               </span>
             </Link>
 
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <Link
-              href="/kurumsal/blog"
-              style={{
-                padding: '10px 16px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: 600,
-                textDecoration: 'none',
-                color: '#475569',
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                transition: 'color 0.2s ease, border-color 0.2s ease, background 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#7c3aed';
-                e.currentTarget.style.borderColor = '#c4b5fd';
-                e.currentTarget.style.background = '#fff';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#475569';
-                e.currentTarget.style.borderColor = '#e2e8f0';
-                e.currentTarget.style.background = '#f8fafc';
-              }}
-            >
-              Blog
-            </Link>
-
-            <a
-              href="/admin/login"
-              className="inline-flex items-center"
-              style={{
-                gap: '6px',
-                padding: '10px 18px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: 600,
-                textDecoration: 'none',
-                color: '#FFFFFF',
-                background: '#7c3aed',
-                boxShadow: '0 1px 3px rgba(124,58,237,0.25)',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 4px 14px rgba(124,58,237,0.35)';
-                const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
-                if (arrow) arrow.style.transform = 'translateX(3px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 1px 3px rgba(124,58,237,0.25)';
-                const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
-                if (arrow) arrow.style.transform = 'translateX(0)';
-              }}
-            >
-              Geliştirici Girişi
-              <span data-arrow="" style={{ display: 'inline-flex', transition: 'transform 0.2s ease' }}>
-                <ArrowRight size={14} />
-              </span>
-            </a>
+            {/* Desktop: Blog + Dev Login buttons */}
+            <div className="hidden lg:flex items-center" style={{ gap: '10px' }}>
+              <Link
+                href="/kurumsal/blog"
+                style={{
+                  padding: '10px 16px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  color: '#475569',
+                  background: '#f8fafc',
+                  border: '1px solid #e2e8f0',
+                  transition: 'color 0.2s ease, border-color 0.2s ease, background 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#7c3aed';
+                  e.currentTarget.style.borderColor = '#c4b5fd';
+                  e.currentTarget.style.background = '#fff';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#475569';
+                  e.currentTarget.style.borderColor = '#e2e8f0';
+                  e.currentTarget.style.background = '#f8fafc';
+                }}
+              >
+                Blog
+              </Link>
+              <a
+                href="/admin/login"
+                className="inline-flex items-center"
+                style={{
+                  gap: '6px',
+                  padding: '10px 18px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  color: '#FFFFFF',
+                  background: '#7c3aed',
+                  boxShadow: '0 1px 3px rgba(124,58,237,0.25)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(124,58,237,0.35)';
+                  const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
+                  if (arrow) arrow.style.transform = 'translateX(3px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 1px 3px rgba(124,58,237,0.25)';
+                  const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
+                  if (arrow) arrow.style.transform = 'translateX(0)';
+                }}
+              >
+                Geliştirici Girişi
+                <span data-arrow="" style={{ display: 'inline-flex', transition: 'transform 0.2s ease' }}>
+                  <ArrowRight size={14} />
+                </span>
+              </a>
             </div>
+
+            {/* Mobile: hamburger */}
+            <button
+              className="flex items-center justify-center lg:hidden text-slate-100"
+              onClick={() => setIsOpen(!isOpen)}
+              style={{ background: 'transparent', border: 'none', padding: '6px', cursor: 'pointer' }}
+              aria-label="Menü"
+            >
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile panel */}
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+            className="lg:hidden"
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: '12px',
+              right: '12px',
+              zIndex: 100,
+              background: '#1f1008',
+              border: '1px solid rgba(255,149,36,0.12)',
+              borderRadius: '16px',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.4)',
+              padding: '12px',
+            }}
+          >
+            <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <Link
+                href="/kurumsal/blog"
+                onClick={() => setIsOpen(false)}
+                style={{
+                  display: 'block',
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  fontSize: '15px',
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  color: '#e2d3c0',
+                  background: 'rgba(255,149,36,0.06)',
+                  transition: 'color 0.2s ease, background 0.2s ease',
+                }}
+              >
+                Blog
+              </Link>
+              <a
+                href="/admin/login"
+                onClick={() => setIsOpen(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                  padding: '12px 16px',
+                  borderRadius: '10px',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  color: '#FFFFFF',
+                  background: '#7c3aed',
+                }}
+              >
+                Geliştirici Girişi
+                <ArrowRight size={14} />
+              </a>
+            </nav>
+          </motion.div>
+        )}
       </header>
     );
   }
