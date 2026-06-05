@@ -35,7 +35,7 @@ function BlogCard({ post }: { post: BlogPost }) {
         <div
           style={{
             position: "relative",
-            aspectRatio: "16 / 10",
+            aspectRatio: "2 / 1",
             overflow: "hidden",
             background: post.gradient,
           }}
@@ -57,7 +57,7 @@ function BlogCard({ post }: { post: BlogPost }) {
                 alignItems: "center",
                 justifyContent: "center",
                 color: "#fff",
-                fontSize: "56px",
+                fontSize: "clamp(38px, 12vw, 52px)",
                 fontWeight: 800,
               }}
             >
@@ -66,15 +66,15 @@ function BlogCard({ post }: { post: BlogPost }) {
           )}
         </div>
 
-        <div style={{ padding: "24px 26px 28px" }}>
+        <div style={{ padding: "clamp(18px, 5vw, 24px)" }}>
           <time
             style={{
               display: "block",
               color: "#9ca3af",
-              fontSize: "13px",
+              fontSize: "12px",
               fontWeight: 700,
               textAlign: "right",
-              marginBottom: "14px",
+              marginBottom: "12px",
             }}
           >
             {post.date}
@@ -83,10 +83,10 @@ function BlogCard({ post }: { post: BlogPost }) {
           <h2
             style={{
               color: "#111827",
-              fontSize: "clamp(20px, 2.8vw, 25px)",
-              lineHeight: 1.18,
+              fontSize: "clamp(18px, 5vw, 23px)",
+              lineHeight: 1.24,
               fontWeight: 800,
-              margin: "0 0 12px",
+              margin: "0 0 10px",
               letterSpacing: "0",
             }}
           >
@@ -96,11 +96,11 @@ function BlogCard({ post }: { post: BlogPost }) {
           <p
             style={{
               color: "#64748b",
-              fontSize: "15px",
-              lineHeight: 1.7,
-              margin: "0 0 24px",
+              fontSize: "14px",
+              lineHeight: 1.6,
+              margin: "0 0 20px",
               display: "-webkit-box",
-              WebkitLineClamp: 3,
+              WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
             }}
@@ -112,15 +112,15 @@ function BlogCard({ post }: { post: BlogPost }) {
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: "10px",
+              gap: "8px",
               color: "#03635f",
-              fontSize: "13px",
+              fontSize: "12px",
               fontWeight: 800,
-              letterSpacing: "0.08em",
+              letterSpacing: "0.06em",
             }}
           >
             DEVAMINI OKU
-            <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
           </span>
         </div>
       </article>
@@ -133,7 +133,7 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
     <main style={{ minHeight: "100vh", background: "#f8fafc", color: "#111827" }}>
       <section
         style={{
-          padding: "132px 20px 34px",
+          padding: "clamp(92px, 18vw, 132px) 20px clamp(26px, 7vw, 34px)",
           background: "linear-gradient(135deg, #013f3e 0%, #07515b 58%, #0f172a 100%)",
           color: "#fff",
           overflow: "hidden",
@@ -154,7 +154,7 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
         <div style={{ maxWidth: "1120px", margin: "0 auto", position: "relative" }}>
           <h1
             style={{
-              fontSize: "clamp(38px, 8vw, 72px)",
+              fontSize: "clamp(34px, 9vw, 68px)",
               lineHeight: 1,
               fontWeight: 900,
               margin: 0,
@@ -166,7 +166,7 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
         </div>
       </section>
 
-      <section style={{ maxWidth: "1120px", margin: "0 auto", padding: "48px 20px 96px" }}>
+      <section style={{ maxWidth: "1120px", margin: "0 auto", padding: "clamp(32px, 7vw, 48px) 20px 96px" }}>
         {posts.length === 0 ? (
           <div
             style={{
@@ -185,7 +185,7 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
           <div
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
             style={{
-              gap: "32px",
+              gap: "clamp(24px, 4vw, 32px)",
             }}
           >
             {posts.map((post) => (
