@@ -17,6 +17,8 @@ export async function generateMetadata({
     select: {
       title: true,
       excerpt: true,
+      seoTitle: true,
+      seoDescription: true,
       coverImage: true,
       publishedAt: true,
       updatedAt: true,
@@ -27,19 +29,21 @@ export async function generateMetadata({
   });
   if (!post) return { title: "Yazı Bulunamadı" };
 
+  const metaTitle = post.seoTitle ?? post.title;
+  const metaDescription = post.seoDescription ?? post.excerpt;
   const images = post.coverImage
-    ? [{ url: post.coverImage, width: 1200, height: 630, alt: post.title }]
+    ? [{ url: post.coverImage, width: 1200, height: 630, alt: metaTitle }]
     : [];
 
   return {
-    title: post.title,
-    description: post.excerpt,
+    title: metaTitle,
+    description: metaDescription,
     alternates: {
       canonical: `/kurumsal/blog/${slug}`,
     },
     openGraph: {
-      title: `${post.title} | ${SITE_NAME}`,
-      description: post.excerpt,
+      title: `${metaTitle} | ${SITE_NAME}`,
+      description: metaDescription,
       type: "article",
       url: `${SITE_URL}/kurumsal/blog/${slug}`,
       publishedTime: post.publishedAt?.toISOString(),
@@ -49,8 +53,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${post.title} | ${SITE_NAME}`,
-      description: post.excerpt,
+      title: `${metaTitle} | ${SITE_NAME}`,
+      description: metaDescription,
       images: post.coverImage ? [post.coverImage] : [],
     },
   };

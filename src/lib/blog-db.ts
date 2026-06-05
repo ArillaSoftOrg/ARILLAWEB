@@ -56,6 +56,8 @@ type DbPost = {
   publishedAt: Date | null;
   createdAt: Date;
   coverImage: string | null;
+  seoTitle: string | null;
+  seoDescription: string | null;
   category: { name: string } | null;
 };
 
@@ -63,7 +65,12 @@ export function dbPostToUiPost(post: DbPost): BlogPost {
   const catName = post.category?.name ?? "Genel";
   const meta = CATEGORY_META[catName] ?? DEFAULT_META;
 
-  let contentData: { emoji?: string; sections?: BlogSection[] } = {};
+  let contentData: {
+    emoji?: string;
+    sections?: BlogSection[];
+    seoFocusKeyword?: string;
+    seoSecondaryKeywords?: string[];
+  } = {};
   try {
     contentData = JSON.parse(post.content);
   } catch {
@@ -85,6 +92,10 @@ export function dbPostToUiPost(post: DbPost): BlogPost {
     emoji: contentData.emoji ?? "📝",
     coverImage: post.coverImage,
     content: contentData.sections ?? [{ type: "paragraph", text: post.excerpt }],
+    seoTitle: post.seoTitle ?? undefined,
+    seoDescription: post.seoDescription ?? undefined,
+    seoFocusKeyword: contentData.seoFocusKeyword ?? undefined,
+    seoSecondaryKeywords: contentData.seoSecondaryKeywords ?? undefined,
   };
 }
 

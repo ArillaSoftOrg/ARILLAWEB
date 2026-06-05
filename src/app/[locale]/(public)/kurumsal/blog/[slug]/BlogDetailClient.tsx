@@ -94,7 +94,6 @@ function ContentBlock({ section, accentColor }: { section: BlogSection; accentCo
           fontWeight: 700,
           color: "var(--blog-h2)",
           margin: "48px 0 16px",
-          letterSpacing: "-0.4px",
           lineHeight: 1.3,
           paddingBottom: "12px",
           borderBottom: "1px solid var(--blog-border)",
@@ -113,7 +112,6 @@ function ContentBlock({ section, accentColor }: { section: BlogSection; accentCo
           fontWeight: 600,
           color: "var(--blog-h3)",
           margin: "36px 0 12px",
-          letterSpacing: "-0.2px",
           lineHeight: 1.4,
         }}
       >

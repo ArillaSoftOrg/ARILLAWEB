@@ -13,6 +13,10 @@ export interface BlogPost {
   emoji: string;
   content: BlogSection[];
   coverImage?: string | null;
+  seoTitle?: string;
+  seoDescription?: string;
+  seoFocusKeyword?: string;
+  seoSecondaryKeywords?: string[];
 }
 
 export interface BlogSection {

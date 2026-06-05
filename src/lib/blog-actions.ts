@@ -2,6 +2,7 @@
 
 import { prisma } from "./prisma";
 import { revalidatePath } from "next/cache";
+import type { BlogSection } from "./blog-data";
 
 const CATEGORY_META: Record<string, { gradient: string; accentColor: string }> = {
   "QR Menü": {
@@ -64,6 +65,11 @@ export type PostDraft = {
   emoji: string;
   published: boolean;
   coverImage: string;
+  sections: BlogSection[];
+  seoTitle: string;
+  seoDescription: string;
+  seoFocusKeyword: string;
+  seoSecondaryKeywords: string[];
 };
 
 export type AdminPost = {
@@ -76,6 +82,8 @@ export type AdminPost = {
   published: boolean;
   coverImage: string | null;
   createdAt: string;
+  seoTitle: string | null;
+  seoDescription: string | null;
   category: { name: string } | null;
 };
 
@@ -94,6 +102,8 @@ export async function getAdminPosts(): Promise<AdminPost[]> {
     published: p.published,
     coverImage: p.coverImage,
     createdAt: p.createdAt.toISOString(),
+    seoTitle: p.seoTitle,
+    seoDescription: p.seoDescription,
     category: p.category ? { name: p.category.name } : null,
   }));
 }
@@ -113,12 +123,18 @@ export async function createPost(draft: PostDraft): Promise<void> {
         emoji: draft.emoji || "📝",
         gradient: meta.gradient,
         accentColor: meta.accentColor,
-        sections: [{ type: "paragraph", text: draft.description }],
+        sections: draft.sections.length > 0
+          ? draft.sections
+          : [{ type: "paragraph", text: draft.description }],
+        ...(draft.seoFocusKeyword ? { seoFocusKeyword: draft.seoFocusKeyword } : {}),
+        ...(draft.seoSecondaryKeywords.length > 0 ? { seoSecondaryKeywords: draft.seoSecondaryKeywords } : {}),
       }),
       readingTime,
       published: draft.published,
       publishedAt: draft.published ? new Date() : null,
       coverImage: draft.coverImage || null,
+      seoTitle: draft.seoTitle || null,
+      seoDescription: draft.seoDescription || null,
       categoryId,
     },
   });
@@ -141,12 +157,18 @@ export async function updatePost(id: string, draft: PostDraft): Promise<void> {
         emoji: draft.emoji || "📝",
         gradient: meta.gradient,
         accentColor: meta.accentColor,
-        sections: [{ type: "paragraph", text: draft.description }],
+        sections: draft.sections.length > 0
+          ? draft.sections
+          : [{ type: "paragraph", text: draft.description }],
+        ...(draft.seoFocusKeyword ? { seoFocusKeyword: draft.seoFocusKeyword } : {}),
+        ...(draft.seoSecondaryKeywords.length > 0 ? { seoSecondaryKeywords: draft.seoSecondaryKeywords } : {}),
       }),
       readingTime,
       published: draft.published,
       publishedAt: draft.published ? new Date() : null,
       coverImage: draft.coverImage || null,
+      seoTitle: draft.seoTitle || null,
+      seoDescription: draft.seoDescription || null,
       categoryId,
     },
   });
