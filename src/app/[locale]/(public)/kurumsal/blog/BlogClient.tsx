@@ -133,7 +133,8 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
     <main style={{ minHeight: "100vh", background: "#f8fafc", color: "#111827" }}>
       <section
         style={{
-          padding: "clamp(78px, 14vw, 108px) 20px clamp(22px, 5vw, 30px)",
+          minHeight: "44px",
+          padding: "10px 20px 12px",
           background: "linear-gradient(135deg, #013f3e 0%, #07515b 58%, #0f172a 100%)",
           color: "#fff",
           overflow: "hidden",
@@ -155,7 +156,7 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
         <div style={{ maxWidth: "1120px", margin: "0 auto", position: "relative" }}>
           <h1
             style={{
-              fontSize: "clamp(32px, 7vw, 52px)",
+              fontSize: "clamp(24px, 5vw, 34px)",
               lineHeight: 1,
               fontWeight: 900,
               margin: 0,
