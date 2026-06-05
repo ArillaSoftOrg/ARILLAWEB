@@ -10,34 +10,30 @@ function BlogCard({ post }: { post: BlogPost }) {
     <Link
       href={`/kurumsal/blog/${post.slug}`}
       className="group block"
+      aria-label={`${post.title} yazısını oku`}
       style={{ textDecoration: "none" }}
     >
       <article
         style={{
-          background: "#fff",
+          background: "transparent",
           borderRadius: "18px",
-          border: "1px solid #e5e7eb",
-          overflow: "hidden",
-          boxShadow: "0 10px 28px rgba(15,23,42,0.06)",
-          transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+          transition: "transform 0.2s ease",
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = "translateY(-3px)";
-          e.currentTarget.style.boxShadow = "0 18px 38px rgba(15,23,42,0.1)";
-          e.currentTarget.style.borderColor = "#d1d5db";
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = "translateY(0)";
-          e.currentTarget.style.boxShadow = "0 10px 28px rgba(15,23,42,0.06)";
-          e.currentTarget.style.borderColor = "#e5e7eb";
         }}
       >
         <div
           style={{
             position: "relative",
-            aspectRatio: "2 / 1",
+            aspectRatio: "1 / 1",
             overflow: "hidden",
+            borderRadius: "18px",
             background: post.gradient,
+            boxShadow: "0 16px 36px rgba(15,23,42,0.12)",
           }}
         >
           {post.coverImage ? (
@@ -66,48 +62,7 @@ function BlogCard({ post }: { post: BlogPost }) {
           )}
         </div>
 
-        <div style={{ padding: "clamp(18px, 5vw, 24px)" }}>
-          <time
-            style={{
-              display: "block",
-              color: "#9ca3af",
-              fontSize: "12px",
-              fontWeight: 700,
-              textAlign: "right",
-              marginBottom: "12px",
-            }}
-          >
-            {post.date}
-          </time>
-
-          <h2
-            style={{
-              color: "#111827",
-              fontSize: "clamp(18px, 5vw, 23px)",
-              lineHeight: 1.24,
-              fontWeight: 800,
-              margin: "0 0 10px",
-              letterSpacing: "0",
-            }}
-          >
-            {post.title}
-          </h2>
-
-          <p
-            style={{
-              color: "#64748b",
-              fontSize: "14px",
-              lineHeight: 1.6,
-              margin: "0 0 20px",
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            {post.description}
-          </p>
-
+        <div style={{ padding: "14px 2px 0" }}>
           <span
             style={{
               display: "inline-flex",
