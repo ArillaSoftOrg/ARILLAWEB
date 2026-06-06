@@ -10,7 +10,7 @@ function BlogCard({ post }: { post: BlogPost }) {
     <Link
       href={`/kurumsal/blog/${post.slug}`}
       className="group block"
-      aria-label={`${post.title} yazısını oku`}
+      aria-label={`${post.title} yazısını incele`}
       style={{ textDecoration: "none" }}
     >
       <article
@@ -60,18 +60,26 @@ function BlogCard({ post }: { post: BlogPost }) {
               {post.title.charAt(0)}
             </div>
           )}
-        </div>
 
-        <div style={{ padding: "6px 2px 0" }}>
           <span
+            className="transition-all duration-200 group-hover:opacity-100"
             style={{
+              position: "absolute",
+              right: "12px",
+              bottom: "12px",
               display: "inline-flex",
               alignItems: "center",
               gap: "7px",
-              color: "#03635f",
-              fontSize: "13px",
+              color: "#fff",
+              fontSize: "12px",
               fontWeight: 800,
               letterSpacing: "0.02em",
+              background: "rgba(3, 99, 95, 0.86)",
+              border: "1px solid rgba(255,255,255,0.24)",
+              borderRadius: "999px",
+              padding: "7px 10px",
+              boxShadow: "0 10px 24px rgba(15,23,42,0.18)",
+              backdropFilter: "blur(10px)",
             }}
           >
             İncele
@@ -143,7 +151,7 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
             style={{
               columnGap: "clamp(24px, 4vw, 32px)",
-              rowGap: "clamp(20px, 4vw, 32px)",
+              rowGap: "clamp(24px, 4vw, 32px)",
             }}
           >
             {posts.map((post) => (
