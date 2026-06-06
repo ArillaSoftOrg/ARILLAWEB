@@ -29,16 +29,33 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Apply next-intl locale routing for all other paths
-  const response = intlMiddleware(request);
-
-  // Forward detected locale in a header so root layout can set <html lang>
+  // Detect locale from path
   const localeFromPath = pathname.split('/')[1];
   const locale = routing.locales.includes(localeFromPath as (typeof routing.locales)[number])
     ? localeFromPath
     : routing.defaultLocale;
-  response.headers.set('x-locale', locale);
-  response.headers.set('x-pathname', pathname);
+
+  // Forward pathname and locale as request headers so server components can read them
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-locale', locale);
+  requestHeaders.set('x-pathname', pathname);
+
+  // Run intl middleware to handle locale redirects/rewrites
+  const intlResponse = intlMiddleware(request);
+
+  // If intl needs to redirect (e.g. missing locale prefix), honour it
+  if (intlResponse.status !== 200) return intlResponse;
+
+  // For passthrough responses, return a NextResponse.next() with the injected
+  // request headers so server components can read x-pathname and x-locale
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
+
+  // Copy any response headers set by intl middleware (e.g. set-cookie, vary)
+  intlResponse.headers.forEach((value, key) => {
+    if (!['content-type', 'content-length'].includes(key)) {
+      response.headers.set(key, value);
+    }
+  });
 
   return response;
 }
