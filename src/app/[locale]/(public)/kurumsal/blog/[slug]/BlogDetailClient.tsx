@@ -374,26 +374,6 @@ export default function BlogDetailClient({
 
           {/* ── Post header ── */}
           <AnimatedSection variants={stagger}>
-            <motion.div variants={fadeUp} style={{ marginBottom: "20px" }}>
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  padding: "5px 14px",
-                  borderRadius: "100px",
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  letterSpacing: "0.05em",
-                  textTransform: "uppercase",
-                  color: post.categoryColor,
-                  background: post.categoryBg,
-                  border: `1px solid ${post.categoryBorder}`,
-                }}
-              >
-                {post.category}
-              </span>
-            </motion.div>
-
             <motion.h1
               variants={fadeUp}
               style={{
