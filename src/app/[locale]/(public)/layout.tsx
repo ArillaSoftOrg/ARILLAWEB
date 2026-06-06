@@ -4,6 +4,7 @@ import FAQSection from '@/components/layout/FAQSection';
 import Footer from '@/components/layout/Footer';
 import AnnouncementBar from '@/components/layout/AnnouncementBar';
 import { getActiveCampaignBars } from '@/lib/announcement-actions';
+import { getFaqsByPage } from '@/lib/faq-actions';
 import { cookies, headers } from 'next/headers';
 import { jwtVerify } from 'jose';
 import { CookieConsentProvider } from '@/components/cookie/CookieConsentProvider';
@@ -28,6 +29,10 @@ export default async function PublicLayout({ children }: { children: React.React
     ? pathSegments[0]
     : routing.defaultLocale;
   const announcementConfigs = showMaintenance ? [] : await getActiveCampaignBars();
+  const faqs =
+    !showMaintenance && !isBlogPath
+      ? await getFaqsByPage(publicPathToSlug(publicPath)).catch(() => [])
+      : [];
 
   return (
     <CookieConsentProvider>
@@ -37,7 +42,7 @@ export default async function PublicLayout({ children }: { children: React.React
         <main className="flex-1" style={{ paddingTop: 'var(--bar-h, 0px)' }}>
           {showMaintenance ? <MaintenanceNotice locale={locale} /> : children}
         </main>
-        {!showMaintenance && !isBlogPath && <FAQSection />}
+        {!showMaintenance && !isBlogPath && <FAQSection faqs={faqs} />}
         {!showMaintenance && !isBlogPath && <Footer />}
       </div>
       <CookieBanner />
@@ -59,6 +64,18 @@ async function hasValidAdminSession(): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+function publicPathToSlug(publicPath: string): string {
+  if (publicPath === '/' || publicPath === '') return 'home';
+  if (publicPath.startsWith('/sektorel-yazilimlar/randevu-sistemi/klinik')) return 'klinik-randevu';
+  if (publicPath.startsWith('/sektorel-yazilimlar/randevu-sistemi/kuafor')) return 'kuafor-randevu';
+  if (publicPath.startsWith('/sektorel-yazilimlar/randevu-sistemi/guzellik')) return 'guzellik-merkezi';
+  if (publicPath.startsWith('/sektorel-yazilimlar/randevu-sistemi')) return 'randevu';
+  if (publicPath.startsWith('/sektorel-yazilimlar/qr-menu')) return 'qr-menu';
+  if (publicPath.startsWith('/teklif-al')) return 'teklif-al';
+  if (publicPath.startsWith('/iletisim')) return 'iletisim';
+  return 'home';
 }
 
 function stripLocale(pathname: string): string {

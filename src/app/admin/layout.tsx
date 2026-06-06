@@ -13,6 +13,7 @@ import {
   Clock,
   Settings,
   Megaphone,
+  HelpCircle,
   ChevronRight,
   Menu,
   X,
@@ -79,6 +80,12 @@ const navItems = [
     label: "Duyurular",
     href: "/admin/announcements",
     icon: Megaphone,
+    exact: false,
+  },
+  {
+    label: "SSS Yönetimi",
+    href: "/admin/faq",
+    icon: HelpCircle,
     exact: false,
   },
 ];
