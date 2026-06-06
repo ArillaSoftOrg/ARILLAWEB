@@ -65,25 +65,25 @@ function BlogCard({ post }: { post: BlogPost }) {
             className="transition-all duration-200 group-hover:opacity-100"
             style={{
               position: "absolute",
-              right: "12px",
-              bottom: "12px",
+              top: "10px",
+              right: "10px",
               display: "inline-flex",
               alignItems: "center",
-              gap: "7px",
+              gap: "5px",
               color: "#fff",
-              fontSize: "12px",
+              fontSize: "11px",
               fontWeight: 800,
               letterSpacing: "0.02em",
               background: "rgba(3, 99, 95, 0.86)",
               border: "1px solid rgba(255,255,255,0.24)",
               borderRadius: "999px",
-              padding: "7px 10px",
+              padding: "5px 8px",
               boxShadow: "0 10px 24px rgba(15,23,42,0.18)",
               backdropFilter: "blur(10px)",
             }}
           >
             İncele
-            <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+            <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
           </span>
         </div>
       </article>
@@ -131,7 +131,7 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
         </div>
       </section>
 
-      <section style={{ maxWidth: "1120px", margin: "0 auto", padding: "clamp(32px, 7vw, 48px) 20px 96px" }}>
+      <section style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(28px, 6vw, 40px) 20px 96px" }}>
         {posts.length === 0 ? (
           <div
             style={{
@@ -150,8 +150,8 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
           <div
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
             style={{
-              columnGap: "clamp(24px, 4vw, 32px)",
-              rowGap: "clamp(24px, 4vw, 32px)",
+              columnGap: "clamp(16px, 2.5vw, 24px)",
+              rowGap: "clamp(16px, 2.5vw, 24px)",
             }}
           >
             {posts.map((post) => (
