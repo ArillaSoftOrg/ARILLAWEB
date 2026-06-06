@@ -62,19 +62,19 @@ function BlogCard({ post }: { post: BlogPost }) {
           )}
         </div>
 
-        <div style={{ padding: "14px 2px 0" }}>
+        <div style={{ padding: "8px 2px 0" }}>
           <span
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "7px",
               color: "#03635f",
-              fontSize: "12px",
+              fontSize: "13px",
               fontWeight: 800,
-              letterSpacing: "0.06em",
+              letterSpacing: "0.02em",
             }}
           >
-            DEVAMINI OKU
+            İncele
             <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
           </span>
         </div>
@@ -142,7 +142,8 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
           <div
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
             style={{
-              gap: "clamp(24px, 4vw, 32px)",
+              columnGap: "clamp(24px, 4vw, 32px)",
+              rowGap: "clamp(28px, 4vw, 36px)",
             }}
           >
             {posts.map((post) => (
