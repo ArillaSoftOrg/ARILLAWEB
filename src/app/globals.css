@@ -289,25 +289,41 @@ body {
 
 /* ── Blog reading theme ── */
 [data-blog-theme="dark"] {
-  --blog-bg:       #08090d;
-  --blog-title:    #f1f5f9;
-  --blog-h2:       #f1f5f9;
-  --blog-h3:       #e2e8f0;
-  --blog-text:     #94a3b8;
-  --blog-border:   rgba(255, 255, 255, 0.06);
-  --blog-card-bg:  rgba(255, 255, 255, 0.03);
-  --blog-meta:     #475569;
-  --blog-divider:  rgba(255, 255, 255, 0.06);
+  --blog-bg:              #08090d;
+  --blog-title:           #f1f5f9;
+  --blog-h2:              #f1f5f9;
+  --blog-h3:              #e2e8f0;
+  --blog-text:            #94a3b8;
+  --blog-border:          rgba(255, 255, 255, 0.06);
+  --blog-card-bg:         rgba(255, 255, 255, 0.03);
+  --blog-meta:            #64748b;
+  --blog-divider:         rgba(255, 255, 255, 0.06);
+  --blog-meta-dot:        #475569;
+  --blog-btn-bg:          rgba(255, 255, 255, 0.05);
+  --blog-btn-border:      rgba(255, 255, 255, 0.10);
+  --blog-btn-color:       #94a3b8;
+  --blog-btn-hover-bg:    rgba(255, 255, 255, 0.09);
+  --blog-btn-hover-color: #f1f5f9;
+  --blog-section-border:  rgba(255, 255, 255, 0.06);
+  --blog-related-title:   #f1f5f9;
 }
 
 [data-blog-theme="light"] {
-  --blog-bg:       #f8fafc;
-  --blog-title:    #0f172a;
-  --blog-h2:       #0f172a;
-  --blog-h3:       #1e293b;
-  --blog-text:     #475569;
-  --blog-border:   rgba(0, 0, 0, 0.08);
-  --blog-card-bg:  rgba(0, 0, 0, 0.03);
-  --blog-meta:     #64748b;
-  --blog-divider:  rgba(0, 0, 0, 0.08);
+  --blog-bg:              #f8fafc;
+  --blog-title:           #0f172a;
+  --blog-h2:              #0f172a;
+  --blog-h3:              #1e293b;
+  --blog-text:            #475569;
+  --blog-border:          rgba(0, 0, 0, 0.08);
+  --blog-card-bg:         rgba(0, 0, 0, 0.03);
+  --blog-meta:            #64748b;
+  --blog-divider:         rgba(0, 0, 0, 0.08);
+  --blog-meta-dot:        #94a3b8;
+  --blog-btn-bg:          rgba(0, 0, 0, 0.04);
+  --blog-btn-border:      rgba(0, 0, 0, 0.12);
+  --blog-btn-color:       #475569;
+  --blog-btn-hover-bg:    rgba(0, 0, 0, 0.08);
+  --blog-btn-hover-color: #0f172a;
+  --blog-section-border:  rgba(0, 0, 0, 0.08);
+  --blog-related-title:   #0f172a;
 }

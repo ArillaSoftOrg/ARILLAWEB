@@ -93,7 +93,7 @@ function ContentBlock({ section, accentColor }: { section: BlogSection; accentCo
           fontSize: "clamp(20px, 3vw, 26px)",
           fontWeight: 700,
           color: "var(--blog-h2)",
-          margin: "48px 0 16px",
+          margin: "clamp(32px, 5vw, 48px) 0 14px",
           lineHeight: 1.3,
           paddingBottom: "12px",
           borderBottom: "1px solid var(--blog-border)",
@@ -111,7 +111,7 @@ function ContentBlock({ section, accentColor }: { section: BlogSection; accentCo
           fontSize: "clamp(17px, 2.5vw, 20px)",
           fontWeight: 600,
           color: "var(--blog-h3)",
-          margin: "36px 0 12px",
+          margin: "clamp(24px, 4vw, 36px) 0 10px",
           lineHeight: 1.4,
         }}
       >
@@ -332,7 +332,7 @@ export default function BlogDetailClient({
           style={{
             maxWidth: "760px",
             margin: "0 auto",
-            padding: "clamp(36px, 7vw, 72px) 24px 120px",
+            padding: "clamp(20px, 5vw, 64px) 24px clamp(64px, 10vw, 96px)",
           }}
         >
           {/* Back button */}
@@ -340,7 +340,7 @@ export default function BlogDetailClient({
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            style={{ paddingTop: "32px", marginBottom: "36px" }}
+            style={{ marginBottom: "28px" }}
           >
             <Link
               href="/kurumsal/blog"
@@ -350,21 +350,21 @@ export default function BlogDetailClient({
                 gap: "8px",
                 fontSize: "14px",
                 fontWeight: 600,
-                color: "#64748b",
+                color: "var(--blog-btn-color)",
                 textDecoration: "none",
                 padding: "8px 14px 8px 10px",
                 borderRadius: "10px",
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.07)",
+                background: "var(--blog-btn-bg)",
+                border: "1px solid var(--blog-btn-border)",
                 transition: "color 0.2s, background 0.2s",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "#f1f5f9";
-                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.08)";
+                (e.currentTarget as HTMLAnchorElement).style.color = "var(--blog-btn-hover-color)";
+                (e.currentTarget as HTMLAnchorElement).style.background = "var(--blog-btn-hover-bg)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "#64748b";
-                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
+                (e.currentTarget as HTMLAnchorElement).style.color = "var(--blog-btn-color)";
+                (e.currentTarget as HTMLAnchorElement).style.background = "var(--blog-btn-bg)";
               }}
             >
               <ArrowLeft size={15} />
@@ -397,7 +397,7 @@ export default function BlogDetailClient({
             <motion.h1
               variants={fadeUp}
               style={{
-                fontSize: "clamp(28px, 5vw, 48px)",
+                fontSize: "clamp(26px, 5vw, 44px)",
                 fontWeight: 800,
                 lineHeight: 1.15,
                 letterSpacing: "-1px",
@@ -429,7 +429,7 @@ export default function BlogDetailClient({
                   width: "4px",
                   height: "4px",
                   borderRadius: "50%",
-                  background: "#334155",
+                  background: "var(--blog-meta-dot)",
                   flexShrink: 0,
                 }}
               />
@@ -470,7 +470,7 @@ export default function BlogDetailClient({
                 background: "var(--blog-card-bg)",
                 border: `1px solid ${post.categoryBorder}`,
                 borderLeft: `3px solid ${post.categoryColor}`,
-                marginBottom: "48px",
+                marginBottom: "clamp(28px, 5vw, 48px)",
               }}
             >
               <p
@@ -490,7 +490,7 @@ export default function BlogDetailClient({
           <div
             style={{
               borderTop: "1px solid var(--blog-divider)",
-              marginBottom: "48px",
+              marginBottom: "clamp(24px, 4vw, 48px)",
             }}
           />
 
@@ -525,24 +525,26 @@ export default function BlogDetailClient({
                 gap: "10px",
                 padding: "14px 28px",
                 borderRadius: "12px",
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.1)",
+                background: "var(--blog-btn-bg)",
+                border: "1px solid var(--blog-btn-border)",
                 fontSize: "15px",
                 fontWeight: 600,
-                color: "#e2e8f0",
+                color: "var(--blog-btn-color)",
                 textDecoration: "none",
                 transition: "background 0.2s, border-color 0.2s, transform 0.2s",
               }}
               onMouseEnter={(e) => {
                 const el = e.currentTarget as HTMLAnchorElement;
-                el.style.background = "rgba(255,255,255,0.09)";
-                el.style.borderColor = "rgba(255,255,255,0.18)";
+                el.style.background = "var(--blog-btn-hover-bg)";
+                el.style.borderColor = "var(--blog-btn-border)";
+                el.style.color = "var(--blog-btn-hover-color)";
                 el.style.transform = "translateY(-2px)";
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget as HTMLAnchorElement;
-                el.style.background = "rgba(255,255,255,0.05)";
-                el.style.borderColor = "rgba(255,255,255,0.1)";
+                el.style.background = "var(--blog-btn-bg)";
+                el.style.borderColor = "var(--blog-btn-border)";
+                el.style.color = "var(--blog-btn-color)";
                 el.style.transform = "translateY(0)";
               }}
             >
@@ -556,15 +558,15 @@ export default function BlogDetailClient({
         {related.length > 0 && (
           <section
             style={{
-              borderTop: "1px solid rgba(255,255,255,0.06)",
-              padding: "80px 24px 100px",
+              borderTop: "1px solid var(--blog-section-border)",
+              padding: "clamp(48px, 8vw, 80px) 24px clamp(64px, 10vw, 100px)",
             }}
           >
             <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
               <AnimatedSection variants={stagger}>
                 <motion.div
                   variants={fadeUp}
-                  style={{ textAlign: "center", marginBottom: "48px" }}
+                  style={{ textAlign: "center", marginBottom: "clamp(28px, 5vw, 48px)" }}
                 >
                   <span
                     style={{
@@ -589,7 +591,7 @@ export default function BlogDetailClient({
                     style={{
                       fontSize: "clamp(24px, 4vw, 36px)",
                       fontWeight: 700,
-                      color: "#f1f5f9",
+                      color: "var(--blog-related-title)",
                       letterSpacing: "-0.5px",
                       margin: 0,
                     }}
