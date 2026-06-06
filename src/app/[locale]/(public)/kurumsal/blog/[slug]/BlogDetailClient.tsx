@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, useInView } from "framer-motion";
-import { ArrowLeft, Calendar, Clock, ChevronRight, Sun, Moon } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, Clock, Sun, Moon } from "lucide-react";
 import { BlogPost, BlogSection } from "@/lib/blog-data";
 
 // ─────────────────────────────────────────────
@@ -187,116 +187,82 @@ function ContentBlock({ section, accentColor }: { section: BlogSection; accentCo
 function RelatedCard({ post }: { post: BlogPost }) {
   return (
     <motion.div variants={scaleIn}>
-      <Link href={`/kurumsal/blog/${post.slug}`} style={{ textDecoration: "none", display: "block" }}>
+      <Link
+        href={`/kurumsal/blog/${post.slug}`}
+        aria-label={`${post.title} yazısını incele`}
+        style={{ textDecoration: "none", display: "block" }}
+      >
         <div
           className="group"
           style={{
-            borderRadius: "16px",
-            background: "rgba(17, 18, 25, 0.85)",
-            border: "1px solid rgba(255,255,255,0.07)",
-            overflow: "hidden",
-            transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease, border-color 0.3s ease",
+            borderRadius: "18px",
+            background: "transparent",
+            transition: "transform 0.2s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "translateY(-4px)";
-            e.currentTarget.style.boxShadow = "0 20px 48px rgba(0,0,0,0.4)";
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)";
+            e.currentTarget.style.transform = "translateY(-3px)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow = "none";
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
           }}
         >
           <div
             style={{
-              height: "120px",
-              background: post.gradient,
               position: "relative",
+              aspectRatio: "1 / 1",
               overflow: "hidden",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "40px",
+              borderRadius: "18px",
+              background: post.gradient,
+              boxShadow: "0 16px 36px rgba(0,0,0,0.22)",
             }}
           >
-            <div className="grid-bg" style={{ position: "absolute", inset: 0, opacity: 0.4 }} />
-            <span style={{ position: "relative", filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.5))" }}>
-              {post.emoji}
-            </span>
-            <div
+            {post.coverImage ? (
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                sizes="(max-width: 768px) 100vw, (max-width: 1180px) 50vw, 33vw"
+              />
+            ) : (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#fff",
+                  fontSize: "clamp(38px, 12vw, 52px)",
+                  fontWeight: 800,
+                }}
+              >
+                {post.title.charAt(0)}
+              </div>
+            )}
+            <span
+              className="transition-all duration-200 group-hover:opacity-100"
               style={{
                 position: "absolute",
                 top: "10px",
-                left: "10px",
-                padding: "3px 10px",
-                borderRadius: "100px",
-                fontSize: "10px",
-                fontWeight: 700,
-                letterSpacing: "0.04em",
-                color: post.categoryColor,
-                background: post.categoryBg,
-                border: `1px solid ${post.categoryBorder}`,
-                backdropFilter: "blur(8px)",
-              }}
-            >
-              {post.category}
-            </div>
-          </div>
-
-          <div style={{ padding: "16px 18px 18px" }}>
-            <div
-              style={{
+                right: "10px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                color: "#fff",
                 fontSize: "11px",
-                color: "#475569",
-                marginBottom: "8px",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
+                fontWeight: 800,
+                letterSpacing: "0.02em",
+                background: "rgba(3, 99, 95, 0.86)",
+                border: "1px solid rgba(255,255,255,0.24)",
+                borderRadius: "999px",
+                padding: "5px 8px",
+                boxShadow: "0 10px 24px rgba(15,23,42,0.18)",
+                backdropFilter: "blur(10px)",
               }}
             >
-              <Calendar size={10} />
-              {post.date}
-              <span style={{ color: "#334155" }}>·</span>
-              <Clock size={10} />
-              {post.readTime}
-            </div>
-            <h4
-              style={{
-                fontSize: "14px",
-                fontWeight: 600,
-                color: "#e2e8f0",
-                lineHeight: 1.45,
-                margin: "0 0 10px",
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}
-            >
-              {post.title}
-            </h4>
-
-            <p
-              style={{
-                fontSize: "14px",
-                color: "#64748b",
-                marginTop: "6px",
-              }}
-            >
-              Yazılım & teknoloji kategorisinde bilgilendirici içerik
-            </p>
-            <span
-              style={{
-                fontSize: "12px",
-                fontWeight: 600,
-                color: post.accentColor,
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-              }}
-            >
-              Oku <ChevronRight size={12} />
+              İncele
+              <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
             </span>
           </div>
         </div>
@@ -304,7 +270,6 @@ function RelatedCard({ post }: { post: BlogPost }) {
     </motion.div>
   );
 }
-
 // ─────────────────────────────────────────────
 // Blog Detail Client
 // ─────────────────────────────────────────────
@@ -362,95 +327,12 @@ export default function BlogDetailClient({
       />
 
       <div style={{ position: "relative", zIndex: 1 }}>
-        {/* ── Hero / Cover ── */}
-        <div
-          style={{
-            position: "relative",
-            width: "100%",
-            height: "clamp(320px, 50vh, 520px)",
-            background: post.gradient,
-            overflow: "hidden",
-          }}
-        >
-          {post.coverImage ? (
-            <Image
-              src={post.coverImage}
-              alt={post.title}
-              fill
-              priority
-              className="object-cover"
-              sizes="100vw"
-            />
-          ) : (
-            <>
-              <div className="grid-bg" style={{ position: "absolute", inset: 0, opacity: 0.5 }} />
-
-              <div
-                style={{
-                  position: "absolute",
-                  top: "-80px",
-                  right: "-80px",
-                  width: "400px",
-                  height: "400px",
-                  borderRadius: "50%",
-                  background: `radial-gradient(circle, ${post.accentColor}28 0%, transparent 65%)`,
-                }}
-              />
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "-60px",
-                  left: "-60px",
-                  width: "300px",
-                  height: "300px",
-                  borderRadius: "50%",
-                  background: `radial-gradient(circle, ${post.accentColor}18 0%, transparent 65%)`,
-                }}
-              />
-
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "clamp(80px, 14vw, 130px)",
-                  filter: "drop-shadow(0 12px 40px rgba(0,0,0,0.5))",
-                  userSelect: "none",
-                }}
-              >
-                {post.emoji}
-              </div>
-            </>
-          )}
-
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: "linear-gradient(to bottom, rgba(8,9,13,0.12), rgba(8,9,13,0.45))",
-            }}
-          />
-
-          <div
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: "120px",
-              background: "linear-gradient(to bottom, transparent, #08090d)",
-            }}
-          />
-        </div>
-
         {/* ── Article container ── */}
         <div
           style={{
             maxWidth: "760px",
             margin: "0 auto",
-            padding: "0 24px 120px",
+            padding: "clamp(36px, 7vw, 72px) 24px 120px",
           }}
         >
           {/* Back button */}
@@ -678,7 +560,7 @@ export default function BlogDetailClient({
               padding: "80px 24px 100px",
             }}
           >
-            <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+            <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
               <AnimatedSection variants={stagger}>
                 <motion.div
                   variants={fadeUp}
@@ -719,8 +601,8 @@ export default function BlogDetailClient({
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-                    gap: "24px",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                    gap: "clamp(16px, 2.5vw, 24px)",
                   }}
                 >
                   {related.map((rel) => (
