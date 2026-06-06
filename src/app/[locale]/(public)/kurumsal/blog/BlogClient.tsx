@@ -62,7 +62,7 @@ function BlogCard({ post }: { post: BlogPost }) {
           )}
         </div>
 
-        <div style={{ padding: "8px 2px 0" }}>
+        <div style={{ padding: "6px 2px 0" }}>
           <span
             style={{
               display: "inline-flex",
@@ -143,7 +143,7 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
             style={{
               columnGap: "clamp(24px, 4vw, 32px)",
-              rowGap: "clamp(28px, 4vw, 36px)",
+              rowGap: "clamp(20px, 4vw, 32px)",
             }}
           >
             {posts.map((post) => (
