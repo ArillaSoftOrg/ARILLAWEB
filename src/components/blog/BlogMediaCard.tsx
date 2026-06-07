@@ -40,15 +40,23 @@ export default function BlogMediaCard({ post }: { post: BlogPost }) {
     >
       <article
         style={{
-          background: "transparent",
-          borderRadius: "18px",
-          transition: "transform 0.2s ease",
+          background: "#fff",
+          border: "1px solid #e5e7eb",
+          borderRadius: "20px",
+          boxShadow: "0 10px 26px rgba(15,23,42,0.05)",
+          overflow: "hidden",
+          padding: "8px",
+          transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
         }}
         onMouseEnter={(event) => {
           event.currentTarget.style.transform = "translateY(-3px)";
+          event.currentTarget.style.borderColor = "#cbd5e1";
+          event.currentTarget.style.boxShadow = "0 16px 34px rgba(15,23,42,0.09)";
         }}
         onMouseLeave={(event) => {
           event.currentTarget.style.transform = "translateY(0)";
+          event.currentTarget.style.borderColor = "#e5e7eb";
+          event.currentTarget.style.boxShadow = "0 10px 26px rgba(15,23,42,0.05)";
         }}
       >
         <div
@@ -56,7 +64,7 @@ export default function BlogMediaCard({ post }: { post: BlogPost }) {
             position: "relative",
             aspectRatio: "1 / 1",
             overflow: "hidden",
-            borderRadius: "18px",
+            borderRadius: "16px",
             background: post.gradient,
             boxShadow: "0 16px 36px rgba(15,23,42,0.12)",
           }}
@@ -201,7 +209,7 @@ export default function BlogMediaCard({ post }: { post: BlogPost }) {
           )}
         </div>
 
-        <div style={{ padding: "10px 2px 0" }}>
+        <div style={{ padding: "10px 4px 4px" }}>
           <p
             style={{
               color: "#334155",
