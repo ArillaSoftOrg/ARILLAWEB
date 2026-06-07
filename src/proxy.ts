@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
@@ -40,24 +40,14 @@ export async function proxy(request: NextRequest) {
   requestHeaders.set('x-locale', locale);
   requestHeaders.set('x-pathname', pathname);
 
-  // Run intl middleware to handle locale redirects/rewrites
-  const intlResponse = intlMiddleware(request);
-
-  // If intl needs to redirect (e.g. missing locale prefix), honour it
-  if (intlResponse.status !== 200) return intlResponse;
-
-  // For passthrough responses, return a NextResponse.next() with the injected
-  // request headers so server components can read x-pathname and x-locale
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
-
-  // Copy any response headers set by intl middleware (e.g. set-cookie, vary)
-  intlResponse.headers.forEach((value, key) => {
-    if (!['content-type', 'content-length'].includes(key)) {
-      response.headers.set(key, value);
-    }
+  // Run intl middleware with the injected request headers so server components
+  // can read x-pathname/x-locale while next-intl keeps its rewrites intact.
+  const requestWithPathHeaders = new NextRequest(request.url, {
+    headers: requestHeaders,
+    method: request.method,
   });
 
-  return response;
+  return intlMiddleware(requestWithPathHeaders);
 }
 
 export const config = {
