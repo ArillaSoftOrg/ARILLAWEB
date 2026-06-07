@@ -2,7 +2,7 @@
 
 import { prisma } from "./prisma";
 import { revalidatePath } from "next/cache";
-import type { BlogSection } from "./blog-data";
+import type { BlogMediaItem, BlogSection } from "./blog-data";
 
 const CATEGORY_META: Record<string, { gradient: string; accentColor: string }> = {
   "QR Menü": {
@@ -66,6 +66,7 @@ export type PostDraft = {
   published: boolean;
   publishDate: string;
   coverImage: string;
+  mediaItems: BlogMediaItem[];
   sections: BlogSection[];
   seoTitle: string;
   seoDescription: string;
@@ -117,6 +118,8 @@ export async function createPost(draft: PostDraft): Promise<void> {
   const meta = CATEGORY_META[draft.category] ?? DEFAULT_META;
   const readingTime = parseInt(draft.readTime) || 5;
   const publishedAt = draft.publishDate ? new Date(`${draft.publishDate}T12:00:00`) : new Date();
+  const mediaItems = draft.mediaItems.filter((item) => item.url.trim());
+  const primaryCover = mediaItems[0]?.url || draft.coverImage || null;
 
   await prisma.blogPost.create({
     data: {
@@ -127,6 +130,7 @@ export async function createPost(draft: PostDraft): Promise<void> {
         emoji: draft.emoji || "📝",
         gradient: meta.gradient,
         accentColor: meta.accentColor,
+        mediaItems,
         sections: draft.sections.length > 0
           ? draft.sections
           : [{ type: "paragraph", text: draft.description }],
@@ -136,7 +140,7 @@ export async function createPost(draft: PostDraft): Promise<void> {
       readingTime,
       published: draft.published,
       publishedAt: draft.published ? publishedAt : null,
-      coverImage: draft.coverImage || null,
+      coverImage: primaryCover,
       seoTitle: draft.seoTitle || null,
       seoDescription: draft.seoDescription || null,
       categoryId,
@@ -152,6 +156,8 @@ export async function updatePost(id: string, draft: PostDraft): Promise<void> {
   const meta = CATEGORY_META[draft.category] ?? DEFAULT_META;
   const readingTime = parseInt(draft.readTime) || 5;
   const publishedAt = draft.publishDate ? new Date(`${draft.publishDate}T12:00:00`) : new Date();
+  const mediaItems = draft.mediaItems.filter((item) => item.url.trim());
+  const primaryCover = mediaItems[0]?.url || draft.coverImage || null;
 
   await prisma.blogPost.update({
     where: { id },
@@ -162,6 +168,7 @@ export async function updatePost(id: string, draft: PostDraft): Promise<void> {
         emoji: draft.emoji || "📝",
         gradient: meta.gradient,
         accentColor: meta.accentColor,
+        mediaItems,
         sections: draft.sections.length > 0
           ? draft.sections
           : [{ type: "paragraph", text: draft.description }],
@@ -171,7 +178,7 @@ export async function updatePost(id: string, draft: PostDraft): Promise<void> {
       readingTime,
       published: draft.published,
       publishedAt: draft.published ? publishedAt : null,
-      coverImage: draft.coverImage || null,
+      coverImage: primaryCover,
       seoTitle: draft.seoTitle || null,
       seoDescription: draft.seoDescription || null,
       categoryId,

@@ -1,5 +1,5 @@
 import { prisma } from "./prisma";
-import type { BlogPost, BlogSection } from "./blog-data";
+import type { BlogMediaItem, BlogPost, BlogSection } from "./blog-data";
 
 const CATEGORY_META: Record<string, {
   color: string; bg: string; border: string;
@@ -67,6 +67,7 @@ export function dbPostToUiPost(post: DbPost): BlogPost {
 
   let contentData: {
     emoji?: string;
+    mediaItems?: BlogMediaItem[];
     sections?: BlogSection[];
     seoFocusKeyword?: string;
     seoSecondaryKeywords?: string[];
@@ -91,6 +92,12 @@ export function dbPostToUiPost(post: DbPost): BlogPost {
     accentColor: meta.accentColor,
     emoji: contentData.emoji ?? "📝",
     coverImage: post.coverImage,
+    mediaItems:
+      contentData.mediaItems?.length
+        ? contentData.mediaItems
+        : post.coverImage
+          ? [{ url: post.coverImage, type: "image" }]
+          : [],
     content: contentData.sections ?? [{ type: "paragraph", text: post.excerpt }],
     seoTitle: post.seoTitle ?? undefined,
     seoDescription: post.seoDescription ?? undefined,

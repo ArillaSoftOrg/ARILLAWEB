@@ -13,10 +13,17 @@ export interface BlogPost {
   emoji: string;
   content: BlogSection[];
   coverImage?: string | null;
+  mediaItems?: BlogMediaItem[];
   seoTitle?: string;
   seoDescription?: string;
   seoFocusKeyword?: string;
   seoSecondaryKeywords?: string[];
+}
+
+export interface BlogMediaItem {
+  url: string;
+  type: "image" | "video";
+  overlayText?: string;
 }
 
 export interface BlogSection {

@@ -1,6 +1,6 @@
 "use client";
 
-import CloudinaryUpload from "@/components/admin/CloudinaryUpload";
+import CloudinaryGalleryUpload from "@/components/admin/CloudinaryGalleryUpload";
 import { useState, useEffect, useTransition, startTransition } from "react";
 import {
   Plus,
@@ -21,7 +21,7 @@ import {
   type AdminPost,
   type PostDraft,
 } from "@/lib/blog-actions";
-import type { BlogSection } from "@/lib/blog-data";
+import type { BlogMediaItem, BlogSection } from "@/lib/blog-data";
 
 /* ─── Slug helper (client-side) ─────────────── */
 function slugify(text: string): string {
@@ -415,10 +415,20 @@ function PostModal({
             </div>
           </div>
 
-          {/* Cover Image */}
+          {/* Media Gallery */}
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
-            <label className="block text-xs font-medium mb-1.5" style={{ color: "#64748b" }}>Kapak Görseli</label>
-            <CloudinaryUpload value={draft.coverImage} onChange={(url) => setDraft((prev) => ({ ...prev, coverImage: url }))} />
+            <label className="block text-xs font-medium mb-1.5" style={{ color: "#64748b" }}>Medya Galerisi</label>
+            <CloudinaryGalleryUpload
+              value={draft.mediaItems}
+              mediaMode="media"
+              onChange={(items) =>
+                setDraft((prev) => ({
+                  ...prev,
+                  mediaItems: items as BlogMediaItem[],
+                  coverImage: (items as BlogMediaItem[])[0]?.url ?? "",
+                }))
+              }
+            />
           </div>
 
           {/* Category + Read time */}
@@ -699,6 +709,7 @@ export default function AdminBlogPage() {
     published: true,
     publishDate: toDateInputValue(),
     coverImage: "",
+    mediaItems: [],
     sections: [],
     seoTitle: "",
     seoDescription: "",
@@ -708,7 +719,7 @@ export default function AdminBlogPage() {
 
   const editDraft: PostDraft = (() => {
     if (!editTarget) return defaultDraft;
-    let parsedContent: { sections?: BlogSection[]; seoFocusKeyword?: string; seoSecondaryKeywords?: string[] } = {};
+    let parsedContent: { mediaItems?: BlogMediaItem[]; sections?: BlogSection[]; seoFocusKeyword?: string; seoSecondaryKeywords?: string[] } = {};
     try { parsedContent = JSON.parse(editTarget.content); } catch { /* keep empty */ }
     return {
       title: editTarget.title,
@@ -720,6 +731,12 @@ export default function AdminBlogPage() {
       published: editTarget.published,
       publishDate: toDateInputValue(editTarget.publishedAt),
       coverImage: editTarget.coverImage ?? "",
+      mediaItems:
+        parsedContent.mediaItems?.length
+          ? parsedContent.mediaItems
+          : editTarget.coverImage
+            ? [{ url: editTarget.coverImage, type: "image" }]
+            : [],
       sections: parsedContent.sections ?? [],
       seoTitle: editTarget.seoTitle ?? "",
       seoDescription: editTarget.seoDescription ?? "",
