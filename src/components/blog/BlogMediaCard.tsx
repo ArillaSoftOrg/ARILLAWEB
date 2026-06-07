@@ -17,6 +17,7 @@ export default function BlogMediaCard({ post }: { post: BlogPost }) {
   const [active, setActive] = useState(0);
   const current = mediaItems[active];
   const hasMultiple = mediaItems.length > 1;
+  const cardText = current?.overlayText?.trim() || post.description;
 
   function showPrevious(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
@@ -76,7 +77,7 @@ export default function BlogMediaCard({ post }: { post: BlogPost }) {
                 alt={post.title}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                sizes="(max-width: 768px) 100vw, (max-width: 1180px) 50vw, 33vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1180px) 50vw, 25vw"
               />
             )
           ) : (
@@ -100,54 +101,10 @@ export default function BlogMediaCard({ post }: { post: BlogPost }) {
             style={{
               position: "absolute",
               inset: 0,
-              background:
-                "linear-gradient(to bottom, rgba(8,9,13,0.12), transparent 34%, rgba(8,9,13,0.36))",
+              background: "linear-gradient(to bottom, rgba(8,9,13,0.08), transparent 38%, rgba(8,9,13,0.18))",
               pointerEvents: "none",
             }}
           />
-
-          {current?.overlayText && (
-            <div
-              style={{
-                position: "absolute",
-                left: "14px",
-                right: "14px",
-                bottom: "14px",
-                color: "#fff",
-                fontSize: "clamp(18px, 4vw, 28px)",
-                lineHeight: 1.12,
-                fontWeight: 900,
-                textShadow: "0 2px 16px rgba(0,0,0,0.55)",
-                letterSpacing: "0",
-              }}
-            >
-              {current.overlayText}
-            </div>
-          )}
-
-          <span
-            style={{
-              position: "absolute",
-              top: "10px",
-              left: "10px",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "5px",
-              color: "#fff",
-              fontSize: "11px",
-              fontWeight: 800,
-              letterSpacing: "0.02em",
-              background: "rgba(3, 99, 95, 0.86)",
-              border: "1px solid rgba(255,255,255,0.24)",
-              borderRadius: "999px",
-              padding: "5px 8px",
-              boxShadow: "0 10px 24px rgba(15,23,42,0.18)",
-              backdropFilter: "blur(10px)",
-            }}
-          >
-            İncele
-            <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
-          </span>
 
           {hasMultiple && (
             <span
@@ -242,6 +199,38 @@ export default function BlogMediaCard({ post }: { post: BlogPost }) {
               </button>
             </>
           )}
+        </div>
+
+        <div style={{ padding: "10px 2px 0" }}>
+          <p
+            style={{
+              color: "#334155",
+              fontSize: "13px",
+              lineHeight: 1.45,
+              fontWeight: 500,
+              margin: "0 0 8px",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {cardText}
+          </p>
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              color: "#1d4ed8",
+              fontSize: "12px",
+              fontWeight: 800,
+              letterSpacing: "0.02em",
+            }}
+          >
+            Detaylı İncele
+            <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+          </span>
         </div>
       </article>
     </Link>

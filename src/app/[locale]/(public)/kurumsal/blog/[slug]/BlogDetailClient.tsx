@@ -464,7 +464,7 @@ export default function BlogDetailClient({
               padding: "clamp(48px, 8vw, 80px) 24px clamp(64px, 10vw, 100px)",
             }}
           >
-            <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+            <div style={{ maxWidth: "1440px", margin: "0 auto" }}>
               <AnimatedSection variants={stagger}>
                 <motion.div
                   variants={fadeUp}
@@ -505,7 +505,7 @@ export default function BlogDetailClient({
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
                     gap: "clamp(16px, 2.5vw, 24px)",
                   }}
                 >

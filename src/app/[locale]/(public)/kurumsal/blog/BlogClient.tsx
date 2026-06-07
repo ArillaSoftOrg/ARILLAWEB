@@ -43,7 +43,7 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
         </div>
       </section>
 
-      <section style={{ maxWidth: "1280px", margin: "0 auto", padding: "clamp(28px, 6vw, 40px) 20px 96px" }}>
+      <section style={{ maxWidth: "1440px", margin: "0 auto", padding: "clamp(28px, 6vw, 40px) 20px 96px" }}>
         {posts.length === 0 ? (
           <div
             style={{
@@ -60,7 +60,7 @@ export default function BlogClient({ posts }: { posts: BlogPost[] }) {
           </div>
         ) : (
           <div
-            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4"
             style={{
               columnGap: "clamp(16px, 2.5vw, 24px)",
               rowGap: "clamp(16px, 2.5vw, 24px)",
