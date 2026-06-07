@@ -135,20 +135,21 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                   fontSize: '14px',
                   fontWeight: 600,
                   textDecoration: 'none',
-                  color: '#475569',
-                  background: '#f8fafc',
-                  border: '1px solid #e2e8f0',
+                  color: '#1d4ed8',
+                  background: '#f8fbff',
+                  border: '1px solid rgba(37,99,235,0.22)',
+                  boxShadow: '0 1px 2px rgba(37,99,235,0.06)',
                   transition: 'color 0.2s ease, border-color 0.2s ease, background 0.2s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#7c3aed';
-                  e.currentTarget.style.borderColor = '#c4b5fd';
-                  e.currentTarget.style.background = '#fff';
+                  e.currentTarget.style.color = '#1e40af';
+                  e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)';
+                  e.currentTarget.style.background = '#eef6ff';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#475569';
-                  e.currentTarget.style.borderColor = '#e2e8f0';
-                  e.currentTarget.style.background = '#f8fafc';
+                  e.currentTarget.style.color = '#1d4ed8';
+                  e.currentTarget.style.borderColor = 'rgba(37,99,235,0.22)';
+                  e.currentTarget.style.background = '#f8fbff';
                 }}
               >
                 Blog
@@ -164,19 +165,19 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: '#FFFFFF',
-                  background: '#7c3aed',
-                  boxShadow: '0 1px 3px rgba(124,58,237,0.25)',
+                  background: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 52%, #7c3aed 100%)',
+                  boxShadow: '0 8px 20px rgba(37,99,235,0.22)',
                   transition: 'transform 0.2s ease, box-shadow 0.2s ease',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(124,58,237,0.35)';
+                  e.currentTarget.style.boxShadow = '0 12px 26px rgba(37,99,235,0.3)';
                   const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
                   if (arrow) arrow.style.transform = 'translateX(3px)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 1px 3px rgba(124,58,237,0.25)';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(37,99,235,0.22)';
                   const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
                   if (arrow) arrow.style.transform = 'translateX(0)';
                 }}
@@ -231,8 +232,9 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                   fontSize: '15px',
                   fontWeight: 500,
                   textDecoration: 'none',
-                  color: '#e2d3c0',
-                  background: 'rgba(255,149,36,0.06)',
+                  color: '#bfdbfe',
+                  background: 'rgba(37,99,235,0.12)',
+                  border: '1px solid rgba(96,165,250,0.18)',
                   transition: 'color 0.2s ease, background 0.2s ease',
                 }}
               >
@@ -252,7 +254,7 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                   fontWeight: 600,
                   textDecoration: 'none',
                   color: '#FFFFFF',
-                  background: '#7c3aed',
+                  background: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 52%, #7c3aed 100%)',
                 }}
               >
                 Geliştirici Girişi

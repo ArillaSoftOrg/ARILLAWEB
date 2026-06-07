@@ -147,12 +147,12 @@ function MaintenanceNotice({ locale }: { locale: string }) {
             marginTop: '28px',
             padding: '12px 22px',
             borderRadius: '10px',
-            background: '#7c3aed',
+            background: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 52%, #7c3aed 100%)',
             color: '#fff',
             fontSize: '14px',
             fontWeight: 700,
             textDecoration: 'none',
-            boxShadow: '0 10px 24px rgba(124,58,237,0.28)',
+            boxShadow: '0 12px 28px rgba(37,99,235,0.28)',
           }}
         >
           Blog&apos;a Git
