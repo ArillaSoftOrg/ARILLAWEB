@@ -121,6 +121,7 @@ function PostModal({
   const [draft, setDraft] = useState<PostDraft>(initial);
   const [slugEdited, setSlugEdited] = useState(mode === "edit");
   const [errors, setErrors] = useState<{ title?: string; description?: string; slug?: string }>({});
+  const [activeTab, setActiveTab] = useState<"basic" | "media" | "content" | "seo">("basic");
 
   // Content blocks
   const [sections, setSections] = useState<BlogSection[]>(initial.sections ?? []);
@@ -301,6 +302,23 @@ function PostModal({
 
   const secondaryChips = secondaryKeywordsRaw.split(",").map(s => s.trim()).filter(Boolean);
   const selectedCat = CATEGORY_OPTIONS.find((c) => c.label === draft.category);
+  const tabs: Array<{ id: typeof activeTab; label: string }> = [
+    { id: "basic", label: "Temel" },
+    { id: "media", label: "Medya" },
+    { id: "content", label: "İçerik" },
+    { id: "seo", label: "SEO" },
+  ];
+  const tabButtonStyle = (id: typeof activeTab): React.CSSProperties => ({
+    flex: 1,
+    padding: "9px 10px",
+    borderRadius: 8,
+    border: id === activeTab ? "1px solid rgba(124,58,237,0.42)" : "1px solid rgba(255,255,255,0.07)",
+    background: id === activeTab ? "rgba(124,58,237,0.18)" : "rgba(255,255,255,0.03)",
+    color: id === activeTab ? "#ddd6fe" : "#64748b",
+    fontSize: 12,
+    fontWeight: 700,
+    cursor: "pointer",
+  });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.7)" }}>
@@ -327,6 +345,16 @@ function PostModal({
         {/* Body */}
         <div className="overflow-y-auto flex-1 px-6 py-5 space-y-4">
 
+          <div style={{ display: "flex", gap: 8, position: "sticky", top: -20, zIndex: 2, paddingBottom: 10, background: "#111219" }}>
+            {tabs.map((tab) => (
+              <button key={tab.id} type="button" onClick={() => setActiveTab(tab.id)} style={tabButtonStyle(tab.id)}>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {activeTab === "basic" && (
+          <>
           {/* Emoji + Title */}
           <div className="flex gap-3">
             <div className="flex-shrink-0">
@@ -359,6 +387,11 @@ function PostModal({
             {errors.description && <p style={errorText}>{errors.description}</p>}
           </div>
 
+          </>
+          )}
+
+          {activeTab === "content" && (
+          <>
           {/* ── Content Blocks ─────────────────── */}
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
             <span style={sectionLabel}>İçerik Blokları</span>
@@ -415,6 +448,11 @@ function PostModal({
             </div>
           </div>
 
+          </>
+          )}
+
+          {activeTab === "media" && (
+          <>
           {/* Media Gallery */}
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
             <label className="block text-xs font-medium mb-1.5" style={{ color: "#64748b" }}>Medya Galerisi</label>
@@ -431,6 +469,11 @@ function PostModal({
             />
           </div>
 
+          </>
+          )}
+
+          {activeTab === "basic" && (
+          <>
           {/* Category + Read time */}
           <div className="flex gap-3">
             <div className="flex-1">
@@ -460,6 +503,11 @@ function PostModal({
             </div>
           )}
 
+          </>
+          )}
+
+          {activeTab === "seo" && (
+          <>
           {/* ── SEO ──────────────────────────── */}
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
             <span style={sectionLabel}>SEO</span>
@@ -516,7 +564,12 @@ function PostModal({
               })}
             </div>
           </div>
+          </>
+          )}
 
+
+          {activeTab === "basic" && (
+          <>
           {/* Status toggle */}
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
             <label className="block text-xs font-medium mb-1.5" style={{ color: "#64748b" }}>Durum</label>
@@ -531,8 +584,10 @@ function PostModal({
               </button>
             </div>
           </div>
-        </div>
 
+          </>
+          )}
+        </div>
         {/* Footer */}
         <div className="flex items-center justify-end gap-3 px-6 py-4 flex-shrink-0" style={{ borderTop: "1px solid rgba(0,0,0,0.05)" }}>
           <button onClick={onClose} className="px-4 py-2 text-sm rounded-lg transition-colors hover:bg-white/5" style={{ color: "#64748b" }}>İptal</button>
