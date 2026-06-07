@@ -7,11 +7,10 @@ import {
   createFaq,
   updateFaq,
   deleteFaq,
-  FAQ_PAGES,
-  getPageLabel,
   type AdminFaq,
   type FaqDraft,
 } from "@/lib/faq-actions";
+import { FAQ_PAGES, getPageLabel } from "@/lib/faq-constants";
 
 // ── Helpers ──────────────────────────────────────────────
 const emptyDraft = (): FaqDraft => ({
