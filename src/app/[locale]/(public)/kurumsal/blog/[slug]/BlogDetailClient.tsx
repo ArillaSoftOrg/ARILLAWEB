@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useRef, useState, useEffect } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { motion, useInView } from "framer-motion";
 import { ArrowLeft, ArrowRight, Calendar, Clock, Sun, Moon } from "lucide-react";
 import { BlogPost, BlogSection } from "@/lib/blog-data";
