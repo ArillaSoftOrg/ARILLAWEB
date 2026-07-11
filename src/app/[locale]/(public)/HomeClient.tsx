@@ -4,8 +4,9 @@ import AnimatedBrand from "@/components/AnimatedBrand";
 import SupportChatWidget from "@/components/SupportChatWidget";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import HomeBlogPreview from "@/components/HomeBlogPreview";
+import BlogMediaCard from "@/components/blog/BlogMediaCard";
 import HeroBookingForm from "@/components/hero/HeroBookingForm";
+import type { BlogPost } from "@/lib/blog-data";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import {
   QrCode,
@@ -28,13 +29,11 @@ import {
   RefreshCw,
   MessageSquare,
   Wifi,
-  Clock,
   DollarSign,
   Package,
   ExternalLink,
   Sparkles,
   MonitorSmartphone,
-  Calendar,
   BookOpen,
   Wrench,
   CheckCircle2,
@@ -1280,13 +1279,7 @@ function CTASection({ settings }: { settings: SiteSettings }) {
 // ─────────────────────────────────────────────
 // Blog Section
 // ─────────────────────────────────────────────
-type HomeBlogPost = {
-  slug: string; gradient: string; accentColor: string; emoji: string;
-  categoryColor: string; categoryBg: string; categoryBorder: string;
-  category: string; date: string; readTime: string; title: string; description: string;
-};
-
-const FALLBACK_BLOG_POSTS: HomeBlogPost[] = [
+const FALLBACK_BLOG_POSTS: BlogPost[] = [
   {
     slug: "dijital-donusum-neden-onemlidir",
     title: "İşletmeler İçin Dijital Dönüşüm Neden Önemlidir?",
@@ -1300,6 +1293,7 @@ const FALLBACK_BLOG_POSTS: HomeBlogPost[] = [
     categoryColor: "#a78bfa",
     categoryBg: "rgba(102, 126, 234, 0.1)",
     categoryBorder: "rgba(102, 126, 234, 0.3)",
+    content: [],
   },
   {
     slug: "kurumsal-web-sitesi-neden-gerekli",
@@ -1314,6 +1308,7 @@ const FALLBACK_BLOG_POSTS: HomeBlogPost[] = [
     categoryColor: "#f472b6",
     categoryBg: "rgba(240, 147, 251, 0.1)",
     categoryBorder: "rgba(240, 147, 251, 0.3)",
+    content: [],
   },
   {
     slug: "ozel-yazilim-ne-zaman-gerekli",
@@ -1328,16 +1323,17 @@ const FALLBACK_BLOG_POSTS: HomeBlogPost[] = [
     categoryColor: "#06b6d4",
     categoryBg: "rgba(79, 172, 254, 0.1)",
     categoryBorder: "rgba(79, 172, 254, 0.3)",
+    content: [],
   },
 ];
 
 function BlogSection() {
-  const [posts, setPosts] = useState<HomeBlogPost[]>([]);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
     fetch("/api/blog")
       .then((r) => r.json())
-      .then((data) => setPosts(data.slice(0, 3)))
+      .then((data) => setPosts(Array.isArray(data) ? data.slice(0, 3) : []))
       .catch(() => { });
   }, []);
 
@@ -1459,7 +1455,7 @@ function BlogSection() {
         </AnimatedSection>
 
         {/* Cards grid */}
-        <AnimatedSection className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+        <AnimatedSection className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           {(posts.length > 0 ? posts : FALLBACK_BLOG_POSTS).map((post, i) => (
             <motion.div
               key={post.slug}
@@ -1467,208 +1463,10 @@ function BlogSection() {
               custom={i}
               transition={{ delay: i * 0.08 }}
             >
-              <Link
-                href={`/kurumsal/blog/${post.slug}`}
-                style={{ textDecoration: "none", display: "block", height: "100%" }}
-              >
-                <div
-                  className="group"
-                  style={{
-                    borderRadius: "20px",
-                    background: "rgba(17, 18, 25, 0.85)",
-                    border: "1px solid rgba(255,255,255,0.07)",
-                    overflow: "hidden",
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    transition: "transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s ease, border-color 0.3s ease",
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-6px) scale(1.01)";
-                    e.currentTarget.style.boxShadow = `0 24px 56px rgba(0,0,0,0.45), 0 0 0 1px rgba(124,58,237,0.15)`;
-                    e.currentTarget.style.borderColor = "rgba(124,58,237,0.2)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0) scale(1)";
-                    e.currentTarget.style.boxShadow = "none";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
-                  }}
-                >
-                  {/* Cover image — gradient illustration */}
-                  <div
-                    style={{
-                      position: "relative",
-                      height: "190px",
-                      background: post.gradient,
-                      overflow: "hidden",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {/* Decorative circles */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "-30px",
-                        right: "-30px",
-                        width: "160px",
-                        height: "160px",
-                        borderRadius: "50%",
-                        background: `radial-gradient(circle, ${post.accentColor}22 0%, transparent 70%)`,
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: "-20px",
-                        left: "-20px",
-                        width: "120px",
-                        height: "120px",
-                        borderRadius: "50%",
-                        background: `radial-gradient(circle, ${post.accentColor}15 0%, transparent 70%)`,
-                      }}
-                    />
-                    {/* Grid overlay */}
-                    <div
-                      className="grid-bg"
-                      style={{ position: "absolute", inset: 0, opacity: 0.4 }}
-                    />
-                    {/* Big emoji */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "56px",
-                        filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.4))",
-                      }}
-                    >
-                      {post.emoji}
-                    </div>
-                    {/* Category badge on image */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "14px",
-                        left: "14px",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "5px",
-                        padding: "4px 12px",
-                        borderRadius: "100px",
-                        fontSize: "11px",
-                        fontWeight: 700,
-                        color: post.categoryColor,
-                        background: post.categoryBg,
-                        border: `1px solid ${post.categoryBorder}`,
-                        backdropFilter: "blur(8px)",
-                        letterSpacing: "0.04em",
-                      }}
-                    >
-                      {post.category}
-                    </div>
-                  </div>
-
-                  {/* Card body */}
-                  <div
-                    style={{
-                      padding: "22px 24px 24px",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "12px",
-                      flex: 1,
-                    }}
-                  >
-                    {/* Meta row */}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "14px",
-                        fontSize: "12px",
-                        color: "#475569",
-                      }}
-                    >
-                      <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                        <Calendar size={12} />
-                        {post.date}
-                      </span>
-                      <span
-                        style={{
-                          width: "3px",
-                          height: "3px",
-                          borderRadius: "50%",
-                          background: "#334155",
-                          flexShrink: 0,
-                        }}
-                      />
-                      <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                        <Clock size={12} />
-                        {post.readTime} okuma
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <h3
-                      style={{
-                        fontSize: "16px",
-                        fontWeight: 700,
-                        color: "#f1f5f9",
-                        lineHeight: 1.45,
-                        margin: 0,
-                        letterSpacing: "-0.2px",
-                        transition: "color 0.2s",
-                      }}
-                    >
-                      {post.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p
-                      style={{
-                        fontSize: "14px",
-                        color: "#64748b",
-                        lineHeight: 1.75,
-                        margin: 0,
-                        flex: 1,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {post.description}
-                    </p>
-
-                    {/* Read more */}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        fontSize: "13px",
-                        fontWeight: 600,
-                        color: post.accentColor,
-                        marginTop: "4px",
-                        transition: "gap 0.2s",
-                      }}
-                    >
-                      Devamını Oku
-                      <ArrowRight
-                        size={14}
-                        style={{ transition: "transform 0.2s" }}
-                        className="group-hover:translate-x-1"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Link>
+              <BlogMediaCard post={post} />
             </motion.div>
           ))}
         </AnimatedSection>
-
         {/* View all — mobile */}
         <AnimatedSection className="flex justify-center sm:hidden">
           <motion.div variants={fadeUp}>

@@ -10,7 +10,16 @@
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\YUSUF\\\\Documents\\\\GitHub\\\\arillaweb\\\\ARILLAWEB\\\\src\" -Recurse -Directory | Select-Object -ExpandProperty FullName | % { $_.Replace\\('C:\\\\Users\\\\YUSUF\\\\Documents\\\\GitHub\\\\arillaweb\\\\ARILLAWEB\\\\', ''\\) } | Sort-Object)",
       "Bash(xargs wc -l)",
       "Bash(npm run *)",
-      "Bash(grep -E \"\\\\.\\(ts|js|json\\)$\")"
+      "Bash(grep -E \"\\\\.\\(ts|js|json\\)$\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(tasklist)",
+      "Bash(netstat -ano)",
+      "Bash(PowerShell.exe *)",
+      "Bash(npx vercel *)",
+      "Bash(curl -s -o /dev/null -w \"HTTP:%{http_code} URL:%{url_effective}\\\\n\" \"https://arillasoft.com/tr\")",
+      "Bash(curl -s \"https://arillasoft.com/tr\")"
     ]
   }
 }
