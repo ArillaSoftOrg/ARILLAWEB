@@ -1,0 +1,342 @@
+/* ---------------------------------------------
+   Blog Detail — page-level layout & chrome
+   Colors come from the [data-blog-theme] tokens
+   in globals.css. Per-post accent is injected as
+   --post-accent on .main.
+   ───────────────────────────────────────────── */
+
+.main {
+  position: relative;
+  min-height: 100vh;
+  background: var(--blog-bg);
+  color: var(--blog-title);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+/* ── Decorative fixed layers ── */
+.gridBg {
+  position: fixed;
+  inset: 0;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glow {
+  position: fixed;
+  top: -220px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 720px;
+  height: 460px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Shell: single column on mobile, two columns ≥1024px ── */
+.shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(16px, 3vw, 40px) 24px clamp(56px, 8vw, 88px);
+}
+
+@media (min-width: 1024px) {
+  .shell {
+    max-width: 1120px;
+    display: grid;
+    grid-template-columns: minmax(0, 760px) 240px;
+    justify-content: center;
+    column-gap: 48px;
+    align-items: start;
+  }
+}
+
+.article {
+  min-width: 0;
+}
+
+/* ── Back buttons ── */
+.backTop {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 8px 14px 8px 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blog-btn-color);
+  background: var(--blog-btn-bg);
+  border: 1px solid var(--blog-btn-border);
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+}
+
+.backTop:hover {
+  color: var(--blog-btn-hover-color);
+  background: var(--blog-btn-hover-bg);
+}
+
+.backBottom {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--blog-btn-color);
+  background: var(--blog-btn-bg);
+  border: 1px solid var(--blog-btn-border);
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.backBottom:hover {
+  color: var(--blog-btn-hover-color);
+  background: var(--blog-btn-hover-bg);
+  transform: translateY(-2px);
+}
+
+.backTop:focus-visible,
+.backBottom:focus-visible,
+.toggle:focus-visible,
+.tocLink:focus-visible {
+  outline: 2px solid var(--post-accent, #38bdf8);
+  outline-offset: 2px;
+}
+
+.backFooter {
+  margin-top: 64px;
+  padding-top: 40px;
+  border-top: 1px solid var(--blog-divider);
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Header ── */
+.title {
+  font-size: clamp(24px, 3.5vw, 36px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  color: var(--blog-title);
+  margin: 0 0 16px;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--blog-meta);
+  margin-bottom: 24px;
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.metaDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--blog-meta-dot);
+  flex-shrink: 0;
+}
+
+.toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--blog-divider);
+  background: var(--blog-card-bg);
+  color: var(--blog-meta);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.toggle:hover {
+  color: var(--blog-title);
+}
+
+/* ── Cover hero (only when a valid coverImage exists) ── */
+.hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 0 0 clamp(24px, 4vw, 36px);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--blog-border);
+  background: var(--blog-card-bg);
+}
+
+.heroImg {
+  object-fit: cover;
+}
+
+/* ── Lead summary ── */
+.summary {
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: var(--blog-card-bg);
+  border: 1px solid var(--summary-border, var(--blog-border));
+  border-left: 3px solid var(--summary-accent, var(--post-accent));
+  margin-bottom: clamp(24px, 4vw, 40px);
+}
+
+.summaryText {
+  font-size: 15px;
+  color: var(--blog-h3);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.divider {
+  border-top: 1px solid var(--blog-divider);
+  margin-bottom: clamp(24px, 4vw, 40px);
+}
+
+/* ── Table of contents (desktop ≥1024px only) ── */
+.tocCol {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .tocCol {
+    display: block;
+    position: sticky;
+    top: calc(92px + var(--bar-h, 0px) + 24px);
+    align-self: start;
+    max-height: calc(100vh - 92px - var(--bar-h, 0px) - 48px);
+    overflow-y: auto;
+  }
+}
+
+.tocTitle {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blog-meta);
+}
+
+.tocList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--blog-divider);
+  display: flex;
+  flex-direction: column;
+}
+
+.tocLink {
+  display: block;
+  margin-left: -1px;
+  padding: 6px 0 6px 14px;
+  border-left: 2px solid transparent;
+  color: var(--blog-meta);
+  font-size: 13px;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tocLink:hover {
+  color: var(--blog-title);
+}
+
+.tocLevel3 {
+  padding-left: 28px;
+  font-size: 12.5px;
+}
+
+.tocActive {
+  color: var(--blog-title);
+  border-left-color: var(--post-accent, #38bdf8);
+  font-weight: 600;
+}
+
+/* ── Entrance animation (degrades to fully visible) ── */
+@keyframes blogFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fadeIn {
+  animation: blogFadeIn 0.5s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fadeIn {
+    animation: none;
+  }
+}
+
+/* ── Related posts ── */
+.related {
+  border-top: 1px solid var(--blog-section-border);
+  padding: clamp(48px, 8vw, 80px) 24px clamp(64px, 10vw, 100px);
+}
+
+.relatedInner {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.relatedHead {
+  text-align: center;
+  margin-bottom: clamp(28px, 5vw, 48px);
+}
+
+.relatedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 5px 16px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a78bfa;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+}
+
+.relatedTitle {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--blog-related-title);
+}
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: clamp(16px, 2.5vw, 24px);
+}

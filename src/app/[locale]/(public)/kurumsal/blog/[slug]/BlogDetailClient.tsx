@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { motion, useInView } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, Sun, Moon } from "lucide-react";
 import BlogMediaCard from "@/components/blog/BlogMediaCard";
 import { BlogPost, BlogSection } from "@/lib/blog-data";
+import styles from "./BlogDetail.module.css";
+
+// Offset used both for the sticky TOC and for anchor scroll targets so
+// headings don't slide under the fixed navbar (h-[92px] on desktop).
+const HEADING_SCROLL_OFFSET = "calc(92px + var(--bar-h, 0px) + 16px)";
 
 // ─────────────────────────────────────────────
 // Blog Reading Theme
@@ -27,68 +32,102 @@ function useBlogTheme() {
 }
 
 // ─────────────────────────────────────────────
-// Animation Variants
+// Heading id generation — deterministic & unique
 // ─────────────────────────────────────────────
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6 },
-  },
+// Turkish letters, upper first (İ→i avoids the combining-dot that a raw
+// toLowerCase() would otherwise produce), then lower.
+const TR_CHAR_MAP: Record<string, string> = {
+  İ: "i", I: "i", Ç: "c", Ğ: "g", Ö: "o", Ş: "s", Ü: "u",
+  ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u",
 };
 
-const stagger = {
-  visible: { transition: { staggerChildren: 0.1 } },
-};
+function slugify(text: string): string {
+  return text
+    .replace(/[İIÇĞÖŞÜçğıöşü]/g, (ch) => TR_CHAR_MAP[ch] ?? ch)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.93 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.5 },
-  },
-};
+interface TocEntry {
+  id: string;
+  text: string;
+  level: 2 | 3;
+}
+
+/**
+ * Walk the body sections once, assigning a stable, unique id to every
+ * heading. Duplicate heading text gets a numeric suffix (`slug`, `slug-2`).
+ * Returns the id map (keyed by body-array index) and the ordered TOC list.
+ */
+function buildHeadingIds(sections: BlogSection[]) {
+  const counts = new Map<string, number>();
+  const idByIndex = new Map<number, string>();
+  const toc: TocEntry[] = [];
+
+  sections.forEach((section, index) => {
+    if (section.type !== "heading2" && section.type !== "heading3") return;
+    const text = section.text ?? "";
+    const base = slugify(text) || "baslik";
+    const seen = (counts.get(base) ?? 0) + 1;
+    counts.set(base, seen);
+    const id = seen === 1 ? base : `${base}-${seen}`;
+    idByIndex.set(index, id);
+    toc.push({ id, text, level: section.type === "heading2" ? 2 : 3 });
+  });
+
+  return { idByIndex, toc };
+}
 
 // ─────────────────────────────────────────────
-// Animated Section
+// Scroll-spy for the desktop TOC. Only drives the
+// active highlight — content is always rendered.
 // ─────────────────────────────────────────────
-function AnimatedSection({
-  children,
-  className = "",
-  variants = stagger,
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  variants?: typeof stagger;
-  delay?: number;
-}) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+function useActiveHeading(toc: TocEntry[]) {
+  const [activeId, setActiveId] = useState<string>("");
 
-  return (
-    <motion.div
-      ref={ref}
-      variants={variants}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      transition={{ delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+  useEffect(() => {
+    if (toc.length === 0) return;
+    const elements = toc
+      .map((entry) => document.getElementById(entry.id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (elements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort(
+            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
+          );
+        if (visible[0]) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: "-120px 0px -70% 0px", threshold: 0 }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [toc]);
+
+  return activeId;
 }
 
 // ─────────────────────────────────────────────
 // Content Renderer
 // ─────────────────────────────────────────────
-function ContentBlock({ section, accentColor }: { section: BlogSection; accentColor: string }) {
+function ContentBlock({
+  section,
+  accentColor,
+  headingId,
+}: {
+  section: BlogSection;
+  accentColor: string;
+  headingId?: string;
+}) {
   if (section.type === "heading2") {
     return (
       <h2
+        id={headingId}
         style={{
           fontSize: "clamp(20px, 3vw, 26px)",
           fontWeight: 700,
@@ -97,6 +136,7 @@ function ContentBlock({ section, accentColor }: { section: BlogSection; accentCo
           lineHeight: 1.3,
           paddingBottom: "12px",
           borderBottom: "1px solid var(--blog-border)",
+          scrollMarginTop: HEADING_SCROLL_OFFSET,
         }}
       >
         {section.text}
@@ -107,12 +147,14 @@ function ContentBlock({ section, accentColor }: { section: BlogSection; accentCo
   if (section.type === "heading3") {
     return (
       <h3
+        id={headingId}
         style={{
           fontSize: "clamp(17px, 2.5vw, 20px)",
           fontWeight: 600,
           color: "var(--blog-h3)",
           margin: "clamp(24px, 4vw, 36px) 0 10px",
           lineHeight: 1.4,
+          scrollMarginTop: HEADING_SCROLL_OFFSET,
         }}
       >
         <span style={{ color: accentColor, marginRight: "8px" }}>/</span>
@@ -182,13 +224,44 @@ function ContentBlock({ section, accentColor }: { section: BlogSection; accentCo
 }
 
 // ─────────────────────────────────────────────
-// Related Post Card
+// Table of contents (desktop only via CSS)
 // ─────────────────────────────────────────────
-function RelatedCard({ post }: { post: BlogPost }) {
+function TableOfContents({
+  toc,
+  activeId,
+}: {
+  toc: TocEntry[];
+  activeId: string;
+}) {
+  if (toc.length === 0) return null;
   return (
-    <motion.div variants={scaleIn}>
-      <BlogMediaCard post={post} />
-    </motion.div>
+    <aside className={styles.tocCol}>
+      <nav aria-label="İçindekiler">
+        <p className={styles.tocTitle}>İçindekiler</p>
+        <ul className={styles.tocList}>
+          {toc.map((entry) => {
+            const linkClass = [
+              styles.tocLink,
+              entry.level === 3 ? styles.tocLevel3 : "",
+              entry.id === activeId ? styles.tocActive : "",
+            ]
+              .filter(Boolean)
+              .join(" ");
+            return (
+              <li key={entry.id}>
+                <a
+                  href={`#${entry.id}`}
+                  className={linkClass}
+                  aria-current={entry.id === activeId ? "true" : undefined}
+                >
+                  {entry.text}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </aside>
   );
 }
 
@@ -203,317 +276,157 @@ export default function BlogDetailClient({
   related: BlogPost[];
 }) {
   const { theme, toggle } = useBlogTheme();
-  const firstParagraph =
-    post.content.find(
-      (section) => section.type === "paragraph" && section.text
-    )?.text?.trim() ?? "";
 
-  const remainingContent = post.content.filter((section) => {
-    if (section.type !== "paragraph") return true;
-    return (section.text?.trim() ?? "") !== firstParagraph;
-  });
+  // Lead summary: keep the first paragraph, and drop ONLY that exact index
+  // from the body. No text-equality / excerpt comparison.
+  const leadIndex = post.content.findIndex(
+    (section) => section.type === "paragraph" && !!section.text?.trim()
+  );
+  const leadText =
+    leadIndex >= 0 ? post.content[leadIndex].text?.trim() ?? "" : "";
+  const bodyContent = useMemo(
+    () => post.content.filter((_, i) => i !== leadIndex),
+    [post.content, leadIndex]
+  );
+
+  const { idByIndex, toc } = useMemo(
+    () => buildHeadingIds(bodyContent),
+    [bodyContent]
+  );
+  const activeId = useActiveHeading(toc);
+
+  const hasCover =
+    typeof post.coverImage === "string" && post.coverImage.trim().length > 0;
+
   return (
     <main
       data-blog-theme={theme}
-      style={{
-        minHeight: "100vh",
-        background: "var(--blog-bg)",
-        color: "var(--blog-title)",
-        transition: "background 0.25s ease, color 0.25s ease",
-      }}
+      className={styles.main}
+      style={
+        {
+          "--post-accent": post.accentColor,
+        } as React.CSSProperties
+      }
     >
+      <div className={`grid-bg ${styles.gridBg}`} />
       <div
-        className="grid-bg"
+        className={styles.glow}
         style={{
-          position: "fixed",
-          inset: 0,
-          opacity: 0.35,
-          pointerEvents: "none",
-          zIndex: 0,
+          background: `radial-gradient(ellipse, ${post.accentColor}14 0%, rgba(6,182,212,0.04) 50%, transparent 70%)`,
         }}
       />
 
-      <div
-        style={{
-          position: "fixed",
-          top: "-300px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "900px",
-          height: "700px",
-          borderRadius: "50%",
-          background: `radial-gradient(ellipse, ${post.accentColor}18 0%, rgba(6,182,212,0.05) 50%, transparent 70%)`,
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      />
-
-      <div style={{ position: "relative", zIndex: 1 }}>
-        {/* ── Article container ── */}
-        <div
-          style={{
-            maxWidth: "760px",
-            margin: "0 auto",
-            padding: "clamp(20px, 5vw, 64px) 24px clamp(64px, 10vw, 96px)",
-          }}
-        >
-          {/* Back button */}
-          <motion.div
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{ marginBottom: "28px" }}
-          >
-            <Link
-              href="/kurumsal/blog"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                fontSize: "14px",
-                fontWeight: 600,
-                color: "var(--blog-btn-color)",
-                textDecoration: "none",
-                padding: "8px 14px 8px 10px",
-                borderRadius: "10px",
-                background: "var(--blog-btn-bg)",
-                border: "1px solid var(--blog-btn-border)",
-                transition: "color 0.2s, background 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "var(--blog-btn-hover-color)";
-                (e.currentTarget as HTMLAnchorElement).style.background = "var(--blog-btn-hover-bg)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "var(--blog-btn-color)";
-                (e.currentTarget as HTMLAnchorElement).style.background = "var(--blog-btn-bg)";
-              }}
-            >
+      <div className={styles.content}>
+        <div className={styles.shell}>
+          <div className={styles.article}>
+            {/* Back button */}
+            <Link href="/kurumsal/blog" className={styles.backTop}>
               <ArrowLeft size={15} />
               Blog&apos;a Dön
             </Link>
-          </motion.div>
 
-          {/* ── Post header ── */}
-          <AnimatedSection variants={stagger}>
-            <motion.h1
-              variants={fadeUp}
-              style={{
-                fontSize: "clamp(26px, 5vw, 44px)",
-                fontWeight: 800,
-                lineHeight: 1.15,
-                letterSpacing: "-1px",
-                color: "var(--blog-title)",
-                margin: "0 0 20px",
-              }}
-            >
-              {post.title}
-            </motion.h1>
+            {/* Header */}
+            <header className={styles.fadeIn}>
+              <h1 className={styles.title}>{post.title}</h1>
 
-            <motion.div
-              variants={fadeUp}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                flexWrap: "wrap",
-                gap: "16px",
-                fontSize: "13px",
-                color: "var(--blog-meta)",
-                marginBottom: "28px",
-              }}
-            >
-              <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <Calendar size={13} />
-                {post.date}
-              </span>
-              <span
-                style={{
-                  width: "4px",
-                  height: "4px",
-                  borderRadius: "50%",
-                  background: "var(--blog-meta-dot)",
-                  flexShrink: 0,
-                }}
-              />
-              <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                <Clock size={13} />
-                {post.readTime} dk okuma
-              </span>
-              <button
-                onClick={toggle}
-                title="Okuma modunu değiştir"
-                style={{
-                  marginLeft: "auto",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  padding: "6px 12px",
-                  borderRadius: "8px",
-                  border: "1px solid var(--blog-divider)",
-                  background: "var(--blog-card-bg)",
-                  color: "var(--blog-meta)",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  transition: "background 0.2s, border-color 0.2s",
-                }}
-              >
-                {theme === "dark" ? <Sun size={13} /> : <Moon size={13} />}
-                {theme === "dark" ? "Açık" : "Koyu"}
-              </button>
-            </motion.div>
+              <div className={styles.metaRow}>
+                <span className={styles.metaItem}>
+                  <Calendar size={13} />
+                  {post.date}
+                </span>
+                <span className={styles.metaDot} />
+                <span className={styles.metaItem}>
+                  <Clock size={13} />
+                  {post.readTime} okuma
+                </span>
+                <button
+                  type="button"
+                  onClick={toggle}
+                  title="Okuma modunu değiştir"
+                  aria-label={
+                    theme === "dark"
+                      ? "Açık okuma moduna geç"
+                      : "Koyu okuma moduna geç"
+                  }
+                  aria-pressed={theme === "light"}
+                  className={styles.toggle}
+                >
+                  {theme === "dark" ? <Sun size={13} /> : <Moon size={13} />}
+                  {theme === "dark" ? "Açık" : "Koyu"}
+                </button>
+              </div>
 
+              {/* Optional cover hero — only for a valid coverImage */}
+              {hasCover && (
+                <div className={styles.hero}>
+                  <Image
+                    src={post.coverImage as string}
+                    alt={post.title}
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 760px"
+                    className={styles.heroImg}
+                  />
+                </div>
+              )}
 
-            <motion.div
-              variants={fadeUp}
-              style={{
-                padding: "20px 24px",
-                borderRadius: "14px",
-                background: "var(--blog-card-bg)",
-                border: `1px solid ${post.categoryBorder}`,
-                borderLeft: `3px solid ${post.categoryColor}`,
-                marginBottom: "clamp(28px, 5vw, 48px)",
-              }}
-            >
-              <p
-                style={{
-                  fontSize: "17px",
-                  color: "var(--blog-h3)",
-                  lineHeight: 1.8,
-                  margin: 0,
-                }}
-              >
-                {firstParagraph}
-              </p>
-            </motion.div>
+              {leadText && (
+                <div
+                  className={styles.summary}
+                  style={
+                    {
+                      "--summary-border": post.categoryBorder,
+                      "--summary-accent": post.categoryColor,
+                    } as React.CSSProperties
+                  }
+                >
+                  <p className={styles.summaryText}>{leadText}</p>
+                </div>
+              )}
+            </header>
 
-          </AnimatedSection>
+            <div className={styles.divider} />
 
-          <div
-            style={{
-              borderTop: "1px solid var(--blog-divider)",
-              marginBottom: "clamp(24px, 4vw, 48px)",
-            }}
-          />
+            {/* Article body */}
+            <article>
+              {bodyContent.map((section, i) => (
+                <ContentBlock
+                  key={i}
+                  section={section}
+                  accentColor={post.accentColor}
+                  headingId={idByIndex.get(i)}
+                />
+              ))}
+            </article>
 
-          {/* ── Article content ── */}
-          <AnimatedSection variants={stagger}>
-            {remainingContent.map((section, i) => (
-              <motion.div key={i} variants={fadeUp}>
-                <ContentBlock section={section} accentColor={post.accentColor} />
-              </motion.div>
-            ))}
-          </AnimatedSection>
+            {/* Bottom back button */}
+            <div className={styles.backFooter}>
+              <Link href="/kurumsal/blog" className={styles.backBottom}>
+                <ArrowLeft size={16} />
+                Blog&apos;a Geri Dön
+              </Link>
+            </div>
+          </div>
 
-          {/* ── Bottom back button ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            style={{
-              marginTop: "64px",
-              paddingTop: "40px",
-              borderTop: "1px solid var(--blog-divider)",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Link
-              href="/kurumsal/blog"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "14px 28px",
-                borderRadius: "12px",
-                background: "var(--blog-btn-bg)",
-                border: "1px solid var(--blog-btn-border)",
-                fontSize: "15px",
-                fontWeight: 600,
-                color: "var(--blog-btn-color)",
-                textDecoration: "none",
-                transition: "background 0.2s, border-color 0.2s, transform 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLAnchorElement;
-                el.style.background = "var(--blog-btn-hover-bg)";
-                el.style.borderColor = "var(--blog-btn-border)";
-                el.style.color = "var(--blog-btn-hover-color)";
-                el.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLAnchorElement;
-                el.style.background = "var(--blog-btn-bg)";
-                el.style.borderColor = "var(--blog-btn-border)";
-                el.style.color = "var(--blog-btn-color)";
-                el.style.transform = "translateY(0)";
-              }}
-            >
-              <ArrowLeft size={16} />
-              Blog&apos;a Geri Dön
-            </Link>
-          </motion.div>
+          <TableOfContents toc={toc} activeId={activeId} />
         </div>
 
-        {/* ── Related Posts ── */}
+        {/* Related Posts */}
         {related.length > 0 && (
-          <section
-            style={{
-              borderTop: "1px solid var(--blog-section-border)",
-              padding: "clamp(48px, 8vw, 80px) 24px clamp(64px, 10vw, 100px)",
-            }}
-          >
-            <div style={{ maxWidth: "1440px", margin: "0 auto" }}>
-              <AnimatedSection variants={stagger}>
-                <motion.div
-                  variants={fadeUp}
-                  style={{ textAlign: "center", marginBottom: "clamp(28px, 5vw, 48px)" }}
-                >
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      padding: "5px 16px",
-                      borderRadius: "100px",
-                      fontSize: "11px",
-                      fontWeight: 700,
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      color: "#a78bfa",
-                      background: "rgba(124,58,237,0.1)",
-                      border: "1px solid rgba(124,58,237,0.2)",
-                      marginBottom: "16px",
-                    }}
-                  >
-                    ✦ İlgili Yazılar
-                  </span>
-                  <h2
-                    style={{
-                      fontSize: "clamp(24px, 4vw, 36px)",
-                      fontWeight: 700,
-                      color: "var(--blog-related-title)",
-                      letterSpacing: "-0.5px",
-                      margin: 0,
-                    }}
-                  >
-                    İlginizi Çekebilecek Diğer Yazılar
-                  </h2>
-                </motion.div>
+          <section className={styles.related}>
+            <div className={styles.relatedInner}>
+              <div className={styles.relatedHead}>
+                <span className={styles.relatedBadge}>✦ İlgili Yazılar</span>
+                <h2 className={styles.relatedTitle}>
+                  İlginizi Çekebilecek Diğer Yazılar
+                </h2>
+              </div>
 
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
-                    gap: "clamp(16px, 2.5vw, 24px)",
-                  }}
-                >
-                  {related.map((rel) => (
-                    <RelatedCard key={rel.slug} post={rel} />
-                  ))}
-                </div>
-              </AnimatedSection>
+              <div className={styles.relatedGrid}>
+                {related.map((rel) => (
+                  <BlogMediaCard key={rel.slug} post={rel} />
+                ))}
+              </div>
             </div>
           </section>
         )}
