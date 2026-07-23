@@ -22,6 +22,7 @@ import {
   type PostDraft,
 } from "@/lib/blog-actions";
 import type { BlogMediaItem, BlogSection } from "@/lib/blog-data";
+import { calculateReadingTimeMinutes } from "@/lib/blog-reading-time";
 
 /* ─── Slug helper (client-side) ─────────────── */
 function slugify(text: string): string {
@@ -302,6 +303,7 @@ function PostModal({
 
   const secondaryChips = secondaryKeywordsRaw.split(",").map(s => s.trim()).filter(Boolean);
   const selectedCat = CATEGORY_OPTIONS.find((c) => c.label === draft.category);
+  const estimatedReadingTime = calculateReadingTimeMinutes(sections, draft.description);
   const tabs: Array<{ id: typeof activeTab; label: string }> = [
     { id: "basic", label: "Temel" },
     { id: "media", label: "Medya" },
@@ -474,7 +476,7 @@ function PostModal({
 
           {activeTab === "basic" && (
           <>
-          {/* Category + Read time */}
+          {/* Category + automatic read time */}
           <div className="flex gap-3">
             <div className="flex-1">
               <label className="block text-xs font-medium mb-1.5" style={{ color: "#64748b" }}>Kategori</label>
@@ -482,9 +484,22 @@ function PostModal({
                 {CATEGORY_OPTIONS.map((c) => <option key={c.label} value={c.label}>{c.label}</option>)}
               </select>
             </div>
-            <div style={{ width: 110 }}>
+            <div style={{ width: 150 }}>
               <label className="block text-xs font-medium mb-1.5" style={{ color: "#64748b" }}>Okuma Süresi</label>
-              <input value={draft.readTime} onChange={set("readTime")} placeholder="5 dk" style={inputStyle} />
+              <div
+                style={{
+                  ...inputStyle,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  color: "#94a3b8",
+                  background: "rgba(255,255,255,0.03)",
+                }}
+                aria-live="polite"
+              >
+                <Clock size={13} />
+                {estimatedReadingTime} dk otomatik
+              </div>
             </div>
           </div>
 
@@ -759,7 +774,6 @@ export default function AdminBlogPage() {
     slug: "",
     description: "",
     category: "Genel",
-    readTime: "5 dk",
     emoji: "📝",
     published: true,
     publishDate: toDateInputValue(),
@@ -781,7 +795,6 @@ export default function AdminBlogPage() {
       slug: editTarget.slug,
       description: editTarget.description,
       category: editTarget.category,
-      readTime: editTarget.readTime,
       emoji: editTarget.emoji,
       published: editTarget.published,
       publishDate: toDateInputValue(editTarget.publishedAt),

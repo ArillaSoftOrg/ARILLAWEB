@@ -1,5 +1,6 @@
 import { prisma } from "./prisma";
 import type { BlogMediaItem, BlogPost, BlogSection } from "./blog-data";
+import { calculateReadingTimeMinutes } from "./blog-reading-time";
 
 const CATEGORY_META: Record<string, {
   color: string; bg: string; border: string;
@@ -74,6 +75,7 @@ export function dbPostToUiPost(post: DbPost): BlogPost {
   } = {};
   try {
     contentData = JSON.parse(post.content);
+    if (!Array.isArray(contentData.sections)) contentData.sections = undefined;
   } catch {
     contentData = {};
   }
@@ -87,7 +89,7 @@ export function dbPostToUiPost(post: DbPost): BlogPost {
     title: post.title,
     description: post.excerpt,
     date: formatDate(post.publishedAt ?? post.createdAt),
-    readTime: `${post.readingTime} dk`,
+    readTime: `${calculateReadingTimeMinutes(contentData.sections ?? [], post.excerpt)} dk`,
     gradient: meta.gradient,
     accentColor: meta.accentColor,
     emoji: contentData.emoji ?? "📝",

@@ -3,6 +3,7 @@
 import { prisma } from "./prisma";
 import { revalidatePath } from "next/cache";
 import type { BlogMediaItem, BlogSection } from "./blog-data";
+import { calculateReadingTimeMinutes } from "./blog-reading-time";
 
 const CATEGORY_META: Record<string, { gradient: string; accentColor: string }> = {
   "QR Menü": {
@@ -56,12 +57,26 @@ async function upsertCategory(name: string): Promise<string> {
   return cat.id;
 }
 
+function getDraftSections(draft: PostDraft): BlogSection[] {
+  return draft.sections.length > 0
+    ? draft.sections
+    : [{ type: "paragraph", text: draft.description }];
+}
+
+function parsePostContent(content: string): { sections?: BlogSection[] } {
+  try {
+    const data = JSON.parse(content);
+    return { sections: Array.isArray(data.sections) ? data.sections : undefined };
+  } catch {
+    return {};
+  }
+}
+
 export type PostDraft = {
   title: string;
   slug: string;
   description: string;
   category: string;
-  readTime: string;
   emoji: string;
   published: boolean;
   publishDate: string;
@@ -95,31 +110,35 @@ export async function getAdminPosts(): Promise<AdminPost[]> {
     include: { category: true },
     orderBy: { createdAt: "desc" },
   });
-  return posts.map((p) => ({
-    id: p.id,
-    slug: p.slug,
-    title: p.title,
-    excerpt: p.excerpt,
-    content: p.content,
-    readingTime: p.readingTime,
-    published: p.published,
-    publishedAt: p.publishedAt?.toISOString() ?? null,
-    coverImage: p.coverImage,
-    createdAt: p.createdAt.toISOString(),
-    seoTitle: p.seoTitle,
-    seoDescription: p.seoDescription,
-    category: p.category ? { name: p.category.name } : null,
-  }));
+  return posts.map((p) => {
+    const contentData = parsePostContent(p.content);
+    return {
+      id: p.id,
+      slug: p.slug,
+      title: p.title,
+      excerpt: p.excerpt,
+      content: p.content,
+      readingTime: calculateReadingTimeMinutes(contentData.sections ?? [], p.excerpt),
+      published: p.published,
+      publishedAt: p.publishedAt?.toISOString() ?? null,
+      coverImage: p.coverImage,
+      createdAt: p.createdAt.toISOString(),
+      seoTitle: p.seoTitle,
+      seoDescription: p.seoDescription,
+      category: p.category ? { name: p.category.name } : null,
+    };
+  });
 }
 
 export async function createPost(draft: PostDraft): Promise<void> {
   const slug = slugify(draft.slug || draft.title) || `post-${Date.now()}`;
   const categoryId = await upsertCategory(draft.category);
   const meta = CATEGORY_META[draft.category] ?? DEFAULT_META;
-  const readingTime = parseInt(draft.readTime) || 5;
   const publishedAt = draft.publishDate ? new Date(`${draft.publishDate}T12:00:00`) : new Date();
   const mediaItems = draft.mediaItems.filter((item) => item.url.trim());
   const primaryCover = mediaItems[0]?.url || draft.coverImage || null;
+  const sections = getDraftSections(draft);
+  const readingTime = calculateReadingTimeMinutes(sections, draft.description);
 
   await prisma.blogPost.create({
     data: {
@@ -131,9 +150,7 @@ export async function createPost(draft: PostDraft): Promise<void> {
         gradient: meta.gradient,
         accentColor: meta.accentColor,
         mediaItems,
-        sections: draft.sections.length > 0
-          ? draft.sections
-          : [{ type: "paragraph", text: draft.description }],
+        sections,
         ...(draft.seoFocusKeyword ? { seoFocusKeyword: draft.seoFocusKeyword } : {}),
         ...(draft.seoSecondaryKeywords.length > 0 ? { seoSecondaryKeywords: draft.seoSecondaryKeywords } : {}),
       }),
@@ -154,10 +171,11 @@ export async function createPost(draft: PostDraft): Promise<void> {
 export async function updatePost(id: string, draft: PostDraft): Promise<void> {
   const categoryId = await upsertCategory(draft.category);
   const meta = CATEGORY_META[draft.category] ?? DEFAULT_META;
-  const readingTime = parseInt(draft.readTime) || 5;
   const publishedAt = draft.publishDate ? new Date(`${draft.publishDate}T12:00:00`) : new Date();
   const mediaItems = draft.mediaItems.filter((item) => item.url.trim());
   const primaryCover = mediaItems[0]?.url || draft.coverImage || null;
+  const sections = getDraftSections(draft);
+  const readingTime = calculateReadingTimeMinutes(sections, draft.description);
 
   await prisma.blogPost.update({
     where: { id },
@@ -169,9 +187,7 @@ export async function updatePost(id: string, draft: PostDraft): Promise<void> {
         gradient: meta.gradient,
         accentColor: meta.accentColor,
         mediaItems,
-        sections: draft.sections.length > 0
-          ? draft.sections
-          : [{ type: "paragraph", text: draft.description }],
+        sections,
         ...(draft.seoFocusKeyword ? { seoFocusKeyword: draft.seoFocusKeyword } : {}),
         ...(draft.seoSecondaryKeywords.length > 0 ? { seoSecondaryKeywords: draft.seoSecondaryKeywords } : {}),
       }),

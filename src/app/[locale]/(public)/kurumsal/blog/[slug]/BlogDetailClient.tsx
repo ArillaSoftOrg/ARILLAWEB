@@ -119,47 +119,42 @@ function ContentBlock({
   section,
   accentColor,
   headingId,
+  headingNumber,
 }: {
   section: BlogSection;
   accentColor: string;
   headingId?: string;
+  headingNumber?: number;
 }) {
   if (section.type === "heading2") {
     return (
-      <h2
-        id={headingId}
-        style={{
-          fontSize: "clamp(20px, 3vw, 26px)",
-          fontWeight: 700,
-          color: "var(--blog-h2)",
-          margin: "clamp(32px, 5vw, 48px) 0 14px",
-          lineHeight: 1.3,
-          paddingBottom: "12px",
-          borderBottom: "1px solid var(--blog-border)",
-          scrollMarginTop: HEADING_SCROLL_OFFSET,
-        }}
-      >
-        {section.text}
-      </h2>
+      <div className={styles.majorHeadingWrap}>
+        <span className={styles.majorHeadingMarker} aria-hidden="true" />
+        <h2
+          id={headingId}
+          className={styles.majorHeading}
+          style={{ scrollMarginTop: HEADING_SCROLL_OFFSET }}
+        >
+          {section.text}
+        </h2>
+      </div>
     );
   }
 
   if (section.type === "heading3") {
     return (
-      <h3
-        id={headingId}
-        style={{
-          fontSize: "clamp(17px, 2.5vw, 20px)",
-          fontWeight: 600,
-          color: "var(--blog-h3)",
-          margin: "clamp(24px, 4vw, 36px) 0 10px",
-          lineHeight: 1.4,
-          scrollMarginTop: HEADING_SCROLL_OFFSET,
-        }}
-      >
-        <span style={{ color: accentColor, marginRight: "8px" }}>/</span>
-        {section.text}
-      </h3>
+      <div className={styles.subHeadingWrap}>
+        <span className={styles.subHeadingBadge} aria-hidden="true">
+          {String(headingNumber ?? 1).padStart(2, "0")}
+        </span>
+        <h3
+          id={headingId}
+          className={styles.subHeading}
+          style={{ scrollMarginTop: HEADING_SCROLL_OFFSET }}
+        >
+          {section.text}
+        </h3>
+      </div>
     );
   }
 
@@ -293,6 +288,17 @@ export default function BlogDetailClient({
     () => buildHeadingIds(bodyContent),
     [bodyContent]
   );
+  const subHeadingNumbers = useMemo(() => {
+    let count = 0;
+    const numbers = new Map<number, number>();
+    bodyContent.forEach((section, index) => {
+      if (section.type === "heading3") {
+        count += 1;
+        numbers.set(index, count);
+      }
+    });
+    return numbers;
+  }, [bodyContent]);
   const activeId = useActiveHeading(toc);
 
   const hasCover =
@@ -370,19 +376,6 @@ export default function BlogDetailClient({
                 </div>
               )}
 
-              {leadText && (
-                <div
-                  className={styles.summary}
-                  style={
-                    {
-                      "--summary-border": post.categoryBorder,
-                      "--summary-accent": post.categoryColor,
-                    } as React.CSSProperties
-                  }
-                >
-                  <p className={styles.summaryText}>{leadText}</p>
-                </div>
-              )}
             </header>
 
             <div className={styles.divider} />
@@ -395,9 +388,26 @@ export default function BlogDetailClient({
                   section={section}
                   accentColor={post.accentColor}
                   headingId={idByIndex.get(i)}
+                  headingNumber={subHeadingNumbers.get(i)}
                 />
               ))}
             </article>
+
+            {leadText && (
+              <section
+                className={styles.summary}
+                aria-label="Yazı özeti"
+                style={
+                  {
+                    "--summary-border": post.categoryBorder,
+                    "--summary-accent": post.categoryColor,
+                  } as React.CSSProperties
+                }
+              >
+                <p className={styles.summaryLabel}>Özet</p>
+                <p className={styles.summaryText}>{leadText}</p>
+              </section>
+            )}
 
             {/* Bottom back button */}
             <div className={styles.backFooter}>
