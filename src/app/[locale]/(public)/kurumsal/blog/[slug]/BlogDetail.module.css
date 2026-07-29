@@ -177,7 +177,7 @@
 /* ── Cover hero (only when a valid coverImage exists) ── */
 .hero {
   position: relative;
-  width: min(100%, 640px);
+  width: min(100%, 520px);
   aspect-ratio: 1 / 1;
   margin: 0 auto clamp(24px, 4vw, 36px);
   border-radius: 16px;

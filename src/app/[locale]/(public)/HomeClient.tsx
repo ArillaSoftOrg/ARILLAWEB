@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import BlogMediaCard from "@/components/blog/BlogMediaCard";
 import HeroBookingForm from "@/components/hero/HeroBookingForm";
+import SiteExampleVisual from "@/components/site-examples/SiteExampleVisual";
 import type { BlogPost } from "@/lib/blog-data";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import {
@@ -557,6 +558,78 @@ function ExampleSolutionsSection() {
 // ─────────────────────────────────────────────
 // Hero Section
 // ─────────────────────────────────────────────
+function SiteExamplesPreviewSection() {
+  const examples = [
+    {
+      title: "Pet Kuaförü — Modern Dönüşüm",
+      sector: "Pet Kuaförü ve Pet Hizmetleri",
+      designCode: "PET-01",
+      href: "/site-ornekleri/pet-kuaforu-pet-hizmetleri/pet-kuaforu-modern-donusum",
+    },
+    {
+      title: "Güzellik — Sade Editoryal",
+      sector: "Güzellik ve Bakım Merkezi",
+      designCode: "GUZ-02",
+      href: "/site-ornekleri/guzellik-bakim-merkezi/guzellik-sade-editoryal",
+    },
+    {
+      title: "Mimarlık — Premium Koyu",
+      sector: "Mimarlık, Dekorasyon ve İnşaat",
+      designCode: "MIM-03",
+      href: "/site-ornekleri/mimarlik-dekorasyon-insaat/mimarlik-dekorasyon-premium-koyu",
+    },
+  ];
+
+  return (
+    <section className="bg-slate-50 py-16 sm:py-20 lg:py-28">
+      <div className="mx-auto max-w-[1280px] px-5 sm:px-6">
+        <AnimatedSection className="mb-10 flex flex-col gap-6 sm:mb-14 sm:flex-row sm:items-end sm:justify-between">
+          <motion.div variants={fadeUp} className="max-w-2xl">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">Site örnekleri</p>
+            <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950 sm:text-5xl">
+              Sektörünüze uygun tasarımı önce görün.
+            </h2>
+            <p className="mt-4 text-base leading-7 text-slate-600">
+              Canlı demoları ve özgün tasarım konseptlerini inceleyin; beğendiğiniz yaklaşımı işletmenize göre uyarlayalım.
+            </p>
+          </motion.div>
+          <motion.div variants={fadeUp}>
+            <Link
+              href="/site-ornekleri"
+              className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-bold text-white"
+            >
+              Tüm tasarımları gör <ArrowRight size={15} />
+            </Link>
+          </motion.div>
+        </AnimatedSection>
+
+        <AnimatedSection className="grid gap-5 md:grid-cols-3">
+          {examples.map((example) => (
+            <motion.div key={example.designCode} variants={scaleIn}>
+              <Link
+                href={example.href}
+                className="group block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+              >
+                <SiteExampleVisual {...example} />
+                <div className="p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-xs font-bold text-blue-600">{example.sector}</span>
+                    <span className="font-mono text-xs font-bold text-slate-500">{example.designCode}</span>
+                  </div>
+                  <h3 className="mt-3 text-lg font-black text-slate-950">{example.title}</h3>
+                  <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue-700">
+                    Tasarımı incele <ArrowRight size={14} className="transition group-hover:translate-x-1" />
+                  </span>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </AnimatedSection>
+      </div>
+    </section>
+  );
+}
+
 function HeroSection() {
   return (
     <section
@@ -1519,6 +1592,7 @@ export default function HomeClient() {
       <TrustStrip />
       <WhyUsSection />
       <ExampleSolutionsSection />
+      <SiteExamplesPreviewSection />
       <ServicesSection settings={settings} />
       <SectoralSoftwareSection />
       <BlogSection />

@@ -1,5 +1,6 @@
 import { PrismaClient, AdminRole, ProjectType, BudgetRange, TargetPlatform } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { CATALOG_EXAMPLES, CATALOG_SECTORS } from './catalog-seed-data';
 
 const prisma = new PrismaClient();
 
@@ -252,6 +253,49 @@ async function main() {
     });
   }
   console.log('✅ Projeler oluşturuldu');
+
+  // Sektörel site örnekleri kataloğu
+  for (const sector of CATALOG_SECTORS) {
+    await prisma.projectCategory.upsert({
+      where: { slug: sector.slug },
+      update: {
+        name: sector.name,
+        description: sector.description,
+        sortOrder: sector.sortOrder,
+        isCatalogSector: true,
+      },
+      create: {
+        name: sector.name,
+        slug: sector.slug,
+        description: sector.description,
+        sortOrder: sector.sortOrder,
+        isCatalogSector: true,
+      },
+    });
+  }
+
+  const catalogCategories = await prisma.projectCategory.findMany({
+    where: { slug: { in: CATALOG_SECTORS.map((sector) => sector.slug) } },
+    select: { id: true, slug: true },
+  });
+  const catalogCategoryIds = new Map(catalogCategories.map((category) => [category.slug, category.id]));
+
+  for (const example of CATALOG_EXAMPLES) {
+    const { categorySlug, ...data } = example;
+    const categoryId = catalogCategoryIds.get(categorySlug);
+    if (!categoryId) continue;
+
+    await prisma.project.upsert({
+      where: { slug: data.slug },
+      update: {},
+      create: {
+        ...data,
+        projectUrl: data.projectUrl,
+        categoryId,
+      },
+    });
+  }
+  console.log('✅ 24 sektörel site örneği oluşturuldu');
 
   // Blog kategorileri
   const blogCategories = [

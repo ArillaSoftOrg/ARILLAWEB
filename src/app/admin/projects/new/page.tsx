@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, FolderKanban } from "lucide-react";
-import { createProject } from "@/lib/project-actions";
+import { createProject, getProjectCategories } from "@/lib/project-actions";
 import CloudinaryUpload from "@/components/admin/CloudinaryUpload";
 import CloudinaryGalleryUpload from "@/components/admin/CloudinaryGalleryUpload";
 
 export default function NewProjectPage() {
     const router = useRouter();
+    const [categories, setCategories] = useState<Awaited<ReturnType<typeof getProjectCategories>>>([]);
 
     const [form, setForm] = useState({
         title: "",
@@ -24,6 +25,15 @@ export default function NewProjectPage() {
         sector: "",
         technologies: "",
         resultMetrics: "",
+        kind: "CLIENT_PROJECT" as "LIVE_DEMO" | "DESIGN_CONCEPT" | "CLIENT_PROJECT",
+        designCode: "",
+        categoryId: "",
+        styleTags: "",
+        recommendedPages: "",
+        featureHighlights: "",
+        customizationNote: "",
+        sourceDesignUrl: "",
+        sortOrder: "0",
         isFeatured: false,
         published: true,
     });
@@ -31,6 +41,10 @@ export default function NewProjectPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [toast, setToast] = useState<string | null>(null);
+
+    useEffect(() => {
+        getProjectCategories().then(setCategories).catch(() => setCategories([]));
+    }, []);
 
     function updateField(
         field: string,
@@ -60,6 +74,15 @@ export default function NewProjectPage() {
                 clientName: form.clientName || undefined,
                 sector: form.sector || undefined,
                 resultMetrics: form.resultMetrics || undefined,
+                kind: form.kind,
+                designCode: form.designCode || undefined,
+                categoryId: form.categoryId || null,
+                styleTags: form.styleTags.split(",").map((item) => item.trim()).filter(Boolean),
+                recommendedPages: form.recommendedPages.split(",").map((item) => item.trim()).filter(Boolean),
+                featureHighlights: form.featureHighlights.split(",").map((item) => item.trim()).filter(Boolean),
+                customizationNote: form.customizationNote || undefined,
+                sourceDesignUrl: form.sourceDesignUrl || undefined,
+                sortOrder: Number(form.sortOrder) || 0,
                 technologies: form.technologies
                     .split(",")
                     .map((item) => item.trim())
@@ -124,6 +147,41 @@ export default function NewProjectPage() {
                     onSubmit={handleSubmit}
                     className="space-y-6 rounded-2xl border border-slate-200 bg-white/[0.03] p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]"
                 >
+                    <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-5">
+                        <h2 className="mb-4 text-lg font-semibold text-white">Site örneği katalog bilgileri</h2>
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <div>
+                                <label className="mb-2 block text-sm font-medium text-slate-300">İçerik türü</label>
+                                <select value={form.kind} onChange={(e) => setForm((prev) => ({ ...prev, kind: e.target.value as typeof form.kind }))} className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white">
+                                    <option value="CLIENT_PROJECT">Yayınlanmış Proje</option>
+                                    <option value="LIVE_DEMO">Canlı Demo</option>
+                                    <option value="DESIGN_CONCEPT">Tasarım Konsepti</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="mb-2 block text-sm font-medium text-slate-300">Tasarım kodu</label>
+                                <input value={form.designCode} onChange={(e) => updateField("designCode", e.target.value.toUpperCase())} placeholder="PET-01" className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white" />
+                            </div>
+                            <div>
+                                <label className="mb-2 block text-sm font-medium text-slate-300">Sektör kategorisi</label>
+                                <select value={form.categoryId} onChange={(e) => updateField("categoryId", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white">
+                                    <option value="">Kategori seçilmedi</option>
+                                    {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="mb-2 block text-sm font-medium text-slate-300">Sıralama</label>
+                                <input type="number" value={form.sortOrder} onChange={(e) => updateField("sortOrder", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white" />
+                            </div>
+                        </div>
+                        <div className="mt-4 space-y-4">
+                            <input value={form.styleTags} onChange={(e) => updateField("styleTags", e.target.value)} placeholder="Stil etiketleri: Modern, Minimal, Premium" className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white" />
+                            <input value={form.recommendedPages} onChange={(e) => updateField("recommendedPages", e.target.value)} placeholder="Önerilen sayfalar: Ana Sayfa, Hizmetler, İletişim" className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white" />
+                            <input value={form.featureHighlights} onChange={(e) => updateField("featureHighlights", e.target.value)} placeholder="Özellikler: Online randevu, Galeri, WhatsApp" className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white" />
+                            <textarea value={form.customizationNote} onChange={(e) => updateField("customizationNote", e.target.value)} placeholder="Neleri değiştirebiliriz?" className="min-h-24 w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white" />
+                            <input value={form.sourceDesignUrl} onChange={(e) => updateField("sourceDesignUrl", e.target.value)} placeholder="Admin için Figma / Stitch kaynak bağlantısı" className="w-full rounded-xl border border-slate-200 bg-[#0b0d12] px-4 py-3 text-sm text-white" />
+                        </div>
+                    </div>
                     <div className="grid gap-6 md:grid-cols-2">
                         <div>
                             <label className="mb-2 block text-sm font-medium text-slate-300">

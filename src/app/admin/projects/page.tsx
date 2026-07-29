@@ -137,6 +137,11 @@ export default function AdminProjectsPage() {
                                             <p className="mt-1 line-clamp-2 text-sm text-slate-600">
                                                 {project.summary}
                                             </p>
+                                            {project.designCode && (
+                                                <p className="mt-2 font-mono text-xs font-bold text-cyan-600">
+                                                    {project.designCode} · {project.kind}
+                                                </p>
+                                            )}
                                         </div>
                                     </div>
 

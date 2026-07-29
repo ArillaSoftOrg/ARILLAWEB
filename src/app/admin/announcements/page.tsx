@@ -157,7 +157,7 @@ export default function AnnouncementsPage() {
         ) : bars.length === 0 ? (
           <div className="p-12 text-center rounded-lg" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>
             <p className="text-lg font-medium mb-2" style={{ color: '#0f172a' }}>Henüz kampanya yok</p>
-            <p className="mb-6" style={{ color: '#64748b' }}>İlk kampanya çubuğunuzu oluşturmak için "Yeni Kampanya" butonuna tıklayın.</p>
+            <p className="mb-6" style={{ color: '#64748b' }}>İlk kampanya çubuğunuzu oluşturmak için &quot;Yeni Kampanya&quot; butonuna tıklayın.</p>
             <button
               onClick={() => goToForm(null)}
               className="flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-white mx-auto transition-opacity hover:opacity-90"

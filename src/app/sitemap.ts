@@ -24,9 +24,15 @@ const STATIC_PATHS = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let posts: { slug: string; updatedAt: Date }[] = [];
   let services: { slug: string; updatedAt: Date }[] = [];
+  let catalogSectors: { slug: string }[] = [];
+  let catalogProjects: {
+    slug: string;
+    updatedAt: Date;
+    category: { slug: string } | null;
+  }[] = [];
 
   try {
-    const [blogPosts, publishedServices] = await prisma.$transaction([
+    const [blogPosts, publishedServices, sectors, projects] = await prisma.$transaction([
       prisma.blogPost.findMany({
         where: { published: true },
         select: { slug: true, updatedAt: true },
@@ -35,9 +41,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         where: { published: true },
         select: { slug: true, updatedAt: true },
       }),
+      prisma.projectCategory.findMany({
+        where: { isCatalogSector: true },
+        select: { slug: true },
+      }),
+      prisma.project.findMany({
+        where: {
+          published: true,
+          designCode: { not: null },
+          category: { isCatalogSector: true },
+        },
+        select: {
+          slug: true,
+          updatedAt: true,
+          category: { select: { slug: true } },
+        },
+      }),
     ]);
     posts = blogPosts;
     services = publishedServices;
+    catalogSectors = sectors;
+    catalogProjects = projects;
   } catch {
     // Database unavailable during build — static routes still present
   }
@@ -78,6 +102,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
       });
     }
+  }
+
+  entries.push({
+    url: `${SITE_URL}/tr/site-ornekleri`,
+    lastModified: STATIC_LAST_MODIFIED,
+    changeFrequency: 'weekly',
+    priority: 0.9,
+  });
+
+  for (const sector of catalogSectors) {
+    entries.push({
+      url: `${SITE_URL}/tr/site-ornekleri/${sector.slug}`,
+      lastModified: STATIC_LAST_MODIFIED,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    });
+  }
+
+  for (const project of catalogProjects) {
+    if (!project.category) continue;
+    entries.push({
+      url: `${SITE_URL}/tr/site-ornekleri/${project.category.slug}/${project.slug}`,
+      lastModified: project.updatedAt,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    });
   }
 
   return Array.from(new Map(entries.map((e) => [e.url, e])).values());

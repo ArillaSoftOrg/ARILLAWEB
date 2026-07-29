@@ -22,8 +22,13 @@ export default async function PublicLayout({ children }: { children: React.React
   const pathname = headerList.get('x-pathname') ?? '/';
   const publicPath = stripLocale(pathname);
   const isBlogPath = publicPath === '/kurumsal/blog' || publicPath.startsWith('/kurumsal/blog/');
+  const isCatalogPath =
+    publicPath === '/site-ornekleri' ||
+    publicPath.startsWith('/site-ornekleri/') ||
+    publicPath.startsWith('/demo-siteler/');
   const isAdminPreview = await hasValidAdminSession();
-  const showMaintenance = PUBLIC_DEVELOPMENT_MODE && !isAdminPreview && !isBlogPath;
+  const showMaintenance =
+    PUBLIC_DEVELOPMENT_MODE && !isAdminPreview && !isBlogPath && !isCatalogPath;
   const pathSegments = pathname.split('/').filter(Boolean);
   const locale = routing.locales.includes(pathSegments[0] as (typeof routing.locales)[number])
     ? pathSegments[0]
@@ -37,7 +42,11 @@ export default async function PublicLayout({ children }: { children: React.React
   return (
     <CookieConsentProvider>
       <div className="flex flex-col min-h-screen">
-        <Navbar developerLoginOnly={PUBLIC_DEVELOPMENT_MODE && !isAdminPreview} />
+        <Navbar
+          developerLoginOnly={
+            PUBLIC_DEVELOPMENT_MODE && !isAdminPreview && !isCatalogPath
+          }
+        />
         {!showMaintenance && <AnnouncementBar configs={announcementConfigs} />}
         <main className="flex-1" style={{ paddingTop: 'var(--bar-h, 0px)' }}>
           {showMaintenance ? <MaintenanceNotice locale={locale} /> : children}

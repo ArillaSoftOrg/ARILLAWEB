@@ -33,6 +33,9 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const NAV_ITEMS: NavItem[] = [
+    ...(locale === 'tr'
+      ? [{ labelKey: 'siteOrnekleri', href: '/site-ornekleri' } satisfies NavItem]
+      : []),
     {
       labelKey: 'sektorelYazilimlar',
       children: [
@@ -90,6 +93,9 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
   }
 
   const otherLocale = locale === 'tr' ? 'en' : 'tr';
+  const showLocaleSwitcher =
+    !pathname.startsWith('/site-ornekleri') &&
+    !pathname.startsWith('/demo-siteler');
 
   if (developerLoginOnly) {
     return (
@@ -495,33 +501,35 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
           {/* CTA + locale switcher + mobile toggle — right */}
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px' }}>
             {/* Locale switcher */}
-            <Link
-              href={pathname}
-              locale={otherLocale}
-              className="hidden lg:inline-flex items-center"
-              style={{
-                padding: '6px 12px',
-                borderRadius: '6px',
-                fontSize: '13px',
-                fontWeight: 600,
-                textDecoration: 'none',
-                color: '#64748b',
-                background: 'transparent',
-                border: '1px solid #e2e8f0',
-                transition: 'color 0.2s ease, border-color 0.2s ease',
-                textTransform: 'uppercase',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#7c3aed';
-                e.currentTarget.style.borderColor = '#7c3aed';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#64748b';
-                e.currentTarget.style.borderColor = '#e2e8f0';
-              }}
-            >
-              {otherLocale.toUpperCase()}
-            </Link>
+            {showLocaleSwitcher && (
+              <Link
+                href={pathname}
+                locale={otherLocale}
+                className="hidden lg:inline-flex items-center"
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  color: '#64748b',
+                  background: 'transparent',
+                  border: '1px solid #e2e8f0',
+                  transition: 'color 0.2s ease, border-color 0.2s ease',
+                  textTransform: 'uppercase',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#7c3aed';
+                  e.currentTarget.style.borderColor = '#7c3aed';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#64748b';
+                  e.currentTarget.style.borderColor = '#e2e8f0';
+                }}
+              >
+                {otherLocale.toUpperCase()}
+              </Link>
+            )}
 
             <Link
               href="/teklif-al"
@@ -699,26 +707,28 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
             })}
 
             {/* Locale switcher in mobile */}
-            <Link
-              href={pathname}
-              locale={otherLocale}
-              onClick={() => setIsOpen(false)}
-              style={{
-                marginTop: '4px',
-                padding: '10px 14px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: 500,
-                color: '#94a3b8',
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.1)',
-                textDecoration: 'none',
-                textAlign: 'center',
-                textTransform: 'uppercase',
-              }}
-            >
-              {otherLocale.toUpperCase()}
-            </Link>
+            {showLocaleSwitcher && (
+              <Link
+                href={pathname}
+                locale={otherLocale}
+                onClick={() => setIsOpen(false)}
+                style={{
+                  marginTop: '4px',
+                  padding: '10px 14px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#94a3b8',
+                  background: 'transparent',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  textDecoration: 'none',
+                  textAlign: 'center',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {otherLocale.toUpperCase()}
+              </Link>
+            )}
 
             <Link
               href="/teklif-al"

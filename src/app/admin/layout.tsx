@@ -14,6 +14,7 @@ import {
   Settings,
   Megaphone,
   HelpCircle,
+  Images,
   ChevronRight,
   Menu,
   X,
@@ -43,6 +44,12 @@ const navItems = [
     label: "Projects",
     href: "/admin/projects",
     icon: FolderKanban,
+    exact: false,
+  },
+  {
+    label: "Tasarım Talepleri",
+    href: "/admin/design-inquiries",
+    icon: Images,
     exact: false,
   },
   {
