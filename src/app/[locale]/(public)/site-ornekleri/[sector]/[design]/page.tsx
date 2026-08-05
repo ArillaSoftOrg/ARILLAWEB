@@ -8,6 +8,7 @@ import { getCatalogProject } from "@/lib/project-actions";
 import ExampleKindBadge from "@/components/site-examples/ExampleKindBadge";
 import SiteExampleVisual from "@/components/site-examples/SiteExampleVisual";
 import DesignInquiryForm from "@/components/site-examples/DesignInquiryForm";
+import LivePreviewSection from "@/components/site-examples/LivePreviewSection";
 
 type Props = { params: Promise<{ locale: string; sector: string; design: string }> };
 
@@ -106,6 +107,8 @@ export default async function SiteExampleDetailPage({ params }: Props) {
             detailUrl={`${SITE_URL}/tr/site-ornekleri/${sector}/${design}`}
           />
         </section>
+
+        <LivePreviewSection sector={sector} design={design} title={project.title} />
 
         <section className="mt-16">
           {screenshots.length > 0 ? (
