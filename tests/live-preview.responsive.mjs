@@ -31,19 +31,43 @@ const VIEWPORTS = [
 ];
 
 /** A responsive stand-in for the reference site, served locally. */
+// Deliberately content-rich: the "real page content" assertion requires enough
+// text and elements to tell a working site apart from an error or challenge
+// page, and the fixture has to clear that same bar.
+const FIXTURE_CARDS = [
+  ["Waterfront Residence", "Four bedrooms overlooking the marina, finished in oak and travertine."],
+  ["City Penthouse", "Panoramic glazing, private lift access and a landscaped roof terrace."],
+  ["Garden Townhouse", "A quiet courtyard home arranged over three light-filled floors."],
+  ["Coastal Villa", "Terraced gardens stepping down to a private stretch of shoreline."],
+  ["Historic Loft", "Restored brickwork and steel windows in a converted riverside warehouse."],
+  ["Country Estate", "Sixty acres of parkland, stables and a fully restored manor house."],
+];
+
 const FIXTURE_HTML = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fixture Reference Site</title>
 <style>
-  body{font-family:system-ui;margin:0}
-  header{padding:24px;background:#0f172a;color:#fff}
+  body{font-family:system-ui;margin:0;color:#0f172a}
+  header{padding:48px 24px;background:#0f172a;color:#fff}
+  h1{margin:0 0 12px;font-size:34px}
   .grid{display:grid;gap:16px;padding:24px;grid-template-columns:repeat(3,1fr)}
   @media (max-width:800px){.grid{grid-template-columns:1fr}}
-  .card{background:#f1f5f9;padding:32px;border-radius:12px}
+  .card{background:#f1f5f9;padding:28px;border-radius:12px}
+  .card h2{margin:0 0 8px;font-size:19px}
+  .card p{margin:0;line-height:1.6;color:#475569}
+  footer{padding:32px 24px;background:#f8fafc;color:#64748b}
 </style></head>
-<body><header><h1>Fixture Reference Site</h1></header>
-<div class="grid"><div class="card">A</div><div class="card">B</div><div class="card">C</div></div>
+<body>
+<header>
+  <h1>Fixture Reference Site</h1>
+  <p>A stand-in reference design used by the automated preview test. It exists so the
+     suite can run offline without embedding a real third-party website.</p>
+</header>
+<main class="grid">
+${FIXTURE_CARDS.map(([t, d]) => `  <article class="card"><h2>${t}</h2><p>${d}</p></article>`).join("\n")}
+</main>
+<footer><p>Fixture footer — not a real listing service.</p></footer>
 </body></html>`;
 
 const results = [];
@@ -68,6 +92,39 @@ async function clickUntil(page, locator, condition, what, attempts = 5) {
     }
   }
   throw new Error(`"${what}" did not take effect after ${attempts} clicks`);
+}
+
+/** Markers of an error page or a bot-protection interstitial rather than the site. */
+const BAD_CONTENT = [
+  /access denied/i,
+  /javascript is disabled/i,
+  /verify that you'?re not a robot/i,
+  /are you a human/i,
+  /attention required/i,
+  /\b(403|404|502|503) (forbidden|not found|bad gateway|unavailable)\b/i,
+];
+
+/** Reads the embedded document. Playwright can cross the origin boundary here. */
+async function readFrameContent(page) {
+  const frame = page.frames().find((f) => f !== page.mainFrame());
+  if (!frame) return { ok: false, reason: "no child frame attached" };
+  try {
+    const info = await frame.evaluate(() => ({
+      title: document.title,
+      text: (document.body?.innerText || "").trim(),
+      elements: document.querySelectorAll("*").length,
+    }));
+    const suspicious = BAD_CONTENT.find((re) => re.test(info.title) || re.test(info.text.slice(0, 800)));
+    if (suspicious) return { ok: false, reason: `challenge/error page: ${suspicious}` };
+    // Reference points: the AWS WAF challenge page is ~13 elements / ~150 chars;
+    // the fixture is ~31 / ~740; the live Zafron site ~930 / ~5250.
+    if (info.text.length < 150 || info.elements < 25) {
+      return { ok: false, reason: `too sparse (${info.text.length} chars, ${info.elements} els)` };
+    }
+    return { ok: true, textLen: info.text.length, elements: info.elements };
+  } catch (err) {
+    return { ok: false, reason: `frame unreadable: ${err.message.slice(0, 80)}` };
+  }
 }
 
 async function waitForServer(url, timeoutMs = 120000) {
@@ -116,7 +173,8 @@ async function run() {
       async () => (await page.locator("iframe").count()) === 1,
       "load preview"
     );
-    await page.waitForTimeout(1500);
+    // A real third-party site needs far longer to paint than the fixture.
+    await page.waitForTimeout(useReal ? 10000 : 1500);
 
     check(vp.name, "exactly one iframe after load", (await page.locator("iframe").count()) === 1);
 
@@ -141,6 +199,29 @@ async function run() {
     });
     check(vp.name, "compact panel stays within container", contained);
 
+    // The compact frame must be inert: no pointer events, not focusable, hidden
+    // from assistive tech (the overlay button is the real control).
+    const inert = await page.evaluate(() => {
+      const f = document.querySelector("iframe");
+      const wrapper = f.parentElement;
+      return (
+        getComputedStyle(f).pointerEvents === "none" &&
+        getComputedStyle(wrapper).pointerEvents === "none" &&
+        f.tabIndex === -1 &&
+        wrapper.getAttribute("aria-hidden") === "true"
+      );
+    });
+    check(vp.name, "compact preview non-interactive", inert);
+
+    // Real third-party content, not an error page or a bot challenge.
+    const content = await readFrameContent(page);
+    check(
+      vp.name,
+      "iframe shows real page content",
+      content.ok,
+      content.ok ? `${content.textLen} chars, ${content.elements} els` : content.reason
+    );
+
     // --- modal ------------------------------------------------------------
     const openBtn = page.getByRole("button", { name: "Tasarımı büyük önizlemede aç" });
     await clickUntil(
@@ -151,7 +232,7 @@ async function run() {
     );
     const dialog = page.getByRole("dialog");
     await dialog.waitFor({ state: "visible", timeout: 10000 });
-    await page.waitForTimeout(1200);
+    await page.waitForTimeout(useReal ? 7000 : 1200);
 
     check(
       vp.name,
@@ -170,6 +251,13 @@ async function run() {
       );
     });
     check(vp.name, "modal within viewport", inViewport);
+
+    // Unlike the compact panel, the modal frame is meant to be usable.
+    const modalInteractive = await page.evaluate(() => {
+      const f = document.querySelector('[role="dialog"] iframe');
+      return !!f && getComputedStyle(f).pointerEvents !== "none";
+    });
+    check(vp.name, "modal iframe interactive", modalInteractive);
 
     // The dialog's close control is labelled by an sr-only "Kapat" span.
     const closeBtn = dialog.getByRole("button", { name: "Kapat" });
@@ -194,7 +282,7 @@ async function run() {
       const box = await b.boundingBox();
       if (!box || box.width < 24 || box.height < 20) controlsUsable = false;
       await b.click();
-      await page.waitForTimeout(400);
+      await page.waitForTimeout(useReal ? 3000 : 400);
       if ((await b.getAttribute("aria-pressed")) !== "true") controlsUsable = false;
       if ((await page.locator("iframe").count()) !== 1) controlsUsable = false;
     }
@@ -228,11 +316,15 @@ const fixtureServer = createServer((_req, res) => {
 // the real PID from the teardown below.
 const nextBin = fileURLToPath(new URL("../node_modules/next/dist/bin/next", import.meta.url));
 
+// PREVIEW_REAL=1 exercises the URL actually configured in
+// design-preview-config.ts (a real third-party site). Default is the local
+// fixture, so routine runs stay hermetic and offline.
+const useReal = process.env.PREVIEW_REAL === "1";
+
 const app = spawn(process.execPath, [nextBin, "dev", "-p", String(APP_PORT)], {
-  env: {
-    ...process.env,
-    DESIGN_PREVIEW_TEST_URL: `http://localhost:${FIXTURE_PORT}/`,
-  },
+  env: useReal
+    ? { ...process.env }
+    : { ...process.env, DESIGN_PREVIEW_TEST_URL: `http://localhost:${FIXTURE_PORT}/` },
   stdio: "ignore",
   detached: process.platform !== "win32",
 });
@@ -266,7 +358,7 @@ process.on("SIGINT", () => {
 
 try {
   await new Promise((r) => fixtureServer.listen(FIXTURE_PORT, "127.0.0.1", r));
-  console.log(`fixture site on :${FIXTURE_PORT}`);
+  console.log(useReal ? "target: REAL configured URL" : `target: local fixture on :${FIXTURE_PORT}`);
   console.log("starting next dev…");
   await waitForServer(APP_URL + ROUTE);
   await run();

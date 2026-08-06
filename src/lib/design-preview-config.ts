@@ -30,8 +30,8 @@ export type DesignPreview = {
  */
 export const DESIGN_PREVIEWS: Record<string, DesignPreview> = {
   "emlak-danismanligi/emlak-danismanligi-modern-donusum": {
-    url: PREVIEW_URL_PLACEHOLDER, // <<< REPLACE THIS
-    label: "referans-tasarim.com",
+    url: "https://zafron.framer.website/",
+    label: "zafron.framer.website",
   },
 };
 
