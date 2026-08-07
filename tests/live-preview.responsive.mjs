@@ -13,6 +13,7 @@
 import { createServer } from "node:http";
 import { spawn, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { connect } from "node:net";
 import { chromium } from "playwright";
 
 const ROUTE = "/tr/site-ornekleri/emlak-danismanligi/emlak-danismanligi-modern-donusum";
@@ -125,6 +126,38 @@ async function readFrameContent(page) {
   } catch (err) {
     return { ok: false, reason: `frame unreadable: ${err.message.slice(0, 80)}` };
   }
+}
+
+function portInUse(port) {
+  return new Promise((resolve) => {
+    const socket = connect({ port, host: "127.0.0.1" });
+    socket.setTimeout(1500);
+    socket.on("connect", () => {
+      socket.destroy();
+      resolve(true);
+    });
+    socket.on("timeout", () => {
+      socket.destroy();
+      resolve(false);
+    });
+    socket.on("error", () => resolve(false));
+  });
+}
+
+/**
+ * Back-to-back runs used to fail intermittently: the previous run's dev server
+ * had not released the port yet, Next refused to start a second one, and the
+ * readiness poll then timed out against nothing. Wait for a clear port instead.
+ */
+async function waitForPortFree(port, timeoutMs = 45000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (!(await portInUse(port))) return;
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  throw new Error(
+    `Port ${port} is still in use — a previous dev server did not exit. Kill it and re-run.`
+  );
 }
 
 async function waitForServer(url, timeoutMs = 120000) {
@@ -259,6 +292,37 @@ async function run() {
     });
     check(vp.name, "modal iframe interactive", modalInteractive);
 
+    // The sandbox omits allow-top-navigation/allow-popups, so nothing inside the
+    // frame may navigate the Arilla page away. Prove it rather than assume it:
+    // inject a target="_top" link and a window.open into the framed document,
+    // trigger both, and confirm we are still on our own URL.
+    const urlBefore = page.url();
+    const frame = page.frames().find((f) => f !== page.mainFrame());
+    if (frame) {
+      await frame
+        .evaluate(() => {
+          const a = document.createElement("a");
+          a.href = "https://example.com/hijack";
+          a.target = "_top";
+          a.textContent = "escape";
+          document.body.appendChild(a);
+          a.click();
+          try {
+            window.open("https://example.com/popup", "_blank");
+          } catch {
+            /* blocked, as intended */
+          }
+        })
+        .catch(() => {});
+    }
+    await page.waitForTimeout(2500);
+    check(
+      vp.name,
+      "framed site cannot navigate top-level page",
+      page.url() === urlBefore && (await page.context().pages()).length === 1,
+      page.url() === urlBefore ? "" : `navigated to ${page.url()}`
+    );
+
     // The dialog's close control is labelled by an sr-only "Kapat" span.
     const closeBtn = dialog.getByRole("button", { name: "Kapat" });
     const closeBox = await closeBtn.boundingBox().catch(() => null);
@@ -321,15 +385,23 @@ const nextBin = fileURLToPath(new URL("../node_modules/next/dist/bin/next", impo
 // fixture, so routine runs stay hermetic and offline.
 const useReal = process.env.PREVIEW_REAL === "1";
 
-const app = spawn(process.execPath, [nextBin, "dev", "-p", String(APP_PORT)], {
-  env: useReal
-    ? { ...process.env }
-    : { ...process.env, DESIGN_PREVIEW_TEST_URL: `http://localhost:${FIXTURE_PORT}/` },
-  stdio: "ignore",
-  detached: process.platform !== "win32",
-});
+let app = null;
+
+function startApp() {
+  return spawn(process.execPath, [nextBin, "dev", "-p", String(APP_PORT)], {
+    env: useReal
+      ? { ...process.env }
+      : { ...process.env, DESIGN_PREVIEW_TEST_URL: `http://localhost:${FIXTURE_PORT}/` },
+    stdio: "ignore",
+    detached: process.platform !== "win32",
+  });
+}
 
 function shutdown() {
+  if (!app) {
+    fixtureServer.close();
+    return;
+  }
   // On Windows `child.kill()` only kills the npx shim, leaving the real dev
   // server alive. Next then refuses to start on the next run ("Another next dev
   // server is already running") and the following run silently attaches to the
@@ -359,7 +431,9 @@ process.on("SIGINT", () => {
 try {
   await new Promise((r) => fixtureServer.listen(FIXTURE_PORT, "127.0.0.1", r));
   console.log(useReal ? "target: REAL configured URL" : `target: local fixture on :${FIXTURE_PORT}`);
+  await waitForPortFree(APP_PORT);
   console.log("starting next dev…");
+  app = startApp();
   await waitForServer(APP_URL + ROUTE);
   await run();
 } catch (err) {
