@@ -12,6 +12,7 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "test:preview": "node tests/live-preview.responsive.mjs",
+    "verify:frame": "node tests/verify-frameable.mjs",
     "db:studio": "prisma studio"
   },
   "dependencies": {
