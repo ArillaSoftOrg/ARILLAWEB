@@ -14,7 +14,11 @@ export default async function LivePreviewSection({ sector, design, title }: Live
   // stays exactly as it is. See src/lib/design-preview-config.ts.
   if (!preview) return null;
 
-  const embeddable = await canBeFramed(preview.url);
+  const embeddable = await canBeFramed(preview.referencePreviewUrl);
+
+  const removalRequestHref = `mailto:info@arillasoft.com?subject=${encodeURIComponent(
+    `Kaldırma Talebi — ${preview.referenceTemplateName}`,
+  )}`;
 
   return (
     <section className="mt-16">
@@ -27,15 +31,45 @@ export default async function LivePreviewSection({ sector, design, title }: Live
       <p className="mt-3 max-w-3xl text-base leading-7 text-slate-600">
         Aşağıdaki önizleme, bu tasarım yönüne örnek olarak seçilmiş{" "}
         <strong className="font-bold text-slate-900">harici bir web sitesidir</strong>. ArillaSoft
-        tarafından geliştirilmemiştir; içerik ve tüm haklar ilgili siteye aittir. Yalnızca tasarım
-        dili hakkında fikir vermek amacıyla gösterilir.
+        tarafından geliştirilmemiştir; içerik ve tüm haklar ilgili siteye aittir. Yalnızca hangi
+        tasarım yönünü tercih edebileceğiniz konusunda size fikir vermek amacıyla gösterilir.
       </p>
+
+      <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+        <span className="font-semibold text-slate-700">
+          {preview.referenceMarketplaceUrl ? (
+            <a
+              href={preview.referenceMarketplaceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-slate-300 underline-offset-2 hover:text-blue-700 hover:decoration-blue-400"
+            >
+              {preview.referenceTemplateName}
+            </a>
+          ) : (
+            preview.referenceTemplateName
+          )}
+        </span>
+        {preview.referenceCreator && <span className="text-slate-400">— {preview.referenceCreator}</span>}
+        <span className="text-slate-300">·</span>
+        <span className="text-slate-500">{preview.referencePlatform}</span>
+        <span className="text-slate-300">·</span>
+        <a href={removalRequestHref} className="text-slate-500 underline decoration-slate-300 underline-offset-2 hover:text-slate-800">
+          Kaldırma Talebi
+        </a>
+      </div>
 
       <div className="mt-6">
         {embeddable ? (
-          <LivePreviewFrame url={preview.url} label={preview.label} title={title} />
+          <LivePreviewFrame
+            url={preview.referencePreviewUrl}
+            label={preview.referenceLabel}
+            title={title}
+            templateName={preview.referenceTemplateName}
+            creator={preview.referenceCreator}
+          />
         ) : (
-          <PreviewUnavailable url={preview.url} />
+          <PreviewUnavailable url={preview.referencePreviewUrl} />
         )}
       </div>
     </section>

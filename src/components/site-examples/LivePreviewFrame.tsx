@@ -28,9 +28,15 @@ type LivePreviewFrameProps = {
   url: string;
   label: string;
   title: string;
+  /** Public name of the external template being shown, e.g. "Groomix - Pet
+   *  Grooming Framer Template". Surfaced in the modal so the attribution is
+   *  visible in the larger, more visited view, not just the compact panel. */
+  templateName: string;
+  /** Template author/studio, when the marketplace listing credits one. */
+  creator?: string;
 };
 
-export default function LivePreviewFrame({ url, label, title }: LivePreviewFrameProps) {
+export default function LivePreviewFrame({ url, label, title, templateName, creator }: LivePreviewFrameProps) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [open, setOpen] = useState(false);
   const [viewport, setViewport] = useState<Viewport>("desktop");
@@ -150,7 +156,9 @@ export default function LivePreviewFrame({ url, label, title }: LivePreviewFrame
             <div className="min-w-0">
               <DialogTitle className="truncate">{title}</DialogTitle>
               <DialogDescription className="mt-0.5 truncate text-xs">
-                {label} — harici referans site, ArillaSoft tarafından geliştirilmemiştir
+                {templateName}
+                {creator ? ` — ${creator}` : ""} · harici referans site, ArillaSoft tarafından
+                geliştirilmemiştir
               </DialogDescription>
             </div>
 
