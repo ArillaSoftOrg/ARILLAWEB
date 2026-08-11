@@ -1,3 +1,5 @@
+import { DESIGN_DNA_BY_CODE } from "./catalog-design-dna";
+
 export const CATALOG_SECTORS = [
   {
     name: "Pet Kuaförü ve Pet Hizmetleri",
@@ -128,6 +130,7 @@ export const CATALOG_EXAMPLES = CATALOG_SECTORS.flatMap((sector) =>
       featureHighlights: [...sector.features],
       customizationNote:
         "Renkler, yazı karakterleri, fotoğraflar, sayfa yapısı, formlar ve işlevler markanıza ve çalışma şeklinize göre değiştirilebilir.",
+      designDna: DESIGN_DNA_BY_CODE[designCode],
       technologies: ["Next.js", "Mobil Uyumlu", "SEO Altyapısı"],
       projectUrl: style.kind === "LIVE_DEMO" ? `/tr/demo-siteler/${slug}` : null,
       sortOrder: sector.sortOrder * 10 + styleIndex,

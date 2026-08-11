@@ -75,6 +75,7 @@ model Project {
   recommendedPages  String[]         @default([])
   featureHighlights String[]         @default([])
   customizationNote String?
+  designDna         Json?
   sourceDesignUrl   String?
   sortOrder         Int              @default(0)
   isFeatured        Boolean          @default(false)

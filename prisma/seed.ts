@@ -287,7 +287,9 @@ async function main() {
 
     await prisma.project.upsert({
       where: { slug: data.slug },
-      update: {},
+      update: {
+        designDna: data.designDna,
+      },
       create: {
         ...data,
         projectUrl: data.projectUrl,

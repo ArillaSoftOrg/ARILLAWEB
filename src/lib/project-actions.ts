@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import type { ProjectKind } from "@prisma/client";
+import type { Prisma, ProjectKind } from "@prisma/client";
 
 export type ProjectFormData = {
     title: string;
@@ -22,6 +22,7 @@ export type ProjectFormData = {
     recommendedPages?: string[];
     featureHighlights?: string[];
     customizationNote?: string;
+    designDna?: Prisma.InputJsonValue | null;
     sourceDesignUrl?: string;
     sortOrder?: number;
     isFeatured?: boolean;
@@ -191,6 +192,7 @@ export async function createProject(data: ProjectFormData) {
             recommendedPages: data.recommendedPages || [],
             featureHighlights: data.featureHighlights || [],
             customizationNote: data.customizationNote || null,
+            designDna: data.designDna ?? undefined,
             sourceDesignUrl: data.sourceDesignUrl || null,
             sortOrder: data.sortOrder ?? 0,
             isFeatured: data.isFeatured ?? false,
@@ -224,6 +226,7 @@ export async function updateProject(id: string, data: ProjectFormData) {
             recommendedPages: data.recommendedPages || [],
             featureHighlights: data.featureHighlights || [],
             customizationNote: data.customizationNote || null,
+            designDna: data.designDna ?? undefined,
             sourceDesignUrl: data.sourceDesignUrl || null,
             sortOrder: data.sortOrder ?? 0,
             isFeatured: data.isFeatured ?? false,
