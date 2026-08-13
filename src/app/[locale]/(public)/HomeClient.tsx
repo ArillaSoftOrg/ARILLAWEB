@@ -3,11 +3,12 @@
 import AnimatedBrand from "@/components/AnimatedBrand";
 import SupportChatWidget from "@/components/SupportChatWidget";
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import BlogMediaCard from "@/components/blog/BlogMediaCard";
 import HeroBookingForm from "@/components/hero/HeroBookingForm";
-import SiteExampleVisual from "@/components/site-examples/SiteExampleVisual";
 import type { BlogPost } from "@/lib/blog-data";
+import { getSiteExampleDisplay } from "@/lib/site-example-display";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import {
   QrCode,
@@ -604,26 +605,37 @@ function SiteExamplesPreviewSection() {
         </AnimatedSection>
 
         <AnimatedSection className="grid gap-5 md:grid-cols-3">
-          {examples.map((example) => (
-            <motion.div key={example.designCode} variants={scaleIn}>
-              <Link
-                href={example.href}
-                className="group block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-              >
-                <SiteExampleVisual {...example} />
-                <div className="p-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="text-xs font-bold text-blue-600">{example.sector}</span>
-                    <span className="font-mono text-xs font-bold text-slate-500">{example.designCode}</span>
+          {examples.map((example) => {
+            const display = getSiteExampleDisplay({ ...example, summary: "" });
+            if (!display.previewSrc) return null;
+
+            return (
+              <motion.div key={example.designCode} variants={scaleIn}>
+                <Link
+                  href={example.href}
+                  className="group block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+                    <Image
+                      src={display.previewSrc}
+                      alt={`${display.title} site önizlemesi`}
+                      fill
+                      loading="lazy"
+                      className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
                   </div>
-                  <h3 className="mt-3 text-lg font-black text-slate-950">{example.title}</h3>
-                  <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue-700">
-                    Tasarımı incele <ArrowRight size={14} className="transition group-hover:translate-x-1" />
-                  </span>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                  <div className="p-5">
+                    <h3 className="text-lg font-black text-slate-950">{display.title}</h3>
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">{display.description}</p>
+                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue-700">
+                      Tasarımı incele <ArrowRight size={14} className="transition group-hover:translate-x-1" />
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
         </AnimatedSection>
       </div>
     </section>

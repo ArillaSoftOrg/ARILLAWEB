@@ -55,12 +55,13 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
   }, [open]);
 
   // Scale the fixed 1440x900 frame down to whatever width the panel has.
-  // 1440x900 is exactly 16:10, so it fills the panel with no letterboxing.
+  // The compact panel is shorter than the source viewport and clips to a hero preview.
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
     const observer = new ResizeObserver(([entry]) => {
-      setPanelScale(entry.contentRect.width / VIEWPORTS.desktop.width);
+      const { width, height } = entry.contentRect;
+      setPanelScale(Math.min(width / VIEWPORTS.desktop.width, height / VIEWPORTS.desktop.height));
     });
     observer.observe(panel);
     return () => observer.disconnect();
@@ -90,26 +91,32 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
       <div className="overflow-hidden rounded-[14px] border border-black/10 bg-[#EEEEEC]">
         <BrowserChrome label={label} />
 
-        <div ref={panelRef} className="relative aspect-[16/10] w-full overflow-hidden bg-white">
+        <div ref={panelRef} className="relative aspect-[16/9] w-full overflow-hidden bg-white">
           {showFrame && panelScale > 0 && (
-            <div aria-hidden className="pointer-events-none absolute inset-0">
-              <iframe
-                src={url}
-                title={`${title} — canlı tasarım önizlemesi`}
-                sandbox={SANDBOX}
-                referrerPolicy="no-referrer"
-                loading="eager"
-                tabIndex={-1}
-                onLoad={handleLoad}
-                onError={() => setPhase("failed")}
-                style={{
-                  width: VIEWPORTS.desktop.width,
-                  height: VIEWPORTS.desktop.height,
-                  transform: `scale(${panelScale})`,
-                  transformOrigin: "top left",
-                  border: 0,
-                }}
-              />
+            <div aria-hidden className="pointer-events-none absolute inset-0 flex items-start justify-center">
+              <div
+                aria-hidden
+                className="pointer-events-none"
+                style={{ width: VIEWPORTS.desktop.width * panelScale, height: VIEWPORTS.desktop.height * panelScale }}
+              >
+                <iframe
+                  src={url}
+                  title={`${title} — canlı tasarım önizlemesi`}
+                  sandbox={SANDBOX}
+                  referrerPolicy="no-referrer"
+                  loading="eager"
+                  tabIndex={-1}
+                  onLoad={handleLoad}
+                  onError={() => setPhase("failed")}
+                  style={{
+                    width: VIEWPORTS.desktop.width,
+                    height: VIEWPORTS.desktop.height,
+                    transform: `scale(${panelScale})`,
+                    transformOrigin: "top left",
+                    border: 0,
+                  }}
+                />
+              </div>
             </div>
           )}
 
