@@ -188,28 +188,22 @@ async function run() {
     const reject = page.getByRole("button", { name: /Yalnızca Zorunlu/i });
     if (await reject.count()) await reject.first().click().catch(() => {});
 
-    const section = page.locator("section", { hasText: "Canlı Tasarım Önizlemesi" }).first();
+    const section = page.locator("section", { hasText: /Canl.*Tasar.*nizlemesi/i }).first();
     await section.scrollIntoViewIfNeeded();
 
-    // --- before any user interaction -------------------------------------
-    check(vp.name, "no iframe before interaction", (await page.locator("iframe").count()) === 0);
-
-    const trigger = page.getByRole("button", { name: "Canlı önizlemeyi yükle" });
-    check(vp.name, "lazy-load trigger present", (await trigger.count()) === 1);
-
     // --- compact panel ----------------------------------------------------
-    // The route's PageTransition (framer-motion) can swallow a click landing
-    // mid-animation, so retry until the frame actually mounts.
-    await clickUntil(
-      page,
-      trigger,
-      async () => (await page.locator("iframe").count()) === 1,
-      "load preview"
+    check(
+      vp.name,
+      "manual load trigger removed",
+      (await page.getByRole("button", { name: /Canl.*nizlemeyi y.*kle/i }).count()) === 0
     );
+    await page.waitForFunction(() => document.querySelectorAll("iframe").length === 1, null, {
+      timeout: 10000,
+    });
     // A real third-party site needs far longer to paint than the fixture.
     await page.waitForTimeout(useReal ? 10000 : 1500);
 
-    check(vp.name, "exactly one iframe after load", (await page.locator("iframe").count()) === 1);
+    check(vp.name, "exactly one iframe auto-mounted", (await page.locator("iframe").count()) === 1);
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth > document.documentElement.clientWidth
@@ -256,7 +250,7 @@ async function run() {
     );
 
     // --- modal ------------------------------------------------------------
-    const openBtn = page.getByRole("button", { name: "Tasarımı büyük önizlemede aç" });
+    const openBtn = page.getByRole("button", { name: /Tasar.*b.*y.*k.*nizlemede a/i });
     await clickUntil(
       page,
       openBtn,

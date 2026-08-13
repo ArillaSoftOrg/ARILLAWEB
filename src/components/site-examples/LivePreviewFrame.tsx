@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ExternalLink, Maximize2, Monitor, Smartphone, Tablet, TriangleAlert } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 type Viewport = "desktop" | "tablet" | "mobile";
@@ -37,7 +36,7 @@ type LivePreviewFrameProps = {
 };
 
 export default function LivePreviewFrame({ url, label, title, templateName, creator }: LivePreviewFrameProps) {
-  const [phase, setPhase] = useState<Phase>("idle");
+  const [phase, setPhase] = useState<Phase>("loading");
   const [open, setOpen] = useState(false);
   const [viewport, setViewport] = useState<Viewport>("desktop");
 
@@ -99,7 +98,7 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
                 title={`${title} — canlı tasarım önizlemesi`}
                 sandbox={SANDBOX}
                 referrerPolicy="no-referrer"
-                loading="lazy"
+                loading="eager"
                 tabIndex={-1}
                 onLoad={handleLoad}
                 onError={() => setPhase("failed")}
@@ -114,22 +113,21 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
             </div>
           )}
 
-          {phase === "idle" && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#FAF9F7] px-6 text-center">
-              <p className="max-w-sm text-sm leading-6 text-[#39415A]">
-                Bu harici referans siteyi sayfamızdan ayrılmadan inceleyebilirsiniz. Site ArillaSoft
-                tarafından geliştirilmemiştir. Sayfa performansı için önizleme yalnızca siz
-                istediğinizde yüklenir.
-              </p>
-              <Button onClick={() => setPhase("loading")} className="rounded-[10px] bg-[#0B1220] hover:bg-[#1B2540]">
-                Canlı önizlemeyi yükle
-              </Button>
-            </div>
-          )}
-
           {phase === "loading" && (
-            <div className="absolute inset-0 flex items-center justify-center bg-[#FAF9F7]/80">
-              <p className="text-sm font-semibold text-[#6C7486]">Önizleme yükleniyor…</p>
+            <div className="absolute inset-0 bg-[#FAF9F7]/90 p-5">
+              <div className="h-full animate-pulse rounded-[10px] border border-black/5 bg-white/75 p-5">
+                <div className="h-6 w-2/5 rounded bg-slate-200" />
+                <div className="mt-5 grid h-[68%] grid-cols-[1.15fr_.85fr] gap-5">
+                  <div className="space-y-3">
+                    <div className="h-10 w-4/5 rounded bg-slate-200" />
+                    <div className="h-4 w-3/5 rounded bg-slate-200" />
+                    <div className="h-4 w-2/3 rounded bg-slate-200" />
+                    <div className="mt-6 h-10 w-32 rounded bg-slate-300" />
+                  </div>
+                  <div className="rounded-[14px] bg-slate-200" />
+                </div>
+                <p className="mt-4 text-center text-sm font-semibold text-[#6C7486]">Önizleme yükleniyor...</p>
+              </div>
             </div>
           )}
 

@@ -2,7 +2,6 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import ExampleKindBadge, { type ExampleKind } from "./ExampleKindBadge";
-import SiteExampleVisual from "./SiteExampleVisual";
 
 export type CatalogCardProject = {
   id: string;
@@ -28,23 +27,16 @@ export default function SiteExampleCard({ project }: { project: CatalogCardProje
       className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-950/5"
     >
       <div className="relative overflow-hidden">
-        {project.coverImage ? (
-          <div className="aspect-[16/10]">
-            <Image
-              src={project.coverImage}
-              alt={`${project.title} site önizlemesi`}
-              fill
-              className="object-cover transition duration-500 group-hover:scale-[1.03]"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
-          </div>
-        ) : (
-          <SiteExampleVisual
-            title={project.title}
-            sector={project.category.name}
-            designCode={project.designCode}
+        <div className="relative aspect-[16/10] bg-slate-100">
+          <Image
+            src={`/site-example-previews/${project.designCode}.webp`}
+            alt={`${project.title} site önizlemesi`}
+            fill
+            loading="lazy"
+            className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-        )}
+        </div>
         <div className="absolute left-4 top-4">
           <ExampleKindBadge kind={project.kind} />
         </div>
