@@ -2,18 +2,18 @@ import type { DesignColor } from "@/lib/design-dna";
 
 export default function ColorPalette({ colors }: { colors: DesignColor[] }) {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
       {colors.map((color) => (
-        <div key={`${color.name}-${color.value}`} className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-3">
+        <div key={`${color.name}-${color.value}`}>
           <span
-            className="h-12 w-12 shrink-0 rounded-md border border-black/10"
+            className="block h-[132px] w-full rounded-[10px] border border-black/10"
             style={{ backgroundColor: color.value }}
             aria-label={`${color.name} renk örneği`}
           />
-          <span className="min-w-0">
-            <span className="block truncate text-sm font-black text-slate-950">{color.name}</span>
-            <span className="block font-mono text-xs font-bold uppercase text-slate-500">{color.value}</span>
+          <span className="mt-2 block font-[family-name:var(--font-se-mono)] text-[11.5px] font-medium uppercase text-[#0B1220]">
+            {color.value}
           </span>
+          <span className="block text-xs text-[#6C7486]">{color.name}</span>
         </div>
       ))}
     </div>

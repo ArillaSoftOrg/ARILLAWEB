@@ -5,11 +5,12 @@ import { Link } from "@/i18n/navigation";
 import { SITE_URL } from "@/lib/constants";
 import { parseDesignDna } from "@/lib/design-dna";
 import { getCatalogProject } from "@/lib/project-actions";
-import ExampleKindBadge from "@/components/site-examples/ExampleKindBadge";
+import { siteExampleFontVariables } from "@/lib/site-example-fonts";
+import HeroSection from "@/components/site-examples/HeroSection";
 import DesignInquiryForm from "@/components/site-examples/DesignInquiryForm";
 import LivePreviewSection from "@/components/site-examples/LivePreviewSection";
 import DesignDNA from "@/components/site-examples/DesignDNA";
-import DesignCharacteristics from "@/components/site-examples/DesignCharacteristics";
+import AnalysisSection from "@/components/site-examples/AnalysisSection";
 import SectorAdaptation from "@/components/site-examples/SectorAdaptation";
 import CustomizationOptions from "@/components/site-examples/CustomizationOptions";
 import SuitableFor from "@/components/site-examples/SuitableFor";
@@ -58,33 +59,25 @@ export default async function SiteExampleDetailPage({ params }: Props) {
   };
 
   return (
-    <main className="min-h-screen bg-white pb-24 pt-28 lg:pt-36">
+    <main className={`min-h-screen bg-white pb-24 pt-28 lg:pt-36 ${siteExampleFontVariables} font-[family-name:var(--font-se-manrope)]`}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="mx-auto max-w-[1440px] px-6 lg:px-14">
         <Link href={`/site-ornekleri/${sector}`} className="inline-flex items-center gap-2 text-sm font-bold text-blue-700">
           <ArrowLeft className="h-4 w-4" /> {project.category.name} tasarımları
         </Link>
 
-        <section className="mt-7 grid items-start gap-10 lg:grid-cols-[1fr_360px]">
-          <div>
-            <div className="flex flex-wrap items-center gap-3">
-              <ExampleKindBadge kind={project.kind} />
-              <span className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600">
-                {project.category.name}
-              </span>
-              <span className="rounded-md bg-slate-950 px-2.5 py-1 font-mono text-xs font-bold text-white">
-                {project.designCode}
-              </span>
-            </div>
-            <h1 className="mt-5 max-w-4xl text-4xl font-black tracking-[-0.045em] text-slate-950 sm:text-6xl">
-              {project.title}
-            </h1>
-            <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600">{project.summary}</p>
-          </div>
-
+        <HeroSection
+          kind={project.kind}
+          sectorName={project.category.name}
+          designCode={project.designCode}
+          title={project.title}
+          summary={project.summary}
+          styleName={designDna.styleName}
+          accent={designDna.contextualAccent}
+        >
           <DesignInquiryForm
             projectId={project.id}
             designCode={project.designCode}
@@ -92,12 +85,12 @@ export default async function SiteExampleDetailPage({ params }: Props) {
             sector={project.category.name}
             detailUrl={`${SITE_URL}/tr/site-ornekleri/${sector}/${design}`}
           />
-        </section>
+        </HeroSection>
 
-        <LivePreviewSection sector={sector} design={design} title={project.title} />
+        <LivePreviewSection sector={sector} design={design} title={project.title} accent={designDna.contextualAccent} />
 
         <DesignDNA dna={designDna} />
-        <DesignCharacteristics dna={designDna} />
+        <AnalysisSection dna={designDna} />
         <SectorAdaptation dna={designDna} sector={project.category.name} />
         <CustomizationOptions dna={designDna} />
         <SuitableFor dna={designDna} />

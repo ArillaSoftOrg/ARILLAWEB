@@ -88,7 +88,7 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
 
   return (
     <>
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm">
+      <div className="overflow-hidden rounded-[14px] border border-black/10 bg-[#EEEEEC]">
         <BrowserChrome label={label} />
 
         <div ref={panelRef} className="relative aspect-[16/10] w-full overflow-hidden bg-white">
@@ -115,19 +115,21 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
           )}
 
           {phase === "idle" && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-slate-50 px-6 text-center">
-              <p className="max-w-sm text-sm leading-6 text-slate-600">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#FAF9F7] px-6 text-center">
+              <p className="max-w-sm text-sm leading-6 text-[#39415A]">
                 Bu harici referans siteyi sayfamızdan ayrılmadan inceleyebilirsiniz. Site ArillaSoft
                 tarafından geliştirilmemiştir. Sayfa performansı için önizleme yalnızca siz
                 istediğinizde yüklenir.
               </p>
-              <Button onClick={() => setPhase("loading")}>Canlı önizlemeyi yükle</Button>
+              <Button onClick={() => setPhase("loading")} className="rounded-[10px] bg-[#0B1220] hover:bg-[#1B2540]">
+                Canlı önizlemeyi yükle
+              </Button>
             </div>
           )}
 
           {phase === "loading" && (
-            <div className="absolute inset-0 flex items-center justify-center bg-slate-50/80">
-              <p className="text-sm font-semibold text-slate-500">Önizleme yükleniyor…</p>
+            <div className="absolute inset-0 flex items-center justify-center bg-[#FAF9F7]/80">
+              <p className="text-sm font-semibold text-[#6C7486]">Önizleme yükleniyor…</p>
             </div>
           )}
 
@@ -137,9 +139,9 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
               ref={openButtonRef}
               onClick={() => setOpen(true)}
               aria-label="Tasarımı büyük önizlemede aç"
-              className="group absolute inset-0 flex items-end justify-center bg-slate-950/0 transition hover:bg-slate-950/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+              className="group absolute inset-0 flex items-end justify-center bg-[#0B1220]/0 transition hover:bg-[#0B1220]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4BF2] focus-visible:ring-offset-2"
             >
-              <span className="mb-5 inline-flex items-center gap-2 rounded-xl bg-slate-950/85 px-4 py-2.5 text-sm font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100 group-focus-visible:opacity-100">
+              <span className="mb-5 inline-flex items-center gap-2 rounded-[10px] bg-[#0B1220]/85 px-4 py-2.5 text-sm font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100 group-focus-visible:opacity-100">
                 <Maximize2 className="h-4 w-4" /> Büyük önizlemede aç
               </span>
             </button>
@@ -152,7 +154,7 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
           className="flex h-[90vh] w-full max-w-[95vw] flex-col gap-0 p-0"
           onCloseAutoFocus={(event) => event.preventDefault()}
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4 pr-14">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 px-5 py-4 pr-14">
             <div className="min-w-0">
               <DialogTitle className="truncate">{title}</DialogTitle>
               <DialogDescription className="mt-0.5 truncate text-xs">
@@ -165,7 +167,7 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
             <div
               role="group"
               aria-label="Önizleme cihaz seçimi"
-              className="flex flex-wrap items-center gap-1 rounded-xl bg-slate-100 p-1"
+              className="flex flex-wrap items-center gap-1 rounded-[11px] bg-black/5 p-1"
             >
               {(Object.keys(VIEWPORTS) as Viewport[]).map((key) => {
                 const Icon = VIEWPORT_ICONS[key];
@@ -176,8 +178,8 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
                     type="button"
                     onClick={() => setViewport(key)}
                     aria-pressed={active}
-                    className={`inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-                      active ? "bg-white text-slate-950 shadow-sm" : "text-slate-500 hover:text-slate-800"
+                    className={`inline-flex items-center gap-2 rounded-[8px] px-3 py-1.5 text-xs font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4BF2] ${
+                      active ? "bg-[#0B1220] text-white shadow-sm" : "text-[#6C7486] hover:text-[#0B1220]"
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -222,7 +224,7 @@ function ModalFrame({
   }, [width, height]);
 
   return (
-    <div ref={stageRef} className="flex flex-1 items-center justify-center overflow-hidden bg-slate-100 p-4">
+    <div ref={stageRef} className="flex flex-1 items-center justify-center overflow-hidden bg-black/5 p-4">
       {scale > 0 && (
         <div style={{ width: width * scale, height: height * scale }} className="overflow-hidden">
           <iframe
@@ -249,13 +251,13 @@ function ModalFrame({
 
 function BrowserChrome({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-3 border-b border-slate-200 bg-slate-100 px-4 py-2.5">
+    <div className="flex items-center gap-3 border-b border-black/10 bg-black/[0.03] px-4 py-2.5">
       <div className="flex gap-1.5">
         <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
         <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
         <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
       </div>
-      <span className="truncate rounded-md bg-white px-3 py-1 text-xs font-semibold text-slate-500">
+      <span className="truncate rounded-[7px] bg-white px-3 py-1 text-xs font-semibold text-[#6C7486]">
         {label}
       </span>
       <span className="ml-auto shrink-0 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-800">
@@ -267,7 +269,7 @@ function BrowserChrome({ label }: { label: string }) {
 
 export function PreviewUnavailable({ url }: { url: string }) {
   return (
-    <div className="flex flex-col items-start gap-4 rounded-2xl border border-amber-200 bg-amber-50 p-6 sm:flex-row sm:items-center">
+    <div className="flex flex-col items-start gap-4 rounded-[14px] border border-amber-200 bg-amber-50 p-6 sm:flex-row sm:items-center">
       <TriangleAlert className="h-6 w-6 shrink-0 text-amber-600" />
       <p className="flex-1 text-sm leading-6 text-amber-900">
         <strong>Canlı önizleme kullanılamıyor.</strong> Bu referans site, güvenlik ayarları
@@ -277,7 +279,7 @@ export function PreviewUnavailable({ url }: { url: string }) {
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex h-11 shrink-0 items-center gap-2 rounded-xl bg-slate-950 px-5 text-sm font-bold text-white transition hover:bg-slate-800"
+        className="inline-flex h-11 shrink-0 items-center gap-2 rounded-[10px] bg-[#0B1220] px-5 text-sm font-bold text-white transition hover:bg-[#1B2540]"
       >
         Yeni sekmede aç <ExternalLink className="h-4 w-4" />
       </a>
