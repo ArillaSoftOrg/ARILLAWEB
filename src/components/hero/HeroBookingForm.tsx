@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
-import { getServicesForForm } from '@/lib/services';
+import { getServiceLabel, SERVICE_SLUGS } from '@/lib/services';
+import { getTodayDateStr, type DayStatus, type SlotStatus } from '@/lib/availability';
 import { useCookieConsentContext } from '@/components/cookie/CookieConsentProvider';
 
 interface HeroBookingFormProps {
@@ -11,10 +12,7 @@ interface HeroBookingFormProps {
   theme?: 'light' | 'dark';
 }
 
-const SERVICES_FOR_FORM = getServicesForForm(false);
-
-type DayStatus = 'available' | 'closed' | 'fully_booked' | 'blocked' | 'past';
-type SlotStatus = 'available' | 'booked' | 'blocked';
+type CalendarDayStatus = DayStatus | 'loading' | 'unknown' | 'no_remaining_today_slots';
 
 interface DaySlot {
   time: string;
@@ -32,9 +30,7 @@ function getMonthStr(year: number, month: number): string {
 export default function HeroBookingForm({ defaultService, theme = 'light' }: HeroBookingFormProps) {
   const router = useRouter();
   const { consentRecord } = useCookieConsentContext();
-  const [service, setService] = useState<string>(
-    SERVICES_FOR_FORM.some((s) => s.slug === defaultService) ? defaultService! : ''
-  );
+  const [service, setService] = useState<string>(defaultService ? getServiceLabel(defaultService) : '');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [error, setError] = useState(false);
@@ -42,25 +38,25 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
   // Availability state
   const [dayStatuses, setDayStatuses] = useState<Record<string, DayStatus>>({});
   const [slots, setSlots] = useState<DaySlot[]>([]);
+  const [todaySlots, setTodaySlots] = useState<DaySlot[]>([]);
   const [loadingDays, setLoadingDays] = useState(false);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [loadingTodaySlots, setLoadingTodaySlots] = useState(false);
 
-  const today = new Date();
-  const todayDateStr = today.toISOString().split('T')[0];
-  const todayYear = today.getFullYear();
-  const todayMonth = today.getMonth();
+  const todayDateStr = getTodayDateStr();
+  const [todayYearValue, todayMonthValue] = todayDateStr.split('-').map(Number);
+  const todayYear = todayYearValue;
+  const todayMonth = todayMonthValue - 1;
 
   const [calendarYear, setCalendarYear] = useState(todayYear);
   const [calendarMonth, setCalendarMonth] = useState(todayMonth);
 
-  // Fetch day statuses when month or service changes
+  // Fetch day statuses when month changes
   useEffect(() => {
-    if (!service) return;
-
     const monthStr = getMonthStr(calendarYear, calendarMonth);
     setLoadingDays(true);
 
-    fetch(`/api/availability/days?month=${monthStr}&service=${encodeURIComponent(service)}`)
+    fetch(`/api/availability/days?month=${monthStr}&service=${SERVICE_SLUGS.ALL}`)
       .then((res) => res.json())
       .then((data) => {
         setDayStatuses(data);
@@ -70,18 +66,39 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
         console.error('Failed to fetch day statuses:', err);
         setLoadingDays(false);
       });
-  }, [service, calendarYear, calendarMonth]);
+  }, [calendarYear, calendarMonth]);
 
-  // Fetch slots when date or service changes
+  // Fetch today's slots for the calendar-only "no remaining time today" state.
   useEffect(() => {
-    if (!date || !service) {
+    if (calendarYear !== todayYear || calendarMonth !== todayMonth) {
+      setTodaySlots([]);
+      return;
+    }
+
+    setLoadingTodaySlots(true);
+
+    fetch(`/api/availability/slots?date=${todayDateStr}&service=${SERVICE_SLUGS.ALL}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTodaySlots(data.slots || []);
+        setLoadingTodaySlots(false);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch today slots:', err);
+        setLoadingTodaySlots(false);
+      });
+  }, [calendarYear, calendarMonth, todayDateStr, todayYear, todayMonth]);
+
+  // Fetch slots when date changes
+  useEffect(() => {
+    if (!date) {
       setSlots([]);
       return;
     }
 
     setLoadingSlots(true);
 
-    fetch(`/api/availability/slots?date=${date}&service=${encodeURIComponent(service)}`)
+    fetch(`/api/availability/slots?date=${date}&service=${SERVICE_SLUGS.ALL}`)
       .then((res) => res.json())
       .then((data) => {
         setSlots(data.slots || []);
@@ -91,18 +108,19 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
         console.error('Failed to fetch slots:', err);
         setLoadingSlots(false);
       });
-  }, [date, service]);
+  }, [date]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!service || !date || !time) {
+    const serviceText = service.trim();
+    if (!serviceText || !date || !time) {
       setError(true);
       return;
     }
 
     if (consentRecord.categories.functional) {
-      sessionStorage.setItem('randevuDraft', JSON.stringify({ service, date, time }));
+      sessionStorage.setItem('randevuDraft', JSON.stringify({ service: serviceText, date, time }));
     } else {
       sessionStorage.removeItem('randevuDraft');
     }
@@ -124,9 +142,28 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
     setTime('');
   };
 
-  // Get day status from API response
-  function getDayStatus(dateStr: string): DayStatus {
-    return dayStatuses[dateStr] || 'past';
+  // Get day status from API response; unknown/loading is never treated as past.
+  function getDayStatus(dateStr: string): CalendarDayStatus {
+    if (dateStr < todayDateStr) {
+      return 'past';
+    }
+
+    const status = dayStatuses[dateStr];
+    if (!status) {
+      return loadingDays ? 'loading' : 'unknown';
+    }
+
+    if (dateStr === todayDateStr && status === 'available') {
+      if (loadingTodaySlots) {
+        return 'loading';
+      }
+
+      if (todaySlots.length > 0 && !todaySlots.some((slot) => slot.status === 'available')) {
+        return 'no_remaining_today_slots';
+      }
+    }
+
+    return status;
   }
 
   // Build calendar grid
@@ -243,12 +280,14 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
         >
           Hizmet
         </label>
-        <select
+        <input
+          type="text"
           value={service}
           onChange={(e) => {
             setService(e.target.value);
             setError(false);
           }}
+          placeholder="Örn. Web sitesi geliştirme"
           style={{
             width: '100%',
             background: inputBg,
@@ -258,23 +297,8 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
             fontSize: 14,
             padding: '10px 12px',
             fontFamily: 'inherit',
-            cursor: 'pointer',
-            appearance: 'none',
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23${isDark ? 'cbd5e1' : '475569'}' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'right 10px center',
-            paddingRight: 32,
           }}
-        >
-          <option value="" disabled>
-            Hizmet seçiniz
-          </option>
-          {SERVICES_FOR_FORM.map((opt) => (
-            <option key={opt.slug} value={opt.slug}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+        />
       </div>
 
       {/* Calendar */}
@@ -338,37 +362,63 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
             let cellOpacity = 1;
             let cellCursor = 'pointer';
             let cellBorder = 'none';
-            let cellTextDecoration = 'none';
+            const cellTextDecoration = 'none';
+            let cellTitle = '';
 
             // Determine styling based on day status
             if (isOverflow) {
-              cellOpacity = 0.35;
+              cellOpacity = dayStatus === 'past' ? 0.2 : 0.45;
               cellColor = isDark ? 'rgba(255,255,255,0.35)' : '#94a3b8';
-              if (dayStatus === 'past') {
-                cellOpacity = 0.2;
-                cellCursor = 'default';
-              }
+              cellCursor = isClickable ? 'pointer' : 'not-allowed';
             } else if (dayStatus === 'past') {
               cellOpacity = 0.3;
-              cellCursor = 'default';
+              cellCursor = 'not-allowed';
               cellColor = isDark ? 'rgba(255,255,255,0.3)' : '#cbd5e1';
             } else if (dayStatus === 'closed') {
               cellColor = isDark ? 'rgba(255,255,255,0.4)' : '#94a3b8';
               cellOpacity = 0.5;
               cellCursor = 'not-allowed';
+              cellTitle = 'Kapalı';
             } else if (dayStatus === 'fully_booked') {
-              cellColor = isDark ? 'rgba(255,255,255,0.3)' : '#94a3b8';
-              cellOpacity = 0.5;
+              cellColor = isDark ? '#fca5a5' : '#b91c1c';
+              cellOpacity = 0.72;
               cellCursor = 'not-allowed';
-              cellTextDecoration = 'line-through';
               cellBg = isDark ? 'rgba(239,68,68,0.12)' : 'rgba(239,68,68,0.07)';
+              cellBorder = isDark ? '1px solid rgba(248,113,113,0.28)' : '1px solid rgba(185,28,28,0.18)';
+              cellTitle = 'Dolu';
             } else if (dayStatus === 'blocked') {
-              cellColor = isDark ? 'rgba(255,255,255,0.3)' : '#94a3b8';
-              cellOpacity = 0.4;
+              cellColor = isDark ? 'rgba(255,255,255,0.42)' : '#94a3b8';
+              cellOpacity = 0.55;
               cellCursor = 'not-allowed';
-              cellTextDecoration = 'line-through';
-            } else if (isToday && !isSelected && isClickable) {
+              cellBg = isDark ? 'rgba(148,163,184,0.08)' : 'rgba(148,163,184,0.08)';
+              cellTitle = 'Bloke';
+            } else if (dayStatus === 'no_remaining_today_slots') {
+              cellColor = '#7c3aed';
+              cellOpacity = 0.64;
+              cellCursor = 'not-allowed';
               cellBorder = '1.5px solid #7c3aed';
+              cellBg = isDark ? 'rgba(124,58,237,0.08)' : 'rgba(124,58,237,0.05)';
+              cellTitle = 'Bugün için kalan saat yok';
+            } else if (dayStatus === 'loading' || dayStatus === 'unknown') {
+              cellColor = isDark ? 'rgba(255,255,255,0.58)' : '#64748b';
+              cellOpacity = 0.75;
+              cellCursor = 'not-allowed';
+              cellBg = isDark ? 'rgba(255,255,255,0.04)' : '#f8fafc';
+            }
+
+            if (isToday && !isSelected && dayStatus !== 'past') {
+              cellBorder = cellBorder === 'none' ? '1.5px solid #7c3aed' : cellBorder;
+              if (isClickable) {
+                cellColor = '#7c3aed';
+              }
+            }
+
+            if (isClickable && !isSelected && !isToday) {
+              cellColor = inputColor;
+              cellCursor = 'pointer';
+            }
+
+            if (isToday && !isSelected && isClickable) {
               cellColor = '#7c3aed';
             }
 
@@ -410,7 +460,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                     e.currentTarget.style.background = cellBg;
                   }
                 }}
-                title={dayStatus === 'closed' ? 'Kapalı' : dayStatus === 'fully_booked' ? 'Dolu' : dayStatus === 'blocked' ? 'Bloke' : ''}
+                title={cellTitle}
               >
                 {cell.day}
               </button>
@@ -444,6 +494,42 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
               {slots.map((slot) => {
                 const isSlotSelected = time === slot.time;
                 const isAvailable = slot.status === 'available';
+                const isPastSlot = slot.status === 'past';
+                const isBookedSlot = slot.status === 'booked';
+                const isBlockedSlot = slot.status === 'blocked';
+
+                let slotBg = inputBg;
+                let slotColor = inputColor;
+                let slotBorder = isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0';
+                let slotOpacity = 1;
+                let slotTextDecoration = 'none';
+                let slotTitle = '';
+
+                if (isPastSlot) {
+                  slotColor = isDark ? 'rgba(255,255,255,0.34)' : '#94a3b8';
+                  slotOpacity = 0.55;
+                  slotTitle = 'Geçmiş saat';
+                } else if (isBookedSlot) {
+                  slotBg = isDark ? 'rgba(239,68,68,0.12)' : 'rgba(239,68,68,0.08)';
+                  slotColor = isDark ? '#fca5a5' : '#b91c1c';
+                  slotBorder = isDark ? 'rgba(248,113,113,0.28)' : 'rgba(185,28,28,0.18)';
+                  slotTextDecoration = 'line-through';
+                  slotTitle = 'Dolu';
+                } else if (isBlockedSlot) {
+                  slotBg = isDark ? 'rgba(148,163,184,0.08)' : 'rgba(148,163,184,0.08)';
+                  slotColor = isDark ? 'rgba(255,255,255,0.42)' : '#94a3b8';
+                  slotOpacity = 0.75;
+                  slotTextDecoration = 'line-through';
+                  slotTitle = 'Bloke';
+                }
+
+                if (isSlotSelected) {
+                  slotBg = '#7c3aed';
+                  slotColor = 'white';
+                  slotBorder = '#7c3aed';
+                  slotOpacity = 1;
+                  slotTextDecoration = 'none';
+                }
 
                 return (
                   <button
@@ -460,12 +546,12 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                       padding: '5px 10px',
                       fontSize: 12,
                       borderRadius: 8,
-                      border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0'}`,
-                      background: isSlotSelected ? '#7c3aed' : inputBg,
-                      color: isSlotSelected ? 'white' : inputColor,
+                      border: `1px solid ${slotBorder}`,
+                      background: slotBg,
+                      color: slotColor,
                       cursor: isAvailable ? 'pointer' : 'not-allowed',
-                      opacity: isAvailable ? 1 : 0.4,
-                      textDecoration: isAvailable ? 'none' : 'line-through',
+                      opacity: slotOpacity,
+                      textDecoration: slotTextDecoration,
                       transition: 'all 0.2s ease',
                     }}
                     onMouseEnter={(e) => {
@@ -477,10 +563,10 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                     }}
                     onMouseLeave={(e) => {
                       if (!isSlotSelected) {
-                        e.currentTarget.style.background = inputBg;
+                        e.currentTarget.style.background = slotBg;
                       }
                     }}
-                    title={!isAvailable ? (slot.status === 'booked' ? 'Dolu' : 'Bloke') : ''}
+                    title={slotTitle}
                   >
                     {slot.time}
                   </button>

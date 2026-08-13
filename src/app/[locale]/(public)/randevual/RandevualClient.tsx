@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, AlertCircle } from 'lucide-react';
-import { getServicesForForm, SERVICE_LABELS } from '@/lib/services';
+import { SERVICE_SLUGS } from '@/lib/services';
+import { getTodayDateStr, type SlotStatus } from '@/lib/availability';
 import { useCookieConsentContext } from '@/components/cookie/CookieConsentProvider';
 
 interface DraftData {
@@ -14,10 +15,8 @@ interface DraftData {
 
 interface DaySlot {
   time: string;
-  status: 'available' | 'booked' | 'blocked';
+  status: SlotStatus;
 }
-
-const SERVICES_FOR_FORM = getServicesForForm(false);
 
 export default function RandevualClient() {
   const router = useRouter();
@@ -42,6 +41,7 @@ export default function RandevualClient() {
   // Availability state
   const [slots, setSlots] = useState<DaySlot[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const todayDateStr = getTodayDateStr();
 
   // Load draft from sessionStorage on mount
   useEffect(() => {
@@ -67,16 +67,16 @@ export default function RandevualClient() {
     setIsHydrated(true);
   }, [isMounted, consentRecord.categories.functional]);
 
-  // Fetch slots when date or service changes
+  // Fetch slots when date changes. Public consultation availability uses the shared "all" calendar.
   useEffect(() => {
-    if (!date || !service) {
+    if (!date) {
       setSlots([]);
       return;
     }
 
     setLoadingSlots(true);
 
-    fetch(`/api/availability/slots?date=${date}&service=${encodeURIComponent(service)}`)
+    fetch(`/api/availability/slots?date=${date}&service=${SERVICE_SLUGS.ALL}`)
       .then((res) => res.json())
       .then((data) => {
         setSlots(data.slots || []);
@@ -86,7 +86,7 @@ export default function RandevualClient() {
         console.error('Failed to fetch slots:', err);
         setLoadingSlots(false);
       });
-  }, [date, service]);
+  }, [date]);
 
   const validatePhoneFormat = (value: string): boolean => {
     if (!value) return true; // Optional field
@@ -103,9 +103,10 @@ export default function RandevualClient() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
+    const serviceText = service.trim();
 
     // Validate required fields
-    if (!service) newErrors.service = 'Hizmet seçiniz';
+    if (!serviceText) newErrors.service = 'Hizmet giriniz';
     if (!date) newErrors.date = 'Tarih seçiniz';
     if (!time) newErrors.time = 'Saat seçiniz';
     if (!name) newErrors.name = 'Ad soyad zorunludur';
@@ -133,7 +134,7 @@ export default function RandevualClient() {
     const res = await fetch('/api/appointment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ service, date, time, name, phone: phone || undefined, email: email || undefined, message }),
+      body: JSON.stringify({ service: serviceText, date, time, name, phone: phone || undefined, email: email || undefined, message }),
     });
 
     if (!res.ok) {
@@ -265,7 +266,7 @@ export default function RandevualClient() {
                 <p style={{ fontSize: 12, color: '#64748b', fontWeight: 600, marginBottom: 4 }}>
                   HİZMET
                 </p>
-                <p style={{ fontSize: 14, color: '#0f172a', fontWeight: 500 }}>{SERVICE_LABELS[service as keyof typeof SERVICE_LABELS] || service}</p>
+                <p style={{ fontSize: 14, color: '#0f172a', fontWeight: 500 }}>{service}</p>
               </div>
             )}
 
@@ -364,7 +365,8 @@ export default function RandevualClient() {
             >
               Hizmet
             </label>
-            <select
+            <input
+              type="text"
               value={service}
               onChange={(e) => {
                 setService(e.target.value);
@@ -375,6 +377,7 @@ export default function RandevualClient() {
                   });
                 }
               }}
+              placeholder="Örn. Web sitesi geliştirme"
               style={{
                 width: '100%',
                 background: '#f8fafc',
@@ -384,22 +387,8 @@ export default function RandevualClient() {
                 fontSize: 14,
                 padding: '10px 12px',
                 fontFamily: 'inherit',
-                cursor: 'pointer',
-                appearance: 'none',
-                backgroundImage:
-                  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23475569' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 10px center',
-                paddingRight: 32,
               }}
-            >
-              <option value="">Hizmet seçiniz</option>
-              {SERVICES_FOR_FORM.map((opt) => (
-                <option key={opt.slug} value={opt.slug}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+            />
             {fieldErrors.service && (
               <p style={{ fontSize: 12, fontWeight: 500, color: '#dc2626', marginTop: 6, lineHeight: '1.4' }}>{fieldErrors.service}</p>
             )}
@@ -423,6 +412,7 @@ export default function RandevualClient() {
               value={date}
               onChange={(e) => {
                 setDate(e.target.value);
+                setTime('');
                 if (e.target.value) {
                   setFieldErrors((prev) => {
                     const { date: _, ...rest } = prev;
@@ -430,7 +420,7 @@ export default function RandevualClient() {
                   });
                 }
               }}
-              min={new Date().toISOString().split('T')[0]}
+              min={todayDateStr}
               style={{
                 width: '100%',
                 background: '#f8fafc',
@@ -482,7 +472,7 @@ export default function RandevualClient() {
                   background: '#f8fafc',
                   border: '1px solid #e2e8f0',
                   borderRadius: 10,
-                  color: '#dc2626',
+                  color: '#64748b',
                   fontSize: 14,
                   padding: '10px 12px',
                   fontFamily: 'inherit',
@@ -492,6 +482,101 @@ export default function RandevualClient() {
               </div>
             ) : (
               <>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 8,
+                    padding: 10,
+                    background: '#f8fafc',
+                    border: fieldErrors.time ? '1px solid #dc2626' : '1px solid #e2e8f0',
+                    borderRadius: 10,
+                  }}
+                >
+                  {slots.map((slot) => {
+                    const isSelected = time === slot.time;
+                    const isAvailable = slot.status === 'available';
+                    const isPast = slot.status === 'past';
+                    const isBooked = slot.status === 'booked';
+                    const isBlocked = slot.status === 'blocked';
+
+                    let slotBg = '#fff';
+                    let slotColor = '#0f172a';
+                    let slotBorder = '#e2e8f0';
+                    let slotOpacity = 1;
+                    let slotTextDecoration = 'none';
+                    let slotTitle = '';
+
+                    if (isPast) {
+                      slotColor = '#94a3b8';
+                      slotOpacity = 0.58;
+                      slotTitle = 'Geçmiş saat';
+                    } else if (isBooked) {
+                      slotBg = 'rgba(239,68,68,0.08)';
+                      slotColor = '#b91c1c';
+                      slotBorder = 'rgba(185,28,28,0.18)';
+                      slotTextDecoration = 'line-through';
+                      slotTitle = 'Dolu';
+                    } else if (isBlocked) {
+                      slotBg = 'rgba(148,163,184,0.08)';
+                      slotColor = '#94a3b8';
+                      slotOpacity = 0.78;
+                      slotTextDecoration = 'line-through';
+                      slotTitle = 'Bloke';
+                    }
+
+                    if (isSelected) {
+                      slotBg = '#7c3aed';
+                      slotColor = 'white';
+                      slotBorder = '#7c3aed';
+                      slotOpacity = 1;
+                      slotTextDecoration = 'none';
+                    }
+
+                    return (
+                      <button
+                        key={slot.time}
+                        type="button"
+                        disabled={!isAvailable}
+                        title={slotTitle}
+                        onClick={() => {
+                          if (!isAvailable) return;
+                          setTime(slot.time);
+                          setFieldErrors((prev) => {
+                            const { time: _, ...rest } = prev;
+                            return rest;
+                          });
+                        }}
+                        style={{
+                          minWidth: 68,
+                          padding: '7px 10px',
+                          borderRadius: 8,
+                          border: `1px solid ${slotBorder}`,
+                          background: slotBg,
+                          color: slotColor,
+                          cursor: isAvailable ? 'pointer' : 'not-allowed',
+                          fontSize: 13,
+                          fontWeight: isSelected ? 700 : 500,
+                          opacity: slotOpacity,
+                          textDecoration: slotTextDecoration,
+                          transition: 'all 0.2s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (isAvailable && !isSelected) {
+                            e.currentTarget.style.background = 'rgba(124,58,237,0.08)';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) {
+                            e.currentTarget.style.background = slotBg;
+                          }
+                        }}
+                      >
+                        {slot.time}
+                      </button>
+                    );
+                  })}
+                </div>
                 <select
                   value={time}
                   onChange={(e) => {
@@ -504,6 +589,7 @@ export default function RandevualClient() {
                     }
                   }}
                   style={{
+                    display: 'none',
                     width: '100%',
                     background: '#f8fafc',
                     border: fieldErrors.time ? '1px solid #dc2626' : '1px solid #e2e8f0',

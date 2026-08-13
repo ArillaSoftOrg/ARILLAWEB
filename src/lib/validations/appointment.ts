@@ -6,7 +6,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const appointmentSchema = z
   .object({
-    service: z.string().min(1, 'Hizmet seçiniz'),
+    service: z.string().trim().min(1, 'Hizmet giriniz'),
     date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Geçersiz tarih formatı'),
     time: z.string().regex(/^\d{2}:\d{2}$/, 'Geçersiz saat formatı'),
     name: z.string().min(1, 'Ad soyad zorunludur'),

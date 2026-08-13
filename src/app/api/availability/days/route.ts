@@ -46,7 +46,7 @@ export async function GET(req: Request) {
 
       // Get booked slots for this date and service
       const bookedSlots = appointments
-        .filter((appt) => appt.date === dateStr && appt.service === service)
+        .filter((appt) => appt.date === dateStr && (service === 'all' || appt.service === service))
         .map((appt) => appt.time);
 
       // Get relevant rules for this day of week

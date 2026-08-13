@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { generateSlots, isSlotAvailable } from '@/lib/availability';
+import { generateSlots, isDateInPast, isSlotAvailable, isTimeSlotInPast } from '@/lib/availability';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
@@ -16,8 +16,7 @@ export async function GET(req: Request) {
     }
 
     // Check if date is in the past
-    const today = new Date().toISOString().split('T')[0];
-    if (date < today) {
+    if (isDateInPast(date)) {
       return NextResponse.json({ slots: [] });
     }
 
@@ -56,12 +55,14 @@ export async function GET(req: Request) {
 
     // Get booked slots for this service
     const bookedSlotsForService = appointments
-      .filter((appt) => appt.service === service && appt.date === date)
+      .filter((appt) => appt.date === date && (service === 'all' || appt.service === service))
       .map((appt) => appt.time);
 
     // Compute status for each slot
     const result = slots.map((time) => {
-      const status = isSlotAvailable(time, date, service, bookedSlotsForService, blockedSlots, rules);
+      const status = isTimeSlotInPast(date, time)
+        ? 'past'
+        : isSlotAvailable(time, date, service, bookedSlotsForService, blockedSlots, rules);
       return { time, status };
     });
 

@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { appointmentSchema } from '@/lib/validations/appointment';
-import { generateSlots } from '@/lib/availability';
+import { generateSlots, isDateInPast, isTimeSlotInPast } from '@/lib/availability';
+import { SERVICE_SLUGS } from '@/lib/services';
 
 const CONFLICT_ERROR = 'Seçtiğiniz saat artık uygun değil. Lütfen farklı bir saat seçiniz.';
 
@@ -22,10 +23,10 @@ export async function POST(req: NextRequest) {
     }
 
     const data = result.data;
+    const availabilityService = SERVICE_SLUGS.ALL;
 
     // 1. Check if date is past
-    const today = new Date().toISOString().split('T')[0];
-    if (data.date < today) {
+    if (isDateInPast(data.date) || isTimeSlotInPast(data.date, data.time)) {
       return NextResponse.json(
         { error: CONFLICT_ERROR },
         { status: 409 }
@@ -36,7 +37,7 @@ export async function POST(req: NextRequest) {
     const blockedDate = await prisma.blockedDate.findFirst({
       where: {
         date: data.date,
-        service: { in: [data.service, 'all'] },
+        service: availabilityService,
       },
     });
     if (blockedDate) {
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
       where: {
         date: data.date,
         time: data.time,
-        service: { in: [data.service, 'all'] },
+        service: availabilityService,
       },
     });
     if (blockedSlot) {
@@ -66,11 +67,10 @@ export async function POST(req: NextRequest) {
     const rules = await prisma.availabilityRule.findMany({
       where: {
         dayOfWeek,
-        service: { in: [data.service, 'all'] },
+        service: availabilityService,
       },
     });
-    // Service-specific rule wins over "all"
-    const effectiveRule = rules.find((r) => r.service === data.service) ?? rules.find((r) => r.service === 'all');
+    const effectiveRule = rules.find((r) => r.service === availabilityService);
     if (!effectiveRule || !effectiveRule.isOpen) {
       return NextResponse.json(
         { error: CONFLICT_ERROR },
@@ -92,7 +92,6 @@ export async function POST(req: NextRequest) {
       where: {
         date: data.date,
         time: data.time,
-        service: data.service,
       },
     });
     if (existing) {

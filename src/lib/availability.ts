@@ -2,7 +2,52 @@
 // No Prisma dependencies — can be used on both server and client
 
 export type DayStatus = 'available' | 'closed' | 'fully_booked' | 'blocked' | 'past';
-export type SlotStatus = 'available' | 'booked' | 'blocked';
+export type SlotStatus = 'available' | 'booked' | 'blocked' | 'past';
+
+export const BUSINESS_TIME_ZONE = 'Europe/Istanbul';
+
+function getDateTimeParts(now = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: BUSINESS_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(now);
+
+  const value = (type: string) => parts.find((part) => part.type === type)?.value || '00';
+
+  return {
+    year: value('year'),
+    month: value('month'),
+    day: value('day'),
+    hour: value('hour'),
+    minute: value('minute'),
+  };
+}
+
+export function getTodayDateStr(now = new Date()): string {
+  const { year, month, day } = getDateTimeParts(now);
+  return `${year}-${month}-${day}`;
+}
+
+export function getCurrentTimeStr(now = new Date()): string {
+  const { hour, minute } = getDateTimeParts(now);
+  return `${hour}:${minute}`;
+}
+
+export function isDateInPast(dateStr: string, now = new Date()): boolean {
+  return dateStr < getTodayDateStr(now);
+}
+
+export function isTimeSlotInPast(dateStr: string, time: string, now = new Date()): boolean {
+  const today = getTodayDateStr(now);
+  if (dateStr < today) return true;
+  if (dateStr > today) return false;
+  return time <= getCurrentTimeStr(now);
+}
 
 export interface BlockedDateRecord {
   id: string;
@@ -111,8 +156,7 @@ export function getDayStatus(
   blockedTimeSlots?: BlockedTimeSlotRecord[] // blocked time slots for this date
 ): DayStatus {
   // Check if date is in the past
-  const today = new Date().toISOString().split('T')[0];
-  if (dateStr < today) {
+  if (isDateInPast(dateStr)) {
     return 'past';
   }
 
