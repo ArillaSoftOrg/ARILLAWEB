@@ -65,7 +65,7 @@ export default async function LivePreviewSection({ sector, design, title, accent
         </a>
       </div>
 
-      <div className="mx-auto mt-6 w-full max-w-[1200px]">
+      <div className="mx-auto mt-6 w-full max-w-[1400px]">
         {embeddable ? (
           <LivePreviewFrame
             url={preview.referencePreviewUrl}

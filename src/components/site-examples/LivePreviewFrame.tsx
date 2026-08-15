@@ -15,12 +15,12 @@ const VIEWPORTS: Record<Viewport, { width: number; height: number; label: string
 
 const VIEWPORT_ICONS = { desktop: Monitor, tablet: Tablet, mobile: Smartphone };
 
-/** Interaction is disabled in the compact panel, so the framed site can never
+/** Interaction is disabled in compact previews, so the framed site can never
  *  navigate our page away. `allow-top-navigation`, `allow-popups`, `allow-modals`
- *  and `allow-downloads` are deliberately omitted in both instances. */
+ *  and `allow-downloads` are deliberately omitted in all iframe instances. */
 const SANDBOX = "allow-scripts allow-same-origin";
 
-/** How long to wait for the frame to load before giving up. */
+/** How long to wait for the main frame to load before giving up. */
 const LOAD_TIMEOUT_MS = 8000;
 
 type LivePreviewFrameProps = {
@@ -54,20 +54,21 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
     wasOpen.current = open;
   }, [open]);
 
-  // Scale the fixed 1440x900 frame down to whatever width the panel has.
-  // The compact panel is shorter than the source viewport and clips to a hero preview.
+  // Scale the fixed 1440x900 frame into the compact desktop panel.
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
     const observer = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
-      setPanelScale(Math.min(width / VIEWPORTS.desktop.width, height / VIEWPORTS.desktop.height));
+      const widthScale = width / VIEWPORTS.desktop.width;
+      const heightScale = height / VIEWPORTS.desktop.height;
+      setPanelScale(width >= 900 ? heightScale : Math.min(widthScale, heightScale));
     });
     observer.observe(panel);
     return () => observer.disconnect();
   }, [phase]);
 
-  // Give up if the frame never reports a load.
+  // Give up if the main frame never reports a load.
   useEffect(() => {
     if (phase !== "loading") return;
     const timer = setTimeout(() => setPhase("failed"), LOAD_TIMEOUT_MS);
@@ -82,76 +83,80 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
     return <PreviewUnavailable url={url} />;
   }
 
-  // Only ever one iframe alive: the compact frame unmounts while the modal is
-  // open, so the modal's frame is the single instance loading the reference site.
+  // Compact desktop/mobile previews unmount while the modal is open, so the
+  // interactive modal remains the only live frame during full preview.
   const showFrame = phase !== "idle" && !open;
 
   return (
     <>
-      <div className="overflow-hidden rounded-[14px] border border-black/10 bg-[#EEEEEC]">
-        <BrowserChrome label={label} />
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="overflow-hidden rounded-[14px] border border-black/10 bg-[#EEEEEC]">
+          <BrowserChrome label={label} />
 
-        <div ref={panelRef} className="relative aspect-[16/9] w-full overflow-hidden bg-white">
-          {showFrame && panelScale > 0 && (
-            <div aria-hidden className="pointer-events-none absolute inset-0 flex items-start justify-center">
-              <div
-                aria-hidden
-                className="pointer-events-none"
-                style={{ width: VIEWPORTS.desktop.width * panelScale, height: VIEWPORTS.desktop.height * panelScale }}
-              >
-                <iframe
-                  src={url}
-                  title={`${title} — canlı tasarım önizlemesi`}
-                  sandbox={SANDBOX}
-                  referrerPolicy="no-referrer"
-                  loading="eager"
-                  tabIndex={-1}
-                  onLoad={handleLoad}
-                  onError={() => setPhase("failed")}
-                  style={{
-                    width: VIEWPORTS.desktop.width,
-                    height: VIEWPORTS.desktop.height,
-                    transform: `scale(${panelScale})`,
-                    transformOrigin: "top left",
-                    border: 0,
-                  }}
-                />
-              </div>
-            </div>
-          )}
-
-          {phase === "loading" && (
-            <div className="absolute inset-0 bg-[#FAF9F7]/90 p-5">
-              <div className="h-full animate-pulse rounded-[10px] border border-black/5 bg-white/75 p-5">
-                <div className="h-6 w-2/5 rounded bg-slate-200" />
-                <div className="mt-5 grid h-[68%] grid-cols-[1.15fr_.85fr] gap-5">
-                  <div className="space-y-3">
-                    <div className="h-10 w-4/5 rounded bg-slate-200" />
-                    <div className="h-4 w-3/5 rounded bg-slate-200" />
-                    <div className="h-4 w-2/3 rounded bg-slate-200" />
-                    <div className="mt-6 h-10 w-32 rounded bg-slate-300" />
-                  </div>
-                  <div className="rounded-[14px] bg-slate-200" />
+          <div ref={panelRef} className="relative h-[520px] w-full overflow-hidden bg-white sm:h-[600px] xl:h-[660px]">
+            {showFrame && panelScale > 0 && (
+              <div aria-hidden className="pointer-events-none absolute inset-0 flex items-start justify-center">
+                <div
+                  aria-hidden
+                  className="pointer-events-none"
+                  style={{ width: VIEWPORTS.desktop.width * panelScale, height: VIEWPORTS.desktop.height * panelScale }}
+                >
+                  <iframe
+                    src={url}
+                    title={`${title} — canlı tasarım önizlemesi`}
+                    sandbox={SANDBOX}
+                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                    tabIndex={-1}
+                    onLoad={handleLoad}
+                    onError={() => setPhase("failed")}
+                    style={{
+                      width: VIEWPORTS.desktop.width,
+                      height: VIEWPORTS.desktop.height,
+                      transform: `scale(${panelScale})`,
+                      transformOrigin: "top left",
+                      border: 0,
+                    }}
+                  />
                 </div>
-                <p className="mt-4 text-center text-sm font-semibold text-[#6C7486]">Önizleme yükleniyor...</p>
               </div>
-            </div>
-          )}
+            )}
 
-          {phase === "ready" && (
-            <button
-              type="button"
-              ref={openButtonRef}
-              onClick={() => setOpen(true)}
-              aria-label="Tasarımı büyük önizlemede aç"
-              className="group absolute inset-0 flex items-end justify-center bg-[#0B1220]/0 transition hover:bg-[#0B1220]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4BF2] focus-visible:ring-offset-2"
-            >
-              <span className="mb-5 inline-flex items-center gap-2 rounded-[10px] bg-[#0B1220]/85 px-4 py-2.5 text-sm font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100 group-focus-visible:opacity-100">
-                <Maximize2 className="h-4 w-4" /> Büyük önizlemede aç
-              </span>
-            </button>
-          )}
+            {phase === "loading" && (
+              <div className="absolute inset-0 bg-[#FAF9F7]/90 p-5">
+                <div className="h-full animate-pulse rounded-[10px] border border-black/5 bg-white/75 p-5">
+                  <div className="h-6 w-2/5 rounded bg-slate-200" />
+                  <div className="mt-5 grid h-[68%] grid-cols-[1.15fr_.85fr] gap-5">
+                    <div className="space-y-3">
+                      <div className="h-10 w-4/5 rounded bg-slate-200" />
+                      <div className="h-4 w-3/5 rounded bg-slate-200" />
+                      <div className="h-4 w-2/3 rounded bg-slate-200" />
+                      <div className="mt-6 h-10 w-32 rounded bg-slate-300" />
+                    </div>
+                    <div className="rounded-[14px] bg-slate-200" />
+                  </div>
+                  <p className="mt-4 text-center text-sm font-semibold text-[#6C7486]">Önizleme yükleniyor...</p>
+                </div>
+              </div>
+            )}
+
+            {phase === "ready" && (
+              <button
+                type="button"
+                ref={openButtonRef}
+                onClick={() => setOpen(true)}
+                aria-label="Tasarımı büyük önizlemede aç"
+                className="group absolute inset-0 flex items-end justify-center bg-[#0B1220]/0 transition hover:bg-[#0B1220]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4BF2] focus-visible:ring-offset-2"
+              >
+                <span className="mb-5 inline-flex items-center gap-2 rounded-[10px] bg-[#0B1220]/85 px-4 py-2.5 text-sm font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100 group-focus-visible:opacity-100">
+                  <Maximize2 className="h-4 w-4" /> Büyük önizlemede aç
+                </span>
+              </button>
+            )}
+          </div>
         </div>
+
+        <MobilePreviewFrame url={url} title={title} showFrame={showFrame && phase === "ready"} />
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -164,8 +169,7 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
               <DialogTitle className="truncate">{title}</DialogTitle>
               <DialogDescription className="mt-0.5 truncate text-xs">
                 {templateName}
-                {creator ? ` — ${creator}` : ""} · harici referans site, ArillaSoft tarafından
-                geliştirilmemiştir
+                {creator ? ` — ${creator}` : ""} · harici referans site, ArillaSoft tarafından geliştirilmemiştir
               </DialogDescription>
             </div>
 
@@ -199,6 +203,73 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
         </DialogContent>
       </Dialog>
     </>
+  );
+}
+
+function MobilePreviewFrame({ url, title, showFrame }: { url: string; title: string; showFrame: boolean }) {
+  const shellRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0);
+  const { width, height } = VIEWPORTS.mobile;
+
+  useEffect(() => {
+    const shell = shellRef.current;
+    if (!shell) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const availableWidth = entry.contentRect.width - 32;
+      setScale(Math.min(availableWidth / width, 1));
+    });
+    observer.observe(shell);
+    return () => observer.disconnect();
+  }, [width]);
+
+  return (
+    <aside className="hidden xl:block">
+      <h3 className="mb-3 text-sm font-extrabold uppercase tracking-[0.14em] text-[#39415A]">Mobil Görünüm</h3>
+      <div
+        ref={shellRef}
+        className="rounded-[34px] border border-black/10 bg-[#111827] p-3 shadow-2xl shadow-slate-950/20"
+      >
+        <div className="mx-auto mb-2 h-1.5 w-20 rounded-full bg-white/20" />
+        <div className="relative h-[700px] overflow-hidden rounded-[25px] border border-white/10 bg-white">
+          {showFrame && scale > 0 && (
+            <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
+              <div
+                aria-hidden
+                className="pointer-events-none"
+                style={{ width: width * scale, height: height * scale }}
+              >
+                <iframe
+                  src={url}
+                  title={`${title} — mobil canlı tasarım önizlemesi`}
+                  sandbox={SANDBOX}
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                  tabIndex={-1}
+                  style={{
+                    width,
+                    height,
+                    transform: `scale(${scale})`,
+                    transformOrigin: "top left",
+                    border: 0,
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          {!showFrame && (
+            <div className="absolute inset-0 animate-pulse bg-[#FAF9F7] p-5">
+              <div className="h-7 w-2/3 rounded bg-slate-200" />
+              <div className="mt-6 h-36 rounded-2xl bg-slate-200" />
+              <div className="mt-5 space-y-3">
+                <div className="h-4 rounded bg-slate-200" />
+                <div className="h-4 w-5/6 rounded bg-slate-200" />
+                <div className="h-10 w-32 rounded bg-slate-300" />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </aside>
   );
 }
 
@@ -277,8 +348,8 @@ export function PreviewUnavailable({ url }: { url: string }) {
     <div className="flex flex-col items-start gap-4 rounded-[14px] border border-amber-200 bg-amber-50 p-6 sm:flex-row sm:items-center">
       <TriangleAlert className="h-6 w-6 shrink-0 text-amber-600" />
       <p className="flex-1 text-sm leading-6 text-amber-900">
-        <strong>Canlı önizleme kullanılamıyor.</strong> Bu referans site, güvenlik ayarları
-        nedeniyle başka sayfalara gömülmesine izin vermiyor.
+        <strong>Canlı önizleme kullanılamıyor.</strong> Bu referans site, güvenlik ayarları nedeniyle başka
+        sayfalara gömülmesine izin vermiyor.
       </p>
       <a
         href={url}
