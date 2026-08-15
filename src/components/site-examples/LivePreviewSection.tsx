@@ -13,15 +13,11 @@ type LivePreviewSectionProps = {
 export default async function LivePreviewSection({ sector, design, title, accent }: LivePreviewSectionProps) {
   const preview = getDesignPreview(sector, design);
 
-  // No verified embeddable URL configured yet — render nothing so the page
+  // No verified embeddable URL configured yet - render nothing so the page
   // stays exactly as it is. See src/lib/design-preview-config.ts.
   if (!preview) return null;
 
   const embeddable = await canBeFramed(preview.referencePreviewUrl);
-
-  const removalRequestHref = `mailto:info@arillasoft.com?subject=${encodeURIComponent(
-    `Kaldırma Talebi — ${preview.referenceTemplateName}`,
-  )}`;
 
   return (
     <section id="onizleme" className="mt-20 scroll-mt-28 border-t border-black/10 pt-14">
@@ -36,34 +32,10 @@ export default async function LivePreviewSection({ sector, design, title, accent
       </div>
       <p className="mt-4 max-w-3xl text-[16px] leading-7 text-[#39415A]">
         Aşağıdaki önizleme, bu tasarım yönüne örnek olarak seçilmiş{" "}
-        <strong className="font-bold text-[#0B1220]">harici bir web sitesidir</strong>. ArillaSoft
-        tarafından geliştirilmemiştir; içerik ve tüm haklar ilgili siteye aittir. Yalnızca hangi
-        tasarım yönünü tercih edebileceğiniz konusunda size fikir vermek amacıyla gösterilir.
+        <strong className="font-bold text-[#0B1220]">harici bir web sitesidir</strong>. ArillaSoft tarafından
+        geliştirilmemiştir; içerik ve tüm haklar ilgili siteye aittir. Yalnızca hangi tasarım yönünü tercih
+        edebileceğiniz konusunda size fikir vermek amacıyla gösterilir.
       </p>
-
-      <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-        <span className="font-semibold text-[#39415A]">
-          {preview.referenceMarketplaceUrl ? (
-            <a
-              href={preview.referenceMarketplaceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline decoration-[#39415A]/30 underline-offset-2 hover:text-[#2B4BF2] hover:decoration-[#2B4BF2]/40"
-            >
-              {preview.referenceTemplateName}
-            </a>
-          ) : (
-            preview.referenceTemplateName
-          )}
-        </span>
-        {preview.referenceCreator && <span className="text-[#6C7486]">— {preview.referenceCreator}</span>}
-        <span className="text-[#6C7486]/60">·</span>
-        <span className="text-[#6C7486]">{preview.referencePlatform}</span>
-        <span className="text-[#6C7486]/60">·</span>
-        <a href={removalRequestHref} className="text-[#6C7486] underline decoration-[#6C7486]/40 underline-offset-2 hover:text-[#0B1220]">
-          Kaldırma Talebi
-        </a>
-      </div>
 
       <div className="mx-auto mt-6 w-full max-w-[1500px]">
         {embeddable ? (
@@ -73,7 +45,6 @@ export default async function LivePreviewSection({ sector, design, title, accent
             title={title}
             templateName={preview.referenceTemplateName}
             creator={preview.referenceCreator}
-            platform={preview.referencePlatform}
           />
         ) : (
           <PreviewUnavailable url={preview.referencePreviewUrl} />

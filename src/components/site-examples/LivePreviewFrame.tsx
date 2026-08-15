@@ -33,7 +33,6 @@ type LivePreviewFrameProps = {
   templateName: string;
   /** Template author/studio, when the marketplace listing credits one. */
   creator?: string;
-  platform?: string;
 };
 
 export default function LivePreviewFrame({
@@ -42,7 +41,6 @@ export default function LivePreviewFrame({
   title,
   templateName,
   creator,
-  platform = "Framer",
 }: LivePreviewFrameProps) {
   const [phase, setPhase] = useState<Phase>("loading");
   const [open, setOpen] = useState(false);
@@ -84,42 +82,14 @@ export default function LivePreviewFrame({
   }
 
   const showFrame = phase !== "idle" && !open;
-  const projectName = getReferenceProjectName(templateName, title);
-  const projectDescription = getReferenceDescription(templateName);
-
   return (
     <>
       <div className="rounded-[28px] bg-gradient-to-br from-white via-[#F8F8FF] to-[#EEF3FF] px-5 py-7 shadow-[0_24px_80px_rgba(43,75,242,0.10)] sm:px-7 lg:px-9">
-        <div className="mb-7 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div className="min-w-0">
-            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#6D4DFF]">WEB SİTE ÖRNEĞİ</p>
-            <h3 className="mt-2 text-[40px] font-black leading-none tracking-[-0.04em] text-[#111827] sm:text-[52px]">
-              {projectName}
-            </h3>
-            <p className="mt-3 max-w-xl text-base font-semibold text-[#46536B]">{projectDescription}</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {["Web Design", "Responsive", platform].map((tag) => (
-                <span key={tag} className="rounded-full bg-[#ECEBFF] px-4 py-1.5 text-sm font-bold text-[#35415C]">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-extrabold text-[#6D4DFF] transition hover:text-[#4F35D8]"
-          >
-            Orijinal Siteyi Ziyaret Et <ExternalLink className="h-4 w-4" />
-          </a>
-        </div>
-
         <div className="grid items-end gap-7 xl:grid-cols-[minmax(0,1fr)_260px]">
           <div>
             <div className="rounded-t-[22px] bg-[#111319] p-2 shadow-[0_20px_50px_rgba(15,23,42,0.22)]">
               <div className="overflow-hidden rounded-t-[14px] border border-black bg-[#0B0D12]">
-                <BrowserChrome label={label} url={url} />
+                <BrowserChrome label={label} />
 
                 <div
                   ref={panelRef}
@@ -180,10 +150,7 @@ export default function LivePreviewFrame({
           </div>
 
           <div className="hidden xl:block">
-            <div className="mb-4 flex items-center gap-2 text-sm font-extrabold text-[#46536B]">
-              <Smartphone className="h-4 w-4 text-[#7A8599]" /> Responsive Görünüm
-            </div>
-            <MobilePreviewFrame url={url} title={title} showFrame={showFrame && phase === "ready"} />
+            <MobilePreviewFrame url={url} title={title} showFrame={showFrame && phase === "ready"} onOpen={() => setOpen(true)} />
           </div>
         </div>
       </div>
@@ -255,7 +222,17 @@ function PreviewSkeleton() {
   );
 }
 
-function MobilePreviewFrame({ url, title, showFrame }: { url: string; title: string; showFrame: boolean }) {
+function MobilePreviewFrame({
+  url,
+  title,
+  showFrame,
+  onOpen,
+}: {
+  url: string;
+  title: string;
+  showFrame: boolean;
+  onOpen: () => void;
+}) {
   const shellRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
   const { width, height } = VIEWPORTS.mobile;
@@ -276,7 +253,7 @@ function MobilePreviewFrame({ url, title, showFrame }: { url: string; title: str
         ref={shellRef}
         className="rounded-[34px] border border-black/15 bg-[#10131B] p-2 shadow-[0_18px_45px_rgba(15,23,42,0.22)]"
       >
-        <div className="relative h-[560px] overflow-hidden rounded-[25px] border border-black bg-white">
+        <div className="relative h-[600px] overflow-hidden rounded-[25px] border border-black bg-white">
           <div className="pointer-events-none absolute left-1/2 top-0 z-10 h-5 w-24 -translate-x-1/2 rounded-b-2xl bg-[#10131B]" />
           {showFrame && scale > 0 && (
             <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
@@ -314,6 +291,18 @@ function MobilePreviewFrame({ url, title, showFrame }: { url: string; title: str
                 <div className="h-10 w-32 rounded bg-slate-300" />
               </div>
             </div>
+          )}
+          {showFrame && (
+            <button
+              type="button"
+              onClick={onOpen}
+              aria-label="Tasarımı büyük önizlemede aç"
+              className="group absolute inset-0 flex items-end justify-center bg-[#0B1220]/0 transition hover:bg-[#0B1220]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4BF2] focus-visible:ring-offset-2"
+            >
+              <span className="mb-5 inline-flex items-center gap-2 rounded-[10px] bg-[#0B1220]/85 px-3 py-2 text-xs font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100 group-focus-visible:opacity-100">
+                <Maximize2 className="h-3.5 w-3.5" /> Büyük önizlemede aç
+              </span>
+            </button>
           )}
         </div>
       </div>
@@ -373,7 +362,7 @@ function ModalFrame({
   );
 }
 
-function BrowserChrome({ label, url }: { label: string; url: string }) {
+function BrowserChrome({ label }: { label: string }) {
   return (
     <div className="flex h-10 items-center gap-3 border-b border-black/10 bg-gradient-to-b from-[#F8F8F8] to-[#E8E8E8] px-4 text-[#1F2937]">
       <div className="flex gap-1.5">
@@ -382,26 +371,9 @@ function BrowserChrome({ label, url }: { label: string; url: string }) {
         <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
       </div>
       <span className="truncate text-xs font-semibold text-[#4B5563]">{label}</span>
-      <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="ml-auto inline-flex shrink-0 items-center gap-1 text-xs font-bold text-[#111827] transition hover:text-[#6D4DFF]"
-      >
-        Orijinal Site <ExternalLink className="h-3.5 w-3.5" />
-      </a>
+      <span className="ml-auto shrink-0 text-xs font-bold text-[#111827]">Orijinal Site</span>
     </div>
   );
-}
-
-function getReferenceProjectName(templateName: string, fallback: string) {
-  return templateName.split(" - ")[0]?.trim() || fallback.split("—")[0]?.trim() || fallback;
-}
-
-function getReferenceDescription(templateName: string) {
-  const [, ...rest] = templateName.split(" - ");
-  const description = rest.join(" - ").replace(/\s*Template\s*$/i, "").trim();
-  return description || "Responsive Website Preview";
 }
 
 export function PreviewUnavailable({ url }: { url: string }) {
