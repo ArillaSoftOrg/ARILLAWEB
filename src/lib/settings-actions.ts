@@ -25,7 +25,7 @@ const DEFAULTS: SiteSettingsData = {
     heroPrimaryButton: "Demo Talep Et",
     heroSecondaryButton: "Tüm Hizmetler",
     homepageIntro:
-        "Web'den mobilye, backend'den UI/UX tasarımına — uçtan uca dijital dönüşüm hizmetleri.",
+        "Web'den mobile, backend'den UI/UX tasarımına — uçtan uca dijital dönüşüm hizmetleri.",
     whyChooseUsTitle: "QR Menü Sistemi ile|Restoranınızı Dönüştürün",
     whyChooseUsText:
         "Masaya QR kodu koyun, müşterileriniz menüye anında ulaşsın. Baskı masrafı yok, güncelleme zahmeti yok.",

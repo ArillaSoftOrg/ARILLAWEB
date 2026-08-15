@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
+import { useLocale } from 'next-intl';
 import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getServiceLabel, SERVICE_SLUGS } from '@/lib/services';
 import { getTodayDateStr, type DayStatus, type SlotStatus } from '@/lib/availability';
@@ -29,6 +30,7 @@ function getMonthStr(year: number, month: number): string {
 
 export default function HeroBookingForm({ defaultService, theme = 'light' }: HeroBookingFormProps) {
   const router = useRouter();
+  const locale = useLocale();
   const { consentRecord } = useCookieConsentContext();
   const [service, setService] = useState<string>(defaultService ? getServiceLabel(defaultService) : '');
   const [date, setDate] = useState('');
@@ -321,7 +323,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
             <ChevronLeft size={18} />
           </button>
           <span style={{ color: inputColor, fontSize: 14, fontWeight: 600 }}>
-            {new Date(calendarYear, calendarMonth).toLocaleDateString('tr-TR', {
+            {new Date(calendarYear, calendarMonth).toLocaleDateString(locale === 'en' ? 'en-US' : 'tr-TR', {
               month: 'long',
               year: 'numeric',
             })}

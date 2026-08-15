@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/constants';
+import { getFaqsByPage } from '@/lib/faq-actions';
 import HomeClient from './HomeClient';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -35,7 +36,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const faqs = await getFaqsByPage('home').catch(() => []);
+
   return (
     <>
       <script
@@ -61,7 +64,7 @@ export default function HomePage() {
           }),
         }}
       />
-      <HomeClient />
+      <HomeClient faqs={faqs} />
     </>
   );
 }

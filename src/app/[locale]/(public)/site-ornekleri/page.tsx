@@ -7,7 +7,7 @@ import { getCatalogProjects, getCatalogSectors } from "@/lib/project-actions";
 type Props = { params: Promise<{ locale: string }> };
 
 export const metadata: Metadata = {
-  title: "Sektörel Site Örnekleri | ArillaSoft",
+  title: "Sektörel Site Örnekleri",
   description: "İşletmenizin sektörüne uygun canlı web sitesi demolarını ve özgün tasarım konseptlerini inceleyin.",
   alternates: { canonical: "/tr/site-ornekleri" },
 };

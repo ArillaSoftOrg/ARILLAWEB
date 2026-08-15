@@ -4,9 +4,11 @@ import AnimatedBrand from "@/components/AnimatedBrand";
 import SupportChatWidget from "@/components/SupportChatWidget";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import BlogMediaCard from "@/components/blog/BlogMediaCard";
-import HeroBookingForm from "@/components/hero/HeroBookingForm";
+import HeroShowcase from "@/components/home/HeroShowcase";
+import HowItWorks from "@/components/sections/HowItWorks";
+import FAQSection from "@/components/sections/FAQSection";
 import type { BlogPost } from "@/lib/blog-data";
 import { getSiteExampleDisplay } from "@/lib/site-example-display";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
@@ -122,11 +124,11 @@ const DEFAULT_SETTINGS: SiteSettings = {
   heroPrimaryButton: "Demo Talep Et",
   heroSecondaryButton: "Tüm Hizmetler",
   homepageIntro:
-    "Web'den mobilye, backend'den UI/UX tasarımına — uçtan uca dijital dönüşüm hizmetleri.",
+    "Web'den mobile, backend'den UI/UX tasarımına — uçtan uca dijital dönüşüm hizmetleri.",
   whyChooseUsTitle: "QR Menü Sistemi ile|Restoranınızı Dönüştürün",
   whyChooseUsText:
     "Masaya QR kodu koyun, müşterileriniz menüye anında ulaşsın. Baskı masrafı yok, güncelleme zahmeti yok.",
-  homepageCTA: "Dijital Dönüşümünüzü|Bugün Başlatın",
+  homepageCTA: "Projenizi Birlikte|Netleştirelim",
 };
 
 const QR_PLAN_FEATURES = [
@@ -271,10 +273,10 @@ function WhyUsSection() {
       icon: Wrench,
     },
     {
-      title: "Mobil uyumlu ve hızlı arayüzler",
+      title: "Büyümeye uygun ölçeklenebilir altyapı",
       description:
-        "Tüm cihazlarda sorunsuz çalışan, hızlı yüklenen arayüzler üretiyoruz.",
-      icon: Smartphone,
+        "İşletmeniz büyüdükçe yeni modül ve entegrasyonlarla genişleyebilen bir mimari üzerine kuruyoruz.",
+      icon: Cpu,
     },
     {
       title: "Yönetilebilir panel altyapısı",
@@ -379,161 +381,6 @@ function WhyUsSection() {
 }
 
 // ─────────────────────────────────────────────
-// Example Solutions Section
-// ─────────────────────────────────────────────
-function ExampleSolutionsSection() {
-  const solutions = [
-    "Klinik Randevu Sistemi",
-    "Kurumsal Web Sitesi",
-    "Eğitim Yönetim Paneli",
-    "Stok ve Sipariş Takip Sistemi",
-  ];
-
-  return (
-    <section
-      style={{ position: "relative" }}
-      className="py-16 sm:py-20 lg:py-28"
-    >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "rgba(255,255,255,0.015)",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-        }}
-      />
-      <div
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          position: "relative",
-        }}
-        className="px-5 sm:px-6"
-      >
-        <AnimatedSection>
-          <motion.div
-            variants={fadeUp}
-            style={{
-              textAlign: "center",
-              marginBottom: "64px",
-            }}
-          >
-            <div
-              className="text-role-eyebrow"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "6px 14px",
-                borderRadius: "100px",
-                background: "rgba(6,182,212,0.1)",
-                border: "1px solid rgba(6,182,212,0.25)",
-                marginBottom: "20px",
-              }}
-            >
-              <Sparkles size={12} />
-              Örnek Çözüm Türleri
-            </div>
-            <h2
-              className="text-role-section-heading"
-              style={{
-                margin: "0 0 16px 0",
-              }}
-            >
-              Geliştirdiğimiz Çözüm Türleri
-            </h2>
-            <p
-              className="text-role-body-lg"
-              style={{
-                maxWidth: "600px",
-                margin: "0 auto",
-              }}
-            >
-              Bunlar örnek çözüm türleridir. Her proje ihtiyaca göre özel olarak geliştirilir.
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={stagger}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
-          >
-            {solutions.map((solution) => (
-              <motion.div
-                key={solution}
-                variants={fadeUp}
-                style={{
-                  background: "#f8fafc",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "12px",
-                  padding: "20px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  textAlign: "center",
-                  gap: "12px",
-                  minHeight: "160px",
-                  justifyContent: "center",
-                }}
-              >
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    borderRadius: "8px",
-                    background: "rgba(124,58,237,0.1)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Code2 size={20} color="#7c3aed" />
-                </div>
-                <h3
-                  className="text-role-subheading"
-                  style={{
-                    margin: "0",
-                  }}
-                >
-                  {solution}
-                </h3>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <motion.div
-            variants={fadeUp}
-            style={{
-              textAlign: "center",
-              marginTop: "48px",
-            }}
-          >
-            <Link
-              href="/randevual"
-              className="text-role-button"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                padding: "12px 24px",
-                borderRadius: "10px",
-                textDecoration: "none",
-                color: "white",
-                background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
-                boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
-              }}
-            >
-              Projenizi Görüşelim <ArrowRight size={14} />
-            </Link>
-          </motion.div>
-        </AnimatedSection>
-      </div>
-    </section>
-  );
-}
-
-// ─────────────────────────────────────────────
 // Hero Section
 // ─────────────────────────────────────────────
 const SITE_EXAMPLES = [
@@ -607,6 +454,9 @@ function SiteExampleTile({ example, hidden = false }: { example: (typeof SITE_EX
           className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
           sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 380px"
         />
+        <span className="absolute left-3 top-3 rounded-full bg-slate-950/80 px-3 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+          Demo / Konsept
+        </span>
       </div>
       <div className="p-5">
         <h3 className="text-lg font-black text-slate-950">{display.title}</h3>
@@ -636,12 +486,12 @@ function SiteExamplesPreviewSection() {
       <div className="mx-auto max-w-[1280px] px-5 sm:px-6">
         <AnimatedSection className="mb-10 flex flex-col gap-6 sm:mb-14 sm:flex-row sm:items-end sm:justify-between">
           <motion.div variants={fadeUp} className="max-w-2xl">
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">Site örnekleri</p>
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">Demo Tasarımlar</p>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950 sm:text-5xl">
-              Sektörünüze uygun tasarımı önce görün.
+              Sektörünüze Uygun Site Konseptlerini İnceleyin
             </h2>
             <p className="mt-4 text-base leading-7 text-slate-600">
-              Canlı demoları ve özgün tasarım konseptlerini inceleyin; beğendiğiniz yaklaşımı işletmenize göre uyarlayalım.
+              Aşağıdaki tasarımlar canlı demo ve konsept çalışmalarıdır, gerçek müşteri projesi değildir; beğendiğiniz yaklaşımı işletmenize göre uyarlayabiliriz.
             </p>
           </motion.div>
           <motion.div variants={fadeUp}>
@@ -735,7 +585,7 @@ function HeroSection() {
       maxWidth: "100%",
     }}
   >
-    İşletmenize özel web sitesi, yazılım ve yönetim sistemleri geliştirin.
+    İş süreçlerinizi dijitalleştiren özel yazılım ve web çözümleri geliştiriyoruz.
   </h1>
 </motion.div>
 
@@ -749,7 +599,7 @@ function HeroSection() {
               marginBottom: "24px",
             }}
           >
-            Arilla Soft; kurumlar, işletmeler ve girişimciler için yönetilebilir web siteleri, randevu sistemleri, özel yazılım çözümleri ve dijital süreç altyapıları geliştirir.
+            Kurumsal web sitelerinden yönetim panellerine, randevu sistemlerinden özel iş yazılımlarına kadar ihtiyacınıza göre tasarlanan dijital sistemleri geliştiriyor, yayına alıyor ve teknik desteğini sağlıyoruz.
           </motion.p>
 
           {/* Value items */}
@@ -799,10 +649,10 @@ function HeroSection() {
               }}
               className="sm:w-auto text-role-button"
             >
-              Ücretsiz Ön Görüşme Planla <ArrowRight size={14} />
+              Ücretsiz Keşif Görüşmesi <ArrowRight size={14} />
             </Link>
             <Link
-              href="/hizmetler"
+              href="/site-ornekleri"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -819,7 +669,7 @@ function HeroSection() {
               }}
               className="sm:w-auto text-role-button"
             >
-              Hizmetleri İncele <ArrowRight size={14} />
+              Projelerimizi İncele <ArrowRight size={14} />
             </Link>
           </motion.div>
 
@@ -835,18 +685,18 @@ function HeroSection() {
               lineHeight: 1.5,
             }}
           >
-            15 dakikalık ücretsiz analiz görüşmesi. Projeniz için net ihtiyaç ve kapsam belirlenir.
+            15 dakikalık ücretsiz keşif görüşmesi. Projeniz için net ihtiyaç ve kapsam belirlenir.
           </motion.p>
         </motion.div>
 
-        {/* Right: Booking form — both mobile and desktop */}
+        {/* Right: Product showcase visual */}
         <motion.div
           variants={scaleIn}
           initial="hidden"
           animate="visible"
           className="flex justify-center items-center w-full"
         >
-          <HeroBookingForm />
+          <HeroShowcase />
         </motion.div>
       </div>
 
@@ -882,8 +732,8 @@ function HeroSection() {
 const MAIN_SERVICES = [
   {
     id: "1",
-    title: "Kurumsal Web Sitesi",
-    description: "Profesyonel, hızlı ve SEO dostu kurumsal web siteleri geliştiriyoruz. İşletmenizi çevrimiçi dünyada en iyi şekilde sunuyoruz.",
+    title: "Kurumsal Web ve Web Uygulamaları",
+    description: "Profesyonel, hızlı ve SEO dostu kurumsal web siteleri ile yönetim panelleri ve web uygulamaları geliştiriyoruz.",
     icon: "Globe",
   },
   {
@@ -894,9 +744,15 @@ const MAIN_SERVICES = [
   },
   {
     id: "3",
-    title: "Dijital Sistemler ve Otomasyon",
-    description: "İş süreçlerinizi otomatikleştiren akıllı sistemler kurarız. Verimliliği artırın, maliyetleri azaltın, hataları elimine edin.",
+    title: "Entegrasyon ve Otomasyon",
+    description: "Mevcut sistemlerinizi birbirine bağlar, iş süreçlerinizi otomatikleştiren akıllı entegrasyonlar kurarız.",
     icon: "Zap",
+  },
+  {
+    id: "4",
+    title: "Bakım ve Sürekli Geliştirme",
+    description: "Projeniz yayına girdikten sonra da güncelleme, izleme ve teknik destekle yanınızda oluruz.",
+    icon: "Wrench",
   },
 ];
 
@@ -910,7 +766,7 @@ const SECTORAL_SOFTWARE = [
   {
     id: "2",
     title: "Randevu Yönetim Sistemi",
-    description: "Salon, klinik ve konsultasyon işletmeleri için müşteri randevu yönetimi, otomatik hatırlatma ve ödeme entegrasyonu.",
+    description: "Salon, klinik ve güzellik merkezi işletmeleri için müşteri randevu yönetimi, otomatik hatırlatma ve ödeme entegrasyonu.",
     icon: "Calendar",
   },
   {
@@ -975,7 +831,7 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
         </AnimatedSection>
 
         <AnimatedSection>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7 mb-12">
             {MAIN_SERVICES.map((service) => {
               const Icon = SERVICE_ICON_MAP[service.icon] ?? Code2;
               return (
@@ -1078,9 +934,50 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
 }
 
 // ─────────────────────────────────────────────
-// Sectoral Software Section
+// How We Work Section
 // ─────────────────────────────────────────────
-function SectoralSoftwareSection() {
+const HOW_WE_WORK_STEPS = [
+  {
+    number: 1,
+    title: "Keşif",
+    description: "İhtiyaçlarınızı, hedeflerinizi ve mevcut süreçlerinizi birlikte netleştiriyoruz.",
+  },
+  {
+    number: 2,
+    title: "Planlama ve Tasarım",
+    description: "Kapsamı, teknik yaklaşımı ve arayüz tasarımını belirleyip yol haritasını çıkarıyoruz.",
+  },
+  {
+    number: 3,
+    title: "Geliştirme ve Test",
+    description: "Sprint döngüleriyle geliştiriyor, her aşamada test ederek kaliteyi güvence altına alıyoruz.",
+  },
+  {
+    number: 4,
+    title: "Yayın ve Destek",
+    description: "Projenizi yayına alıyor, sonrasında güncelleme ve teknik destekle yanınızda kalıyoruz.",
+  },
+];
+
+function HowWeWorkSection() {
+  return (
+    <div className="px-5 sm:px-6" style={{ maxWidth: "1280px", margin: "0 auto" }}>
+      <HowItWorks
+        title="Nasıl Çalışıyoruz?"
+        description="Projenizi netleştirmekten yayına almaya kadar dört adımlık şeffaf bir süreç izliyoruz."
+        steps={HOW_WE_WORK_STEPS}
+        accentColor="#7c3aed"
+        darkMode={false}
+        layout="horizontal"
+      />
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Industry Products Section
+// ─────────────────────────────────────────────
+function IndustryProductsSection() {
   return (
     <section style={{ position: "relative" }} className="py-16 sm:py-20 lg:py-28">
       <div
@@ -1121,6 +1018,15 @@ function SectoralSoftwareSection() {
               Sektörünüze Özel{" "}
               <span style={{ color: "#059669", fontWeight: 900 }}>Yazılım Çözümleri</span>
             </h2>
+            <p
+              className="text-role-body-lg"
+              style={{
+                maxWidth: "520px",
+                margin: "0 auto 8px",
+              }}
+            >
+              Hazır altyapı üzerine işletmeye göre yapılandırılan sektörel sistemler.
+            </p>
             <p
               className="text-role-body-lg"
               style={{
@@ -1296,7 +1202,7 @@ function CTASection({ settings }: { settings: SiteSettings }) {
                 }}
               >
                 <Zap size={12} />
-                Ücretsiz Danışmanlık
+                Ücretsiz Keşif Görüşmesi
               </div>
 
               <h2
@@ -1316,12 +1222,12 @@ function CTASection({ settings }: { settings: SiteSettings }) {
                   margin: "0 auto 32px",
                 }}
               >
-                Projenizi bizimle paylaşın. 24 saat içinde size özel teklifimizi hazırlayalım.
+                Projenizi bizimle paylaşın. Ücretsiz keşif görüşmesinde ihtiyacınızı ve kapsamı birlikte netleştirelim.
               </p>
 
               <div className="flex flex-wrap gap-3 sm:gap-4 justify-center">
                 <Link
-                  href="/teklif-al"
+                  href="/randevual"
                   className="inline-flex items-center gap-2 rounded-xl text-white transition-all text-role-button"
                   style={{
                     padding: "12px 24px",
@@ -1331,7 +1237,7 @@ function CTASection({ settings }: { settings: SiteSettings }) {
                   }}
                 >
                   <Sparkles size={15} />
-                  Ücretsiz Teklif Al
+                  Ücretsiz Keşif Görüşmesi
                 </Link>
                 <Link
                   href="/kurumsal/iletisim"
@@ -1567,7 +1473,9 @@ function BlogSection() {
 // ─────────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────────
-export default function HomeClient() {
+type HomeFaq = { question: string; answer: string };
+
+export default function HomeClient({ faqs = [] }: { faqs?: HomeFaq[] }) {
   const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
 
   useEffect(() => {
@@ -1585,13 +1493,22 @@ export default function HomeClient() {
     <div style={{ background: "#ffffff", minHeight: "100vh", color: "#0f172a", overflowX: "hidden" }}>
       <HeroSection />
       <TrustStrip />
-      <WhyUsSection />
-      <ExampleSolutionsSection />
-      <SiteExamplesPreviewSection />
       <ServicesSection settings={settings} />
-      <SectoralSoftwareSection />
-      <BlogSection />
+      <HowWeWorkSection />
+      <IndustryProductsSection />
+      <SiteExamplesPreviewSection />
+      <WhyUsSection />
+      {faqs.length > 0 && (
+        <FAQSection
+          title="Sıkça Sorulan Sorular"
+          description="Projeye başlamadan önce merak edilenler."
+          faqs={faqs}
+          accentColor="#7c3aed"
+          darkMode={false}
+        />
+      )}
       <CTASection settings={settings} />
+      <BlogSection />
       <SupportChatWidget />
     </div>
   );

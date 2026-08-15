@@ -21,6 +21,7 @@ export default async function PublicLayout({ children }: { children: React.React
   const pathname = headerList.get('x-pathname') ?? '/';
   const publicPath = stripLocale(pathname);
   const isBlogPath = publicPath === '/kurumsal/blog' || publicPath.startsWith('/kurumsal/blog/');
+  const isHomePath = publicPath === '/';
   const isAdminPreview = await hasValidAdminSession();
   const settings = await getSiteSettings();
   const maintenanceModeEnabled = settings.maintenanceModeEnabled;
@@ -32,7 +33,7 @@ export default async function PublicLayout({ children }: { children: React.React
     : routing.defaultLocale;
   const announcementConfigs = showMaintenance ? [] : await getActiveCampaignBars();
   const faqs =
-    !showMaintenance && !isBlogPath
+    !showMaintenance && !isBlogPath && !isHomePath
       ? await getFaqsByPage(publicPathToSlug(publicPath)).catch(() => [])
       : [];
 
@@ -48,7 +49,7 @@ export default async function PublicLayout({ children }: { children: React.React
         <main className="flex-1" style={{ paddingTop: 'var(--bar-h, 0px)' }}>
           {showMaintenance ? <MaintenanceNotice locale={locale} /> : children}
         </main>
-        {!showMaintenance && !isBlogPath && <FAQSection faqs={faqs} />}
+        {!showMaintenance && !isBlogPath && !isHomePath && <FAQSection faqs={faqs} />}
         {!showMaintenance && !isBlogPath && <Footer />}
       </div>
       <CookieBanner />

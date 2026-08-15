@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!project || !project.category) return {};
   const url = `${SITE_URL}/tr/site-ornekleri/${sector}/${design}`;
   return {
-    title: `${project.title} | ${project.designCode} | ArillaSoft`,
+    title: `${project.title} | ${project.designCode}`,
     description: project.summary,
     alternates: { canonical: `/tr/site-ornekleri/${sector}/${design}` },
     openGraph: {

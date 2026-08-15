@@ -4,6 +4,7 @@
     "description": "Modern yazılım çözümleri ile işletmenizi dijital geleceğe taşıyoruz. Web, mobil ve kurumsal yazılım geliştirme."
   },
   "nav": {
+    "projeler": "Projeler",
     "siteOrnekleri": "Site Örnekleri",
     "sektorelYazilimlar": "Sektörel Yazılımlar",
     "tumSektorelYazilimlar": "Tüm Sektörel Yazılımlar",
@@ -19,7 +20,7 @@
     "blog": "Blog",
     "kariyer": "Kariyer",
     "iletisim": "İletişim",
-    "teklifAl": "Teklif Al",
+    "teklifAl": "Ücretsiz Keşif Görüşmesi",
     "menuToggle": "Menüyü aç/kapat"
   },
   "footer": {
@@ -38,7 +39,7 @@
     "contact": "İletişim",
     "contactHeading": "İletişim",
     "location": "Konyaaltı / Antalya",
-    "contactCta": "Teklif Al",
+    "contactCta": "Ücretsiz Keşif Görüşmesi",
     "copyright": "Tüm hakları saklıdır.",
     "cookiePrefs": "Çerez Tercihleri"
   },

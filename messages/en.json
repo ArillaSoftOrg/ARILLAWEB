@@ -4,6 +4,7 @@
     "description": "We take your business to the digital future with modern software solutions. Web, mobile and enterprise software development."
   },
   "nav": {
+    "projeler": "Projects",
     "siteOrnekleri": "Website Examples",
     "sektorelYazilimlar": "Industry Software",
     "tumSektorelYazilimlar": "All Industry Software",
@@ -19,7 +20,7 @@
     "blog": "Blog",
     "kariyer": "Careers",
     "iletisim": "Contact",
-    "teklifAl": "Get a Quote",
+    "teklifAl": "Free Discovery Call",
     "menuToggle": "Toggle menu"
   },
   "footer": {
@@ -38,7 +39,7 @@
     "contact": "Contact",
     "contactHeading": "Contact",
     "location": "Konyaaltı / Antalya",
-    "contactCta": "Get a Quote",
+    "contactCta": "Free Discovery Call",
     "copyright": "All rights reserved.",
     "cookiePrefs": "Cookie Preferences"
   },

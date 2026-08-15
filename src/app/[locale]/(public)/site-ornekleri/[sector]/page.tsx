@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const sector = await getCatalogSectorBySlug(slug);
   if (!sector) return {};
   return {
-    title: `${sector.name} Site Örnekleri | ArillaSoft`,
+    title: `${sector.name} Site Örnekleri`,
     description: sector.description ?? `${sector.name} için canlı demo ve özgün web sitesi tasarım konseptleri.`,
     alternates: { canonical: `/tr/site-ornekleri/${sector.slug}` },
     openGraph: {

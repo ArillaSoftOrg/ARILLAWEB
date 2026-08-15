@@ -33,9 +33,7 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const NAV_ITEMS: NavItem[] = [
-    ...(locale === 'tr'
-      ? [{ labelKey: 'siteOrnekleri', href: '/site-ornekleri' } satisfies NavItem]
-      : []),
+    { labelKey: 'projeler', href: '/site-ornekleri' },
     {
       labelKey: 'sektorelYazilimlar',
       children: [
