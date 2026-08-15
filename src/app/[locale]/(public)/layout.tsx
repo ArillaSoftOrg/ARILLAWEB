@@ -12,23 +12,20 @@ import { CookieBanner } from '@/components/cookie/CookieBanner';
 import { CookiePreferencesModal } from '@/components/cookie/CookiePreferencesModal';
 import { ConsentedScripts } from '@/components/cookie/ConsentedScripts';
 import { routing } from '@/i18n/routing';
+import { getSiteSettings } from '@/lib/settings-actions';
 
 export const dynamic = 'force-dynamic';
-
-const PUBLIC_DEVELOPMENT_MODE = true;
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const headerList = await headers();
   const pathname = headerList.get('x-pathname') ?? '/';
   const publicPath = stripLocale(pathname);
   const isBlogPath = publicPath === '/kurumsal/blog' || publicPath.startsWith('/kurumsal/blog/');
-  const isCatalogPath =
-    publicPath === '/site-ornekleri' ||
-    publicPath.startsWith('/site-ornekleri/') ||
-    publicPath.startsWith('/demo-siteler/');
   const isAdminPreview = await hasValidAdminSession();
+  const settings = await getSiteSettings();
+  const maintenanceModeEnabled = settings.maintenanceModeEnabled;
   const showMaintenance =
-    PUBLIC_DEVELOPMENT_MODE && !isAdminPreview && !isBlogPath && !isCatalogPath;
+    maintenanceModeEnabled && !isAdminPreview;
   const pathSegments = pathname.split('/').filter(Boolean);
   const locale = routing.locales.includes(pathSegments[0] as (typeof routing.locales)[number])
     ? pathSegments[0]
@@ -44,7 +41,7 @@ export default async function PublicLayout({ children }: { children: React.React
       <div className="flex flex-col min-h-screen">
         <Navbar
           developerLoginOnly={
-            PUBLIC_DEVELOPMENT_MODE && !isAdminPreview && !isCatalogPath
+            maintenanceModeEnabled && !isAdminPreview
           }
         />
         {!showMaintenance && <AnnouncementBar configs={announcementConfigs} />}

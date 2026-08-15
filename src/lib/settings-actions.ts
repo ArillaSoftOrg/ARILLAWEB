@@ -2,8 +2,11 @@
 
 import { prisma } from "./prisma";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { jwtVerify } from "jose";
 
 export type SiteSettingsData = {
+    maintenanceModeEnabled: boolean;
     heroTitle: string;
     heroSubtitle: string;
     heroPrimaryButton: string;
@@ -15,6 +18,7 @@ export type SiteSettingsData = {
 };
 
 const DEFAULTS: SiteSettingsData = {
+    maintenanceModeEnabled: true,
     heroTitle: "Restoranınız İçin|Akıllı Dijital Menü Sistemi",
     heroSubtitle:
         "QR kod ile anında erişilen, anlık güncellenebilen, çok dilli dijital menü çözümü. Müşteri deneyimini dönüştürün, maliyetleri azaltın.",
@@ -34,6 +38,7 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
         row = await prisma.siteSetting.create({ data: {} });
     }
     return {
+        maintenanceModeEnabled: row.maintenanceModeEnabled ?? DEFAULTS.maintenanceModeEnabled,
         heroTitle: row.heroTitle || DEFAULTS.heroTitle,
         heroSubtitle: row.heroSubtitle || DEFAULTS.heroSubtitle,
         heroPrimaryButton: row.heroPrimaryButton || DEFAULTS.heroPrimaryButton,
@@ -46,12 +51,29 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
 }
 
 export async function updateSiteSettings(data: Partial<SiteSettingsData>): Promise<void> {
+    await requireAdminSession();
+
     const existing = await prisma.siteSetting.findFirst();
     if (existing) {
         await prisma.siteSetting.update({ where: { id: existing.id }, data });
     } else {
         await prisma.siteSetting.create({ data });
     }
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     revalidatePath("/admin/settings");
+}
+
+async function requireAdminSession(): Promise<void> {
+    const token = (await cookies()).get("admin-auth")?.value;
+    const secret = process.env.ADMIN_AUTH_SECRET;
+
+    if (!token || !secret) {
+        throw new Error("Unauthorized");
+    }
+
+    try {
+        await jwtVerify(token, new TextEncoder().encode(secret));
+    } catch {
+        throw new Error("Unauthorized");
+    }
 }

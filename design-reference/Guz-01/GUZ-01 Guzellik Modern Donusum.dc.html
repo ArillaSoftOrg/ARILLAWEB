@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Instrument+Serif:ital@0;1&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #FBFBFA; }
+  * { box-sizing: border-box; }
+  a { color: #2B4BF2; text-decoration: none; }
+  a:hover { color: #6B3BF0; }
+  input, textarea, button { font-family: inherit; }
+  input::placeholder, textarea::placeholder { color: #6C7486; }
+  @media (max-width: 1040px) {
+    [data-split] { grid-template-columns: 1fr !important; }
+    [data-cols3] { grid-template-columns: 1fr !important; }
+    [data-cols2] { grid-template-columns: 1fr !important; }
+    [data-quad] { grid-template-columns: 1fr 1fr !important; }
+    [data-pad] { padding-left: 24px !important; padding-right: 24px !important; }
+    [data-h1] { font-size: 48px !important; }
+    [data-h2] { font-size: 34px !important; }
+    [data-devices] { display: none !important; }
+    [data-swatches] { grid-template-columns: 1fr 1fr !important; }
+    [data-footcols] { grid-template-columns: 1fr 1fr !important; }
+    [data-rowdiv] { border-left: 0 !important; border-top: 1px solid rgba(11,18,32,0.10) !important; }
+  }
+</style>
+</helmet>
+<div style="--ink:#0B1220; --ink2:#39415A; --ink3:#6C7486; --line:rgba(11,18,32,0.10); --blue:#2B4BF2; --violet:#6B3BF0; --paper:#FBFBFA; font-family:Manrope,Helvetica,Arial,sans-serif; color:var(--ink); background:var(--paper); -webkit-font-smoothing:antialiased;">
+
+  <header style="position:sticky; top:0; z-index:50; background:rgba(251,251,250,0.88); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);">
+    <div data-pad="1" style="max-width:1440px; margin:0 auto; padding:0 56px; height:64px; display:flex; align-items:center; justify-content:space-between; gap:32px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div style="width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg,var(--blue),var(--violet));"></div>
+        <span style="font-weight:800; font-size:16px; letter-spacing:-0.01em;">ArillaSoft</span>
+      </div>
+      <nav style="display:flex; align-items:center; gap:28px; font-size:14px; font-weight:500; color:var(--ink2);">
+        <a href="#" style="color:var(--ink2);">Hizmetler</a>
+        <a href="#" style="color:var(--ink);">Tasarım Referansları</a>
+        <a href="#" style="color:var(--ink2);">Süreç</a>
+        <a href="#" style="color:var(--ink2);">İletişim</a>
+      </nav>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em; color:var(--ink3);">GUZ-01</span>
+        <a href="#gorusme" style="display:inline-flex; align-items:center; height:36px; padding:0 16px; border-radius:8px; background:var(--ink); color:#fff; font-size:13px; font-weight:600;" style-hover="background:#1B2540;">Görüşme iste</a>
+      </div>
+    </div>
+  </header>
+
+  <section data-pad="1" style="max-width:1440px; margin:0 auto; padding:0 56px;">
+    <div data-split="1" style="display:grid; grid-template-columns:1.12fr 0.88fr; gap:72px; padding:56px 0 72px; align-items:start;">
+
+      <div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink3); margin-bottom:28px;">
+          <a href="#" style="color:var(--ink3);">Tasarım Referansları</a>
+          <span style="opacity:0.5;">/</span>
+          <a href="#" style="color:var(--ink3);">Güzellik ve Bakım Merkezi</a>
+          <span style="opacity:0.5;">/</span>
+          <span style="color:var(--ink);">Modern Dönüşüm</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:22px;">
+          <span style="display:inline-flex; align-items:center; gap:7px; height:26px; padding:0 10px 0 8px; border:1px solid rgba(43,75,242,0.28); background:rgba(43,75,242,0.06); border-radius:6px; font-size:12px; font-weight:600; color:var(--blue);">
+            <span style="position:relative; width:6px; height:6px; border-radius:50%; background:var(--blue);"></span>
+            Canlı Demo
+          </span>
+          <span style="font-size:13px; font-weight:600; color:var(--ink2);">Güzellik ve Bakım Merkezi</span>
+          <span style="width:1px; height:14px; background:var(--line);"></span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.06em; color:var(--ink3);">GUZ-01</span>
+        </div>
+
+        <h1 data-h1="1" style="margin:0 0 24px; font-size:76px; line-height:0.98; letter-spacing:-0.035em; font-weight:800; text-wrap:balance;">Güzellik —<br><span style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-style:italic; letter-spacing:-0.01em;">Modern Dönüşüm</span></h1>
+
+        <p style="margin:0 0 32px; max-width:52ch; font-size:17px; line-height:1.62; color:var(--ink2); text-wrap:pretty;">Yumuşak editoryal tipografi, geniş beyaz alan ve sakin bir fotoğraf dili üzerine kurulu bir tasarım yönü. Hizmet odaklı içeriği bir bakım deneyimi gibi sunar: az sayıda güçlü başlık, net hiyerarşi ve her ekranda tek bir eylem.</p>
+
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:20px;">
+          <a href="#onizleme" style="display:inline-flex; align-items:center; gap:10px; height:50px; padding:0 24px; border-radius:10px; background:var(--ink); color:#fff; font-size:15px; font-weight:600; box-shadow:0 8px 24px -12px rgba(11,18,32,0.55);" style-hover="background:#1B2540;">
+            Canlı tasarımı incele
+            <span style="font-size:16px; line-height:1;">↓</span>
+          </a>
+          <a href="#dna" style="display:inline-flex; align-items:center; height:50px; padding:0 20px; border-radius:10px; border:1px solid var(--line); color:var(--ink); font-size:15px; font-weight:600; background:#fff;" style-hover="border-color:rgba(11,18,32,0.24);">Tasarım dilini gör</a>
+        </div>
+
+        <p style="margin:0; max-width:46ch; font-size:13.5px; line-height:1.6; color:var(--ink3);">Bu referans bir başlangıç noktasıdır. Renk, tipografi, fotoğraf ve bölümler işletmenizin markasına göre yeniden kurulur.</p>
+
+        <div style="display:flex; gap:40px; margin-top:44px; padding-top:28px; border-top:1px solid var(--line);">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:var(--ink3); margin-bottom:6px;">STİL</div>
+            <div style="font-size:14px; font-weight:600;">Soft Editorial</div>
+          </div>
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:var(--ink3); margin-bottom:6px;">UYARLAMA</div>
+            <div style="font-size:14px; font-weight:600;">7-10 Gün</div>
+          </div>
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:var(--ink3); margin-bottom:6px;">PLATFORM</div>
+            <div style="font-size:14px; font-weight:600;">Özel geliştirme</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="gorusme" style="background:#0B1220; border-radius:16px; padding:32px; color:#fff; box-shadow:0 40px 80px -40px rgba(11,18,32,0.55); background-image:radial-gradient(120% 90% at 100% 0%, rgba(107,59,240,0.28), transparent 60%);">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:rgba(255,255,255,0.5); margin-bottom:12px;">GÖRÜŞME TALEBİ</div>
+        <h2 style="margin:0 0 8px; font-size:24px; line-height:1.2; letter-spacing:-0.02em; font-weight:700;">Bu tasarımı işletmenize uyarlayalım</h2>
+        <p style="margin:0 0 26px; font-size:13.5px; line-height:1.6; color:rgba(255,255,255,0.6);">Formu bırakın, 1 iş günü içinde tasarım yönü ve kapsam için dönüş yapalım.</p>
+
+        <div style="display:grid; gap:14px;">
+          <label style="display:block;">
+            <span style="display:block; font-size:12px; font-weight:600; color:rgba(255,255,255,0.72); margin-bottom:7px;">Ad soyad</span>
+            <input type="text" placeholder="Adınız ve soyadınız" style="width:100%; height:44px; padding:0 14px; border-radius:9px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05); color:#fff; font-size:14px; outline:none;" style-focus="border-color:rgba(107,59,240,0.75); background:rgba(255,255,255,0.08);">
+          </label>
+          <label style="display:block;">
+            <span style="display:block; font-size:12px; font-weight:600; color:rgba(255,255,255,0.72); margin-bottom:7px;">İşletme adı</span>
+            <input type="text" placeholder="Güzellik merkeziniz" style="width:100%; height:44px; padding:0 14px; border-radius:9px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05); color:#fff; font-size:14px; outline:none;" style-focus="border-color:rgba(107,59,240,0.75); background:rgba(255,255,255,0.08);">
+          </label>
+          <div data-cols2="1" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <label style="display:block;">
+              <span style="display:block; font-size:12px; font-weight:600; color:rgba(255,255,255,0.72); margin-bottom:7px;">Telefon</span>
+              <input type="tel" placeholder="05__ ___ __ __" style="width:100%; height:44px; padding:0 14px; border-radius:9px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05); color:#fff; font-size:14px; outline:none;" style-focus="border-color:rgba(107,59,240,0.75); background:rgba(255,255,255,0.08);">
+            </label>
+            <label style="display:block;">
+              <span style="display:block; font-size:12px; font-weight:600; color:rgba(255,255,255,0.72); margin-bottom:7px;">E-posta</span>
+              <input type="email" placeholder="ornek@site.com" style="width:100%; height:44px; padding:0 14px; border-radius:9px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05); color:#fff; font-size:14px; outline:none;" style-focus="border-color:rgba(107,59,240,0.75); background:rgba(255,255,255,0.08);">
+            </label>
+          </div>
+          <label style="display:block;">
+            <span style="display:block; font-size:12px; font-weight:600; color:rgba(255,255,255,0.72); margin-bottom:7px;">İstenen değişiklikler</span>
+            <textarea rows="3" placeholder="Örn. randevu sistemi, öncesi/sonrası galerisi, kurumsal renkler" style="width:100%; padding:12px 14px; border-radius:9px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05); color:#fff; font-size:14px; line-height:1.5; outline:none; resize:vertical;" style-focus="border-color:rgba(107,59,240,0.75); background:rgba(255,255,255,0.08);"></textarea>
+          </label>
+        </div>
+
+        <button type="button" onClick="{{ submit }}" style="width:100%; height:50px; margin-top:20px; border:0; border-radius:10px; background:#fff; color:#0B1220; font-size:15px; font-weight:700; cursor:pointer;" style-hover="background:#EDEFF5;">Tasarım için görüşme iste</button>
+        <a href="{{ waHref }}" style="display:flex; align-items:center; justify-content:center; gap:9px; height:46px; margin-top:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.16); color:#fff; font-size:14px; font-weight:600;" style-hover="background:rgba(255,255,255,0.06);">
+          <span style="width:7px; height:7px; border-radius:50%; background:#4ADE80;"></span>
+          WhatsApp ile konuş
+        </a>
+        <p style="margin:14px 0 0; font-size:11.5px; line-height:1.5; color:rgba(255,255,255,0.42);">{{ formNote }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="onizleme" style="border-top:1px solid var(--line); background:#F5F5F4;">
+    <div data-pad="1" style="max-width:1440px; margin:0 auto; padding:56px 56px 72px;">
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap; margin-bottom:26px;">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--ink3); margin-bottom:12px;">02 — ÖNİZLEME</div>
+          <h2 data-h2="1" style="margin:0; font-size:44px; line-height:1.05; letter-spacing:-0.03em; font-weight:800;">Canlı Tasarım Önizlemesi</h2>
+        </div>
+        <div data-devices="1" style="display:flex; align-items:center; gap:6px; padding:5px; border-radius:11px; border:1px solid var(--line); background:#fff;">
+          <button type="button" onClick="{{ setDesktop }}" style="{{ tabDesktop }}">Desktop</button>
+          <button type="button" onClick="{{ setTablet }}" style="{{ tabTablet }}">Tablet</button>
+          <button type="button" onClick="{{ setMobile }}" style="{{ tabMobile }}">Mobile</button>
+        </div>
+      </div>
+
+      <div style="border-radius:14px; border:1px solid rgba(11,18,32,0.14); background:#fff; overflow:hidden; box-shadow:0 50px 90px -50px rgba(11,18,32,0.45);">
+        <div style="display:flex; align-items:center; gap:16px; height:48px; padding:0 16px; border-bottom:1px solid var(--line); background:#FBFBFA;">
+          <div style="display:flex; gap:6px;">
+            <span style="width:10px; height:10px; border-radius:50%; background:#E5E5E3;"></span>
+            <span style="width:10px; height:10px; border-radius:50%; background:#E5E5E3;"></span>
+            <span style="width:10px; height:10px; border-radius:50%; background:#E5E5E3;"></span>
+          </div>
+          <div style="flex:1; display:flex; align-items:center; gap:8px; height:28px; padding:0 12px; border-radius:7px; border:1px solid var(--line); background:#fff; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink3); overflow:hidden; white-space:nowrap;">
+            <span style="width:6px; height:6px; border-radius:50%; background:#4ADE80; flex:none;"></span>
+            {{ previewUrl }}
+          </div>
+          <a href="{{ previewUrl }}" target="_blank" rel="noopener" style="font-size:12.5px; font-weight:600; color:var(--ink2); flex:none;">Yeni sekmede aç ↗</a>
+        </div>
+
+        <div style="background:#EEEEEC; padding:{{ stagePad }}; display:flex; justify-content:center;">
+          <div style="position:relative; width:{{ frameWidth }}; max-width:100%; transition:width 320ms cubic-bezier(0.2,0.8,0.2,1); border-radius:{{ frameRadius }}; overflow:hidden; background:#fff; border:1px solid rgba(11,18,32,0.08);">
+            <iframe src="{{ previewUrl }}" title="Referans tasarım önizlemesi" referrerpolicy="no-referrer" style="position:relative; z-index:1; display:block; width:100%; height:{{ frameHeight }}; border:0; background:transparent;"></iframe>
+            <sc-if value="{{ frameFallback }}" hint-placeholder-val="{{ true }}">
+              <div style="position:absolute; inset:0; z-index:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:32px; text-align:center; background-color:#FAF9F7; background-image:repeating-linear-gradient(135deg, rgba(11,18,32,0.05) 0 1px, transparent 1px 9px);">
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--ink3);">{{ fallbackLabel }}</div>
+                <div style="max-width:44ch; font-size:15px; line-height:1.6; color:var(--ink2);">{{ fallbackText }}</div>
+                <a href="{{ previewUrl }}" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; height:44px; padding:0 20px; border-radius:10px; background:var(--ink); color:#fff; font-size:14px; font-weight:600;" style-hover="background:#1B2540;">Referansı yeni sekmede aç ↗</a>
+                <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink3); word-break:break-all; max-width:52ch;">{{ previewUrl }}</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:0; flex-wrap:wrap; border-top:1px solid var(--line); background:#FBFBFA;">
+          <div style="padding:14px 18px; border-right:1px solid var(--line);">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:var(--ink3); margin-bottom:4px;">KAYNAK</div>
+            <div style="font-size:13px; font-weight:600;">Harici referans</div>
+          </div>
+          <div style="padding:14px 18px; border-right:1px solid var(--line);">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:var(--ink3); margin-bottom:4px;">PLATFORM</div>
+            <div style="font-size:13px; font-weight:600;">Framer</div>
+          </div>
+          <div style="padding:14px 18px; border-right:1px solid var(--line);">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:var(--ink3); margin-bottom:4px;">ŞABLON</div>
+            <div style="font-size:13px; font-weight:600;">{{ templateName }}</div>
+          </div>
+          <div style="padding:14px 18px; border-right:1px solid var(--line);">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:var(--ink3); margin-bottom:4px;">TASARIMCI</div>
+            <div style="font-size:13px; font-weight:600;">{{ creator }}</div>
+          </div>
+          <div style="flex:1; min-width:200px; padding:14px 18px; display:flex; justify-content:flex-end;">
+            <a href="#" style="font-size:12.5px; font-weight:600; color:var(--ink3);" style-hover="color:var(--ink);">Kaldırma Talebi</a>
+          </div>
+        </div>
+      </div>
+      <p style="margin:16px 0 0; font-size:12.5px; line-height:1.6; color:var(--ink3); max-width:80ch;">Önizleme, tasarım yönünü göstermek amacıyla harici kaynaktan canlı olarak yüklenir. Tüm haklar ilgili tasarımcıya aittir; ArillaSoft bu şablonu satmaz, yalnızca görsel yön referansı olarak gösterir.</p>
+    </div>
+  </section>
+
+  <section id="dna" data-pad="1" style="max-width:1440px; margin:0 auto; padding:88px 56px; border-top:1px solid var(--line);">
+    <div data-split="1" style="display:grid; grid-template-columns:0.9fr 1.1fr; gap:80px;">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--ink3); margin-bottom:14px;">03 — TASARIM DNA</div>
+        <h2 data-h2="1" style="margin:0 0 20px; font-size:46px; line-height:1.03; letter-spacing:-0.03em; font-weight:800; text-wrap:balance;">Referans tasarımın <span style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-style:italic;">dili</span></h2>
+        <p style="margin:0 0 32px; font-size:16px; line-height:1.65; color:var(--ink2); max-width:44ch;">Bu sayfayı premium yapan şey görselleri değil, kurduğu sistem: dar bir tipografi ölçeği, tek bir vurgu rengi ve bölümler arasında değişmeyen bir ritim.</p>
+        <div style="display:grid; gap:0; border-top:1px solid var(--line);">
+          <div style="padding:18px 0; border-bottom:1px solid var(--line); display:flex; gap:24px;">
+            <div style="width:120px; flex:none; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em; color:var(--ink3); padding-top:3px;">STİL</div>
+            <div style="font-size:15px; font-weight:600;">Soft Editorial / Modern Beauty</div>
+          </div>
+          <div style="padding:18px 0; border-bottom:1px solid var(--line); display:flex; gap:24px;">
+            <div style="width:120px; flex:none; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em; color:var(--ink3); padding-top:3px;">TİPOGRAFİ</div>
+            <div>
+              <div style="font-family:'Instrument Serif',Georgia,serif; font-size:26px; line-height:1.1; margin-bottom:6px;">Editorial display başlıklar</div>
+              <div style="font-size:14px; color:var(--ink2); line-height:1.55;">Gövdede temiz, çağdaş sans-serif. İki ağırlık, üç boyut; başka ölçek yok.</div>
+            </div>
+          </div>
+          <div style="padding:18px 0; border-bottom:1px solid var(--line); display:flex; gap:24px;">
+            <div style="width:120px; flex:none; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em; color:var(--ink3); padding-top:3px;">MOTION</div>
+            <div style="font-size:14px; color:var(--ink2); line-height:1.6;">Yalnızca scroll ile beliren yumuşak fade ve 8–16px yükselme. Paralaks yok, otomatik slider yok. Mobilde tek kolona iner, fotoğraflar tam genişliğe geçer, başlık ölçeği yarıya yaklaşır.</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:var(--ink3); margin-bottom:16px;">RENK PALETİ</div>
+        <div data-swatches="1" style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:14px;">
+          <div>
+            <div style="height:132px; border-radius:10px; background:#F7F1EC; border:1px solid rgba(11,18,32,0.08);"></div>
+            <div style="margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink);">#F7F1EC</div>
+            <div style="font-size:12px; color:var(--ink3);">Canvas</div>
+          </div>
+          <div>
+            <div style="height:132px; border-radius:10px; background:#E6D2C6; border:1px solid rgba(11,18,32,0.06);"></div>
+            <div style="margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink);">#E6D2C6</div>
+            <div style="font-size:12px; color:var(--ink3);">Blush</div>
+          </div>
+          <div>
+            <div style="height:132px; border-radius:10px; background:#C79C86;"></div>
+            <div style="margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink);">#C79C86</div>
+            <div style="font-size:12px; color:var(--ink3);">Accent</div>
+          </div>
+          <div>
+            <div style="height:132px; border-radius:10px; background:#6F5748;"></div>
+            <div style="margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink);">#6F5748</div>
+            <div style="font-size:12px; color:var(--ink3);">Deep clay</div>
+          </div>
+          <div>
+            <div style="height:132px; border-radius:10px; background:#1B1917;"></div>
+            <div style="margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink);">#1B1917</div>
+            <div style="font-size:12px; color:var(--ink3);">Ink</div>
+          </div>
+        </div>
+        <p style="margin:0 0 36px; font-size:13.5px; line-height:1.6; color:var(--ink3);">Sıcak nötrler zemini taşır; tek bir toprak tonu vurgu olarak çalışır. Renk hiçbir yerde alan doldurmaz, yalnızca yön gösterir.</p>
+
+        <div data-cols2="1" style="display:grid; grid-template-columns:1fr 1fr; gap:0; border-top:1px solid var(--line);">
+          <div data-rowdiv="0" style="padding:24px 28px 24px 0; border-bottom:1px solid var(--line);">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em; color:var(--ink3); margin-bottom:10px;">GÖRSEL YÖN</div>
+            <p style="margin:0; font-size:14.5px; line-height:1.6; color:var(--ink2);">Doğal ışıkta, düşük kontrastlı portre ve doku fotoğrafları. Grafik unsur yerine boşluk ve kadraj kullanılır; her bölümde tek bir görsel odak vardır.</p>
+          </div>
+          <div data-rowdiv="1" style="padding:24px 0 24px 28px; border-left:1px solid var(--line); border-bottom:1px solid var(--line);">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.08em; color:var(--ink3); margin-bottom:10px;">UI KARAKTERİ</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              <span style="font-size:13px; font-weight:600; padding:6px 11px; border:1px solid var(--line); border-radius:7px;">Hafif kenarlıklar</span>
+              <span style="font-size:13px; font-weight:600; padding:6px 11px; border:1px solid var(--line); border-radius:7px;">Yumuşak 12–16px radius</span>
+              <span style="font-size:13px; font-weight:600; padding:6px 11px; border:1px solid var(--line); border-radius:7px;">Gölge yerine kontrast</span>
+              <span style="font-size:13px; font-weight:600; padding:6px 11px; border:1px solid var(--line); border-radius:7px;">Tek vurgu rengi</span>
+              <span style="font-size:13px; font-weight:600; padding:6px 11px; border:1px solid var(--line); border-radius:7px;">Geniş satır aralığı</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-pad="1" style="max-width:1440px; margin:0 auto; padding:0 56px 88px;">
+    <div style="border-top:1px solid var(--line); padding-top:56px;">
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px; flex-wrap:wrap; margin-bottom:44px;">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--ink3); margin-bottom:14px;">04 — ANALİZ</div>
+          <h2 data-h2="1" style="margin:0; font-size:46px; line-height:1.03; letter-spacing:-0.03em; font-weight:800; max-width:22ch; text-wrap:balance;">Sayfanın öne çıkan tasarım kararları</h2>
+        </div>
+        <p style="margin:0; max-width:38ch; font-size:15px; line-height:1.65; color:var(--ink2);">Sekiz karar, sayfanın neden pahalı göründüğünü açıklıyor. Her biri işletmenizin içeriğine taşınabilir.</p>
+      </div>
+
+      <div data-cols2="1" style="display:grid; grid-template-columns:1fr 1fr; column-gap:80px;">
+        <div>
+          <sc-for list="{{ decisionsA }}" as="d" hint-placeholder-count="4">
+            <div style="display:flex; gap:24px; padding:26px 0; border-top:1px solid var(--line);">
+              <div style="width:34px; flex:none; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--blue); padding-top:4px;">{{ d.no }}</div>
+              <div>
+                <h3 style="margin:0 0 8px; font-size:18px; letter-spacing:-0.015em; font-weight:700;">{{ d.title }}</h3>
+                <p style="margin:0; font-size:14.5px; line-height:1.62; color:var(--ink2); text-wrap:pretty;">{{ d.body }}</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div>
+          <sc-for list="{{ decisionsB }}" as="d" hint-placeholder-count="4">
+            <div style="display:flex; gap:24px; padding:26px 0; border-top:1px solid var(--line);">
+              <div style="width:34px; flex:none; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--violet); padding-top:4px;">{{ d.no }}</div>
+              <div>
+                <h3 style="margin:0 0 8px; font-size:18px; letter-spacing:-0.015em; font-weight:700;">{{ d.title }}</h3>
+                <p style="margin:0; font-size:14.5px; line-height:1.62; color:var(--ink2); text-wrap:pretty;">{{ d.body }}</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="border-top:1px solid var(--line); background:#fff;">
+    <div data-pad="1" style="max-width:1440px; margin:0 auto; padding:88px 56px;">
+      <div data-split="1" style="display:grid; grid-template-columns:0.82fr 1.18fr; gap:80px; align-items:start;">
+        <div style="position:sticky; top:96px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--ink3); margin-bottom:14px;">05 — UYARLAMA</div>
+          <h2 data-h2="1" style="margin:0 0 20px; font-size:44px; line-height:1.05; letter-spacing:-0.03em; font-weight:800; text-wrap:balance;">Güzellik ve Bakım Merkezi için nasıl uyarlanır?</h2>
+          <p style="margin:0 0 18px; font-size:16px; line-height:1.65; color:var(--ink2); max-width:42ch;">Görsel yön korunur; üzerine işletmeyi çalıştıran fonksiyonlar eklenir. Referans bir vitrin, sizin siteniz bir işletme aracı olur.</p>
+          <p style="margin:0 0 28px; font-size:14px; line-height:1.65; color:var(--ink3); max-width:42ch;">Modüller ihtiyacınıza göre seçilir. Hepsini birlikte de, aşamalı olarak da kurabiliriz.</p>
+          <a href="#gorusme" style="display:inline-flex; align-items:center; gap:8px; font-size:15px; font-weight:700; color:var(--ink);">Kapsamı birlikte belirleyelim <span>→</span></a>
+        </div>
+
+        <div>
+          <div data-cols2="1" style="display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--paper);">
+            <sc-for list="{{ modules }}" as="m" hint-placeholder-count="10">
+              <div style="padding:24px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); background:#fff;" style-hover="background:#FBFBFA;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                  <div style="width:28px; height:28px; border-radius:8px; background:{{ m.tint }}; display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; color:{{ m.ink }};">{{ m.no }}</div>
+                  <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.06em; color:var(--ink3);">{{ m.tag }}</span>
+                </div>
+                <h3 style="margin:0 0 6px; font-size:16px; font-weight:700; letter-spacing:-0.01em;">{{ m.title }}</h3>
+                <p style="margin:0; font-size:13.5px; line-height:1.55; color:var(--ink2);">{{ m.body }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:#F1F0ED; border-top:1px solid var(--line);">
+    <div data-pad="1" style="max-width:1440px; margin:0 auto; padding:76px 56px;">
+      <div data-split="1" style="display:grid; grid-template-columns:0.9fr 1.1fr; gap:72px; align-items:start;">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--ink3); margin-bottom:14px;">CUSTOMIZATION</div>
+          <h2 data-h2="1" style="margin:0 0 18px; font-size:44px; line-height:1.05; letter-spacing:-0.03em; font-weight:800;">Tasarım <span style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-style:italic;">başlangıç</span> noktasıdır.</h2>
+          <p style="margin:0; font-size:16px; line-height:1.65; color:var(--ink2); max-width:44ch;">Referans, sabit bir şablon değil bir görsel yöndür. Sıfırdan kurulan bir sitede aşağıdaki katmanların tamamı sizin markanıza göre yeniden tanımlanır.</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr; border-top:1px solid rgba(11,18,32,0.14);">
+          <sc-for list="{{ custom }}" as="c" hint-placeholder-count="8">
+            <div style="display:flex; align-items:baseline; gap:20px; padding:15px 0; border-bottom:1px solid rgba(11,18,32,0.10);">
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink3); width:26px; flex:none;">{{ c.no }}</span>
+              <span style="font-size:17px; font-weight:700; letter-spacing:-0.015em; min-width:180px;">{{ c.title }}</span>
+              <span style="font-size:14px; line-height:1.55; color:var(--ink2);">{{ c.body }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-pad="1" style="max-width:1440px; margin:0 auto; padding:76px 56px;">
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:32px; flex-wrap:wrap; margin-bottom:36px;">
+      <h2 data-h2="1" style="margin:0; font-size:38px; line-height:1.05; letter-spacing:-0.03em; font-weight:800;">Bu tasarım kimler için uygun?</h2>
+      <p style="margin:0; font-size:14.5px; color:var(--ink3); max-width:40ch; line-height:1.6;">Sakin, güven veren ve hizmet odaklı bir dil arayan işletmeler için.</p>
+    </div>
+    <div data-quad="1" style="display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--line); border-bottom:1px solid var(--line);">
+      <sc-for list="{{ audiences }}" as="a" hint-placeholder-count="4">
+        <div style="padding:28px 28px 30px 0; border-right:1px solid var(--line);">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink3); margin-bottom:14px;">{{ a.no }}</div>
+          <h3 style="margin:0 0 8px; font-size:19px; font-weight:700; letter-spacing:-0.015em;">{{ a.title }}</h3>
+          <p style="margin:0; font-size:13.5px; line-height:1.6; color:var(--ink2);">{{ a.body }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:#0B1220; color:#fff; background-image:radial-gradient(80% 120% at 15% 0%, rgba(43,75,242,0.22), transparent 55%), radial-gradient(70% 100% at 100% 100%, rgba(107,59,240,0.22), transparent 60%);">
+    <div data-pad="1" style="max-width:1440px; margin:0 auto; padding:96px 56px 24px;">
+      <div data-split="1" style="display:grid; grid-template-columns:1.15fr 0.85fr; gap:72px; align-items:end;">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:rgba(255,255,255,0.5); margin-bottom:18px;">Bu tasarım yönünü beğendiniz mi?</div>
+          <h2 data-h1="1" style="margin:0 0 22px; font-size:58px; line-height:1.04; letter-spacing:-0.035em; font-weight:800; max-width:24ch; text-wrap:balance;">Modern Dönüşüm yaklaşımını işletmenize göre birlikte <span style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-style:italic;">uyarlayalım.</span></h2>
+          <p style="margin:0; font-size:16.5px; line-height:1.6; color:rgba(255,255,255,0.66); max-width:52ch;">Görüşmede tasarım yönünü, gerekli fonksiyonları ve takvimi netleştirir; size özel bir kapsam çıkarırız.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <a href="#gorusme" style="display:flex; align-items:center; justify-content:center; height:54px; border-radius:11px; background:#fff; color:#0B1220; font-size:16px; font-weight:700;" style-hover="background:#EDEFF5;">Tasarım için görüşme iste</a>
+          <a href="{{ waHref }}" style="display:flex; align-items:center; justify-content:center; gap:10px; height:54px; border-radius:11px; border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:16px; font-weight:600;" style-hover="background:rgba(255,255,255,0.06);">
+            <span style="width:7px; height:7px; border-radius:50%; background:#4ADE80;"></span>
+            WhatsApp ile konuş
+          </a>
+          <p style="margin:4px 0 0; font-size:12.5px; color:rgba(255,255,255,0.42); text-align:center;">Ortalama yanıt süresi: 1 iş günü</p>
+        </div>
+      </div>
+
+      <div data-split="1" style="display:grid; grid-template-columns:0.6fr 1.4fr; gap:72px; margin-top:96px; padding-top:56px; border-top:1px solid rgba(255,255,255,0.12);">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:rgba(255,255,255,0.5); margin-bottom:14px;">09 — SSS</div>
+          <h2 data-h2="1" style="margin:0; font-size:34px; line-height:1.1; letter-spacing:-0.03em; font-weight:800;">Sık sorulan sorular</h2>
+        </div>
+        <div>
+          <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
+            <div style="border-top:1px solid rgba(255,255,255,0.12);">
+              <button type="button" onClick="{{ f.toggle }}" style="width:100%; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:22px 0; background:none; border:0; color:#fff; text-align:left; cursor:pointer;">
+                <span style="font-size:17px; font-weight:600; letter-spacing:-0.01em;">{{ f.q }}</span>
+                <span style="flex:none; width:26px; height:26px; border-radius:50%; border:1px solid rgba(255,255,255,0.24); display:flex; align-items:center; justify-content:center; font-size:15px; color:rgba(255,255,255,0.7);">{{ f.sign }}</span>
+              </button>
+              <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0; padding:0 60px 24px 0; font-size:15px; line-height:1.65; color:rgba(255,255,255,0.62); max-width:70ch;">{{ f.a }}</p>
+              </sc-if>
+            </div>
+          </sc-for>
+          <div style="border-top:1px solid rgba(255,255,255,0.12);"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer data-pad="1" style="max-width:1440px; margin:0 auto; padding:64px 56px 40px;">
+      <div data-footcols="1" style="display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:48px; padding-top:48px; border-top:1px solid rgba(255,255,255,0.12);">
+        <div>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+            <div style="width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg,var(--blue),var(--violet));"></div>
+            <span style="font-weight:800; font-size:16px;">ArillaSoft</span>
+          </div>
+          <p style="margin:0 0 18px; font-size:13.5px; line-height:1.65; color:rgba(255,255,255,0.55); max-width:34ch;">İşletmeler için özel tasarlanan ve geliştirilen web siteleri, randevu sistemleri ve entegrasyonlar.</p>
+          <div style="font-size:13.5px; color:rgba(255,255,255,0.7);">merhaba@arillasoft.com</div>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:rgba(255,255,255,0.4); margin-bottom:14px;">HİZMETLER</div>
+          <div style="display:grid; gap:10px; font-size:13.5px;">
+            <a href="#" style="color:rgba(255,255,255,0.72);">Web tasarım</a>
+            <a href="#" style="color:rgba(255,255,255,0.72);">Web geliştirme</a>
+            <a href="#" style="color:rgba(255,255,255,0.72);">Randevu sistemleri</a>
+            <a href="#" style="color:rgba(255,255,255,0.72);">Entegrasyonlar</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:rgba(255,255,255,0.4); margin-bottom:14px;">SEKTÖRLER</div>
+          <div style="display:grid; gap:10px; font-size:13.5px;">
+            <a href="#" style="color:rgba(255,255,255,0.72);">Güzellik ve bakım</a>
+            <a href="#" style="color:rgba(255,255,255,0.72);">Sağlık</a>
+            <a href="#" style="color:rgba(255,255,255,0.72);">Restoran ve kafe</a>
+            <a href="#" style="color:rgba(255,255,255,0.72);">Kurumsal</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:rgba(255,255,255,0.4); margin-bottom:14px;">KURUMSAL</div>
+          <div style="display:grid; gap:10px; font-size:13.5px;">
+            <a href="#" style="color:rgba(255,255,255,0.72);">Hakkımızda</a>
+            <a href="#" style="color:rgba(255,255,255,0.72);">Referanslar</a>
+            <a href="#" style="color:rgba(255,255,255,0.72);">Gizlilik</a>
+            <a href="#" style="color:rgba(255,255,255,0.72);">Kaldırma talebi</a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-top:44px; padding-top:22px; border-top:1px solid rgba(255,255,255,0.12); font-size:12.5px; color:rgba(255,255,255,0.4);">
+        <span>© 2026 ArillaSoft. Tüm hakları saklıdır.</span>
+        <span style="font-family:'IBM Plex Mono',monospace;">GUZ-01 · Güzellik ve Bakım Merkezi</span>
+      </div>
+    </footer>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;previewUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://salona.framer.website/&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Referans&quot;},&quot;templateName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Salona&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Referans&quot;},&quot;creator&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Tempbix&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Referans&quot;},&quot;whatsapp&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;905422535192&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;İletişim&quot;}}">
+class Component extends DCLogic {
+  state = { device: 'desktop', openFaq: 0 };
+
+  tab(active) {
+    return active
+      ? 'height:34px; padding:0 16px; border:0; border-radius:8px; background:#0B1220; color:#fff; font-size:13px; font-weight:600; cursor:pointer;'
+      : 'height:34px; padding:0 16px; border:0; border-radius:8px; background:transparent; color:#6C7486; font-size:13px; font-weight:600; cursor:pointer;';
+  }
+
+  renderVals() {
+    const d = this.state.device;
+    const wa = (this.props.whatsapp || '905555555555').replace(/[^0-9]/g, '');
+    const faqData = [
+      ['Bu tasarımı olduğu gibi mi alıyorum?', 'Hayır. Referans yalnızca görsel yönü gösterir. Siteniz sıfırdan, sizin içeriğiniz, markanız ve ihtiyaçlarınıza göre tasarlanıp geliştirilir.'],
+      ['Randevu sistemi dahil mi?', 'Online randevu, hizmet süreleri, uzman bazlı takvim ve otomatik hatırlatmalar ayrı bir modül olarak kurulur. Kapsamı görüşmede birlikte belirliyoruz.'],
+      ['Süreç ne kadar sürüyor?', 'Tipik bir güzellik merkezi projesi, içerik hazır olduğunda 3–5 hafta sürer. Randevu ve CRM entegrasyonları takvimi bir hafta kadar uzatabilir.'],
+      ['Fotoğrafları siz mi sağlıyorsunuz?', 'Bu tasarım dili fotoğrafa dayanıyor. Kendi çekimlerinizi kullanabiliriz; yoksa yönlendirilmiş bir çekim planı veya lisanslı görsel seçimi öneriyoruz.'],
+      ['Siteyi sonradan kendim güncelleyebilir miyim?', 'Evet. Hizmetler, kampanyalar, galeri ve ekip içerikleri panel üzerinden güncellenebilir; teknik bilgi gerekmez.']
+    ];
+
+    return {
+      previewUrl: this.props.previewUrl || 'https://salona.framer.website/',
+      templateName: this.props.templateName || 'Salona',
+      creator: this.props.creator || 'Tempbix',
+      formNote: 'Bilgileriniz yalnızca bu talep için kullanılır, üçüncü taraflarla paylaşılmaz.',
+      waHref: 'https://wa.me/' + wa,
+      submit: () => {},
+      frameFallback: true,
+      fallbackLabel: 'HARİCİ ÖNİZLEME',
+      fallbackText: 'Referans site canlı olarak yükleniyor. Görünmüyorsa site gömülü görüntülemeye izin vermiyor; tasarımı yeni sekmede açarak inceleyebilirsiniz.',
+      setDesktop: () => this.setState({ device: 'desktop' }),
+      setTablet: () => this.setState({ device: 'tablet' }),
+      setMobile: () => this.setState({ device: 'mobile' }),
+      tabDesktop: this.tab(d === 'desktop'),
+      tabTablet: this.tab(d === 'tablet'),
+      tabMobile: this.tab(d === 'mobile'),
+      frameWidth: d === 'desktop' ? '100%' : d === 'tablet' ? '834px' : '414px',
+      frameHeight: d === 'mobile' ? '760px' : '720px',
+      frameRadius: d === 'desktop' ? '8px' : d === 'tablet' ? '14px' : '22px',
+      stagePad: d === 'desktop' ? '16px' : '32px 16px',
+
+      decisionsA: [
+        { no: '01', title: 'Hero kompozisyonu', body: 'Tek bir editoryal başlık, kısa bir alt satır ve tek CTA. Görsel sağda tam yüksekliği alır; hiçbir şey başlıkla yarışmaz.' },
+        { no: '02', title: 'Navigasyon', body: 'Beş bağlantı, alt menü yok. Kenarlıksız ve şeffaf; scroll ile ince bir çizgi kazanır. Sağda tek koyu buton.' },
+        { no: '03', title: 'Fotoğraf dili', body: 'Düşük kontrast, sıcak beyaz denge, tutarlı kadraj. Görseller filtresiz durur ve renk paletini kendisi taşır.' },
+        { no: '04', title: 'Boşluk sistemi', body: 'Bölüm aralıkları 8 tabanlı tek bir ölçekten gelir. Dikey ritim değişmez, bu yüzden sayfa uzun olsa da sakin okunur.' }
+      ],
+      decisionsB: [
+        { no: '05', title: 'İçerik kartları', body: 'Kart yerine kenarlıklı satırlar ve ince ayırıcılar. Gölge neredeyse yok; ayrım kontrast ve hizalama ile kurulur.' },
+        { no: '06', title: 'CTA yaklaşımı', body: 'Sayfada tek bir birincil eylem rengi. İkincil eylemler yalnızca kenarlıklı; kullanıcı nereye tıklayacağını düşünmez.' },
+        { no: '07', title: 'Kenarlık ve radius dili', body: 'Kompakt 12–16px radius, 1px hairline kenarlıklar. Aynı değerler formda, görselde ve butonda tekrar eder.' },
+        { no: '08', title: 'Mobil davranış', body: 'Tek kolon, tam genişlikte görseller, sabit alt CTA. Başlık ölçeği küçülür ama tipografik kontrast korunur.' }
+      ],
+
+      modules: [
+        { no: '01', tag: 'DÖNÜŞÜM', title: 'Online randevu', body: 'Hizmet, uzman ve süre bazlı takvim; çift rezervasyon engeli.', tint: 'rgba(43,75,242,0.10)', ink: '#2B4BF2' },
+        { no: '02', tag: 'İLETİŞİM', title: 'WhatsApp iletişimi', body: 'Hizmete göre ön dolu mesaj ile tek dokunuşta yazışma.', tint: 'rgba(43,75,242,0.10)', ink: '#2B4BF2' },
+        { no: '03', tag: 'İÇERİK', title: 'Hizmet kataloğu', body: 'Kategori, süre ve fiyat aralığı ile yönetilebilir hizmet listesi.', tint: 'rgba(107,59,240,0.10)', ink: '#6B3BF0' },
+        { no: '04', tag: 'İÇERİK', title: 'Uzman profilleri', body: 'Deneyim, uzmanlık alanı ve doğrudan randevu bağlantısı.', tint: 'rgba(107,59,240,0.10)', ink: '#6B3BF0' },
+        { no: '05', tag: 'GÜVEN', title: 'Öncesi / sonrası galerisi', body: 'Onaylı görsellerle karşılaştırmalı, filtrelenebilir galeri.', tint: 'rgba(199,156,134,0.20)', ink: '#8A6350' },
+        { no: '06', tag: 'PAZARLAMA', title: 'Kampanyalar', body: 'Tarihli kampanya kartları ve süresi geçenlerin otomatik kaldırılması.', tint: 'rgba(199,156,134,0.20)', ink: '#8A6350' },
+        { no: '07', tag: 'YEREL', title: 'Şube / Google Maps', body: 'Şube bazlı sayfa, çalışma saatleri ve yol tarifi.', tint: 'rgba(43,75,242,0.10)', ink: '#2B4BF2' },
+        { no: '08', tag: 'DÖNÜŞÜM', title: 'İletişim ve lead formları', body: 'Kısa formlar, spam koruması ve e-posta bildirimi.', tint: 'rgba(43,75,242,0.10)', ink: '#2B4BF2' },
+        { no: '09', tag: 'SİSTEM', title: 'CRM entegrasyonu', body: 'Talepler mevcut CRM veya panelinize akar, kayıp lead olmaz.', tint: 'rgba(107,59,240,0.10)', ink: '#6B3BF0' },
+        { no: '10', tag: 'SİSTEM', title: 'Otomatik bildirimler', body: 'Randevu onayı, hatırlatma ve sonrası bakım mesajları.', tint: 'rgba(107,59,240,0.10)', ink: '#6B3BF0' }
+      ],
+
+      custom: [
+        { no: '01', title: 'Renk paleti', body: 'Marka renklerinize göre yeniden kurulur; nötr zemin korunur.' },
+        { no: '02', title: 'Tipografi', body: 'Display ve gövde eşleşmesi markanızın tonuna göre seçilir.' },
+        { no: '03', title: 'Fotoğraflar', body: 'Kendi çekimleriniz veya yönlendirilmiş yeni bir çekim planı.' },
+        { no: '04', title: 'Metinler', body: 'Hizmet anlatımı ve SEO odaklı içerik birlikte yazılır.' },
+        { no: '05', title: 'Sayfa bölümleri', body: 'Bölümler eklenir, çıkarılır, sıralaması değiştirilir.' },
+        { no: '06', title: 'Formlar', body: 'Alanlar, doğrulama ve talebin nereye düşeceği size göre.' },
+        { no: '07', title: 'Fonksiyonlar', body: 'Randevu, galeri, kampanya ve panel ihtiyaca göre eklenir.' },
+        { no: '08', title: 'Entegrasyonlar', body: 'CRM, WhatsApp, Google, ödeme ve analitik bağlantıları.' }
+      ],
+
+      audiences: [
+        { no: '01', title: 'Premium güzellik merkezleri', body: 'Geniş hizmet menüsünü sakin bir hiyerarşiyle sunmak isteyenler.' },
+        { no: '02', title: 'Cilt bakım merkezleri', body: 'Sonuç odaklı içeriği öncesi/sonrası ile güven verecek şekilde anlatanlar.' },
+        { no: '03', title: 'Wellness stüdyoları', body: 'Deneyimi ve mekân atmosferini fotoğrafla öne çıkaranlar.' },
+        { no: '04', title: 'Estetik / bakım işletmeleri', body: 'Uzman kadrosunu ve randevu akışını netleştirmek isteyenler.' }
+      ],
+
+      faqs: faqData.map((f, i) => ({
+        q: f[0], a: f[1],
+        open: this.state.openFaq === i,
+        sign: this.state.openFaq === i ? '−' : '+',
+        toggle: () => this.setState(s => ({ openFaq: s.openFaq === i ? -1 : i }))
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
