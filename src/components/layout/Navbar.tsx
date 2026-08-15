@@ -135,11 +135,10 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
             <div className="hidden lg:flex items-center" style={{ gap: '10px' }}>
               <Link
                 href="/kurumsal/blog"
+                className="text-role-navigation"
                 style={{
                   padding: '10px 16px',
                   borderRadius: '8px',
-                  fontSize: '14px',
-                  fontWeight: 600,
                   textDecoration: 'none',
                   color: '#1d4ed8',
                   background: '#f8fbff',
@@ -162,13 +161,11 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
               </Link>
               <a
                 href="/admin/login"
-                className="inline-flex items-center"
+                className="inline-flex items-center text-role-button"
                 style={{
                   gap: '6px',
                   padding: '10px 18px',
                   borderRadius: '8px',
-                  fontSize: '14px',
-                  fontWeight: 600,
                   textDecoration: 'none',
                   color: '#FFFFFF',
                   background: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 52%, #7c3aed 100%)',
@@ -231,12 +228,11 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
               <Link
                 href="/kurumsal/blog"
                 onClick={() => setIsOpen(false)}
+                className="text-role-navigation"
                 style={{
                   display: 'block',
                   padding: '12px 16px',
                   borderRadius: '10px',
-                  fontSize: '15px',
-                  fontWeight: 500,
                   textDecoration: 'none',
                   color: '#bfdbfe',
                   background: 'rgba(37,99,235,0.12)',
@@ -249,6 +245,7 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
               <a
                 href="/admin/login"
                 onClick={() => setIsOpen(false)}
+                className="text-role-button"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -256,8 +253,6 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                   gap: '6px',
                   padding: '12px 16px',
                   borderRadius: '10px',
-                  fontSize: '15px',
-                  fontWeight: 600,
                   textDecoration: 'none',
                   color: '#FFFFFF',
                   background: 'linear-gradient(135deg, #1d4ed8 0%, #2563eb 52%, #7c3aed 100%)',
@@ -326,6 +321,7 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                     onMouseLeave={handleMouseLeave}
                   >
                     <button
+                      className="text-role-navigation"
                       style={{
                         position: 'relative',
                         display: 'inline-flex',
@@ -334,8 +330,6 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                         padding: '8px 14px',
                         paddingBottom: '10px',
                         borderRadius: '7px',
-                        fontSize: '15px',
-                        fontWeight: active ? 600 : 500,
                         color: active ? '#7c3aed' : isDropdownOpen ? '#7c3aed' : '#334155',
                         background: active ? 'rgba(124,58,237,0.06)' : isDropdownOpen ? 'rgba(124,58,237,0.10)' : 'transparent',
                         border: 'none',
@@ -396,12 +390,11 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                               <Link
                                 key={child.labelKey}
                                 href={child.href}
+                                className="text-role-navigation"
                                 style={{
                                   display: 'block',
                                   padding: '9px 14px',
                                   borderRadius: '8px',
-                                  fontSize: '14px',
-                                  fontWeight: pathname === child.href ? 600 : 400,
                                   color: pathname === child.href ? '#7c3aed' : '#334155',
                                   background: pathname === child.href ? 'rgba(124,58,237,0.08)' : 'transparent',
                                   textDecoration: 'none',
@@ -427,13 +420,12 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                           }
                           return (
                             <div
+                              className="text-role-navigation"
                               key={child.labelKey}
                               style={{
                                 display: 'block',
                                 padding: '9px 14px',
                                 borderRadius: '8px',
-                                fontSize: '14px',
-                                fontWeight: 600,
                                 color: '#334155',
                                 background: 'transparent',
                                 whiteSpace: 'nowrap',
@@ -454,13 +446,12 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                   <Link
                     key={item.labelKey}
                     href={item.href}
+                    className="text-role-navigation"
                     style={{
                       position: 'relative',
                       padding: '8px 14px',
                       paddingBottom: '10px',
                       borderRadius: '7px',
-                      fontSize: '15px',
-                      fontWeight: active ? 600 : 500,
                       color: active ? '#7c3aed' : '#334155',
                       textDecoration: 'none',
                       transition: 'color 0.2s ease',
@@ -505,12 +496,10 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
               <Link
                 href={pathname}
                 locale={otherLocale}
-                className="hidden lg:inline-flex items-center"
+                className="hidden lg:inline-flex items-center text-role-metadata"
                 style={{
                   padding: '6px 12px',
                   borderRadius: '6px',
-                  fontSize: '13px',
-                  fontWeight: 600,
                   textDecoration: 'none',
                   color: '#64748b',
                   background: 'transparent',
@@ -533,13 +522,11 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
 
             <Link
               href="/teklif-al"
-              className="hidden lg:inline-flex items-center"
+              className="hidden lg:inline-flex items-center text-role-button"
               style={{
                 gap: '6px',
                 padding: '10px 24px',
                 borderRadius: '8px',
-                fontSize: '14px',
-                fontWeight: 600,
                 textDecoration: 'none',
                 color: '#FFFFFF',
                 background: '#7c3aed',
@@ -607,6 +594,7 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                   <div key={item.labelKey}>
                     <button
                       onClick={() => setMobileExpanded(isExpanded ? null : item.labelKey)}
+                      className="text-role-navigation"
                       style={{
                         width: '100%',
                         display: 'flex',
@@ -614,8 +602,6 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                         justifyContent: 'space-between',
                         padding: '10px 14px',
                         borderRadius: '8px',
-                        fontSize: '15px',
-                        fontWeight: active ? 600 : 500,
                         color: active ? '#a78bfa' : '#cbd5e1',
                         background: active ? 'rgba(124,58,237,0.15)' : 'transparent',
                         border: 'none',
@@ -643,12 +629,11 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                                 key={child.labelKey}
                                 href={child.href}
                                 onClick={() => setIsOpen(false)}
+                                className="text-role-navigation"
                                 style={{
                                   display: 'block',
                                   padding: '8px 14px',
                                   borderRadius: '7px',
-                                  fontSize: '14px',
-                                  fontWeight: pathname === child.href ? 600 : 400,
                                   color: pathname === child.href ? '#a78bfa' : '#cbd5e1',
                                   background: pathname === child.href ? 'rgba(124,58,237,0.15)' : 'transparent',
                                   textDecoration: 'none',
@@ -661,12 +646,11 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                           return (
                             <div
                               key={child.labelKey}
+                              className="text-role-navigation"
                               style={{
                                 display: 'block',
                                 padding: '8px 14px',
                                 borderRadius: '7px',
-                                fontSize: '14px',
-                                fontWeight: 400,
                                 color: '#cbd5e1',
                                 background: 'transparent',
                               }}
@@ -687,11 +671,10 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                     key={item.labelKey}
                     href={item.href}
                     onClick={() => setIsOpen(false)}
+                    className="text-role-navigation"
                     style={{
                       padding: '10px 14px',
                       borderRadius: '8px',
-                      fontSize: '15px',
-                      fontWeight: active ? 600 : 500,
                       color: active ? '#a78bfa' : '#cbd5e1',
                       background: active ? 'rgba(124,58,237,0.15)' : 'transparent',
                       textDecoration: 'none',
@@ -712,12 +695,11 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
                 href={pathname}
                 locale={otherLocale}
                 onClick={() => setIsOpen(false)}
+                className="text-role-metadata"
                 style={{
                   marginTop: '4px',
                   padding: '10px 14px',
                   borderRadius: '8px',
-                  fontSize: '14px',
-                  fontWeight: 500,
                   color: '#94a3b8',
                   background: 'transparent',
                   border: '1px solid rgba(255,255,255,0.1)',
@@ -733,13 +715,12 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
             <Link
               href="/teklif-al"
               onClick={() => setIsOpen(false)}
+              className="text-role-button"
               style={{
                 marginTop: '8px',
                 padding: '11px 20px',
                 borderRadius: '8px',
                 textAlign: 'center',
-                fontWeight: 600,
-                fontSize: '15px',
                 textDecoration: 'none',
                 color: '#FFFFFF',
                 background: '#7c3aed',

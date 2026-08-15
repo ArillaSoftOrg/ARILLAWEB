@@ -1,4 +1,5 @@
 import './globals.css';
+import '@/lib/typography-fonts';
 import { headers } from 'next/headers';
 import PageTransition from '@/components/PageTransition';
 

@@ -235,6 +235,7 @@ function TrustStrip() {
         {items.map((item, idx) => (
           <div key={item}>
             <span
+              className="font-body"
               style={{
                 fontSize: "13px",
                 color: "#475569",
@@ -311,24 +312,18 @@ function WhyUsSection() {
             }}
           >
             <h2
+              className="text-role-section-heading"
               style={{
-                fontSize: "clamp(24px, 5vw, 48px)",
-                fontWeight: 800,
-                color: "#0f172a",
-                letterSpacing: "-1px",
-                lineHeight: 1.15,
                 margin: "0 0 16px 0",
               }}
             >
               Neden Arilla Soft?
             </h2>
             <p
+              className="text-role-body-lg"
               style={{
-                fontSize: "16px",
-                color: "#475569",
                 maxWidth: "600px",
                 margin: "0 auto",
-                lineHeight: 1.6,
               }}
             >
               Kurumlar ve işletmeler için özel tasarlanmış, güvenilir yazılım çözümleri.
@@ -358,21 +353,17 @@ function WhyUsSection() {
                 >
                   <Icon size={24} color="#7c3aed" strokeWidth={2} />
                   <h3
+                    className="text-role-subheading"
                     style={{
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: "#0f172a",
                       margin: "0",
                     }}
                   >
                     {item.title}
                   </h3>
                   <p
+                    className="text-role-body"
                     style={{
-                      fontSize: "14px",
-                      color: "#64748b",
                       margin: "0",
-                      lineHeight: 1.6,
                     }}
                   >
                     {item.description}
@@ -429,6 +420,7 @@ function ExampleSolutionsSection() {
             }}
           >
             <div
+              className="text-role-eyebrow"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -437,11 +429,6 @@ function ExampleSolutionsSection() {
                 borderRadius: "100px",
                 background: "rgba(6,182,212,0.1)",
                 border: "1px solid rgba(6,182,212,0.25)",
-                fontSize: "12px",
-                fontWeight: 700,
-                color: "#22d3ee",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
                 marginBottom: "20px",
               }}
             >
@@ -449,24 +436,18 @@ function ExampleSolutionsSection() {
               Örnek Çözüm Türleri
             </div>
             <h2
+              className="text-role-section-heading"
               style={{
-                fontSize: "clamp(24px, 5vw, 48px)",
-                fontWeight: 800,
-                color: "#0f172a",
-                letterSpacing: "-1px",
-                lineHeight: 1.15,
                 margin: "0 0 16px 0",
               }}
             >
               Geliştirdiğimiz Çözüm Türleri
             </h2>
             <p
+              className="text-role-body-lg"
               style={{
-                fontSize: "16px",
-                color: "#475569",
                 maxWidth: "600px",
                 margin: "0 auto",
-                lineHeight: 1.6,
               }}
             >
               Bunlar örnek çözüm türleridir. Her proje ihtiyaca göre özel olarak geliştirilir.
@@ -509,12 +490,9 @@ function ExampleSolutionsSection() {
                   <Code2 size={20} color="#7c3aed" />
                 </div>
                 <h3
+                  className="text-role-subheading"
                   style={{
-                    fontSize: "15px",
-                    fontWeight: 600,
-                    color: "#0f172a",
                     margin: "0",
-                    lineHeight: 1.4,
                   }}
                 >
                   {solution}
@@ -532,6 +510,7 @@ function ExampleSolutionsSection() {
           >
             <Link
               href="/randevual"
+              className="text-role-button"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -539,8 +518,6 @@ function ExampleSolutionsSection() {
                 gap: "8px",
                 padding: "12px 24px",
                 borderRadius: "10px",
-                fontSize: "14px",
-                fontWeight: 600,
                 textDecoration: "none",
                 color: "white",
                 background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
@@ -737,12 +714,8 @@ function HeroSection() {
           {/* Eyebrow */}
           <motion.div variants={fadeUp}>
             <span
+              className="text-role-eyebrow"
               style={{
-                fontSize: "12px",
-                fontWeight: 600,
-                letterSpacing: "0.08em",
-                color: "#7c3aed",
-                textTransform: "uppercase",
                 marginBottom: "10px",
                 display: "inline-block",
               }}
@@ -757,11 +730,8 @@ function HeroSection() {
   className="flex flex-col items-start"
 >
   <h1
+    className="text-role-hero"
     style={{
-      fontSize: "clamp(28px, 4.5vw, 46px)",
-      fontWeight: 700,
-      color: "#050505",
-      lineHeight: 1.15,
       maxWidth: "100%",
     }}
   >
@@ -772,11 +742,9 @@ function HeroSection() {
           {/* Subtext */}
           <motion.p
             variants={fadeUp}
+            className="text-role-body-lg"
             style={{
-              color: "#64748b",
               maxWidth: "480px",
-              fontSize: "clamp(15px, 1.4vw, 16px)",
-              lineHeight: 1.65,
               margin: 0,
               marginBottom: "24px",
             }}
@@ -803,7 +771,7 @@ function HeroSection() {
                 }}
               >
                 <CheckCircle2 size={15} color="#7c3aed" strokeWidth={2.5} />
-                <span style={{ fontSize: "13px", color: "#475569", fontWeight: 500 }}>{title}</span>
+                <span className="font-body" style={{ fontSize: "13px", color: "#475569", fontWeight: 500 }}>{title}</span>
               </div>
             ))}
           </motion.div>
@@ -823,15 +791,13 @@ function HeroSection() {
                 padding: "12px 24px",
                 minHeight: "48px",
                 borderRadius: "10px",
-                fontSize: "14px",
-                fontWeight: 600,
                 textDecoration: "none",
                 color: "white",
                 background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
                 boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
                 width: "100%",
               }}
-              className="sm:w-auto"
+              className="sm:w-auto text-role-button"
             >
               Ücretsiz Ön Görüşme Planla <ArrowRight size={14} />
             </Link>
@@ -845,15 +811,13 @@ function HeroSection() {
                 padding: "12px 24px",
                 minHeight: "48px",
                 borderRadius: "10px",
-                fontSize: "14px",
-                fontWeight: 600,
                 textDecoration: "none",
                 color: "#1e293b",
                 background: "#ffffff",
                 border: "1.5px solid #cbd5e1",
                 width: "100%",
               }}
-              className="sm:w-auto"
+              className="sm:w-auto text-role-button"
             >
               Hizmetleri İncele <ArrowRight size={14} />
             </Link>
@@ -862,6 +826,7 @@ function HeroSection() {
           {/* Trust note */}
           <motion.p
             variants={fadeUp}
+            className="font-body"
             style={{
               fontSize: "12px",
               color: "#94a3b8",
@@ -972,6 +937,7 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
         <AnimatedSection>
           <motion.div variants={fadeUp} style={{ textAlign: "center", marginBottom: "64px" }}>
             <div
+              className="text-role-eyebrow"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -980,11 +946,6 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
                 borderRadius: "100px",
                 background: "rgba(6,182,212,0.1)",
                 border: "1px solid rgba(6,182,212,0.35)",
-                fontSize: "12px",
-                fontWeight: 700,
-                color: "#0891b2",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
                 marginBottom: "20px",
               }}
             >
@@ -992,12 +953,8 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
               Hizmetlerimiz
             </div>
             <h2
+              className="text-role-section-heading"
               style={{
-                fontSize: "clamp(24px, 5vw, 48px)",
-                fontWeight: 800,
-                color: "#0f172a",
-                letterSpacing: "-1px",
-                lineHeight: 1.15,
                 margin: "0 0 16px 0",
                 wordBreak: "break-word",
               }}
@@ -1006,12 +963,10 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
               <span style={{ color: "#0891b2", fontWeight: 900 }}>Yazılım Çözümü</span>
             </h2>
             <p
+              className="text-role-body-lg"
               style={{
-                fontSize: "clamp(15px, 2.5vw, 17px)",
-                color: "#64748b",
                 maxWidth: "520px",
                 margin: "0 auto",
-                lineHeight: 1.7,
               }}
             >
               {settings.homepageIntro}
@@ -1069,17 +1024,14 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
                       <Icon size={24} color="#22d3ee" />
                     </div>
                     <h3
+                      className="text-role-subheading text-role-subheading--on-dark"
                       style={{
-                        fontSize: "18px",
-                        fontWeight: 700,
-                        color: "#f1f5f9",
                         marginBottom: "12px",
-                        letterSpacing: "-0.3px",
                       }}
                     >
                       {service.title}
                     </h3>
-                    <p style={{ fontSize: "15px", color: "#94a3b8", lineHeight: 1.8, margin: 0, flex: 1 }}>
+                    <p className="text-role-body text-role-body--on-dark" style={{ margin: 0, flex: 1 }}>
                       {service.description}
                     </p>
                   </div>
@@ -1091,14 +1043,13 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
           <motion.div variants={fadeUp} style={{ textAlign: "center" }}>
             <Link
               href="/hizmetler"
+              className="text-role-button"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
                 padding: "13px 32px",
                 borderRadius: "12px",
-                fontSize: "15px",
-                fontWeight: 600,
                 color: "#a78bfa",
                 background: "rgba(124,58,237,0.1)",
                 border: "1px solid rgba(124,58,237,0.3)",
@@ -1145,6 +1096,7 @@ function SectoralSoftwareSection() {
         <AnimatedSection>
           <motion.div variants={fadeUp} style={{ textAlign: "center", marginBottom: "64px" }}>
             <div
+              className="text-role-eyebrow"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -1153,11 +1105,6 @@ function SectoralSoftwareSection() {
                 borderRadius: "100px",
                 background: "rgba(16,185,129,0.1)",
                 border: "1px solid rgba(16,185,129,0.40)",
-                fontSize: "12px",
-                fontWeight: 700,
-                color: "#059669",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
                 marginBottom: "20px",
               }}
             >
@@ -1165,12 +1112,8 @@ function SectoralSoftwareSection() {
               Sektörel Yazılımlar
             </div>
             <h2
+              className="text-role-section-heading"
               style={{
-                fontSize: "clamp(24px, 5vw, 48px)",
-                fontWeight: 800,
-                color: "#0f172a",
-                letterSpacing: "-1px",
-                lineHeight: 1.15,
                 margin: "0 0 16px 0",
                 wordBreak: "break-word",
               }}
@@ -1179,12 +1122,10 @@ function SectoralSoftwareSection() {
               <span style={{ color: "#059669", fontWeight: 900 }}>Yazılım Çözümleri</span>
             </h2>
             <p
+              className="text-role-body-lg"
               style={{
-                fontSize: "clamp(15px, 2.5vw, 17px)",
-                color: "#64748b",
                 maxWidth: "520px",
                 margin: "0 auto",
-                lineHeight: 1.7,
               }}
             >
               Restoranlar, salonlar, klinikler ve farklı sektörlerin ihtiyaçlarına özel tasarlanmış, hemen kullanıma hazır yazılım çözümleri.
@@ -1242,17 +1183,14 @@ function SectoralSoftwareSection() {
                       <Icon size={24} color="#6ee7b7" />
                     </div>
                     <h3
+                      className="text-role-subheading text-role-subheading--on-dark"
                       style={{
-                        fontSize: "18px",
-                        fontWeight: 700,
-                        color: "#f1f5f9",
                         marginBottom: "12px",
-                        letterSpacing: "-0.3px",
                       }}
                     >
                       {service.title}
                     </h3>
-                    <p style={{ fontSize: "15px", color: "#94a3b8", lineHeight: 1.8, margin: 0, flex: 1 }}>
+                    <p className="text-role-body text-role-body--on-dark" style={{ margin: 0, flex: 1 }}>
                       {service.description}
                     </p>
                   </div>
@@ -1264,14 +1202,13 @@ function SectoralSoftwareSection() {
           <motion.div variants={fadeUp} style={{ textAlign: "center" }}>
             <Link
               href="/sektorel-yazilimlar"
+              className="text-role-button"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
                 padding: "13px 32px",
                 borderRadius: "12px",
-                fontSize: "15px",
-                fontWeight: 600,
                 color: "#6ee7b7",
                 background: "rgba(16,185,129,0.1)",
                 border: "1px solid rgba(16,185,129,0.3)",
@@ -1346,6 +1283,7 @@ function CTASection({ settings }: { settings: SiteSettings }) {
 
             <div style={{ position: "relative" }}>
               <div
+                className="text-role-eyebrow text-role-eyebrow--on-dark"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1354,10 +1292,6 @@ function CTASection({ settings }: { settings: SiteSettings }) {
                   borderRadius: "100px",
                   background: "rgba(124,58,237,0.15)",
                   border: "1px solid rgba(124,58,237,0.35)",
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  color: "#a78bfa",
-                  letterSpacing: "0.05em",
                   marginBottom: "28px",
                 }}
               >
@@ -1366,12 +1300,8 @@ function CTASection({ settings }: { settings: SiteSettings }) {
               </div>
 
               <h2
+                className="text-role-section-heading text-role-section-heading--on-dark"
                 style={{
-                  fontSize: "clamp(24px, 5vw, 52px)",
-                  fontWeight: 800,
-                  color: "#f1f5f9",
-                  letterSpacing: "-1px",
-                  lineHeight: 1.15,
                   marginBottom: "16px",
                   wordBreak: "break-word",
                 }}
@@ -1380,12 +1310,10 @@ function CTASection({ settings }: { settings: SiteSettings }) {
               </h2>
 
               <p
+                className="text-role-body-lg text-role-body-lg--on-dark"
                 style={{
-                  fontSize: "clamp(15px, 2.5vw, 18px)",
-                  color: "#94a3b8",
                   maxWidth: "500px",
                   margin: "0 auto 32px",
-                  lineHeight: 1.7,
                 }}
               >
                 Projenizi bizimle paylaşın. 24 saat içinde size özel teklifimizi hazırlayalım.
@@ -1394,10 +1322,9 @@ function CTASection({ settings }: { settings: SiteSettings }) {
               <div className="flex flex-wrap gap-3 sm:gap-4 justify-center">
                 <Link
                   href="/teklif-al"
-                  className="inline-flex items-center gap-2 rounded-xl font-bold text-white transition-all"
+                  className="inline-flex items-center gap-2 rounded-xl text-white transition-all text-role-button"
                   style={{
                     padding: "12px 24px",
-                    fontSize: "clamp(14px, 2vw, 16px)",
                     textDecoration: "none",
                     background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)",
                     boxShadow: "0 0 40px rgba(124,58,237,0.4), 0 4px 20px rgba(0,0,0,0.3)",
@@ -1408,10 +1335,9 @@ function CTASection({ settings }: { settings: SiteSettings }) {
                 </Link>
                 <Link
                   href="/kurumsal/iletisim"
-                  className="inline-flex items-center gap-2 rounded-xl font-semibold transition-all"
+                  className="inline-flex items-center gap-2 rounded-xl transition-all text-role-button"
                   style={{
                     padding: "12px 24px",
-                    fontSize: "clamp(14px, 2vw, 16px)",
                     textDecoration: "none",
                     color: "#e2e8f0",
                     background: "rgba(255,255,255,0.07)",
@@ -1528,6 +1454,7 @@ function BlogSection() {
             <div>
               {/* Label */}
               <div
+                className="text-role-eyebrow"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1536,11 +1463,6 @@ function BlogSection() {
                   borderRadius: "100px",
                   background: "rgba(124,58,237,0.1)",
                   border: "1px solid rgba(124,58,237,0.40)",
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  color: "#7c3aed",
-                  letterSpacing: "0.05em",
-                  textTransform: "uppercase",
                   marginBottom: "20px",
                 }}
               >
@@ -1548,22 +1470,16 @@ function BlogSection() {
                 Blog
               </div>
               <h2
+                className="text-role-section-heading"
                 style={{
-                  fontSize: "clamp(26px, 5vw, 52px)",
-                  fontWeight: 800,
-                  color: "#0f172a",
-                  letterSpacing: "-1px",
-                  lineHeight: 1.15,
                   margin: "0 0 14px 0",
                 }}
               >
                 Son <span style={{ color: "#7c3aed", fontWeight: 900 }}>Yazılar</span>
               </h2>
               <p
+                className="text-role-body-lg"
                 style={{
-                  fontSize: "clamp(15px, 2vw, 17px)",
-                  color: "#64748b",
-                  lineHeight: 1.7,
                   margin: 0,
                   maxWidth: "520px",
                 }}
@@ -1576,14 +1492,13 @@ function BlogSection() {
             <div className="hidden sm:block">
               <Link
                 href="/kurumsal/blog"
+                className="text-role-button"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
                   padding: "10px 22px",
                   borderRadius: "100px",
-                  fontSize: "14px",
-                  fontWeight: 600,
                   color: "#7c3aed",
                   background: "rgba(124,58,237,0.08)",
                   border: "1px solid rgba(124,58,237,0.35)",
@@ -1626,14 +1541,13 @@ function BlogSection() {
           <motion.div variants={fadeUp}>
             <Link
               href="/kurumsal/blog"
+              className="text-role-button"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
                 padding: "12px 28px",
                 borderRadius: "100px",
-                fontSize: "14px",
-                fontWeight: 600,
                 color: "#a78bfa",
                 background: "rgba(124,58,237,0.08)",
                 border: "1px solid rgba(124,58,237,0.22)",

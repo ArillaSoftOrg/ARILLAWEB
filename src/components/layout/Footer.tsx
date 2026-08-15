@@ -28,7 +28,7 @@ export default function Footer() {
             >
               <img src="/logoarilla.png" alt="Arillasoft" style={{ height: '40px', width: 'auto' }} />
             </Link>
-            <p style={{ fontSize: '14px', color: '#cbd5e1', lineHeight: 1.8, marginBottom: '24px' }}>
+            <p className="text-role-footer" style={{ lineHeight: 1.8, marginBottom: '24px' }}>
               {t('tagline')}
             </p>
             <div style={{ display: 'flex', gap: '10px' }}>
@@ -65,7 +65,7 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h3 style={{ fontWeight: 700, fontSize: '14px', color: '#e2e8f0', marginBottom: '16px' }}>
+            <h3 className="text-role-footer-header" style={{ marginBottom: '16px' }}>
               {t('servicesHeading')}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -73,7 +73,7 @@ export default function Footer() {
                 <li key={key}>
                   <Link
                     href="/hizmetler"
-                    className="text-sm text-slate-500 no-underline transition-colors duration-200 hover:text-slate-400"
+                    className="text-role-footer no-underline transition-colors duration-200"
                   >
                     {t(key)}
                   </Link>
@@ -84,7 +84,7 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h3 style={{ fontWeight: 700, fontSize: '14px', color: '#e2e8f0', marginBottom: '16px' }}>
+            <h3 className="text-role-footer-header" style={{ marginBottom: '16px' }}>
               {t('companyHeading')}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -97,7 +97,7 @@ export default function Footer() {
                 <li key={item.key}>
                   <Link
                     href={item.href}
-                    className="text-sm text-slate-500 no-underline transition-colors duration-200 hover:text-slate-400"
+                    className="text-role-footer no-underline transition-colors duration-200"
                   >
                     {t(item.key)}
                   </Link>
@@ -108,13 +108,13 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 style={{ fontWeight: 700, fontSize: '14px', color: '#e2e8f0', marginBottom: '16px' }}>
+            <h3 className="text-role-footer-header" style={{ marginBottom: '16px' }}>
               {t('contactHeading')}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <svg viewBox="0 0 24 24" fill="white" style={{ width: '14px', height: '14px', marginTop: '2px', flexShrink: 0 }}><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                <a href="mailto:iletisim@arillasoft.com" className="text-xs text-slate-500 no-underline transition-colors duration-200 hover:text-violet-300">
+                <a href="mailto:iletisim@arillasoft.com" className="text-role-footer no-underline transition-colors duration-200">
                   iletisim@arillasoft.com
                 </a>
               </li>
@@ -124,14 +124,14 @@ export default function Footer() {
                   href="https://wa.me/905422535192?text=Merhaba%2C%20hizmetlerinizle%20ilgili%20detayl%C4%B1%20bilgi%20almak%20istiyorum."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-slate-500 no-underline transition-colors duration-200 hover:text-violet-300"
+                  className="text-role-footer no-underline transition-colors duration-200"
                 >
                   WhatsApp
                 </a>
               </li>
               <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <svg viewBox="0 0 24 24" fill="white" style={{ width: '14px', height: '14px', marginTop: '2px', flexShrink: 0 }}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5z"/></svg>
-                <span style={{ fontSize: '13px', color: '#475569', lineHeight: 1.6 }}>
+                <span className="text-role-footer" style={{ lineHeight: 1.6 }}>
                   {t('location')}
                 </span>
               </li>
@@ -139,7 +139,7 @@ export default function Footer() {
             <div style={{ marginTop: '20px' }}>
               <Link
                 href="/kurumsal/iletisim"
-                className="inline-flex items-center gap-1.5 px-4.5 py-2 rounded-lg text-xs font-semibold text-white bg-gradient-to-br from-violet-600 to-purple-700 no-underline transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/30 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-1.5 px-4.5 py-2 rounded-lg text-white bg-gradient-to-br from-violet-600 to-purple-700 no-underline transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/30 hover:-translate-y-0.5 text-role-button"
               >
                 {t('contactCta')}
               </Link>
@@ -162,17 +162,17 @@ export default function Footer() {
             gap: '12px',
           }}
         >
-          <p style={{ fontSize: '13px', color: '#64748b' }}>
+          <p className="text-role-footer-legal">
             © {currentYear} Arillasoft. {t('copyright')}
           </p>
           <button
             type="button"
             onClick={() => setPreferencesOpen(true)}
+            className="text-role-footer-legal"
             style={{
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '13px',
               color: '#475569',
               padding: '0',
               transition: 'color 0.15s',
