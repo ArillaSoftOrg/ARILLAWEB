@@ -35,7 +35,7 @@ type LivePreviewFrameProps = {
   creator?: string;
 };
 
-export default function LivePreviewFrame({ url, label, title, templateName, creator }: LivePreviewFrameProps) {
+export default function LivePreviewFrame({ url, title, templateName, creator }: LivePreviewFrameProps) {
   const [phase, setPhase] = useState<Phase>("loading");
   const [open, setOpen] = useState(false);
   const [viewport, setViewport] = useState<Viewport>("desktop");
@@ -89,11 +89,11 @@ export default function LivePreviewFrame({ url, label, title, templateName, crea
 
   return (
     <>
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_330px]">
         <div className="overflow-hidden rounded-[14px] border border-black/10 bg-[#EEEEEC]">
-          <BrowserChrome label={label} />
+          <BrowserChrome />
 
-          <div ref={panelRef} className="relative h-[520px] w-full overflow-hidden bg-white sm:h-[600px] xl:h-[660px]">
+          <div ref={panelRef} className="relative h-[500px] w-full overflow-hidden bg-white sm:h-[570px] xl:h-[610px]">
             {showFrame && panelScale > 0 && (
               <div aria-hidden className="pointer-events-none absolute inset-0 flex items-start justify-center">
                 <div
@@ -215,8 +215,7 @@ function MobilePreviewFrame({ url, title, showFrame }: { url: string; title: str
     const shell = shellRef.current;
     if (!shell) return;
     const observer = new ResizeObserver(([entry]) => {
-      const availableWidth = entry.contentRect.width - 32;
-      setScale(Math.min(availableWidth / width, 1));
+      setScale(Math.min(entry.contentRect.width / width, 1));
     });
     observer.observe(shell);
     return () => observer.disconnect();
@@ -224,13 +223,11 @@ function MobilePreviewFrame({ url, title, showFrame }: { url: string; title: str
 
   return (
     <aside className="hidden xl:block">
-      <h3 className="mb-3 text-sm font-extrabold uppercase tracking-[0.14em] text-[#39415A]">Mobil Görünüm</h3>
       <div
         ref={shellRef}
-        className="rounded-[34px] border border-black/10 bg-[#111827] p-3 shadow-2xl shadow-slate-950/20"
+        className="rounded-[24px] border border-black/10 bg-[#111827] p-1 shadow-xl shadow-slate-950/15"
       >
-        <div className="mx-auto mb-2 h-1.5 w-20 rounded-full bg-white/20" />
-        <div className="relative h-[700px] overflow-hidden rounded-[25px] border border-white/10 bg-white">
+        <div className="relative h-[620px] overflow-hidden rounded-[20px] border border-black/10 bg-white">
           {showFrame && scale > 0 && (
             <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
               <div
@@ -325,7 +322,7 @@ function ModalFrame({
   );
 }
 
-function BrowserChrome({ label }: { label: string }) {
+function BrowserChrome() {
   return (
     <div className="flex items-center gap-3 border-b border-black/10 bg-black/[0.03] px-4 py-2.5">
       <div className="flex gap-1.5">
@@ -333,9 +330,6 @@ function BrowserChrome({ label }: { label: string }) {
         <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
         <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
       </div>
-      <span className="truncate rounded-[7px] bg-white px-3 py-1 text-xs font-semibold text-[#6C7486]">
-        {label}
-      </span>
       <span className="ml-auto shrink-0 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-800">
         Harici site
       </span>
