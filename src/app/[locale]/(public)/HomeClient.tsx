@@ -559,27 +559,100 @@ function ExampleSolutionsSection() {
 // ─────────────────────────────────────────────
 // Hero Section
 // ─────────────────────────────────────────────
+const SITE_EXAMPLES = [
+  {
+    title: "Pet Kuaförü — Modern Dönüşüm",
+    sector: "Pet Kuaförü ve Pet Hizmetleri",
+    designCode: "PET-01",
+    href: "/site-ornekleri/pet-kuaforu-pet-hizmetleri/pet-kuaforu-modern-donusum",
+  },
+  {
+    title: "Kuaför — Modern Dönüşüm",
+    sector: "Kuaför ve Berber",
+    designCode: "KUA-01",
+    href: "/site-ornekleri/kuafor-berber/kuafor-modern-donusum",
+  },
+  {
+    title: "Güzellik — Modern Dönüşüm",
+    sector: "Güzellik ve Bakım Merkezi",
+    designCode: "GUZ-01",
+    href: "/site-ornekleri/guzellik-bakim-merkezi/guzellik-modern-donusum",
+  },
+  {
+    title: "Diş Kliniği — Modern Dönüşüm",
+    sector: "Diş Kliniği ve Özel Klinik",
+    designCode: "KLI-01",
+    href: "/site-ornekleri/dis-klinigi-ozel-klinik/dis-klinigi-modern-donusum",
+  },
+  {
+    title: "Restoran — Modern Dönüşüm",
+    sector: "Restoran ve Kafe",
+    designCode: "RES-01",
+    href: "/site-ornekleri/restoran-kafe/restoran-modern-donusum",
+  },
+  {
+    title: "Emlak — Modern Dönüşüm",
+    sector: "Emlak Danışmanlığı",
+    designCode: "EML-01",
+    href: "/site-ornekleri/emlak-danismanligi/emlak-danismanligi-modern-donusum",
+  },
+  {
+    title: "Otomotiv — Modern Dönüşüm",
+    sector: "Otomotiv Servisi ve Araç Bakım",
+    designCode: "OTO-01",
+    href: "/site-ornekleri/otomotiv-servisi-arac-bakim/otomotiv-servisi-modern-donusum",
+  },
+  {
+    title: "Mimarlık — Modern Dönüşüm",
+    sector: "Mimarlık, Dekorasyon ve İnşaat",
+    designCode: "MIM-01",
+    href: "/site-ornekleri/mimarlik-dekorasyon-insaat/mimarlik-dekorasyon-modern-donusum",
+  },
+] as const;
+
+function SiteExampleTile({ example, hidden = false }: { example: (typeof SITE_EXAMPLES)[number]; hidden?: boolean }) {
+  const display = getSiteExampleDisplay({ ...example, summary: "" });
+  if (!display.previewSrc) return null;
+
+  return (
+    <Link
+      href={example.href}
+      aria-hidden={hidden || undefined}
+      tabIndex={hidden ? -1 : undefined}
+      className="group block w-[280px] flex-shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:w-[320px] lg:w-[380px]"
+    >
+      <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+        <Image
+          src={display.previewSrc}
+          alt={`${display.title} site önizlemesi`}
+          fill
+          loading="lazy"
+          className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
+          sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 380px"
+        />
+      </div>
+      <div className="p-5">
+        <h3 className="text-lg font-black text-slate-950">{display.title}</h3>
+        <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">{display.description}</p>
+        <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue-700">
+          Tasarımı incele <ArrowRight size={14} className="transition group-hover:translate-x-1" />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
 function SiteExamplesPreviewSection() {
-  const examples = [
-    {
-      title: "Pet Kuaförü — Modern Dönüşüm",
-      sector: "Pet Kuaförü ve Pet Hizmetleri",
-      designCode: "PET-01",
-      href: "/site-ornekleri/pet-kuaforu-pet-hizmetleri/pet-kuaforu-modern-donusum",
-    },
-    {
-      title: "Güzellik — Sade Editoryal",
-      sector: "Güzellik ve Bakım Merkezi",
-      designCode: "GUZ-02",
-      href: "/site-ornekleri/guzellik-bakim-merkezi/guzellik-sade-editoryal",
-    },
-    {
-      title: "Mimarlık — Premium Koyu",
-      sector: "Mimarlık, Dekorasyon ve İnşaat",
-      designCode: "MIM-03",
-      href: "/site-ornekleri/mimarlik-dekorasyon-insaat/mimarlik-dekorasyon-premium-koyu",
-    },
-  ];
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
 
   return (
     <section className="bg-slate-50 py-16 sm:py-20 lg:py-28">
@@ -604,40 +677,36 @@ function SiteExamplesPreviewSection() {
           </motion.div>
         </AnimatedSection>
 
-        <AnimatedSection className="grid gap-5 md:grid-cols-3">
-          {examples.map((example) => {
-            const display = getSiteExampleDisplay({ ...example, summary: "" });
-            if (!display.previewSrc) return null;
-
-            return (
-              <motion.div key={example.designCode} variants={scaleIn}>
-                <Link
-                  href={example.href}
-                  className="group block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
-                    <Image
-                      src={display.previewSrc}
-                      alt={`${display.title} site önizlemesi`}
-                      fill
-                      loading="lazy"
-                      className="object-cover object-top transition duration-500 group-hover:scale-[1.03]"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  </div>
-                  <div className="p-5">
-                    <h3 className="text-lg font-black text-slate-950">{display.title}</h3>
-                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">{display.description}</p>
-                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-blue-700">
-                      Tasarımı incele <ArrowRight size={14} className="transition group-hover:translate-x-1" />
-                    </span>
-                  </div>
-                </Link>
-              </motion.div>
-            );
-          })}
-        </AnimatedSection>
       </div>
+
+      {reducedMotion ? (
+        <AnimatedSection className="mx-auto grid max-w-[1280px] gap-5 px-5 sm:grid-cols-2 sm:px-6 lg:grid-cols-3">
+          {SITE_EXAMPLES.map((example) => (
+            <motion.div key={example.designCode} variants={scaleIn}>
+              <SiteExampleTile example={example} />
+            </motion.div>
+          ))}
+        </AnimatedSection>
+      ) : (
+        <AnimatedSection className="w-full overflow-hidden">
+          <motion.div variants={fadeUp}>
+            <div
+              className="site-examples-track flex w-max gap-5"
+              style={paused ? { animationPlayState: "paused" } : undefined}
+              onTouchStart={() => setPaused(true)}
+              onTouchEnd={() => setPaused(false)}
+              onTouchCancel={() => setPaused(false)}
+            >
+              {SITE_EXAMPLES.map((example) => (
+                <SiteExampleTile key={example.designCode} example={example} />
+              ))}
+              {SITE_EXAMPLES.map((example) => (
+                <SiteExampleTile key={`${example.designCode}-clone`} example={example} hidden />
+              ))}
+            </div>
+          </motion.div>
+        </AnimatedSection>
+      )}
     </section>
   );
 }

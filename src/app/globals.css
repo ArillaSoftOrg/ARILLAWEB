@@ -287,6 +287,35 @@ body {
   }
 }
 
+/* Site examples (homepage) card marquee — scrolls right, opposite of the
+   announcement bar's leftward text scroll. */
+.site-examples-track {
+  animation: site-examples-scroll 48s linear infinite;
+}
+
+/* Pause on hover — desktop only */
+@media (hover: hover) {
+  .site-examples-track:hover {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes site-examples-scroll {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .site-examples-track {
+    animation: none;
+  }
+}
+
 /* ── Blog reading theme ── */
 [data-blog-theme="dark"] {
   --blog-bg:              #08090d;
