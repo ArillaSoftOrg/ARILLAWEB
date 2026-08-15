@@ -33,9 +33,17 @@ type LivePreviewFrameProps = {
   templateName: string;
   /** Template author/studio, when the marketplace listing credits one. */
   creator?: string;
+  platform?: string;
 };
 
-export default function LivePreviewFrame({ url, title, templateName, creator }: LivePreviewFrameProps) {
+export default function LivePreviewFrame({
+  url,
+  label,
+  title,
+  templateName,
+  creator,
+  platform = "Framer",
+}: LivePreviewFrameProps) {
   const [phase, setPhase] = useState<Phase>("loading");
   const [open, setOpen] = useState(false);
   const [viewport, setViewport] = useState<Viewport>("desktop");
@@ -45,30 +53,22 @@ export default function LivePreviewFrame({ url, title, templateName, creator }: 
   const wasOpen = useRef(false);
   const [panelScale, setPanelScale] = useState(0);
 
-  // Restore focus to the panel trigger after the modal closes. Radix's own
-  // restoration targets the node it captured on open, but closing also remounts
-  // the compact iframe beneath it, and focus ends up on <body> instead. Running
-  // this in an effect means the DOM has already settled.
   useEffect(() => {
     if (wasOpen.current && !open) openButtonRef.current?.focus();
     wasOpen.current = open;
   }, [open]);
 
-  // Scale the fixed 1440x900 frame into the compact desktop panel.
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return;
     const observer = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
-      const widthScale = width / VIEWPORTS.desktop.width;
-      const heightScale = height / VIEWPORTS.desktop.height;
-      setPanelScale(width >= 900 ? heightScale : Math.min(widthScale, heightScale));
+      setPanelScale(Math.min(width / VIEWPORTS.desktop.width, height / VIEWPORTS.desktop.height));
     });
     observer.observe(panel);
     return () => observer.disconnect();
   }, [phase]);
 
-  // Give up if the main frame never reports a load.
   useEffect(() => {
     if (phase !== "loading") return;
     const timer = setTimeout(() => setPhase("failed"), LOAD_TIMEOUT_MS);
@@ -83,80 +83,109 @@ export default function LivePreviewFrame({ url, title, templateName, creator }: 
     return <PreviewUnavailable url={url} />;
   }
 
-  // Compact desktop/mobile previews unmount while the modal is open, so the
-  // interactive modal remains the only live frame during full preview.
   const showFrame = phase !== "idle" && !open;
+  const projectName = getReferenceProjectName(templateName, title);
+  const projectDescription = getReferenceDescription(templateName);
 
   return (
     <>
-      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_330px]">
-        <div className="overflow-hidden rounded-[14px] border border-black/10 bg-[#EEEEEC]">
-          <BrowserChrome />
-
-          <div ref={panelRef} className="relative h-[500px] w-full overflow-hidden bg-white sm:h-[570px] xl:h-[610px]">
-            {showFrame && panelScale > 0 && (
-              <div aria-hidden className="pointer-events-none absolute inset-0 flex items-start justify-center">
-                <div
-                  aria-hidden
-                  className="pointer-events-none"
-                  style={{ width: VIEWPORTS.desktop.width * panelScale, height: VIEWPORTS.desktop.height * panelScale }}
-                >
-                  <iframe
-                    src={url}
-                    title={`${title} — canlı tasarım önizlemesi`}
-                    sandbox={SANDBOX}
-                    referrerPolicy="no-referrer"
-                    loading="lazy"
-                    tabIndex={-1}
-                    onLoad={handleLoad}
-                    onError={() => setPhase("failed")}
-                    style={{
-                      width: VIEWPORTS.desktop.width,
-                      height: VIEWPORTS.desktop.height,
-                      transform: `scale(${panelScale})`,
-                      transformOrigin: "top left",
-                      border: 0,
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {phase === "loading" && (
-              <div className="absolute inset-0 bg-[#FAF9F7]/90 p-5">
-                <div className="h-full animate-pulse rounded-[10px] border border-black/5 bg-white/75 p-5">
-                  <div className="h-6 w-2/5 rounded bg-slate-200" />
-                  <div className="mt-5 grid h-[68%] grid-cols-[1.15fr_.85fr] gap-5">
-                    <div className="space-y-3">
-                      <div className="h-10 w-4/5 rounded bg-slate-200" />
-                      <div className="h-4 w-3/5 rounded bg-slate-200" />
-                      <div className="h-4 w-2/3 rounded bg-slate-200" />
-                      <div className="mt-6 h-10 w-32 rounded bg-slate-300" />
-                    </div>
-                    <div className="rounded-[14px] bg-slate-200" />
-                  </div>
-                  <p className="mt-4 text-center text-sm font-semibold text-[#6C7486]">Önizleme yükleniyor...</p>
-                </div>
-              </div>
-            )}
-
-            {phase === "ready" && (
-              <button
-                type="button"
-                ref={openButtonRef}
-                onClick={() => setOpen(true)}
-                aria-label="Tasarımı büyük önizlemede aç"
-                className="group absolute inset-0 flex items-end justify-center bg-[#0B1220]/0 transition hover:bg-[#0B1220]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4BF2] focus-visible:ring-offset-2"
-              >
-                <span className="mb-5 inline-flex items-center gap-2 rounded-[10px] bg-[#0B1220]/85 px-4 py-2.5 text-sm font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100 group-focus-visible:opacity-100">
-                  <Maximize2 className="h-4 w-4" /> Büyük önizlemede aç
+      <div className="rounded-[28px] bg-gradient-to-br from-white via-[#F8F8FF] to-[#EEF3FF] px-5 py-7 shadow-[0_24px_80px_rgba(43,75,242,0.10)] sm:px-7 lg:px-9">
+        <div className="mb-7 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0">
+            <p className="text-xs font-extrabold uppercase tracking-[0.14em] text-[#6D4DFF]">WEB SİTE ÖRNEĞİ</p>
+            <h3 className="mt-2 text-[40px] font-black leading-none tracking-[-0.04em] text-[#111827] sm:text-[52px]">
+              {projectName}
+            </h3>
+            <p className="mt-3 max-w-xl text-base font-semibold text-[#46536B]">{projectDescription}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {["Web Design", "Responsive", platform].map((tag) => (
+                <span key={tag} className="rounded-full bg-[#ECEBFF] px-4 py-1.5 text-sm font-bold text-[#35415C]">
+                  {tag}
                 </span>
-              </button>
-            )}
+              ))}
+            </div>
           </div>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-extrabold text-[#6D4DFF] transition hover:text-[#4F35D8]"
+          >
+            Orijinal Siteyi Ziyaret Et <ExternalLink className="h-4 w-4" />
+          </a>
         </div>
 
-        <MobilePreviewFrame url={url} title={title} showFrame={showFrame && phase === "ready"} />
+        <div className="grid items-end gap-7 xl:grid-cols-[minmax(0,1fr)_260px]">
+          <div>
+            <div className="rounded-t-[22px] bg-[#111319] p-2 shadow-[0_20px_50px_rgba(15,23,42,0.22)]">
+              <div className="overflow-hidden rounded-t-[14px] border border-black bg-[#0B0D12]">
+                <BrowserChrome label={label} url={url} />
+
+                <div
+                  ref={panelRef}
+                  className="relative h-[430px] w-full overflow-hidden bg-white sm:h-[500px] lg:h-[560px] xl:h-[600px]"
+                >
+                  {showFrame && panelScale > 0 && (
+                    <div aria-hidden className="pointer-events-none absolute inset-0 flex items-start justify-center">
+                      <div
+                        aria-hidden
+                        className="pointer-events-none"
+                        style={{ width: VIEWPORTS.desktop.width * panelScale, height: VIEWPORTS.desktop.height * panelScale }}
+                      >
+                        <iframe
+                          src={url}
+                          title={`${title} — canlı tasarım önizlemesi`}
+                          sandbox={SANDBOX}
+                          referrerPolicy="no-referrer"
+                          loading="lazy"
+                          tabIndex={-1}
+                          onLoad={handleLoad}
+                          onError={() => setPhase("failed")}
+                          className="[scrollbar-width:none]"
+                          style={{
+                            width: VIEWPORTS.desktop.width,
+                            height: VIEWPORTS.desktop.height,
+                            transform: `scale(${panelScale})`,
+                            transformOrigin: "top left",
+                            border: 0,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {phase === "loading" && <PreviewSkeleton />}
+
+                  {phase === "ready" && (
+                    <button
+                      type="button"
+                      ref={openButtonRef}
+                      onClick={() => setOpen(true)}
+                      aria-label="Tasarımı büyük önizlemede aç"
+                      className="group absolute inset-0 flex items-end justify-center bg-[#0B1220]/0 transition hover:bg-[#0B1220]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2B4BF2] focus-visible:ring-offset-2"
+                    >
+                      <span className="mb-5 inline-flex items-center gap-2 rounded-[10px] bg-[#0B1220]/85 px-4 py-2.5 text-sm font-bold text-white opacity-0 shadow-lg transition group-hover:opacity-100 group-focus-visible:opacity-100">
+                        <Maximize2 className="h-4 w-4" /> Büyük önizlemede aç
+                      </span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="relative mx-auto h-7 w-[104%] -translate-x-[2%] rounded-b-[22px] bg-gradient-to-b from-[#E8EBEF] to-[#ADB4BC] shadow-[0_14px_30px_rgba(15,23,42,0.22)]">
+              <div className="absolute left-1/2 top-0 h-3 w-36 -translate-x-1/2 rounded-b-xl bg-gradient-to-b from-[#B8BEC6] to-[#E5E7EB]" />
+              <div className="absolute bottom-0 left-7 h-1.5 w-20 rounded-t-full bg-slate-500/25" />
+              <div className="absolute bottom-0 right-7 h-1.5 w-20 rounded-t-full bg-slate-500/25" />
+            </div>
+          </div>
+
+          <div className="hidden xl:block">
+            <div className="mb-4 flex items-center gap-2 text-sm font-extrabold text-[#46536B]">
+              <Smartphone className="h-4 w-4 text-[#7A8599]" /> Responsive Görünüm
+            </div>
+            <MobilePreviewFrame url={url} title={title} showFrame={showFrame && phase === "ready"} />
+          </div>
+        </div>
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -206,6 +235,26 @@ export default function LivePreviewFrame({ url, title, templateName, creator }: 
   );
 }
 
+function PreviewSkeleton() {
+  return (
+    <div className="absolute inset-0 bg-[#FAF9F7]/90 p-5">
+      <div className="h-full animate-pulse rounded-[10px] border border-black/5 bg-white/75 p-5">
+        <div className="h-6 w-2/5 rounded bg-slate-200" />
+        <div className="mt-5 grid h-[68%] grid-cols-[1.15fr_.85fr] gap-5">
+          <div className="space-y-3">
+            <div className="h-10 w-4/5 rounded bg-slate-200" />
+            <div className="h-4 w-3/5 rounded bg-slate-200" />
+            <div className="h-4 w-2/3 rounded bg-slate-200" />
+            <div className="mt-6 h-10 w-32 rounded bg-slate-300" />
+          </div>
+          <div className="rounded-[14px] bg-slate-200" />
+        </div>
+        <p className="mt-4 text-center text-sm font-semibold text-[#6C7486]">Önizleme yükleniyor...</p>
+      </div>
+    </div>
+  );
+}
+
 function MobilePreviewFrame({ url, title, showFrame }: { url: string; title: string; showFrame: boolean }) {
   const shellRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
@@ -222,12 +271,13 @@ function MobilePreviewFrame({ url, title, showFrame }: { url: string; title: str
   }, [width]);
 
   return (
-    <aside className="hidden xl:block">
+    <aside className="w-[260px]">
       <div
         ref={shellRef}
-        className="rounded-[24px] border border-black/10 bg-[#111827] p-1 shadow-xl shadow-slate-950/15"
+        className="rounded-[34px] border border-black/15 bg-[#10131B] p-2 shadow-[0_18px_45px_rgba(15,23,42,0.22)]"
       >
-        <div className="relative h-[620px] overflow-hidden rounded-[20px] border border-black/10 bg-white">
+        <div className="relative h-[560px] overflow-hidden rounded-[25px] border border-black bg-white">
+          <div className="pointer-events-none absolute left-1/2 top-0 z-10 h-5 w-24 -translate-x-1/2 rounded-b-2xl bg-[#10131B]" />
           {showFrame && scale > 0 && (
             <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">
               <div
@@ -242,6 +292,7 @@ function MobilePreviewFrame({ url, title, showFrame }: { url: string; title: str
                   referrerPolicy="no-referrer"
                   loading="lazy"
                   tabIndex={-1}
+                  className="[scrollbar-width:none]"
                   style={{
                     width,
                     height,
@@ -322,19 +373,35 @@ function ModalFrame({
   );
 }
 
-function BrowserChrome() {
+function BrowserChrome({ label, url }: { label: string; url: string }) {
   return (
-    <div className="flex items-center gap-3 border-b border-black/10 bg-black/[0.03] px-4 py-2.5">
+    <div className="flex h-10 items-center gap-3 border-b border-black/10 bg-gradient-to-b from-[#F8F8F8] to-[#E8E8E8] px-4 text-[#1F2937]">
       <div className="flex gap-1.5">
         <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
         <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
         <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
       </div>
-      <span className="ml-auto shrink-0 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-800">
-        Harici site
-      </span>
+      <span className="truncate text-xs font-semibold text-[#4B5563]">{label}</span>
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="ml-auto inline-flex shrink-0 items-center gap-1 text-xs font-bold text-[#111827] transition hover:text-[#6D4DFF]"
+      >
+        Orijinal Site <ExternalLink className="h-3.5 w-3.5" />
+      </a>
     </div>
   );
+}
+
+function getReferenceProjectName(templateName: string, fallback: string) {
+  return templateName.split(" - ")[0]?.trim() || fallback.split("—")[0]?.trim() || fallback;
+}
+
+function getReferenceDescription(templateName: string) {
+  const [, ...rest] = templateName.split(" - ");
+  const description = rest.join(" - ").replace(/\s*Template\s*$/i, "").trim();
+  return description || "Responsive Website Preview";
 }
 
 export function PreviewUnavailable({ url }: { url: string }) {
