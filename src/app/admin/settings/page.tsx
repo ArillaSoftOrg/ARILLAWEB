@@ -1,15 +1,19 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
-import { Save, Settings, Info } from "lucide-react";
+import { Save, Settings, Info, ShieldCheck } from "lucide-react";
 import {
     getSiteSettings,
     updateSiteSettings,
     type SiteSettingsData,
 } from "@/lib/settings-actions";
 
+type TextSettingKey = {
+    [K in keyof SiteSettingsData]: SiteSettingsData[K] extends string ? K : never;
+}[keyof SiteSettingsData];
+
 const FIELD_META: {
-    key: keyof SiteSettingsData;
+    key: TextSettingKey;
     label: string;
     hint?: string;
     multiline?: boolean;
@@ -78,8 +82,13 @@ export default function AdminSettingsPage() {
         getSiteSettings().then(setForm).catch(() => setError(true));
     }, []);
 
-    function setField(key: keyof SiteSettingsData, value: string) {
+    function setField(key: TextSettingKey, value: string) {
         setForm((prev) => (prev ? { ...prev, [key]: value } : prev));
+        setSaved(false);
+    }
+
+    function setMaintenanceMode(value: boolean) {
+        setForm((prev) => (prev ? { ...prev, maintenanceModeEnabled: value } : prev));
         setSaved(false);
     }
 
@@ -141,6 +150,67 @@ export default function AdminSettingsPage() {
                 </div>
             )}
 
+            {form && (
+                <section
+                    className="rounded-xl px-6 py-5"
+                    style={{
+                        background: form.maintenanceModeEnabled
+                            ? "rgba(245,158,11,0.10)"
+                            : "rgba(16,185,129,0.08)",
+                        border: form.maintenanceModeEnabled
+                            ? "1px solid rgba(245,158,11,0.28)"
+                            : "1px solid rgba(16,185,129,0.24)",
+                    }}
+                >
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex items-start gap-3">
+                            <div
+                                className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                                style={{
+                                    background: form.maintenanceModeEnabled
+                                        ? "rgba(245,158,11,0.16)"
+                                        : "rgba(16,185,129,0.14)",
+                                }}
+                            >
+                                <ShieldCheck
+                                    size={17}
+                                    style={{
+                                        color: form.maintenanceModeEnabled ? "#fbbf24" : "#34d399",
+                                    }}
+                                />
+                            </div>
+                            <div>
+                                <h2 className="text-base font-semibold" style={{ color: "#f8fafc" }}>
+                                    Geliştirme / Bakım Modu
+                                </h2>
+                                <p className="text-sm mt-1" style={{ color: "#94a3b8" }}>
+                                    Açıkken public ziyaretçiler bakım ekranını görür; admin oturumu olan kullanıcı siteyi normal görüntüler.
+                                </p>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={() => setMaintenanceMode(!form.maintenanceModeEnabled)}
+                            className="relative inline-flex items-center w-14 h-7 rounded-full transition-colors focus:outline-none self-start sm:self-auto"
+                            style={{
+                                background: form.maintenanceModeEnabled ? "#f59e0b" : "#10b981",
+                            }}
+                            aria-pressed={form.maintenanceModeEnabled}
+                            aria-label="Geliştirme bakım modunu değiştir"
+                            title={form.maintenanceModeEnabled ? "Bakım modu açık" : "Bakım modu kapalı"}
+                        >
+                            <span
+                                className="inline-block w-5 h-5 bg-white rounded-full shadow transition-transform"
+                                style={{
+                                    transform: form.maintenanceModeEnabled ? "translateX(30px)" : "translateX(4px)",
+                                }}
+                            />
+                        </button>
+                    </div>
+                </section>
+            )}
+
             {/* Gradient hint banner */}
             <div
                 className="flex items-start gap-3 px-4 py-3 rounded-xl text-sm"
@@ -170,7 +240,7 @@ export default function AdminSettingsPage() {
                         borderColor: "rgba(0,0,0,0.05)",
                     }}
                 >
-                    {FIELD_META.map(({ key, label, hint, multiline }, i) => (
+                    {FIELD_META.map(({ key, label, hint, multiline }) => (
                         <div
                             key={key}
                             className="px-6 py-5"

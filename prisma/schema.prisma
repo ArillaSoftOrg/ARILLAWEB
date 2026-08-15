@@ -249,27 +249,28 @@ model BlockedTimeSlot {
 }
 
 model SiteSetting {
-  id                  String   @id @default(cuid())
-  siteName            String   @default("Arillasoft")
-  siteDescription     String?
-  contactEmail        String?
-  contactPhone        String?
-  address             String?
-  linkedinUrl         String?
-  githubUrl           String?
-  instagramUrl        String?
-  twitterUrl          String?
-  logoPath            String?
-  faviconPath         String?
-  heroTitle           String   @default("Restoranınız İçin|Akıllı Dijital Menü Sistemi")
-  heroSubtitle        String   @default("QR kod ile anında erişilen, anlık güncellenebilen, çok dilli dijital menü çözümü. Müşteri deneyimini dönüştürün, maliyetleri azaltın.")
-  heroPrimaryButton   String   @default("Demo Talep Et")
-  heroSecondaryButton String   @default("Tüm Hizmetler")
-  homepageIntro       String   @default("Web'den mobilye, backend'den UI/UX tasarımına — uçtan uca dijital dönüşüm hizmetleri.")
-  whyChooseUsTitle    String   @default("QR Menü Sistemi ile|Restoranınızı Dönüştürün")
-  whyChooseUsText     String   @default("Masaya QR kodu koyun, müşterileriniz menüye anında ulaşsın. Baskı masrafı yok, güncelleme zahmeti yok.")
-  homepageCTA         String   @default("Dijital Dönüşümünüzü|Bugün Başlatın")
-  updatedAt           DateTime @updatedAt
+  id                     String   @id @default(cuid())
+  siteName               String   @default("Arillasoft")
+  siteDescription        String?
+  contactEmail           String?
+  contactPhone           String?
+  address                String?
+  linkedinUrl            String?
+  githubUrl              String?
+  instagramUrl           String?
+  twitterUrl             String?
+  logoPath               String?
+  faviconPath            String?
+  heroTitle              String   @default("Restoranınız İçin|Akıllı Dijital Menü Sistemi")
+  heroSubtitle           String   @default("QR kod ile anında erişilen, anlık güncellenebilen, çok dilli dijital menü çözümü. Müşteri deneyimini dönüştürün, maliyetleri azaltın.")
+  heroPrimaryButton      String   @default("Demo Talep Et")
+  heroSecondaryButton    String   @default("Tüm Hizmetler")
+  homepageIntro          String   @default("Web'den mobilye, backend'den UI/UX tasarımına — uçtan uca dijital dönüşüm hizmetleri.")
+  whyChooseUsTitle       String   @default("QR Menü Sistemi ile|Restoranınızı Dönüştürün")
+  whyChooseUsText        String   @default("Masaya QR kodu koyun, müşterileriniz menüye anında ulaşsın. Baskı masrafı yok, güncelleme zahmeti yok.")
+  homepageCTA            String   @default("Dijital Dönüşümünüzü|Bugün Başlatın")
+  maintenanceModeEnabled Boolean  @default(true)
+  updatedAt              DateTime @updatedAt
 }
 
 model AnnouncementBar {
