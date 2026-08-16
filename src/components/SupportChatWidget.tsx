@@ -73,14 +73,31 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
   }, []);
 
   const playNotificationSound = () => {
+    // Browser autoplay policy blocks sound with no prior user interaction — check
+    // proactively instead of relying solely on the play() rejection. This never
+    // blocks the chat widget itself from opening; it only decides whether to
+    // attempt playback.
+    const hasUserActivation = typeof navigator !== 'undefined' && navigator.userActivation?.hasBeenActive === true;
+
+    if (!hasUserActivation) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug('[SupportChatWidget] Notification sound skipped — no prior user interaction (browser autoplay policy).');
+      }
+      return;
+    }
+
     try {
       const audio = new Audio('/sounds/chat-notification.wav');
-      audio.volume = 0.35;
-      audio.play().catch(() => {
-        // Autoplay blocked by the browser — silent fallback, panel/teaser still opens.
+      audio.volume = 0.4;
+      audio.play().catch((err) => {
+        if (process.env.NODE_ENV !== 'production') {
+          console.debug('[SupportChatWidget] Notification sound playback failed:', err);
+        }
       });
-    } catch {
-      // Audio API unavailable — ignore.
+    } catch (err) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug('[SupportChatWidget] Notification sound unavailable:', err);
+      }
     }
   };
 
