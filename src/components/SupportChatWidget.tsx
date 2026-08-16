@@ -13,8 +13,9 @@ const DWELL_MS = 1800;
 const TEASER_AUTO_HIDE_MS = 8000;
 const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
 // audio.volume caps at 1 — this drives loudness above that via a GainNode instead.
-// Single tunable knob: lower to 2.0 / 1.5 if the sound ever distorts/clips.
-const NOTIFICATION_GAIN = 3.0;
+// Source WAV peaks at -3.00 dBFS; 1.25x keeps the effective peak ~-1.06 dBFS
+// (safely under 0 dBFS). Single tunable knob: lower it further if it ever clips.
+const NOTIFICATION_GAIN = 1.25;
 
 interface SupportChatWidgetProps {
   triggerRef?: RefObject<HTMLDivElement | null>;
@@ -38,6 +39,7 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
   const fallbackRef = useRef<HTMLDivElement>(null);
   const notificationAudioRef = useRef<HTMLAudioElement | null>(null);
   const notificationGraphRef = useRef<{ context: AudioContext; gainNode: GainNode } | null>(null);
+  const notificationUnlockedRef = useRef(false);
 
   const isSectionInView = useInView(triggerRef ?? fallbackRef, { amount: 0.4 });
 
@@ -77,26 +79,19 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
     return () => mql.removeEventListener('change', handler);
   }, []);
 
-  const playNotificationSound = () => {
-    // Browser autoplay policy blocks sound with no prior user interaction — check
-    // proactively instead of relying solely on the play() rejection. This never
-    // blocks the chat widget itself from opening; it only decides whether to
-    // attempt playback.
-    const hasUserActivation = typeof navigator !== 'undefined' && navigator.userActivation?.hasBeenActive === true;
-
-    if (!hasUserActivation) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.debug('[SupportChatWidget] Notification sound skipped — no prior user interaction (browser autoplay policy).');
-      }
-      return;
-    }
+  // Prepares (but does not play) the audio -> gainNode -> destination graph.
+  // Must run inside a real user gesture to satisfy autoplay policy — the later
+  // scroll-triggered playNotificationSound() call is not itself a gesture.
+  const unlockNotificationAudio = async () => {
+    if (notificationUnlockedRef.current) return;
+    notificationUnlockedRef.current = true;
 
     try {
       if (!notificationAudioRef.current) {
         notificationAudioRef.current = new Audio('/sounds/chat-notification.wav');
       }
       const audio = notificationAudioRef.current;
-      audio.volume = 1; // uncapped loudness now comes from the GainNode below, not this.
+      audio.volume = 1; // uncapped loudness comes from the GainNode below, not this.
 
       // Build the audio -> gainNode -> destination graph once and reuse it —
       // createMediaElementSource() can only be called a single time per element.
@@ -115,9 +110,48 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
       }
 
       if (notificationGraphRef.current?.context.state === 'suspended') {
-        notificationGraphRef.current.context.resume().catch(() => {});
+        await notificationGraphRef.current.context.resume();
       }
+    } catch (err) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug('[SupportChatWidget] Notification audio unlock failed:', err);
+      }
+    }
+  };
 
+  // Listen once for the first real user gesture anywhere on the page (not tied
+  // to the chat widget itself) so a later scroll-triggered notification sound
+  // has already-unlocked audio to play through.
+  useEffect(() => {
+    const events: Array<keyof WindowEventMap> = ['pointerdown', 'touchend', 'keydown'];
+    const handleFirstInteraction = () => {
+      events.forEach((evt) => window.removeEventListener(evt, handleFirstInteraction));
+      void unlockNotificationAudio();
+    };
+    events.forEach((evt) => window.addEventListener(evt, handleFirstInteraction));
+    return () => {
+      events.forEach((evt) => window.removeEventListener(evt, handleFirstInteraction));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const playNotificationSound = () => {
+    const audio = notificationAudioRef.current;
+    const graph = notificationGraphRef.current;
+
+    if (!audio || !graph) {
+      // Never unlocked by a real gesture (pointerdown/touchend/keydown) — e.g. a
+      // scroll-only visit. Skip the sound silently; the widget still opens.
+      if (process.env.NODE_ENV !== 'production') {
+        console.debug('[SupportChatWidget] Notification sound skipped — audio not unlocked (no prior interaction).');
+      }
+      return;
+    }
+
+    try {
+      if (graph.context.state === 'suspended') {
+        graph.context.resume().catch(() => {});
+      }
       audio.currentTime = 0;
       audio.play().catch((err) => {
         if (process.env.NODE_ENV !== 'production') {
