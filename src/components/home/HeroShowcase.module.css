@@ -1,0 +1,304 @@
+.heroVisual {
+  --hero-x: 0;
+  --hero-y: 0;
+  position: relative;
+  isolation: isolate;
+  height: 100%;
+  width: 100%;
+  transform-style: preserve-3d;
+  contain: layout;
+}
+
+.ambientGlow,
+.orbitLayer,
+.personLayer {
+  pointer-events: none;
+  position: absolute;
+}
+
+.ambientGlow {
+  z-index: 0;
+  inset: 4% -1% 2% -4%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 58% 36%, rgba(139, 92, 246, 0.2), transparent 34%),
+    radial-gradient(circle at 32% 58%, rgba(6, 182, 212, 0.14), transparent 36%),
+    radial-gradient(circle at 56% 62%, rgba(109, 40, 217, 0.14), transparent 46%);
+  filter: blur(18px);
+  opacity: 0.9;
+  transform: translate3d(calc(var(--hero-x) * -4px), calc(var(--hero-y) * -3px), 0);
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.orbitLayer {
+  z-index: 1;
+  inset: 6% 0 7%;
+  height: auto;
+  overflow: visible;
+  transform: translate3d(calc(var(--hero-x) * -3px), calc(var(--hero-y) * -4px), 0);
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.orbitTrack {
+  fill: none;
+  stroke: rgba(124, 58, 237, 0.18);
+  stroke-width: 1.4;
+}
+
+.orbitTrackCyan {
+  stroke: rgba(6, 182, 212, 0.14);
+}
+
+.orbitSpin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: orbitSpin 22s linear infinite;
+}
+
+.orbitSpinReverse {
+  animation-duration: 30s;
+  animation-direction: reverse;
+}
+
+.orbitSpinSlow {
+  animation-duration: 38s;
+}
+
+.orbitDot {
+  fill: rgba(124, 58, 237, 0.58);
+}
+
+.personLayer {
+  z-index: 2;
+  bottom: -1%;
+  left: 50%;
+  width: clamp(360px, 78%, 560px);
+  transform: translate3d(
+    calc(-44% + (var(--hero-x) * 6px)),
+    calc(var(--hero-y) * 5px),
+    0
+  );
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.personImage,
+.cardImage {
+  display: block;
+  height: auto;
+  width: 100%;
+  user-select: none;
+}
+
+.cardLayer {
+  position: absolute;
+  z-index: 3;
+  opacity: 0;
+  pointer-events: auto;
+  will-change: transform;
+  animation: cardReveal 700ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--reveal-delay, 620ms) both;
+  transition: transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.floatLayer {
+  animation: cardFloat var(--float-duration, 7s) ease-in-out var(--float-delay, 0s) infinite;
+  transform: translate3d(0, 0, 0);
+}
+
+.cardImage {
+  transform: translate3d(0, 0, 0) scale(1);
+  transition:
+    filter 220ms ease,
+    transform 220ms ease;
+}
+
+.browserLayer {
+  --float-duration: 6.5s;
+  --float-delay: -1.2s;
+  --reveal-delay: 620ms;
+  left: 3%;
+  top: 15%;
+  width: clamp(170px, 38%, 250px);
+  transform: translate3d(calc(var(--hero-x) * -8px), calc(var(--hero-y) * 7px), 0);
+}
+
+.chartLayer {
+  --float-duration: 7.8s;
+  --float-delay: -3.1s;
+  --reveal-delay: 760ms;
+  left: 8%;
+  top: 47%;
+  width: clamp(95px, 21%, 135px);
+  transform: translate3d(calc(var(--hero-x) * -10px), calc(var(--hero-y) * 9px), 0);
+}
+
+.codeLayer {
+  --float-duration: 6.9s;
+  --float-delay: -2.4s;
+  --reveal-delay: 690ms;
+  right: 8%;
+  top: 24%;
+  width: clamp(62px, 14%, 92px);
+  transform: translate3d(calc(var(--hero-x) * 12px), calc(var(--hero-y) * -9px), 0);
+}
+
+.mobileLayer {
+  --float-duration: 8.4s;
+  --float-delay: -4s;
+  --reveal-delay: 830ms;
+  right: 0;
+  top: 50%;
+  width: clamp(70px, 16%, 105px);
+  transform: translate3d(calc(var(--hero-x) * 9px), calc(var(--hero-y) * 8px), 0);
+}
+
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cardFloat {
+  0%,
+  100% {
+    transform: translate3d(0, -3px, 0);
+  }
+  50% {
+    transform: translate3d(0, 5px, 0);
+  }
+}
+
+@keyframes orbitSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cardLayer:hover .cardImage {
+    filter: drop-shadow(0 12px 20px rgba(79, 70, 229, 0.14));
+    transform: translate3d(0, -3px, 0) scale(1.015);
+  }
+}
+
+@media (max-width: 1023px) {
+  .personLayer {
+    bottom: -2%;
+    width: clamp(330px, 72%, 500px);
+    transform: translate3d(
+      calc(-44% + (var(--hero-x) * 5px)),
+      calc(var(--hero-y) * 4px),
+      0
+    );
+  }
+
+  .browserLayer {
+    left: 4%;
+    top: 16%;
+    width: clamp(155px, 34%, 220px);
+  }
+
+  .chartLayer {
+    left: 7%;
+    top: 48%;
+    width: clamp(86px, 19%, 122px);
+  }
+
+  .codeLayer {
+    right: 9%;
+    top: 25%;
+    width: clamp(58px, 12%, 80px);
+  }
+
+  .mobileLayer {
+    right: 3%;
+    top: 51%;
+    width: clamp(66px, 14%, 92px);
+  }
+}
+
+@media (max-width: 640px) {
+  .heroVisual {
+    --hero-x: 0 !important;
+    --hero-y: 0 !important;
+  }
+
+  .ambientGlow {
+    inset: 5% -5% 2%;
+    filter: blur(14px);
+    opacity: 0.74;
+  }
+
+  .orbitLayer {
+    inset: 8% -4% 8%;
+  }
+
+  .personLayer {
+    bottom: -1%;
+    width: min(82%, 390px);
+    transform: translate3d(-45%, 0, 0);
+  }
+
+  .browserLayer {
+    left: 1%;
+    top: 17%;
+    width: min(36%, 170px);
+  }
+
+  .chartLayer {
+    left: 4%;
+    top: 49%;
+    width: min(20%, 92px);
+  }
+
+  .codeLayer {
+    right: 5%;
+    top: 23%;
+    width: min(13%, 64px);
+  }
+
+  .mobileLayer {
+    right: 1%;
+    top: 49%;
+    width: min(15%, 72px);
+  }
+
+  .floatLayer {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambientGlow,
+  .orbitLayer,
+  .personLayer,
+  .cardLayer,
+  .cardImage {
+    transition: none;
+  }
+
+  .ambientGlow,
+  .orbitLayer,
+  .browserLayer,
+  .chartLayer,
+  .codeLayer,
+  .mobileLayer {
+    transform: none;
+  }
+
+  .personLayer {
+    transform: translate3d(-44%, 0, 0);
+  }
+
+  .floatLayer,
+  .orbitSpin,
+  .cardLayer {
+    animation: none;
+  }
+
+  .cardLayer {
+    opacity: 1;
+  }
+}

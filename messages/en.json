@@ -108,19 +108,32 @@
       "dayFri": "Fr",
       "daySat": "Sa",
       "daySun": "Su"
+    },
+    "newsletter": {
+      "title": "Email Newsletter",
+      "description": "Don't miss the latest updates from Arilla Soft. Follow new projects, service updates and exclusive content straight from your inbox.",
+      "emailPlaceholder": "Your email address",
+      "submit": "SUBSCRIBE",
+      "sending": "Sending...",
+      "success": "You have successfully subscribed to our newsletter.",
+      "error": "Subscription failed. Please try again."
     }
   },
   "chat": {
     "title": "Arilla Soft Support",
     "today": "Today",
-    "greeting": "Hello. I am Arilla Soft's virtual support assistant. You can select one of the options below or write your message to get the right help.",
+    "greeting": "Hello. Have a question about your project? You can write to us here.",
     "messagePlaceholder": "Type your message...",
     "consultationLabel": "Schedule Consultation",
     "consultationMsg": "Hello, I would like to schedule a consultation.",
     "infoLabel": "Service Information",
     "infoMsg": "I would like to get detailed information about your services.",
     "priceLabel": "Request Pricing",
-    "priceMsg": "Please provide information about your services pricing."
+    "priceMsg": "Please provide information about your services pricing.",
+    "toggleAriaLabel": "Open/close support chat",
+    "closeAriaLabel": "Close chat",
+    "teaserText": "Have a question? You can write to us.",
+    "teaserAriaLabel": "Open support chat"
   },
   "projectTypes": {
     "WEB_APPLICATION": "Web Application",

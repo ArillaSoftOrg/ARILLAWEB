@@ -11,7 +11,8 @@ import HowItWorks from "@/components/sections/HowItWorks";
 import FAQSection from "@/components/sections/FAQSection";
 import type { BlogPost } from "@/lib/blog-data";
 import { getSiteExampleDisplay } from "@/lib/site-example-display";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { TESTIMONIALS } from "@/lib/constants/testimonials";
+import { motion, useInView, useScroll, useTransform, type Variants } from "framer-motion";
 import {
   QrCode,
   Smartphone,
@@ -160,6 +161,35 @@ const scaleIn = {
   visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
 };
 
+const heroEase = [0.2, 0.8, 0.2, 1] as const;
+
+const heroFadeUp: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.72, ease: heroEase },
+  },
+};
+
+const heroStagger: Variants = {
+  visible: { transition: { staggerChildren: 0.11 } },
+};
+
+const heroBenefitStagger: Variants = {
+  visible: { transition: { staggerChildren: 0.07 } },
+};
+
+const heroVisualIn: Variants = {
+  hidden: { opacity: 0, y: 14, scale: 0.985 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.78, ease: heroEase, delay: 0.48 },
+  },
+};
+
 // ─────────────────────────────────────────────
 // Helper: Animated Section
 // ─────────────────────────────────────────────
@@ -197,67 +227,6 @@ function renderGradientText(text: string) {
       <span className="gradient-text">{parts[1]}</span>
       {parts[2] ?? ""}
     </>
-  );
-}
-
-
-// ─────────────────────────────────────────────
-// Trust Strip
-// ─────────────────────────────────────────────
-function TrustStrip() {
-  const items = [
-    "Özel Yazılım",
-    "Kurumsal Web Sitesi",
-    "Yönetim Paneli",
-    "Randevu Sistemi",
-    "Teknik Destek",
-  ];
-
-  return (
-    <section
-      style={{
-        background: "#f8fafc",
-        borderTop: "1px solid #e2e8f0",
-        borderBottom: "1px solid #e2e8f0",
-      }}
-      className="py-5"
-    >
-      <div
-        style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "8px",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "0 20px",
-        }}
-      >
-        {items.map((item, idx) => (
-          <div key={item}>
-            <span
-              className="font-body"
-              style={{
-                fontSize: "13px",
-                color: "#475569",
-                padding: "4px 12px",
-                borderRadius: "999px",
-                background: "#fff",
-                border: "1px solid #e2e8f0",
-                display: "inline-block",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {item}
-            </span>
-            {idx < items.length - 1 && (
-              <span style={{ marginLeft: "-4px", color: "#cbd5e1" }}>•</span>
-            )}
-          </div>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -538,6 +507,141 @@ function SiteExamplesPreviewSection() {
   );
 }
 
+// ─────────────────────────────────────────────
+// Testimonials marquee (homepage, above footer)
+// ─────────────────────────────────────────────
+const TESTIMONIALS_ROW_1 = TESTIMONIALS.slice(0, 12);
+const TESTIMONIALS_ROW_2 = TESTIMONIALS.slice(12, 24);
+
+function TestimonialCard({
+  testimonial,
+  hidden = false,
+}: {
+  testimonial: (typeof TESTIMONIALS)[number];
+  hidden?: boolean;
+}) {
+  return (
+    <div
+      aria-hidden={hidden || undefined}
+      className="flex w-[280px] flex-shrink-0 flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:w-[320px] lg:w-[380px]"
+    >
+      <div aria-hidden="true" className="flex gap-1 text-amber-400">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Star
+            key={i}
+            size={16}
+            fill={i < testimonial.rating ? "currentColor" : "none"}
+            className={i < testimonial.rating ? "" : "text-slate-300"}
+          />
+        ))}
+      </div>
+      <span className="sr-only">{`5 üzerinden ${testimonial.rating}`}</span>
+      <blockquote className="mt-4 line-clamp-6 text-sm leading-6 text-slate-600">
+        “{testimonial.quote}”
+      </blockquote>
+      <div className="mt-auto pt-5">
+        <p className="text-sm font-bold text-slate-950">{testimonial.name}</p>
+        <p className="text-xs text-slate-500">
+          {testimonial.company} · {testimonial.service}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function TestimonialsSection() {
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [row1Paused, setRow1Paused] = useState(false);
+  const [row2Paused, setRow2Paused] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
+  return (
+    <section className="bg-slate-50 py-16 sm:py-20 lg:py-28">
+      <div className="mx-auto max-w-[1280px] px-5 sm:px-6">
+        <AnimatedSection className="mx-auto mb-10 max-w-2xl text-center sm:mb-14">
+          <motion.p variants={fadeUp} className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">
+            Müşteri Deneyimleri
+          </motion.p>
+          <motion.h2
+            id="testimonials-heading"
+            variants={fadeUp}
+            className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950 sm:text-5xl"
+          >
+            Müşterilerimiz Ne Diyor?
+          </motion.h2>
+          <motion.p variants={fadeUp} className="mt-4 text-base leading-7 text-slate-600">
+            Web sitelerinden özel iş yazılımlarına kadar geliştirdiğimiz sistemlerle çalışan müşterilerimizin deneyimleri.
+          </motion.p>
+        </AnimatedSection>
+      </div>
+
+      {reducedMotion ? (
+        <AnimatedSection
+          aria-labelledby="testimonials-heading"
+          className="mx-auto grid max-w-[1280px] gap-5 px-5 sm:grid-cols-2 sm:px-6 lg:grid-cols-3"
+        >
+          {TESTIMONIALS.map((testimonial) => (
+            <motion.div key={testimonial.id} variants={scaleIn}>
+              <TestimonialCard testimonial={testimonial} />
+            </motion.div>
+          ))}
+        </AnimatedSection>
+      ) : (
+        <AnimatedSection
+          aria-labelledby="testimonials-heading"
+          className="w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
+        >
+          <motion.div variants={fadeUp} className="flex flex-col gap-5">
+            <div
+              className="testimonials-row"
+              onTouchStart={() => setRow1Paused(true)}
+              onTouchEnd={() => setRow1Paused(false)}
+              onTouchCancel={() => setRow1Paused(false)}
+            >
+              <div
+                className="testimonials-track flex w-max gap-5"
+                style={row1Paused ? { animationPlayState: "paused" } : undefined}
+              >
+                {TESTIMONIALS_ROW_1.map((testimonial) => (
+                  <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+                ))}
+                {TESTIMONIALS_ROW_1.map((testimonial) => (
+                  <TestimonialCard key={`${testimonial.id}-clone`} testimonial={testimonial} hidden />
+                ))}
+              </div>
+            </div>
+            <div
+              className="testimonials-row"
+              onTouchStart={() => setRow2Paused(true)}
+              onTouchEnd={() => setRow2Paused(false)}
+              onTouchCancel={() => setRow2Paused(false)}
+            >
+              <div
+                className="testimonials-track testimonials-track--reverse flex w-max gap-5"
+                style={row2Paused ? { animationPlayState: "paused" } : undefined}
+              >
+                {TESTIMONIALS_ROW_2.map((testimonial) => (
+                  <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+                ))}
+                {TESTIMONIALS_ROW_2.map((testimonial) => (
+                  <TestimonialCard key={`${testimonial.id}-clone`} testimonial={testimonial} hidden />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </AnimatedSection>
+      )}
+    </section>
+  );
+}
+
 function HeroSection() {
   return (
     <section
@@ -561,14 +665,14 @@ function HeroSection() {
 
         {/* Left: Text */}
         <motion.div
-          variants={stagger}
+          variants={heroStagger}
           initial="hidden"
           animate="visible"
           className="flex w-full max-w-[640px] flex-col items-start text-left"
         >
           {/* Headline */}
           <motion.div
-            variants={fadeUp}
+            variants={heroFadeUp}
             className="flex flex-col items-start"
           >
             <h1
@@ -583,7 +687,7 @@ function HeroSection() {
 
           {/* Subtext */}
           <motion.p
-            variants={fadeUp}
+            variants={heroFadeUp}
             className="text-role-body-lg"
             style={{
               maxWidth: "520px",
@@ -595,7 +699,7 @@ function HeroSection() {
 
           {/* Value items */}
           <motion.div
-            variants={fadeUp}
+            variants={heroBenefitStagger}
             className="mt-[18px] flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4 xl:mx-0"
           >
             {[
@@ -603,23 +707,30 @@ function HeroSection() {
               "Verimli İş Süreçleri",
               "Güvenilir Dijital Altyapı",
             ].map((title) => (
-              <div
+              <motion.div
                 key={title}
+                variants={heroFadeUp}
+                className="group"
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: "8px",
                 }}
               >
-                <CheckCircle2 size={15} color="#7c3aed" strokeWidth={2.5} />
+                <CheckCircle2
+                  size={15}
+                  color="#7c3aed"
+                  strokeWidth={2.5}
+                  className="transition-transform duration-200 group-hover:scale-[1.07]"
+                />
                 <span className="font-body" style={{ fontSize: "13px", color: "#475569", fontWeight: 500 }}>{title}</span>
-              </div>
+              </motion.div>
             ))}
           </motion.div>
 
           {/* CTAs */}
           <motion.div
-            variants={fadeUp}
+            variants={heroFadeUp}
             className="mt-[22px] flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-start"
           >
             <Link
@@ -637,10 +748,22 @@ function HeroSection() {
                 background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
                 boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
                 whiteSpace: "nowrap",
+                transition: "transform 0.2s ease, box-shadow 0.2s ease",
               }}
-              className="w-full sm:w-auto text-role-button"
+              className="group w-full sm:w-auto text-role-button"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 10px 26px rgba(124,58,237,0.42)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.35)";
+              }}
             >
-              Ücretsiz Keşif Görüşmesi <ArrowRight size={14} />
+              Ücretsiz Keşif Görüşmesi{" "}
+              <span className="inline-flex transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none">
+                <ArrowRight size={14} />
+              </span>
             </Link>
             <Link
               href="/site-ornekleri"
@@ -657,16 +780,28 @@ function HeroSection() {
                 background: "#ffffff",
                 border: "1.5px solid #cbd5e1",
                 whiteSpace: "nowrap",
+                transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
               }}
-              className="w-full sm:w-auto text-role-button"
+              className="group w-full sm:w-auto text-role-button"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "rgba(124,58,237,0.48)";
+                e.currentTarget.style.boxShadow = "0 8px 20px rgba(15,23,42,0.08)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "#cbd5e1";
+                e.currentTarget.style.boxShadow = "none";
+              }}
             >
-              Projelerimizi İncele <ArrowRight size={14} />
+              Projelerimizi İncele{" "}
+              <span className="inline-flex transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none">
+                <ArrowRight size={14} />
+              </span>
             </Link>
           </motion.div>
 
           {/* Trust note */}
           <motion.p
-            variants={fadeUp}
+            variants={heroFadeUp}
             className="font-body"
             style={{
               fontSize: "12px",
@@ -681,7 +816,7 @@ function HeroSection() {
 
         {/* Right: Product showcase visual */}
         <motion.div
-          variants={scaleIn}
+          variants={heroVisualIn}
           initial="hidden"
           animate="visible"
           className="flex w-full items-center justify-center xl:justify-start"
@@ -722,27 +857,43 @@ function HeroSection() {
 const MAIN_SERVICES = [
   {
     id: "1",
+    number: "01",
     title: "Kurumsal Web ve Web Uygulamaları",
-    description: "Profesyonel, hızlı ve SEO dostu kurumsal web siteleri ile yönetim panelleri ve web uygulamaları geliştiriyoruz.",
+    shortTitle: "Web & Uygulama",
+    description: "Hızlı, SEO uyumlu ve ölçeklenebilir web siteleri ile web uygulamaları geliştiriyoruz.",
+    tags: ["Next.js", "React", "Node.js"],
     icon: "Globe",
+    href: "/hizmetler/web-uygulama-gelistirme",
   },
   {
     id: "2",
+    number: "02",
     title: "Özel Yazılım Geliştirme",
-    description: "İşletmenize özel, ölçeklenebilir yazılım çözümleri tasarlarız. Masaüstü, mobil veya web uygulaması — her türü yapabiliriz.",
+    shortTitle: "Özel Yazılım",
+    description: "İşletmenizin süreçlerine uyumlanan, verimli ve ölçeklenebilir yazılım çözümleri tasarlarız.",
+    tags: [".NET", "Python", "Bulut"],
     icon: "Code2",
+    href: "/hizmetler/ozel-yazilim-gelistirme",
   },
   {
     id: "3",
+    number: "03",
     title: "Entegrasyon ve Otomasyon",
-    description: "Mevcut sistemlerinizi birbirine bağlar, iş süreçlerinizi otomatikleştiren akıllı entegrasyonlar kurarız.",
+    shortTitle: "Entegrasyon & Otomasyon",
+    description: "Sistemlerinizi birbirine bağlayan, veri akışını ve iş süreçlerini otomatikleştiren çözümler kurarız.",
+    tags: ["API", "Backend", "ERP"],
     icon: "Zap",
+    href: "/hizmetler/backend-ve-api-gelistirme",
   },
   {
     id: "4",
+    number: "04",
     title: "Bakım ve Sürekli Geliştirme",
-    description: "Projeniz yayına girdikten sonra da güncelleme, izleme ve teknik destekle yanınızda oluruz.",
+    shortTitle: "Bakım & Geliştirme",
+    description: "Yayın sonrası güncelleme, performans izleme, teknik destek ve sürekli iyileştirme sağlarız.",
+    tags: ["Destek", "Güncelleme", "İzleme"],
     icon: "Wrench",
+    href: "/hizmetler/bakim-ve-teknik-destek",
   },
 ];
 
@@ -768,20 +919,23 @@ const SECTORAL_SOFTWARE = [
 ];
 
 function ServicesSection({ settings }: { settings: SiteSettings }) {
+  const [activeServiceIndex, setActiveServiceIndex] = useState(0);
+  const activeService = MAIN_SERVICES[activeServiceIndex] ?? MAIN_SERVICES[0];
+  const ActiveIcon = SERVICE_ICON_MAP[activeService.icon] ?? Code2;
+
   return (
-    <section style={{ position: "relative" }} className="py-16 sm:py-20 lg:py-28">
+    <section style={{ position: "relative", background: "var(--paper-alt)" }} className="pt-14 pb-16 md:pt-16 md:pb-20 lg:pt-16 lg:pb-24">
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(255,255,255,0.015)",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          borderTop: "1px solid rgba(226,232,240,0.7)",
+          borderBottom: "1px solid rgba(226,232,240,0.7)",
         }}
       />
       <div style={{ maxWidth: "1280px", margin: "0 auto", position: "relative" }} className="px-5 sm:px-6">
         <AnimatedSection>
-          <motion.div variants={fadeUp} style={{ textAlign: "center", marginBottom: "64px" }}>
+          <motion.div variants={fadeUp} className="mb-10 text-center sm:mb-12 lg:mb-14">
             <div
               className="text-role-eyebrow"
               style={{
@@ -821,102 +975,143 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
         </AnimatedSection>
 
         <AnimatedSection>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7 mb-12">
-            {MAIN_SERVICES.map((service) => {
-              const Icon = SERVICE_ICON_MAP[service.icon] ?? Code2;
-              return (
-                <motion.div key={service.id} variants={fadeUp}>
-                  <div
-                    className="p-6 sm:p-8 lg:p-10"
+          <div className="hidden items-stretch gap-10 lg:grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:gap-12">
+            <div className="home-service-index" aria-label="Hizmet listesi">
+              {MAIN_SERVICES.map((service, index) => {
+                const Icon = SERVICE_ICON_MAP[service.icon] ?? Code2;
+                const isActive = index === activeServiceIndex;
+
+                return (
+                  <button
+                    key={service.id}
+                    type="button"
+                    className={`home-service-index__row ${isActive ? "is-active" : ""}`}
+                    aria-pressed={isActive}
+                    aria-controls="home-service-detail-panel"
+                    onMouseEnter={() => setActiveServiceIndex(index)}
+                    onFocus={() => setActiveServiceIndex(index)}
+                    onClick={() => setActiveServiceIndex(index)}
+                  >
+                    <span className="home-service-index__number">{service.number}</span>
+                    <span className="home-service-index__title">{service.shortTitle}</span>
+                    <span className="home-service-index__icon" aria-hidden="true">
+                      <Icon size={20} color="currentColor" />
+                    </span>
+                    <ChevronRight className="home-service-index__arrow" aria-hidden="true" size={18} />
+                  </button>
+                );
+              })}
+            </div>
+
+            <div
+              id="home-service-detail-panel"
+              className="home-service-detail"
+              aria-live="polite"
+              style={{
+                borderRadius: "20px",
+                background: "#F4FAF7",
+                border: "1px solid var(--hairline)",
+                boxShadow: "none",
+              }}
+            >
+              <div key={activeService.id} className="home-service-detail__content">
+                <div className="mb-6 flex items-center gap-4">
+                  <span className="home-service-detail__icon" aria-hidden="true">
+                    <ActiveIcon size={24} color="currentColor" />
+                  </span>
+                  <h3
+                    className="text-role-subheading"
                     style={{
-                      borderRadius: "20px",
-                      background: "rgba(17, 18, 25, 0.95)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      transition: "all 0.3s ease",
-                      cursor: "default",
-                      boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
-                    }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget;
-                      el.style.borderColor = "rgba(34,211,238,0.35)";
-                      el.style.background = "rgba(22, 26, 36, 0.98)";
-                      el.style.transform = "translateY(-4px)";
-                      el.style.boxShadow = "0 24px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(34,211,238,0.1)";
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget;
-                      el.style.borderColor = "rgba(255,255,255,0.08)";
-                      el.style.background = "rgba(17, 18, 25, 0.95)";
-                      el.style.transform = "translateY(0)";
-                      el.style.boxShadow = "0 8px 24px rgba(0,0,0,0.2)";
+                      margin: 0,
+                      fontSize: "clamp(31px, 2.7vw, 42px)",
+                      lineHeight: 1.05,
+                      textWrap: "balance",
                     }}
                   >
-                    <div
-                      style={{
-                        width: "52px",
-                        height: "52px",
-                        borderRadius: "14px",
-                        background: "rgba(6,182,212,0.12)",
-                        border: "1px solid rgba(6,182,212,0.25)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginBottom: "24px",
-                      }}
-                    >
-                      <Icon size={24} color="#22d3ee" />
-                    </div>
-                    <h3
-                      className="text-role-subheading text-role-subheading--on-dark"
-                      style={{
-                        marginBottom: "12px",
-                      }}
-                    >
-                      {service.title}
-                    </h3>
-                    <p className="text-role-body text-role-body--on-dark" style={{ margin: 0, flex: 1 }}>
+                    {activeService.number}/ {activeService.shortTitle}
+                  </h3>
+                </div>
+
+                <p
+                  className="text-role-body-lg"
+                  style={{
+                    maxWidth: "520px",
+                    margin: "18px 0 0",
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {activeService.description}
+                </p>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {activeService.tags.map((tag) => (
+                    <span key={tag} className="home-service-tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <Link
+                  href={activeService.href}
+                  className="home-service-detail__link text-role-button"
+                  aria-label={`${activeService.shortTitle} detaylarını incele`}
+                >
+                  Detayları İncele
+                  <ArrowRight className="home-service-detail__arrow h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="home-service-accordion lg:hidden">
+            {MAIN_SERVICES.map((service, index) => {
+              const Icon = SERVICE_ICON_MAP[service.icon] ?? Code2;
+              const isActive = index === activeServiceIndex;
+              const contentId = `home-service-accordion-${service.id}`;
+
+              return (
+                <div key={service.id} className="home-service-accordion__item">
+                  <button
+                    type="button"
+                    className={`home-service-accordion__trigger ${isActive ? "is-active" : ""}`}
+                    aria-expanded={isActive}
+                    aria-controls={contentId}
+                    onClick={() => setActiveServiceIndex(index)}
+                  >
+                    <span className="home-service-accordion__number">{service.number}</span>
+                    <span className="home-service-accordion__title">{service.shortTitle}</span>
+                    <span className="home-service-accordion__icon" aria-hidden="true">
+                      <Icon size={18} color="currentColor" />
+                    </span>
+                    <span className="home-service-accordion__state" aria-hidden="true">
+                      {isActive ? "×" : "+"}
+                    </span>
+                  </button>
+
+                  <div id={contentId} hidden={!isActive} className="home-service-accordion__content">
+                    <p className="text-role-body" style={{ margin: 0, lineHeight: 1.7 }}>
                       {service.description}
                     </p>
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {service.tags.map((tag) => (
+                        <span key={tag} className="home-service-tag home-service-tag--light">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <Link
+                      href={service.href}
+                      className="home-service-accordion__link text-role-button"
+                      aria-label={`${service.shortTitle} detaylarını incele`}
+                    >
+                      Detayları İncele
+                      <ArrowRight className="home-service-detail__arrow h-4 w-4" aria-hidden="true" />
+                    </Link>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
-
-          <motion.div variants={fadeUp} style={{ textAlign: "center" }}>
-            <Link
-              href="/hizmetler"
-              className="text-role-button"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "13px 32px",
-                borderRadius: "12px",
-                color: "#a78bfa",
-                background: "rgba(124,58,237,0.1)",
-                border: "1px solid rgba(124,58,237,0.3)",
-                textDecoration: "none",
-                transition: "all 0.2s",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(124,58,237,0.18)";
-                e.currentTarget.style.borderColor = "rgba(124,58,237,0.5)";
-                e.currentTarget.style.transform = "translateY(-1px)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "rgba(124,58,237,0.1)";
-                e.currentTarget.style.borderColor = "rgba(124,58,237,0.3)";
-                e.currentTarget.style.transform = "translateY(0)";
-              }}
-            >
-              Tüm Hizmetleri Gör <ArrowRight size={15} />
-            </Link>
-          </motion.div>
         </AnimatedSection>
       </div>
     </section>
@@ -951,16 +1146,15 @@ const HOW_WE_WORK_STEPS = [
 
 function HowWeWorkSection() {
   return (
-    <div className="px-5 sm:px-6" style={{ maxWidth: "1280px", margin: "0 auto" }}>
-      <HowItWorks
-        title="Nasıl Çalışıyoruz?"
-        description="Projenizi netleştirmekten yayına almaya kadar dört adımlık şeffaf bir süreç izliyoruz."
-        steps={HOW_WE_WORK_STEPS}
-        accentColor="#7c3aed"
-        darkMode={false}
-        layout="horizontal"
-      />
-    </div>
+    <HowItWorks
+      title="Nasıl Çalışıyoruz?"
+      description="Projenizi netleştirmekten yayına almaya kadar dört adımlık şeffaf bir süreç izliyoruz."
+      steps={HOW_WE_WORK_STEPS}
+      accentColor="#7c3aed"
+      darkMode={false}
+      layout="horizontal"
+      variant="process"
+    />
   );
 }
 
@@ -969,7 +1163,7 @@ function HowWeWorkSection() {
 // ─────────────────────────────────────────────
 function IndustryProductsSection() {
   return (
-    <section style={{ position: "relative" }} className="py-16 sm:py-20 lg:py-28">
+    <section style={{ position: "relative" }} className="pt-14 pb-16 md:pt-16 md:pb-20 lg:pt-16 lg:pb-24">
       <div
         style={{
           position: "absolute",
@@ -981,7 +1175,7 @@ function IndustryProductsSection() {
       />
       <div style={{ maxWidth: "1280px", margin: "0 auto", position: "relative" }} className="px-5 sm:px-6">
         <AnimatedSection>
-          <motion.div variants={fadeUp} style={{ textAlign: "center", marginBottom: "64px" }}>
+          <motion.div variants={fadeUp} className="mb-10 text-center sm:mb-12 lg:mb-14">
             <div
               className="text-role-eyebrow"
               style={{
@@ -1030,13 +1224,13 @@ function IndustryProductsSection() {
         </AnimatedSection>
 
         <AnimatedSection>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-7 mb-12">
+          <div className="mb-10 grid grid-cols-1 gap-5 sm:gap-6 lg:mb-11 lg:grid-cols-3">
             {SECTORAL_SOFTWARE.map((service) => {
               const Icon = SERVICE_ICON_MAP[service.icon] ?? Code2;
               return (
                 <motion.div key={service.id} variants={fadeUp}>
                   <div
-                    className="p-6 sm:p-8 lg:p-10"
+                    className="p-6 sm:p-8 lg:p-9"
                     style={{
                       borderRadius: "20px",
                       background: "rgba(17, 18, 25, 0.95)",
@@ -1073,7 +1267,7 @@ function IndustryProductsSection() {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        marginBottom: "24px",
+                        marginBottom: "28px",
                       }}
                     >
                       <Icon size={24} color="#6ee7b7" />
@@ -1081,7 +1275,8 @@ function IndustryProductsSection() {
                     <h3
                       className="text-role-subheading text-role-subheading--on-dark"
                       style={{
-                        marginBottom: "12px",
+                        marginBottom: "16px",
+                        textWrap: "balance",
                       }}
                     >
                       {service.title}
@@ -1309,7 +1504,7 @@ function BlogSection() {
   useEffect(() => {
     fetch("/api/blog")
       .then((r) => r.json())
-      .then((data) => setPosts(Array.isArray(data) ? data.slice(0, 3) : []))
+      .then((data) => setPosts(Array.isArray(data) ? data.slice(0, 4) : []))
       .catch(() => { });
   }, []);
 
@@ -1420,7 +1615,7 @@ function BlogSection() {
         </AnimatedSection>
 
         {/* Cards grid */}
-        <AnimatedSection className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <AnimatedSection className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {(posts.length > 0 ? posts : FALLBACK_BLOG_POSTS).map((post, i) => (
             <motion.div
               key={post.slug}
@@ -1467,6 +1662,7 @@ type HomeFaq = { question: string; answer: string };
 
 export default function HomeClient({ faqs = [] }: { faqs?: HomeFaq[] }) {
   const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
+  const howItWorksRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch("/api/settings")
@@ -1482,9 +1678,10 @@ export default function HomeClient({ faqs = [] }: { faqs?: HomeFaq[] }) {
   return (
     <div style={{ background: "#ffffff", minHeight: "100vh", color: "#0f172a", overflowX: "hidden" }}>
       <HeroSection />
-      <TrustStrip />
       <ServicesSection settings={settings} />
-      <HowWeWorkSection />
+      <div ref={howItWorksRef}>
+        <HowWeWorkSection />
+      </div>
       <IndustryProductsSection />
       <SiteExamplesPreviewSection />
       <WhyUsSection />
@@ -1499,7 +1696,8 @@ export default function HomeClient({ faqs = [] }: { faqs?: HomeFaq[] }) {
       )}
       <CTASection settings={settings} />
       <BlogSection />
-      <SupportChatWidget />
+      <TestimonialsSection />
+      <SupportChatWidget triggerRef={howItWorksRef} />
     </div>
   );
 }

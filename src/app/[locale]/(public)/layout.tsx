@@ -1,6 +1,7 @@
 import Navbar from '@/components/layout/Navbar';
 import AnimatedShaderBackground from '@/components/AnimatedShaderBackground';
 import FAQSection from '@/components/layout/FAQSection';
+import NewsletterSection from '@/components/layout/NewsletterSection';
 import Footer from '@/components/layout/Footer';
 import AnnouncementBar from '@/components/layout/AnnouncementBar';
 import { getActiveCampaignBars } from '@/lib/announcement-actions';
@@ -50,6 +51,7 @@ export default async function PublicLayout({ children }: { children: React.React
           {showMaintenance ? <MaintenanceNotice locale={locale} /> : children}
         </main>
         {!showMaintenance && !isBlogPath && !isHomePath && <FAQSection faqs={faqs} />}
+        {!showMaintenance && !isBlogPath && <NewsletterSection />}
         {!showMaintenance && !isBlogPath && <Footer />}
       </div>
       <CookieBanner />

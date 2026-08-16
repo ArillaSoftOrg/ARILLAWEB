@@ -108,19 +108,32 @@
       "dayFri": "Cu",
       "daySat": "Ct",
       "daySun": "Pa"
+    },
+    "newsletter": {
+      "title": "E-posta Bülteni",
+      "description": "Arilla Soft'taki güncel gelişmeleri kaçırmayın. Yeni projeleri, hizmet güncellemelerini ve özel içerikleri doğrudan e-posta kutunuzdan takip edin.",
+      "emailPlaceholder": "E-posta adresiniz",
+      "submit": "ABONE OL",
+      "sending": "Gönderiliyor...",
+      "success": "Bültenimize başarıyla abone oldunuz.",
+      "error": "Abonelik işlemi başarısız oldu. Lütfen tekrar deneyin."
     }
   },
   "chat": {
     "title": "Arilla Soft Destek",
     "today": "Bugün",
-    "greeting": "Merhaba. Ben Arilla Soft sanal destek asistanıyım. Size doğru şekilde yardımcı olabilmem için aşağıdaki seçeneklerden birini seçebilir veya mesajınızı yazabilirsiniz.",
+    "greeting": "Merhaba. Projenizle ilgili bir sorunuz mu var? Buradan bize yazabilirsiniz.",
     "messagePlaceholder": "Mesajınızı yazın...",
     "consultationLabel": "Ön Görüşme Al",
     "consultationMsg": "Merhaba, ön görüşme almak istiyorum.",
     "infoLabel": "Hizmet Hakkında Bilgi",
     "infoMsg": "Hizmetleriniz hakkında detaylı bilgi almak istiyorum.",
     "priceLabel": "Fiyat Talep Et",
-    "priceMsg": "Lütfen hizmetlerinizin fiyatlandırması hakkında bilgi veriniz."
+    "priceMsg": "Lütfen hizmetlerinizin fiyatlandırması hakkında bilgi veriniz.",
+    "toggleAriaLabel": "Destek sohbetini aç/kapat",
+    "closeAriaLabel": "Sohbeti kapat",
+    "teaserText": "Bir sorunuz mu var? Bize yazabilirsiniz.",
+    "teaserAriaLabel": "Destek sohbetini aç"
   },
   "projectTypes": {
     "WEB_APPLICATION": "Web Uygulaması",

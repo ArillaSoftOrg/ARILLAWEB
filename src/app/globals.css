@@ -328,6 +328,260 @@ body {
   background-size: 60px 60px;
 }
 
+/* Homepage services */
+.home-service-index {
+  border-top: 1px solid var(--hairline);
+}
+
+.home-service-index__row {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 44px minmax(0, 1fr) 40px 20px;
+  align-items: center;
+  gap: 16px;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--ink);
+  min-height: 94px;
+  padding: 18px 0;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+.home-service-index__number {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--type-label);
+  transition: color 200ms ease;
+}
+
+.home-service-index__title {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 1.75vw, 30px);
+  font-weight: 600;
+  line-height: 1.08;
+  color: currentColor;
+}
+
+.home-service-index__icon {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  justify-content: center;
+  border-radius: 14px;
+  border: 1px solid rgba(6, 182, 212, 0.18);
+  background: rgba(6, 182, 212, 0.06);
+  color: var(--text-secondary);
+  transition:
+    border-color 200ms ease,
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+.home-service-index__arrow {
+  color: var(--text-muted);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease,
+    color 200ms ease;
+}
+
+.home-service-index__row.is-active {
+  border-bottom-color: rgba(6, 182, 212, 0.55);
+  color: var(--ink);
+}
+
+.home-service-index__row.is-active .home-service-index__number,
+.home-service-index__row.is-active .home-service-index__arrow {
+  color: var(--accent-cyan);
+}
+
+.home-service-index__row.is-active .home-service-index__icon {
+  border-color: rgba(6, 182, 212, 0.42);
+  background: rgba(6, 182, 212, 0.12);
+  color: var(--accent-cyan);
+}
+
+.home-service-index__row.is-active .home-service-index__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.home-service-index__row:focus-visible,
+.home-service-accordion__trigger:focus-visible,
+.home-service-detail__link:focus-visible,
+.home-service-accordion__link:focus-visible {
+  outline: 2px solid rgba(6, 182, 212, 0.75);
+  outline-offset: 4px;
+}
+
+.home-service-detail {
+  height: 100%;
+  overflow: hidden;
+  padding: clamp(28px, 3.2vw, 42px);
+}
+
+.home-service-detail__content {
+  animation: home-service-panel-in 180ms ease both;
+}
+
+.home-service-detail__icon {
+  display: inline-flex;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  background: rgba(6, 182, 212, 0.1);
+  color: #22d3ee;
+}
+
+.home-service-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 211, 238, 0.16);
+  background: rgba(34, 211, 238, 0.07);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1;
+  padding: 7px 10px;
+}
+
+.home-service-tag--light {
+  border-color: rgba(6, 182, 212, 0.2);
+  background: rgba(6, 182, 212, 0.08);
+  color: var(--text-secondary);
+}
+
+.home-service-detail__link,
+.home-service-accordion__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 26px;
+  color: var(--accent-cyan);
+  text-decoration: none;
+}
+
+.home-service-detail__arrow {
+  transition: transform 200ms ease;
+}
+
+.home-service-accordion {
+  border-top: 1px solid var(--hairline);
+}
+
+.home-service-accordion__item {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.home-service-accordion__trigger {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 38px minmax(0, 1fr) 34px 28px;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  padding: 20px 0;
+  text-align: left;
+}
+
+.home-service-accordion__number {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--type-label);
+}
+
+.home-service-accordion__title {
+  min-width: 0;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 7vw, 30px);
+  font-weight: 600;
+  line-height: 1.08;
+}
+
+.home-service-accordion__icon {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid rgba(6, 182, 212, 0.18);
+  background: rgba(6, 182, 212, 0.06);
+  color: var(--text-secondary);
+}
+
+.home-service-accordion__state {
+  justify-self: end;
+  font-family: var(--font-body);
+  font-size: 24px;
+  line-height: 1;
+  color: var(--accent-cyan);
+}
+
+.home-service-accordion__trigger.is-active .home-service-accordion__number,
+.home-service-accordion__trigger.is-active .home-service-accordion__icon {
+  color: var(--accent-cyan);
+}
+
+.home-service-accordion__trigger.is-active .home-service-accordion__icon {
+  border-color: rgba(6, 182, 212, 0.42);
+  background: rgba(6, 182, 212, 0.12);
+}
+
+.home-service-accordion__content {
+  padding: 0 0 24px 50px;
+  animation: home-service-panel-in 180ms ease both;
+}
+
+@keyframes home-service-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-service-index__row:hover {
+    border-bottom-color: rgba(6, 182, 212, 0.42);
+    color: var(--ink-soft);
+  }
+
+  .home-service-index__row:hover .home-service-index__number,
+  .home-service-index__row:hover .home-service-index__icon {
+    color: var(--accent-cyan);
+  }
+
+  .home-service-index__row:hover .home-service-index__icon {
+    border-color: rgba(6, 182, 212, 0.36);
+    background: rgba(6, 182, 212, 0.1);
+  }
+
+  .home-service-detail__link:hover .home-service-detail__arrow,
+  .home-service-accordion__link:hover .home-service-detail__arrow {
+    transform: translateX(4px);
+  }
+}
+
 /* Noise texture overlay */
 .noise::after {
   content: '';
@@ -543,7 +797,64 @@ body {
 
 /* Respect prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
+  .home-service-index__row,
+  .home-service-index__icon,
+  .home-service-index__arrow,
+  .home-service-detail__arrow {
+    transition: none;
+  }
+
+  .home-service-detail__content,
+  .home-service-accordion__content {
+    animation: none;
+  }
+
+  .home-service-index__row:hover .home-service-index__arrow,
+  .home-service-detail__link:hover .home-service-detail__arrow,
+  .home-service-accordion__link:hover .home-service-detail__arrow {
+    transform: none;
+  }
+
   .site-examples-track {
+    animation: none;
+  }
+}
+
+/* Testimonials (homepage) two-row card marquee. Row 1 scrolls the base
+   direction, Row 2 reverses via .testimonials-track--reverse so the two
+   rows drift in opposite directions. */
+.testimonials-track {
+  animation: testimonials-scroll 55s linear infinite;
+}
+
+.testimonials-track--reverse {
+  animation-direction: reverse;
+}
+
+/* Pause on hover — desktop only, scoped per row */
+@media (hover: hover) {
+  .testimonials-row:hover .testimonials-track {
+    animation-play-state: paused;
+  }
+}
+
+/* Pause on keyboard focus within a row */
+.testimonials-row:focus-within .testimonials-track {
+  animation-play-state: paused;
+}
+
+@keyframes testimonials-scroll {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .testimonials-track {
     animation: none;
   }
 }
@@ -587,4 +898,21 @@ body {
   --blog-btn-hover-color: #0f172a;
   --blog-section-border:  rgba(0, 0, 0, 0.08);
   --blog-related-title:   #0f172a;
+}
+
+/* Support chat widget — one-shot attention pulse before auto-open */
+@keyframes supportChatAttentionPulse {
+  0% { box-shadow: 0 8px 24px rgba(124,58,237,0.35), 0 0 0 0 rgba(124,58,237,0.45); }
+  70% { box-shadow: 0 8px 24px rgba(124,58,237,0.35), 0 0 0 14px rgba(124,58,237,0); }
+  100% { box-shadow: 0 8px 24px rgba(124,58,237,0.35), 0 0 0 0 rgba(124,58,237,0); }
+}
+
+.support-chat-attention {
+  animation: supportChatAttentionPulse 0.7s ease-out 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .support-chat-attention {
+    animation: none;
+  }
 }
