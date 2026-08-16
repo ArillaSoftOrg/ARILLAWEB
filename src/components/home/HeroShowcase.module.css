@@ -226,6 +226,10 @@
 }
 
 @media (max-width: 768px) {
+  .cardLayer {
+    display: none;
+  }
+
   .showcaseFrame {
     aspect-ratio: auto;
     height: 100%;
