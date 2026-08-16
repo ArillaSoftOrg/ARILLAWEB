@@ -645,7 +645,7 @@ function TestimonialsSection() {
 function HeroSection() {
   return (
     <section
-      className="max-[768px]:!min-h-0"
+      className="max-[768px]:!min-h-0 max-[768px]:!bg-[#0B0F17]"
       style={{
         position: "relative",
         minHeight: "calc(100dvh - var(--bar-h, 0px))",
@@ -677,7 +677,7 @@ function HeroSection() {
             className="flex flex-col items-start"
           >
             <h1
-              className="text-role-hero"
+              className="text-role-hero max-[768px]:!text-[#F8F7F4]"
               style={{
                 maxWidth: "100%",
               }}
@@ -689,7 +689,7 @@ function HeroSection() {
           {/* Subtext */}
           <motion.p
             variants={heroFadeUp}
-            className="text-role-body-lg"
+            className="text-role-body-lg max-[768px]:!text-[#C4CAD5]"
             style={{
               maxWidth: "520px",
               margin: "18px 0 0",
@@ -724,7 +724,7 @@ function HeroSection() {
                   strokeWidth={2.5}
                   className="transition-transform duration-200 group-hover:scale-[1.07]"
                 />
-                <span className="font-body" style={{ fontSize: "13px", color: "#475569", fontWeight: 500 }}>{title}</span>
+                <span className="font-body max-[768px]:!text-[#DDE2EA]" style={{ fontSize: "13px", color: "#475569", fontWeight: 500 }}>{title}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -783,7 +783,7 @@ function HeroSection() {
                 whiteSpace: "nowrap",
                 transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
               }}
-              className="group w-full sm:w-auto text-role-button"
+              className="group w-full sm:w-auto text-role-button max-[768px]:!border max-[768px]:!border-white/[0.18] max-[768px]:!bg-white/[0.04] max-[768px]:!text-[#F1F5F9] max-[768px]:hover:!bg-white/[0.08] max-[768px]:active:!bg-white/[0.08]"
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = "rgba(124,58,237,0.48)";
                 e.currentTarget.style.boxShadow = "0 8px 20px rgba(15,23,42,0.08)";
@@ -803,7 +803,7 @@ function HeroSection() {
           {/* Trust note */}
           <motion.p
             variants={heroFadeUp}
-            className="font-body"
+            className="font-body max-[768px]:!text-[#8993A4]"
             style={{
               fontSize: "12px",
               color: "#94a3b8",
@@ -822,7 +822,7 @@ function HeroSection() {
           animate="visible"
           className="flex w-full items-center justify-center max-[768px]:pointer-events-none max-[768px]:absolute max-[768px]:inset-0 max-[768px]:z-0 max-[768px]:overflow-hidden xl:justify-start"
         >
-          <div className="w-full max-[768px]:absolute max-[768px]:inset-0 max-[768px]:max-w-none max-[768px]:opacity-[0.95]">
+          <div className="w-full max-[768px]:absolute max-[768px]:inset-0 max-[768px]:max-w-none max-[768px]:opacity-[0.95] max-[768px]:[filter:saturate(0.85)_contrast(1.05)]">
             <HeroShowcase />
           </div>
         </motion.div>
@@ -831,7 +831,7 @@ function HeroSection() {
           className="pointer-events-none absolute inset-0 z-[1] hidden max-[768px]:block"
           style={{
             background:
-              "linear-gradient(to right, rgba(244,250,247,0.9) 0%, rgba(244,250,247,0.78) 35%, rgba(244,250,247,0.34) 65%, rgba(244,250,247,0.04) 100%)",
+              "linear-gradient(90deg, rgba(11,15,23,0.96) 0%, rgba(11,15,23,0.84) 45%, rgba(11,15,23,0.45) 100%)",
           }}
         />
       </div>
