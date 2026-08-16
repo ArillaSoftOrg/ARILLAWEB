@@ -645,6 +645,7 @@ function TestimonialsSection() {
 function HeroSection() {
   return (
     <section
+      className="max-[768px]:!min-h-0"
       style={{
         position: "relative",
         minHeight: "calc(100dvh - var(--bar-h, 0px))",
@@ -655,20 +656,20 @@ function HeroSection() {
         paddingTop: "var(--header-h)",
         background: "#F4FAF7",
       }}
-    >
-      <div
-        className="w-full max-w-[1360px] mx-auto flex flex-col xl:grid xl:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] items-center gap-9 xl:gap-10 px-4 sm:px-6 lg:px-8 pt-6 pb-10 sm:pt-8 sm:pb-14 xl:py-8"
-        style={{
-          minHeight: "calc(100dvh - var(--header-h) - var(--bar-h, 0px))",
-        }}
       >
+        <div
+          className="relative w-full max-w-[1360px] mx-auto flex flex-col xl:grid xl:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] items-center gap-9 max-[768px]:gap-5 xl:gap-10 px-4 sm:px-6 lg:px-8 pt-6 max-[768px]:!min-h-0 max-[768px]:overflow-hidden max-[768px]:pt-3 pb-10 sm:pt-8 sm:pb-14 xl:py-8"
+          style={{
+            minHeight: "calc(100dvh - var(--header-h) - var(--bar-h, 0px))",
+          }}
+        >
 
         {/* Left: Text */}
         <motion.div
           variants={heroStagger}
           initial="hidden"
           animate="visible"
-          className="flex w-full max-w-[640px] flex-col items-start text-left"
+          className="relative z-10 flex w-full max-w-[640px] flex-col items-start text-left"
         >
           {/* Headline */}
           <motion.div
@@ -819,10 +820,20 @@ function HeroSection() {
           variants={heroVisualIn}
           initial="hidden"
           animate="visible"
-          className="flex w-full items-center justify-center xl:justify-start"
+          className="flex w-full items-center justify-center max-[768px]:pointer-events-none max-[768px]:absolute max-[768px]:inset-0 max-[768px]:z-0 max-[768px]:overflow-hidden xl:justify-start"
         >
-          <HeroShowcase />
+          <div className="w-full max-[768px]:absolute max-[768px]:inset-0 max-[768px]:max-w-none max-[768px]:opacity-[0.95]">
+            <HeroShowcase />
+          </div>
         </motion.div>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[1] hidden max-[768px]:block"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(244,250,247,0.9) 0%, rgba(244,250,247,0.78) 35%, rgba(244,250,247,0.34) 65%, rgba(244,250,247,0.04) 100%)",
+          }}
+        />
       </div>
 
       {/* Scroll indicator */}

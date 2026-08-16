@@ -1,3 +1,7 @@
+.showcaseFrame {
+  min-width: 0;
+}
+
 .heroVisual {
   --hero-x: 0;
   --hero-y: 0;
@@ -85,6 +89,8 @@
 .cardImage {
   display: block;
   height: auto;
+  object-fit: contain;
+  object-position: right center;
   width: 100%;
   user-select: none;
 }
@@ -219,6 +225,55 @@
   }
 }
 
+@media (max-width: 768px) {
+  .cardLayer {
+    display: none;
+  }
+
+  .showcaseFrame {
+    aspect-ratio: auto;
+    height: 100%;
+    margin: 0;
+    max-height: none !important;
+    max-width: none;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .personLayer {
+    bottom: auto;
+    left: auto;
+    right: -18%;
+    top: 14%;
+    width: min(112vw, 520px);
+    transform: translate3d(0, 0, 0);
+  }
+
+  .browserLayer {
+    left: 42%;
+    top: 19%;
+    width: min(46vw, 210px);
+  }
+
+  .chartLayer {
+    left: 48%;
+    top: 55%;
+    width: min(24vw, 110px);
+  }
+
+  .codeLayer {
+    right: 0;
+    top: 30%;
+    width: min(16vw, 76px);
+  }
+
+  .mobileLayer {
+    right: -2%;
+    top: 59%;
+    width: min(18vw, 88px);
+  }
+}
+
 @media (max-width: 640px) {
   .heroVisual {
     --hero-x: 0 !important;
@@ -236,33 +291,36 @@
   }
 
   .personLayer {
-    bottom: -1%;
-    width: min(82%, 390px);
-    transform: translate3d(-45%, 0, 0);
+    bottom: auto;
+    left: auto;
+    right: -20%;
+    top: 14%;
+    width: min(112vw, 520px);
+    transform: translate3d(0, 0, 0);
   }
 
   .browserLayer {
-    left: 1%;
-    top: 17%;
-    width: min(36%, 170px);
+    left: 42%;
+    top: 19%;
+    width: min(46vw, 210px);
   }
 
   .chartLayer {
-    left: 4%;
-    top: 49%;
-    width: min(20%, 92px);
+    left: 48%;
+    top: 55%;
+    width: min(24vw, 110px);
   }
 
   .codeLayer {
-    right: 5%;
-    top: 23%;
-    width: min(13%, 64px);
+    right: 0;
+    top: 30%;
+    width: min(16vw, 76px);
   }
 
   .mobileLayer {
-    right: 1%;
-    top: 49%;
-    width: min(15%, 72px);
+    right: -2%;
+    top: 59%;
+    width: min(18vw, 88px);
   }
 
   .floatLayer {

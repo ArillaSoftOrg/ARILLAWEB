@@ -73,7 +73,7 @@ export default function HeroShowcase() {
 
   return (
     <div
-      className="relative mx-auto aspect-[31/32] w-full max-w-[560px] overflow-visible sm:max-w-[600px] xl:mx-0 xl:max-w-[620px]"
+      className={`${styles.showcaseFrame} relative mx-auto aspect-[31/32] w-full max-w-[560px] overflow-visible sm:max-w-[600px] xl:mx-0 xl:max-w-[620px]`}
       style={{
         maxHeight: "calc(100dvh - var(--header-h) - var(--bar-h, 0px) - 56px)",
       }}
