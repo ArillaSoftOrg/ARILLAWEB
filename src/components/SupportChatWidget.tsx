@@ -88,7 +88,7 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
 
     try {
       const audio = new Audio('/sounds/chat-notification.wav');
-      audio.volume = 0.4;
+      audio.volume = 0.8;
       audio.play().catch((err) => {
         if (process.env.NODE_ENV !== 'production') {
           console.debug('[SupportChatWidget] Notification sound playback failed:', err);
