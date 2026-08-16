@@ -12,6 +12,9 @@ const DISMISSED_KEY = 'support-chat-dismissed';
 const DWELL_MS = 1800;
 const TEASER_AUTO_HIDE_MS = 8000;
 const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
+// audio.volume caps at 1 — this drives loudness above that via a GainNode instead.
+// Single tunable knob: lower to 2.0 / 1.5 if the sound ever distorts/clips.
+const NOTIFICATION_GAIN = 3.0;
 
 interface SupportChatWidgetProps {
   triggerRef?: RefObject<HTMLDivElement | null>;
@@ -33,6 +36,8 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
   const dwellTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const teaserHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fallbackRef = useRef<HTMLDivElement>(null);
+  const notificationAudioRef = useRef<HTMLAudioElement | null>(null);
+  const notificationGraphRef = useRef<{ context: AudioContext; gainNode: GainNode } | null>(null);
 
   const isSectionInView = useInView(triggerRef ?? fallbackRef, { amount: 0.4 });
 
@@ -87,8 +92,33 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
     }
 
     try {
-      const audio = new Audio('/sounds/chat-notification.wav');
-      audio.volume = 0.8;
+      if (!notificationAudioRef.current) {
+        notificationAudioRef.current = new Audio('/sounds/chat-notification.wav');
+      }
+      const audio = notificationAudioRef.current;
+      audio.volume = 1; // uncapped loudness now comes from the GainNode below, not this.
+
+      // Build the audio -> gainNode -> destination graph once and reuse it —
+      // createMediaElementSource() can only be called a single time per element.
+      if (!notificationGraphRef.current) {
+        const AudioContextCtor =
+          window.AudioContext ??
+          (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (AudioContextCtor) {
+          const context = new AudioContextCtor();
+          const source = context.createMediaElementSource(audio);
+          const gainNode = context.createGain();
+          gainNode.gain.value = NOTIFICATION_GAIN;
+          source.connect(gainNode).connect(context.destination);
+          notificationGraphRef.current = { context, gainNode };
+        }
+      }
+
+      if (notificationGraphRef.current?.context.state === 'suspended') {
+        notificationGraphRef.current.context.resume().catch(() => {});
+      }
+
+      audio.currentTime = 0;
       audio.play().catch((err) => {
         if (process.env.NODE_ENV !== 'production') {
           console.debug('[SupportChatWidget] Notification sound playback failed:', err);
