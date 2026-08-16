@@ -113,15 +113,15 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
         }}
       >
         <div className="max-w-[1440px] mx-auto px-4 lg:px-10 xl:px-14">
-          <div className="flex items-center justify-between h-14 lg:h-[92px]">
+          <div className="flex items-center justify-between h-14 lg:h-[84px]">
             <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', gap: '12px' }}>
               <img
                 src="/logoarilla.png"
                 alt="Arilla Soft"
-                className="h-10 lg:h-[56px] w-auto flex-shrink-0"
+                className="h-10 lg:h-[50px] w-auto flex-shrink-0"
               />
               <span
-                className="text-[15px] tracking-[0.20em] lg:text-[22px] lg:tracking-[0.18em] text-white md:text-slate-900"
+                className="text-[15px] tracking-[0.20em] lg:text-[20px] lg:tracking-[0.18em] text-white md:text-slate-900"
                 style={{ fontWeight: 700, textTransform: 'uppercase', userSelect: 'none' }}
               >
                 ARILLA{' '}
@@ -283,7 +283,7 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
       }}
     >
       <div className="max-w-[1440px] mx-auto px-4 lg:px-10 xl:px-14">
-        <div className="flex items-center h-14 lg:h-[92px]">
+        <div className="flex items-center h-14 lg:h-[84px]">
 
           {/* Logo */}
           <div style={{ flex: 1 }}>
@@ -291,10 +291,10 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
               <img
                 src="/logoarilla.png"
                 alt="Arilla Soft"
-                className="h-10 lg:h-[56px] w-auto flex-shrink-0"
+                className="h-10 lg:h-[50px] w-auto flex-shrink-0"
               />
               <span
-                className="text-[15px] tracking-[0.20em] lg:text-[22px] lg:tracking-[0.18em] text-white md:text-slate-900"
+                className="text-[15px] tracking-[0.20em] lg:text-[20px] lg:tracking-[0.18em] text-white md:text-slate-900"
                 style={{ fontWeight: 700, textTransform: 'uppercase', userSelect: 'none' }}
               >
                 ARILLA{' '}

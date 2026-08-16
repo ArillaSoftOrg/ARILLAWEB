@@ -543,60 +543,51 @@ function HeroSection() {
     <section
       style={{
         position: "relative",
-        minHeight: "auto",
+        minHeight: "calc(100dvh - var(--bar-h, 0px))",
         display: "flex",
         alignItems: "center",
         overflowX: "hidden",
         overflowY: "clip",
-        paddingTop: "68px",
+        paddingTop: "var(--header-h)",
         background: "#F4FAF7",
       }}
     >
-      <div className="w-full max-w-[1280px] mx-auto flex flex-col lg:grid lg:grid-cols-2 items-center gap-10 lg:gap-12 px-4 sm:px-6 lg:px-8 pt-6 pb-10 sm:pt-8 sm:pb-14 lg:py-20">
+      <div
+        className="w-full max-w-[1360px] mx-auto flex flex-col xl:grid xl:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] items-center gap-9 xl:gap-10 px-4 sm:px-6 lg:px-8 pt-6 pb-10 sm:pt-8 sm:pb-14 xl:py-8"
+        style={{
+          minHeight: "calc(100dvh - var(--header-h) - var(--bar-h, 0px))",
+        }}
+      >
 
         {/* Left: Text */}
         <motion.div
           variants={stagger}
           initial="hidden"
           animate="visible"
-          className="flex flex-col gap-6 items-start text-left"
+          className="flex w-full max-w-[640px] flex-col items-start text-left"
         >
-          {/* Eyebrow */}
-          <motion.div variants={fadeUp}>
-            <span
-              className="text-role-eyebrow"
+          {/* Headline */}
+          <motion.div
+            variants={fadeUp}
+            className="flex flex-col items-start"
+          >
+            <h1
+              className="text-role-hero"
               style={{
-                marginBottom: "10px",
-                display: "inline-block",
+                maxWidth: "100%",
               }}
             >
-              Özel Yazılım ve Web Çözümleri
-            </span>
+              İş süreçlerinizi dijitalleştiren özel yazılım ve web çözümleri geliştiriyoruz.
+            </h1>
           </motion.div>
-
-          {/* Headline */}
-<motion.div
-  variants={fadeUp}
-  className="flex flex-col items-start"
->
-  <h1
-    className="text-role-hero"
-    style={{
-      maxWidth: "100%",
-    }}
-  >
-    İş süreçlerinizi dijitalleştiren özel yazılım ve web çözümleri geliştiriyoruz.
-  </h1>
-</motion.div>
 
           {/* Subtext */}
           <motion.p
             variants={fadeUp}
             className="text-role-body-lg"
             style={{
-              maxWidth: "480px",
-              margin: 0,
-              marginBottom: "24px",
+              maxWidth: "520px",
+              margin: "18px 0 0",
             }}
           >
             Kurumsal web sitelerinden yönetim panellerine, randevu sistemlerinden özel iş yazılımlarına kadar ihtiyacınıza göre tasarlanan dijital sistemleri geliştiriyor, yayına alıyor ve teknik desteğini sağlıyoruz.
@@ -605,7 +596,7 @@ function HeroSection() {
           {/* Value items */}
           <motion.div
             variants={fadeUp}
-            className="flex flex-col gap-3 sm:flex-row sm:gap-6 sm:flex-wrap w-full lg:mx-0"
+            className="mt-[18px] flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4 xl:mx-0"
           >
             {[
               "İhtiyaca Özel Sistemler",
@@ -629,7 +620,7 @@ function HeroSection() {
           {/* CTAs */}
           <motion.div
             variants={fadeUp}
-            className="flex flex-col sm:flex-row gap-3 justify-start w-full sm:w-auto"
+            className="mt-[22px] flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-start"
           >
             <Link
               href="/randevual"
@@ -638,16 +629,16 @@ function HeroSection() {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "8px",
-                padding: "12px 24px",
-                minHeight: "48px",
+                padding: "14px 24px",
+                minHeight: "54px",
                 borderRadius: "10px",
                 textDecoration: "none",
                 color: "white",
                 background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
                 boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
-                width: "100%",
+                whiteSpace: "nowrap",
               }}
-              className="sm:w-auto text-role-button"
+              className="w-full sm:w-auto text-role-button"
             >
               Ücretsiz Keşif Görüşmesi <ArrowRight size={14} />
             </Link>
@@ -658,16 +649,16 @@ function HeroSection() {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: "8px",
-                padding: "12px 24px",
-                minHeight: "48px",
+                padding: "14px 24px",
+                minHeight: "54px",
                 borderRadius: "10px",
                 textDecoration: "none",
                 color: "#1e293b",
                 background: "#ffffff",
                 border: "1.5px solid #cbd5e1",
-                width: "100%",
+                whiteSpace: "nowrap",
               }}
-              className="sm:w-auto text-role-button"
+              className="w-full sm:w-auto text-role-button"
             >
               Projelerimizi İncele <ArrowRight size={14} />
             </Link>
@@ -680,8 +671,7 @@ function HeroSection() {
             style={{
               fontSize: "12px",
               color: "#94a3b8",
-              margin: 0,
-              marginTop: "8px",
+              margin: "10px 0 0",
               lineHeight: 1.5,
             }}
           >
@@ -694,7 +684,7 @@ function HeroSection() {
           variants={scaleIn}
           initial="hidden"
           animate="visible"
-          className="flex justify-center items-center w-full"
+          className="flex w-full items-center justify-center xl:justify-start"
         >
           <HeroShowcase />
         </motion.div>

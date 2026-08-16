@@ -155,7 +155,7 @@ export default function AnnouncementBar({ configs }: AnnouncementBarProps) {
         ref={barRef}
         role="banner"
         aria-live="polite"
-        className="top-14 lg:top-[92px] z-40 left-0 right-0 w-full overflow-hidden"
+        className="top-14 lg:top-[84px] z-40 left-0 right-0 w-full overflow-hidden"
         style={{
           position: 'fixed',
           backgroundColor: config.backgroundColor,
@@ -202,7 +202,7 @@ export default function AnnouncementBar({ configs }: AnnouncementBarProps) {
       ref={barRef}
       role="banner"
       aria-live="polite"
-      className="top-14 lg:top-[92px] z-40 left-0 right-0 w-full"
+      className="top-14 lg:top-[84px] z-40 left-0 right-0 w-full"
       style={{
         position: 'fixed',
         backgroundColor: config.backgroundColor,
