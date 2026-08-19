@@ -2,6 +2,7 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
+import ProcessTimeline from './ProcessTimeline';
 
 interface Step {
   number: number;
@@ -48,7 +49,7 @@ export default function HowItWorks({
         position: 'relative',
         overflow: 'hidden',
       }}
-      className={isProcess ? 'pt-12 pb-16 md:pt-16 md:pb-20 lg:pt-12 lg:pb-24' : 'py-16 sm:py-20 lg:py-28'}
+      className="section-py"
     >
       {/* Background glow */}
       <div
@@ -65,7 +66,7 @@ export default function HowItWorks({
         }}
       />
 
-      <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="px-5 sm:px-6">
+      <div className="section-container">
         {/* Header */}
         <motion.div
           ref={ref}
@@ -107,71 +108,7 @@ export default function HowItWorks({
 
         {/* Steps */}
         {isProcess ? (
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
-            className="relative grid grid-cols-1 gap-5 md:gap-6 lg:grid-cols-4"
-          >
-            <div
-              aria-hidden="true"
-              className="absolute left-[12.5%] right-[12.5%] top-6 hidden h-px lg:block"
-              style={{ background: `linear-gradient(90deg, transparent, ${accentColor}55, transparent)` }}
-            />
-            {steps.map((step, i) => (
-              <motion.div key={step.title} variants={fadeUp} className="relative flex gap-4 lg:flex-col lg:items-center lg:text-center">
-                {i < steps.length - 1 && (
-                  <div
-                    aria-hidden="true"
-                    className="absolute bottom-[-20px] left-6 top-12 w-px lg:hidden"
-                    style={{ background: `linear-gradient(180deg, ${accentColor}55, transparent)` }}
-                  />
-                )}
-                <div
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '999px',
-                    background: '#ffffff',
-                    border: `1px solid ${accentColor}55`,
-                    boxShadow: `0 12px 28px ${accentColor}1f`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '16px',
-                    fontWeight: 800,
-                    color: accentColor,
-                    flexShrink: 0,
-                    position: 'relative',
-                    zIndex: 1,
-                  }}
-                >
-                  {step.number}
-                </div>
-                <div className="pt-1 lg:max-w-[250px] lg:pt-2">
-                  <h3
-                    className="text-role-subheading"
-                    style={{
-                      fontSize: '22px',
-                      margin: '0 0 10px',
-                      textWrap: 'balance',
-                    }}
-                  >
-                    {step.title}
-                  </h3>
-                  <p
-                    className="text-role-body"
-                    style={{
-                      margin: 0,
-                      color: '#64748b',
-                    }}
-                  >
-                    {step.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+          <ProcessTimeline steps={steps} accentColor={accentColor} start={isInView} />
         ) : (
           <motion.div
             variants={stagger}
@@ -197,7 +134,7 @@ export default function HowItWorks({
                         position: 'absolute',
                         top: '48px',
                         left: 'calc(100% + 12px)',
-                        width: 'calc(100vw / 4 - 24px)',
+                        width: 'calc(100% - 24px)',
                         height: '2px',
                         background: `linear-gradient(90deg, ${accentColor}, transparent)`,
                         display: 'none',

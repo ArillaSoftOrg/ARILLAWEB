@@ -200,6 +200,14 @@ model DesignInquiry {
   @@index([createdAt])
 }
 
+model NewsletterSubscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  isActive       Boolean   @default(true)
+  unsubscribedAt DateTime?
+  createdAt      DateTime  @default(now())
+}
+
 model AppointmentRequest {
   id        String   @id @default(cuid())
   service   String

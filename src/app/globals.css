@@ -15,6 +15,13 @@
   --bar-h: 0px;
   --header-h: 56px;
 
+  /* Layout — shared section spacing & container (single fluid scale, replaces
+     the mismatched py-16/sm:py-20/lg:py-28-style step scales used ad hoc
+     across sections) */
+  --section-py: clamp(3rem, 2.2rem + 3vw, 7rem);
+  --container-max: 1280px;
+  --container-px: clamp(1.25rem, 1rem + 1vw, 1.5rem);
+
   /* Typography — font families (Arilla Soft design system) */
   --font-display: 'Lora', serif;
   --font-body: 'Archivo', sans-serif;
@@ -52,17 +59,40 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
+}
+
+/* Shared section layout primitives — see --section-py/--container-* in :root */
+.section-py {
+  padding-top: var(--section-py);
+  padding-bottom: var(--section-py);
+}
+
+.section-container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-px);
+}
+
+html.brand-intro-scroll-lock,
+html.brand-intro-scroll-lock body {
+  overflow: hidden;
+}
+
+html[data-brand-intro="pending"] [data-brand-logo-target],
+html[data-brand-intro="running"] [data-brand-logo-target] {
+  opacity: 0 !important;
 }
 
 /* ── Typography roles (Arilla Soft design system) ── */
@@ -71,7 +101,7 @@ body {
   font-family: var(--font-display);
   font-weight: 400;
   font-style: normal;
-  font-size: 42px;
+  font-size: clamp(40px, 3vw + 29px, 72px);
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--ink);
@@ -81,7 +111,7 @@ body {
   font-family: var(--font-display);
   font-weight: 400;
   font-style: normal;
-  font-size: 33px;
+  font-size: clamp(33px, 2.9vw + 22px, 52px);
   line-height: 1.16;
   letter-spacing: 0;
   color: var(--ink);
@@ -91,7 +121,7 @@ body {
   font-family: var(--font-display);
   font-weight: 400;
   font-style: normal;
-  font-size: 20px;
+  font-size: clamp(20px, 2.16vw + 12px, 34px);
   line-height: 1.15;
   letter-spacing: 0;
   color: var(--ink);
@@ -219,19 +249,13 @@ body {
   }
 
   .text-role-hero {
-    font-size: clamp(58px, 4.6vw, 72px);
     line-height: 0.98;
     letter-spacing: -0.03em;
   }
 
   .text-role-section-heading {
-    font-size: 52px;
     line-height: 1.13;
     letter-spacing: -0.02em;
-  }
-
-  .text-role-subheading {
-    font-size: 34px;
   }
 
   .text-role-body-lg {
@@ -268,6 +292,146 @@ body {
 
   .text-role-footer-header {
     font-size: 11.5px;
+  }
+}
+
+.home-hero-typewriter {
+  position: relative;
+  display: block;
+  min-height: 6.6em;
+  min-height: calc(var(--home-hero-typewriter-lines, 6) * 1lh);
+  white-space: normal;
+  overflow-wrap: normal;
+}
+
+.home-hero-typewriter__lines {
+  display: block;
+}
+
+.home-hero-typewriter__line {
+  display: block;
+  min-height: 1lh;
+  white-space: nowrap;
+}
+
+.home-hero-typewriter__measure {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
+
+.home-hero-typewriter__cursor {
+  display: inline-block;
+  margin-left: 0.03em;
+  color: currentColor;
+  opacity: 0.58;
+}
+
+.home-hero-typewriter__cursor[data-waiting="true"] {
+  animation: home-hero-cursor-blink 1s steps(1, end) infinite;
+}
+
+@keyframes home-hero-cursor-blink {
+  0%,
+  48% {
+    opacity: 0.58;
+  }
+
+  49%,
+  100% {
+    opacity: 0.16;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-typewriter__cursor {
+    animation: none;
+  }
+}
+
+/* Hero scroll-down cue */
+.home-hero-scroll-cue {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.home-hero-scroll-cue__mouse {
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 20px;
+  height: 32px;
+  padding-top: 6px;
+  border: 1.5px solid currentColor;
+  border-radius: 12px;
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.home-hero-scroll-cue__wheel {
+  width: 3px;
+  height: 6px;
+  border-radius: 2px;
+  background: currentColor;
+  animation: home-hero-scroll-wheel 1.8s ease-in-out infinite;
+}
+
+.home-hero-scroll-cue__label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: inherit;
+}
+
+@media (hover: hover) {
+  .home-hero-scroll-cue:hover .home-hero-scroll-cue__mouse {
+    opacity: 1;
+  }
+}
+
+@keyframes home-hero-scroll-wheel {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  60% {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+
+  61% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-scroll-cue__wheel {
+    animation: none;
   }
 }
 
@@ -415,9 +579,9 @@ body {
 }
 
 .home-service-index__row:focus-visible,
-.home-service-accordion__trigger:focus-visible,
 .home-service-detail__link:focus-visible,
-.home-service-accordion__link:focus-visible {
+.home-service-swipe__track:focus-visible,
+.home-service-swipe__dash:focus-visible {
   outline: 2px solid rgba(6, 182, 212, 0.75);
   outline-offset: 4px;
 }
@@ -464,8 +628,7 @@ body {
   color: var(--text-secondary);
 }
 
-.home-service-detail__link,
-.home-service-accordion__link {
+.home-service-detail__link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -478,74 +641,139 @@ body {
   transition: transform 200ms ease;
 }
 
-.home-service-accordion {
-  border-top: 1px solid var(--hairline);
+/* Mobile/tablet services — horizontal swipe cards (< lg) */
+.home-service-swipe__track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 4px 20px 6px;
 }
 
-.home-service-accordion__item {
-  border-bottom: 1px solid var(--hairline);
+.home-service-swipe__track::-webkit-scrollbar {
+  display: none;
 }
 
-.home-service-accordion__trigger {
-  display: grid;
-  width: 100%;
-  grid-template-columns: 38px minmax(0, 1fr) 34px 28px;
-  align-items: center;
-  gap: 12px;
-  border: 0;
-  background: transparent;
-  color: var(--ink);
-  padding: 20px 0;
-  text-align: left;
+.home-service-swipe__card {
+  flex: 0 0 90vw;
+  max-width: 420px;
+  scroll-snap-align: start;
+  border-radius: 20px;
+  background: #F4FAF7;
+  border: 1px solid var(--hairline);
+  padding: clamp(22px, 6vw, 28px);
 }
 
-.home-service-accordion__number {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--type-label);
+@media (min-width: 640px) {
+  .home-service-swipe__track {
+    padding-inline: 24px;
+  }
+
+  .home-service-swipe__card {
+    flex-basis: 86vw;
+  }
+
+  .home-service-swipe__indicator {
+    padding-inline: 24px;
+  }
 }
 
-.home-service-accordion__title {
-  min-width: 0;
-  font-family: var(--font-display);
-  font-size: clamp(22px, 7vw, 30px);
-  font-weight: 600;
-  line-height: 1.08;
-}
-
-.home-service-accordion__icon {
-  display: inline-flex;
-  width: 34px;
-  height: 34px;
+.home-service-swipe__indicator {
+  display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  border: 1px solid rgba(6, 182, 212, 0.18);
-  background: rgba(6, 182, 212, 0.06);
-  color: var(--text-secondary);
+  gap: 18px;
+  margin-top: 20px;
+  padding: 0 20px;
 }
 
-.home-service-accordion__state {
-  justify-self: end;
-  font-family: var(--font-body);
-  font-size: 24px;
-  line-height: 1;
+.home-service-swipe__dash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.home-service-swipe__dash-number {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--type-label);
+  transition: color 200ms ease;
+}
+
+.home-service-swipe__dash-bar {
+  display: block;
+  width: 14px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--hairline);
+  transition: width 200ms ease, background-color 200ms ease;
+}
+
+.home-service-swipe__dash.is-active .home-service-swipe__dash-number {
   color: var(--accent-cyan);
 }
 
-.home-service-accordion__trigger.is-active .home-service-accordion__number,
-.home-service-accordion__trigger.is-active .home-service-accordion__icon {
-  color: var(--accent-cyan);
+.home-service-swipe__dash.is-active .home-service-swipe__dash-bar {
+  width: 28px;
+  background: var(--accent-cyan);
 }
 
-.home-service-accordion__trigger.is-active .home-service-accordion__icon {
-  border-color: rgba(6, 182, 212, 0.42);
-  background: rgba(6, 182, 212, 0.12);
+/* Homepage sticky scene stack — Services / How-we-work / Industry products
+   pin at the same offset and cover each other via ascending z-index.
+   `.home-scene-stack` is these three sections' shared containing block —
+   position:sticky's stuck range is bounded by it, not by each section's own
+   box, so it needs extra height beyond the three sections' natural sum
+   (via padding-bottom) or the last section (industry) would never gain the
+   room to release and would stay pinned for the rest of the page. */
+.home-scene-stack {
+  position: relative;
 }
 
-.home-service-accordion__content {
-  padding: 0 0 24px 50px;
-  animation: home-service-panel-in 180ms ease both;
+.home-services-scene {
+  position: relative;
+}
+
+.home-how-we-work-scene {
+  position: relative;
+}
+
+.home-industry-scene {
+  position: relative;
+}
+
+@media (min-width: 1024px) {
+  .home-scene-stack {
+    padding-bottom: 50vh;
+  }
+
+  .home-services-scene {
+    position: sticky;
+    top: calc(var(--header-h, 56px) + var(--bar-h, 0px));
+    z-index: 1;
+    min-height: 320vh;
+  }
+
+  .home-how-we-work-scene {
+    position: sticky;
+    top: calc(var(--header-h, 56px) + var(--bar-h, 0px));
+    z-index: 2;
+    background: #ffffff;
+  }
+
+  .home-industry-scene {
+    position: sticky;
+    top: calc(var(--header-h, 56px) + var(--bar-h, 0px));
+    z-index: 3;
+    background: #ffffff;
+  }
 }
 
 @keyframes home-service-panel-in {
@@ -576,9 +804,12 @@ body {
     background: rgba(6, 182, 212, 0.1);
   }
 
-  .home-service-detail__link:hover .home-service-detail__arrow,
-  .home-service-accordion__link:hover .home-service-detail__arrow {
+  .home-service-detail__link:hover .home-service-detail__arrow {
     transform: translateX(4px);
+  }
+
+  .home-service-swipe__dash:hover .home-service-swipe__dash-bar {
+    background: rgba(6, 182, 212, 0.5);
   }
 }
 
@@ -800,19 +1031,23 @@ body {
   .home-service-index__row,
   .home-service-index__icon,
   .home-service-index__arrow,
-  .home-service-detail__arrow {
+  .home-service-detail__arrow,
+  .home-service-swipe__dash-bar,
+  .home-service-swipe__dash-number {
     transition: none;
   }
 
-  .home-service-detail__content,
-  .home-service-accordion__content {
+  .home-service-detail__content {
     animation: none;
   }
 
   .home-service-index__row:hover .home-service-index__arrow,
-  .home-service-detail__link:hover .home-service-detail__arrow,
-  .home-service-accordion__link:hover .home-service-detail__arrow {
+  .home-service-detail__link:hover .home-service-detail__arrow {
     transform: none;
+  }
+
+  .home-service-swipe__track {
+    scroll-behavior: auto;
   }
 
   .site-examples-track {

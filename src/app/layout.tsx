@@ -12,7 +12,7 @@ export default async function RootLayout({
   const locale = hl.get('x-locale') ?? 'tr';
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body>
         <PageTransition>{children}</PageTransition>
       </body>

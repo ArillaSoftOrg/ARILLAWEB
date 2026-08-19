@@ -69,7 +69,7 @@ export default function ProductHero({
         }}
       />
 
-      <div className="w-full max-w-[1280px] mx-auto flex flex-col lg:grid lg:grid-cols-2 items-center gap-10 lg:gap-20 px-4 sm:px-6 lg:px-8 pt-10 pb-16 sm:pt-14 sm:pb-20 lg:py-28">
+      <div className="section-container section-py w-full flex flex-col lg:grid lg:grid-cols-2 items-center gap-10 lg:gap-20">
         {/* Left: Text */}
         <motion.div
           variants={stagger}

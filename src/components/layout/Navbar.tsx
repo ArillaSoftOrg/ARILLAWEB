@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef, startTransition } from 'react';
+import { useState, useEffect, useRef, startTransition, type Ref } from 'react';
 import { usePathname, Link } from '@/i18n/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Menu, X, ArrowRight, ChevronDown } from 'lucide-react';
+import BrandLockup from '@/components/BrandLockup';
 
 type NavChild = {
   labelKey: string;
@@ -19,10 +20,16 @@ type NavItem = {
 };
 
 type NavbarProps = {
+  brandIntroActive?: boolean;
+  brandLogoRef?: Ref<HTMLSpanElement>;
   developerLoginOnly?: boolean;
 };
 
-export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
+export default function Navbar({
+  brandIntroActive = false,
+  brandLogoRef,
+  developerLoginOnly = false,
+}: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -64,8 +71,9 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { capture: true, passive: true });
+    return () => window.removeEventListener('scroll', handleScroll, { capture: true });
   }, []);
 
   useEffect(() => {
@@ -94,6 +102,30 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
   const showLocaleSwitcher =
     !pathname.startsWith('/site-ornekleri') &&
     !pathname.startsWith('/demo-siteler');
+  const isHomePath = pathname === '/';
+  const isHomeTop = isHomePath && !scrolled;
+  const publicHeaderClassName = isHomePath ? 'bg-transparent' : 'bg-slate-900 md:bg-white';
+  const publicHeaderStyle = {
+    position: 'fixed' as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 50,
+    backgroundColor: isHomeTop ? 'transparent' : isHomePath ? 'rgba(255,255,255,0.84)' : undefined,
+    backdropFilter: isHomePath ? (isHomeTop ? 'none' : 'blur(14px)') : 'blur(6px)',
+    WebkitBackdropFilter: isHomePath ? (isHomeTop ? 'none' : 'blur(14px)') : 'blur(6px)',
+    borderBottom: isHomeTop
+      ? '1px solid transparent'
+      : isHomePath
+        ? '1px solid rgba(15,23,42,0.08)'
+        : scrolled ? '1px solid rgba(0,0,0,0.2)' : '1px solid rgba(0,0,0,0.1)',
+    boxShadow: isHomeTop
+      ? 'none'
+      : isHomePath
+        ? '0 10px 30px rgba(15,23,42,0.06)'
+        : scrolled ? '0 4px 24px rgba(0,0,0,0.15)' : 'none',
+    transition: 'background-color 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease, backdrop-filter 0.28s ease',
+  };
 
   if (developerLoginOnly) {
     return (
@@ -114,18 +146,18 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
       >
         <div className="max-w-[1440px] mx-auto px-4 lg:px-10 xl:px-14">
           <div className="flex items-center justify-between h-14 lg:h-[84px]">
-            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', gap: '12px' }}>
-              <img
-                src="/logoarilla.png"
-                alt="Arilla Soft"
-                className="h-10 lg:h-[50px] w-auto flex-shrink-0"
-              />
+            <Link href="/" aria-label="Arilla Yazılım" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
               <span
-                className="text-[15px] tracking-[0.20em] lg:text-[20px] lg:tracking-[0.18em] text-white md:text-slate-900"
-                style={{ fontWeight: 700, textTransform: 'uppercase', userSelect: 'none' }}
+                ref={brandLogoRef}
+                data-brand-logo-target=""
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  opacity: brandIntroActive ? 0 : 1,
+                  transition: brandIntroActive ? 'none' : 'opacity 180ms ease',
+                }}
               >
-                ARILLA{' '}
-                <span className="text-slate-300 md:text-slate-600" style={{ fontWeight: 500 }}>SOFT</span>
+                <BrandLockup variant="maintenance" rotationEnabled={!brandIntroActive} />
               </span>
             </Link>
 
@@ -194,7 +226,7 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
             <button
               className="flex items-center justify-center lg:hidden text-slate-100"
               onClick={() => setIsOpen(!isOpen)}
-              style={{ background: 'transparent', border: 'none', padding: '6px', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', padding: '12px', margin: '-12px', cursor: 'pointer' }}
               aria-label="Menü"
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -220,6 +252,8 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
               borderRadius: '16px',
               boxShadow: '0 12px 40px rgba(0,0,0,0.4)',
               padding: '12px',
+              maxHeight: 'calc(100dvh - 72px)',
+              overflowY: 'auto',
             }}
           >
             <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -268,37 +302,29 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
 
   return (
     <header
-      className="bg-slate-900 md:bg-white"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        backdropFilter: 'blur(6px)',
-        WebkitBackdropFilter: 'blur(6px)',
-        borderBottom: scrolled ? '1px solid rgba(0,0,0,0.2)' : '1px solid rgba(0,0,0,0.1)',
-        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.15)' : 'none',
-        transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
-      }}
+      className={publicHeaderClassName}
+      style={publicHeaderStyle}
     >
       <div className="max-w-[1440px] mx-auto px-4 lg:px-10 xl:px-14">
         <div className="flex items-center h-14 lg:h-[84px]">
 
           {/* Logo */}
           <div style={{ flex: 1 }}>
-            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none', gap: '12px' }}>
-              <img
-                src="/logoarilla.png"
-                alt="Arilla Soft"
-                className="h-10 lg:h-[50px] w-auto flex-shrink-0"
-              />
+            <Link href="/" aria-label="Arilla Yazılım" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>
               <span
-                className="text-[15px] tracking-[0.20em] lg:text-[20px] lg:tracking-[0.18em] text-white md:text-slate-900"
-                style={{ fontWeight: 700, textTransform: 'uppercase', userSelect: 'none' }}
+                ref={brandLogoRef}
+                data-brand-logo-target=""
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  opacity: brandIntroActive ? 0 : 1,
+                  transition: brandIntroActive ? 'none' : 'opacity 180ms ease',
+                }}
               >
-                ARILLA{' '}
-                <span className="text-slate-300 md:text-slate-600" style={{ fontWeight: 500 }}>SOFT</span>
+                <BrandLockup
+                  rotationEnabled={!brandIntroActive}
+                  variant={isHomePath && !isHomeTop ? 'surface' : 'default'}
+                />
               </span>
             </Link>
           </div>
@@ -551,9 +577,9 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
             </Link>
 
             <button
-              className="flex items-center justify-center lg:hidden text-slate-100 md:text-slate-700"
+              className={`flex items-center justify-center lg:hidden ${isHomePath && !isHomeTop ? 'text-slate-700' : 'text-slate-100 md:text-slate-700'}`}
               onClick={() => setIsOpen(!isOpen)}
-              style={{ background: 'transparent', border: 'none', padding: '6px', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', padding: '12px', margin: '-12px', cursor: 'pointer' }}
               aria-label={t('menuToggle')}
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -578,6 +604,8 @@ export default function Navbar({ developerLoginOnly = false }: NavbarProps) {
             borderRadius: '16px',
             boxShadow: '0 12px 40px rgba(0,0,0,0.3)',
             padding: '12px',
+            maxHeight: 'calc(100dvh - 72px)',
+            overflowY: 'auto',
           }}
           className="lg:hidden top-14 text-slate-100 md:bg-white md:border-slate-200 md:text-slate-900"
         >

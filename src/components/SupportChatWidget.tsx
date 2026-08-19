@@ -13,9 +13,9 @@ const DWELL_MS = 1800;
 const TEASER_AUTO_HIDE_MS = 8000;
 const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
 // audio.volume caps at 1 — this drives loudness above that via a GainNode instead.
-// Source WAV peaks at -3.00 dBFS; 1.25x keeps the effective peak ~-1.06 dBFS
-// (safely under 0 dBFS). Single tunable knob: lower it further if it ever clips.
-const NOTIFICATION_GAIN = 1.25;
+// Kept high on purpose for an initial, clearly-audible level — lower this if it
+// ever sounds too loud or distorts. Single tunable knob.
+const NOTIFICATION_GAIN = 1.1;
 
 interface SupportChatWidgetProps {
   triggerRef?: RefObject<HTMLDivElement | null>;
@@ -88,7 +88,7 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
 
     try {
       if (!notificationAudioRef.current) {
-        notificationAudioRef.current = new Audio('/sounds/chat-notification.wav');
+        notificationAudioRef.current = new Audio('/sounds/chat-notification.mp3');
       }
       const audio = notificationAudioRef.current;
       audio.volume = 1; // uncapped loudness comes from the GainNode below, not this.

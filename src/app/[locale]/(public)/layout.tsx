@@ -1,4 +1,4 @@
-import Navbar from '@/components/layout/Navbar';
+import BrandIntroShell from '@/components/layout/BrandIntroShell';
 import AnimatedShaderBackground from '@/components/AnimatedShaderBackground';
 import FAQSection from '@/components/layout/FAQSection';
 import NewsletterSection from '@/components/layout/NewsletterSection';
@@ -40,12 +40,12 @@ export default async function PublicLayout({ children }: { children: React.React
 
   return (
     <CookieConsentProvider>
-      <div className="flex flex-col min-h-screen">
-        <Navbar
-          developerLoginOnly={
-            maintenanceModeEnabled && !isAdminPreview
-          }
-        />
+      <BrandIntroBootScript />
+      <BrandIntroShell
+        developerLoginOnly={
+          maintenanceModeEnabled && !isAdminPreview
+        }
+      >
         {!showMaintenance && <AnnouncementBar configs={announcementConfigs} />}
         <main className="flex-1" style={{ paddingTop: 'var(--bar-h, 0px)' }}>
           {showMaintenance ? <MaintenanceNotice locale={locale} /> : children}
@@ -53,12 +53,35 @@ export default async function PublicLayout({ children }: { children: React.React
         {!showMaintenance && !isBlogPath && !isHomePath && <FAQSection faqs={faqs} />}
         {!showMaintenance && !isBlogPath && <NewsletterSection />}
         {!showMaintenance && !isBlogPath && <Footer />}
-      </div>
+      </BrandIntroShell>
       <CookieBanner />
       <CookiePreferencesModal />
       <ConsentedScripts />
     </CookieConsentProvider>
   );
+}
+
+function BrandIntroBootScript() {
+  const script = `
+(function () {
+  try {
+    var key = 'arilla-brand-intro:v1';
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce && window.sessionStorage && window.sessionStorage.getItem(key) !== '1') {
+      document.documentElement.setAttribute('data-brand-intro', 'pending');
+      window.setTimeout(function () {
+        if (document.documentElement.getAttribute('data-brand-intro') === 'pending') {
+          document.documentElement.removeAttribute('data-brand-intro');
+        }
+      }, 1400);
+    }
+  } catch (error) {
+    document.documentElement.removeAttribute('data-brand-intro');
+  }
+})();
+`;
+
+  return <script dangerouslySetInnerHTML={{ __html: script }} />;
 }
 
 async function hasValidAdminSession(): Promise<boolean> {

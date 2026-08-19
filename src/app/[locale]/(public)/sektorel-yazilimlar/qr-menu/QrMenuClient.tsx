@@ -459,7 +459,7 @@ export default function QrMenuClient() {
   ];
 
   return (
-    <div style={{ background: '#ffffff', minHeight: '100vh', color: '#0f172a', overflowX: 'hidden' }}>
+    <div style={{ background: '#ffffff', minHeight: '100dvh', color: '#0f172a', overflowX: 'hidden' }}>
       {/* Hero Section */}
       <ProductHero
         badge="En Popüler Ürünümüz"

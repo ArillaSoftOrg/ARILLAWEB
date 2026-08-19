@@ -52,8 +52,8 @@ export default function ProductCTASection({
   const SecondaryIcon = secondaryButton?.icon;
 
   return (
-    <section className="py-16 sm:py-20 lg:py-28">
-      <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="px-5 sm:px-6">
+    <section className="section-py">
+      <div className="section-container">
         <motion.div
           ref={ref}
           variants={fadeUp}

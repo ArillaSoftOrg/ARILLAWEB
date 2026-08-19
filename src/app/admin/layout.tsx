@@ -18,6 +18,7 @@ import {
   ChevronRight,
   Menu,
   X,
+  Send,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -63,6 +64,12 @@ const navItems = [
     label: "İletişim",
     href: "/admin/contact",
     icon: Mail,
+    exact: false,
+  },
+  {
+    label: "Bülten Aboneleri",
+    href: "/admin/newsletter",
+    icon: Send,
     exact: false,
   },
   {

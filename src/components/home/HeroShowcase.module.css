@@ -291,36 +291,7 @@
   }
 
   .personLayer {
-    bottom: auto;
-    left: auto;
     right: -20%;
-    top: 14%;
-    width: min(112vw, 520px);
-    transform: translate3d(0, 0, 0);
-  }
-
-  .browserLayer {
-    left: 42%;
-    top: 19%;
-    width: min(46vw, 210px);
-  }
-
-  .chartLayer {
-    left: 48%;
-    top: 55%;
-    width: min(24vw, 110px);
-  }
-
-  .codeLayer {
-    right: 0;
-    top: 30%;
-    width: min(16vw, 76px);
-  }
-
-  .mobileLayer {
-    right: -2%;
-    top: 59%;
-    width: min(18vw, 88px);
   }
 
   .floatLayer {

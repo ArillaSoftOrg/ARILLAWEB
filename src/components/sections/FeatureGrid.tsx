@@ -47,7 +47,7 @@ export default function FeatureGrid({
         position: 'relative',
         overflow: 'hidden',
       }}
-      className="py-16 sm:py-20 lg:py-28"
+      className="section-py"
     >
       {/* Background glow */}
       <div
@@ -65,7 +65,7 @@ export default function FeatureGrid({
         }}
       />
 
-      <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="px-5 sm:px-6">
+      <div className="section-container">
         {/* Header */}
         {(title || description) && (
           <motion.div

@@ -2,7 +2,7 @@
 
 import AnimatedBrand from "@/components/AnimatedBrand";
 import SupportChatWidget from "@/components/SupportChatWidget";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import BlogMediaCard from "@/components/blog/BlogMediaCard";
@@ -41,7 +41,6 @@ import {
   MonitorSmartphone,
   BookOpen,
   Wrench,
-  CheckCircle2,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────
@@ -174,10 +173,6 @@ const heroFadeUp: Variants = {
 
 const heroStagger: Variants = {
   visible: { transition: { staggerChildren: 0.11 } },
-};
-
-const heroBenefitStagger: Variants = {
-  visible: { transition: { staggerChildren: 0.07 } },
 };
 
 const heroVisualIn: Variants = {
@@ -352,6 +347,192 @@ function WhyUsSection() {
 // ─────────────────────────────────────────────
 // Hero Section
 // ─────────────────────────────────────────────
+const HERO_TYPEWRITER_MESSAGES = [
+  "İş süreçlerinizi\ndijitalleştiren özel\nyazılım ve web\nçözümleri\ngeliştiriyoruz.",
+  "Dijital Fikirleri\nÇalışan Ürünlere\nDönüştürüyoruz.",
+  "Özgün ve Kullanıcı\nOdaklı Deneyimler\nTasarlıyoruz.",
+  "İşinize Özel\nYazılım Sistemleri\nGeliştiriyoruz.",
+  "Web'den Otomasyona\nDijitalin Her Alanında\nYanınızdayız.",
+] as const;
+
+const HERO_TYPEWRITER_CHARSETS = HERO_TYPEWRITER_MESSAGES.map((message) => Array.from(message.replace(/\n/g, "")));
+const HERO_TYPE_SPEED_MS = 30;
+const HERO_DELETE_SPEED_MS = 14;
+const HERO_HOLD_MS = 2800;
+const HERO_NEXT_DELAY_MS = 125;
+
+function wrapHeroMessage(message: string, measureElement: HTMLElement, availableWidth: number) {
+  if (availableWidth <= 0) {
+    return message.split("\n");
+  }
+
+  const measure = (value: string) => {
+    measureElement.textContent = value || " ";
+    return measureElement.getBoundingClientRect().width;
+  };
+
+  return message
+    .split("\n")
+    .flatMap((segment) => {
+      const words = segment.trim().split(/\s+/).filter(Boolean);
+      if (words.length === 0) return [""];
+
+      const lines: string[] = [];
+      let line = "";
+
+      words.forEach((word) => {
+        const candidate = line ? `${line} ${word}` : word;
+        // Measure with a trailing cursor glyph reserved so the typewriter cursor
+        // (rendered after the visible text) never pushes a fully-typed line past
+        // the container edge.
+        if (line && measure(`${candidate}_`) > availableWidth) {
+          lines.push(line);
+          line = word;
+        } else {
+          line = candidate;
+        }
+      });
+
+      if (line) lines.push(line);
+      return lines;
+    });
+}
+
+function areHeroLineLayoutsEqual(current: string[][], next: string[][]) {
+  if (current.length !== next.length) return false;
+
+  return current.every((currentLines, messageIndex) => {
+    const nextLines = next[messageIndex];
+    if (!nextLines || currentLines.length !== nextLines.length) return false;
+    return currentLines.every((line, lineIndex) => line === nextLines[lineIndex]);
+  });
+}
+
+function getHeroLineCharacterCounts(lines: string[]) {
+  return lines.map((line) => Array.from(line).length);
+}
+
+function getHeroVisibleLines(lines: string[], visibleCount: number) {
+  let remainingCharacters = visibleCount;
+
+  return lines.map((line) => {
+    const characters = Array.from(line);
+    const characterCount = Math.max(0, Math.min(characters.length, remainingCharacters));
+    remainingCharacters -= characters.length;
+    return characters.slice(0, characterCount).join("");
+  });
+}
+
+function getHeroActiveLineIndex(lines: string[], visibleCount: number) {
+  const lineCharacterCounts = getHeroLineCharacterCounts(lines);
+  let remainingCharacters = visibleCount;
+
+  for (let index = 0; index < lineCharacterCounts.length; index += 1) {
+    const lineCharacterCount = lineCharacterCounts[index];
+    if (remainingCharacters <= lineCharacterCount || index === lineCharacterCounts.length - 1) {
+      return index;
+    }
+    remainingCharacters -= lineCharacterCount;
+  }
+
+  return 0;
+}
+
+function usePrefersReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setPrefersReducedMotion(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  return prefersReducedMotion;
+}
+
+function useHeroTypewriter(isLineLayoutReady: boolean) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [messageIndex, setMessageIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(HERO_TYPEWRITER_CHARSETS[0].length);
+  const [isWaiting, setIsWaiting] = useState(false);
+
+  useEffect(() => {
+    if (prefersReducedMotion || !isLineLayoutReady) {
+      setMessageIndex(0);
+      setVisibleCount(HERO_TYPEWRITER_CHARSETS[0].length);
+      setIsWaiting(false);
+      return;
+    }
+
+    let timeoutId: ReturnType<typeof setTimeout>;
+    let activeMessageIndex = 0;
+    let characterIndex = HERO_TYPEWRITER_CHARSETS[0].length;
+    let phase: "waiting" | "deleting" | "typing" | "between" = "waiting";
+
+    setMessageIndex(0);
+    setVisibleCount(HERO_TYPEWRITER_CHARSETS[0].length);
+    setIsWaiting(true);
+
+    const schedule = (delay: number) => {
+      timeoutId = setTimeout(tick, delay);
+    };
+
+    const tick = () => {
+      if (phase === "waiting") {
+        setIsWaiting(false);
+        phase = "deleting";
+        schedule(HERO_DELETE_SPEED_MS);
+        return;
+      }
+
+      if (phase === "deleting") {
+        if (characterIndex > 0) {
+          characterIndex -= 1;
+          setVisibleCount(characterIndex);
+          schedule(HERO_DELETE_SPEED_MS);
+          return;
+        }
+
+        phase = "between";
+        schedule(HERO_NEXT_DELAY_MS);
+        return;
+      }
+
+      if (phase === "between") {
+        activeMessageIndex = (activeMessageIndex + 1) % HERO_TYPEWRITER_MESSAGES.length;
+        characterIndex = 0;
+        phase = "typing";
+        setMessageIndex(activeMessageIndex);
+      }
+
+      const nextCharacters = HERO_TYPEWRITER_CHARSETS[activeMessageIndex];
+      characterIndex += 1;
+      setVisibleCount(characterIndex);
+
+      if (characterIndex >= nextCharacters.length) {
+        setIsWaiting(true);
+        phase = "waiting";
+        schedule(HERO_HOLD_MS);
+        return;
+      }
+
+      schedule(HERO_TYPE_SPEED_MS);
+    };
+
+    schedule(HERO_HOLD_MS);
+
+    return () => clearTimeout(timeoutId);
+  }, [isLineLayoutReady, prefersReducedMotion]);
+
+  return { messageIndex, visibleCount, isWaiting, prefersReducedMotion };
+}
+
 const SITE_EXAMPLES = [
   {
     title: "Pet Kuaförü — Modern Dönüşüm",
@@ -643,6 +824,92 @@ function TestimonialsSection() {
 }
 
 function HeroSection() {
+  const typewriterRef = useRef<HTMLHeadingElement>(null);
+  const measureRef = useRef<HTMLSpanElement>(null);
+  const [isLineLayoutReady, setIsLineLayoutReady] = useState(false);
+  const { messageIndex, visibleCount, isWaiting, prefersReducedMotion } = useHeroTypewriter(isLineLayoutReady);
+  const [wrappedMessages, setWrappedMessages] = useState<string[][]>(
+    () => HERO_TYPEWRITER_MESSAGES.map((message) => message.split("\n"))
+  );
+  const activeLines = wrappedMessages[messageIndex] ?? wrappedMessages[0];
+  const visibleLines = getHeroVisibleLines(activeLines, visibleCount);
+  const activeLineIndex = getHeroActiveLineIndex(activeLines, visibleCount);
+  const measuredMaxLineCount = Math.max(...wrappedMessages.map((lines) => lines.length));
+  // Pre-hydration (isLineLayoutReady=false) renders use a literal `\n`-split line count,
+  // which real width-measured wrapping can only ever grow, never shrink. A floor here keeps
+  // the reserved heading height from under-shooting on the very first paint (before the
+  // client-side ResizeObserver measurement lands) so the box can't visibly grow afterward.
+  const maxLineCount = isLineLayoutReady ? measuredMaxLineCount : Math.max(measuredMaxLineCount, 6);
+
+  useLayoutEffect(() => {
+    const typewriterElement = typewriterRef.current;
+    const measureElement = measureRef.current;
+    if (!typewriterElement || !measureElement) return;
+
+    let frameId: number | null = null;
+    let lastWidth = Math.round(typewriterElement.clientWidth);
+    let isCancelled = false;
+
+    const recomputeLines = () => {
+      frameId = null;
+      const availableWidth = typewriterElement.clientWidth;
+      if (availableWidth <= 0) {
+        scheduleRecompute();
+        return false;
+      }
+
+      const nextWrappedMessages = HERO_TYPEWRITER_MESSAGES.map((message) =>
+        wrapHeroMessage(message, measureElement, availableWidth)
+      );
+      measureElement.textContent = "";
+
+      setWrappedMessages((currentWrappedMessages) =>
+        areHeroLineLayoutsEqual(currentWrappedMessages, nextWrappedMessages)
+          ? currentWrappedMessages
+          : nextWrappedMessages
+      );
+
+      return true;
+    };
+
+    const scheduleRecompute = () => {
+      if (frameId !== null) return;
+      frameId = window.requestAnimationFrame(recomputeLines);
+    };
+
+    recomputeLines();
+
+    const markReadyAfterFontLoad = () => {
+      if (isCancelled) return;
+      if (recomputeLines()) {
+        setIsLineLayoutReady(true);
+      }
+    };
+
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(markReadyAfterFontLoad).catch(markReadyAfterFontLoad);
+    } else {
+      markReadyAfterFontLoad();
+    }
+
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      const nextWidth = Math.round(entry?.contentRect.width ?? typewriterElement.clientWidth);
+      if (Math.abs(nextWidth - lastWidth) < 1) return;
+      lastWidth = nextWidth;
+      scheduleRecompute();
+    });
+
+    resizeObserver.observe(typewriterElement);
+
+    return () => {
+      isCancelled = true;
+      resizeObserver.disconnect();
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+  }, []);
+
   return (
     <section
       className="max-[768px]:!min-h-0 max-[768px]:!bg-[#0B0F17]"
@@ -677,142 +944,35 @@ function HeroSection() {
             className="flex flex-col items-start"
           >
             <h1
-              className="text-role-hero max-[768px]:!text-[#F8F7F4]"
+              ref={typewriterRef}
+              className="home-hero-typewriter text-role-hero max-[768px]:!text-[#F8F7F4]"
+              aria-label={HERO_TYPEWRITER_MESSAGES[0].replace(/\n/g, " ")}
               style={{
                 maxWidth: "100%",
+                width: "100%",
+                ["--home-hero-typewriter-lines" as string]: maxLineCount,
               }}
             >
-              İş süreçlerinizi dijitalleştiren özel yazılım ve web çözümleri geliştiriyoruz.
+              <span aria-hidden="true" className="home-hero-typewriter__lines">
+                {activeLines.map((line, lineIndex) => (
+                  <span className="home-hero-typewriter__line" key={`${messageIndex}-${lineIndex}-${line}`}>
+                    <span>{visibleLines[lineIndex]}</span>
+                    {!prefersReducedMotion && activeLineIndex === lineIndex && (
+                      <span
+                        aria-hidden="true"
+                        className="home-hero-typewriter__cursor"
+                        data-waiting={isWaiting ? "true" : "false"}
+                      >
+                        _
+                      </span>
+                    )}
+                  </span>
+                ))}
+              </span>
+              <span aria-hidden="true" className="home-hero-typewriter__measure" ref={measureRef} />
             </h1>
           </motion.div>
 
-          {/* Subtext */}
-          <motion.p
-            variants={heroFadeUp}
-            className="text-role-body-lg max-[768px]:!text-[#C4CAD5]"
-            style={{
-              maxWidth: "520px",
-              margin: "18px 0 0",
-            }}
-          >
-            Kurumsal web sitelerinden yönetim panellerine, randevu sistemlerinden özel iş yazılımlarına kadar ihtiyacınıza göre tasarlanan dijital sistemleri geliştiriyor, yayına alıyor ve teknik desteğini sağlıyoruz.
-          </motion.p>
-
-          {/* Value items */}
-          <motion.div
-            variants={heroBenefitStagger}
-            className="mt-[18px] flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4 xl:mx-0"
-          >
-            {[
-              "İhtiyaca Özel Sistemler",
-              "Verimli İş Süreçleri",
-              "Güvenilir Dijital Altyapı",
-            ].map((title) => (
-              <motion.div
-                key={title}
-                variants={heroFadeUp}
-                className="group"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                }}
-              >
-                <CheckCircle2
-                  size={15}
-                  color="#7c3aed"
-                  strokeWidth={2.5}
-                  className="transition-transform duration-200 group-hover:scale-[1.07]"
-                />
-                <span className="font-body max-[768px]:!text-[#DDE2EA]" style={{ fontSize: "13px", color: "#475569", fontWeight: 500 }}>{title}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* CTAs */}
-          <motion.div
-            variants={heroFadeUp}
-            className="mt-[22px] flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:justify-start"
-          >
-            <Link
-              href="/randevual"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                padding: "14px 24px",
-                minHeight: "54px",
-                borderRadius: "10px",
-                textDecoration: "none",
-                color: "white",
-                background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
-                boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
-                whiteSpace: "nowrap",
-                transition: "transform 0.2s ease, box-shadow 0.2s ease",
-              }}
-              className="group w-full sm:w-auto text-role-button"
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 10px 26px rgba(124,58,237,0.42)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)";
-                e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.35)";
-              }}
-            >
-              Ücretsiz Keşif Görüşmesi{" "}
-              <span className="inline-flex transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none">
-                <ArrowRight size={14} />
-              </span>
-            </Link>
-            <Link
-              href="/site-ornekleri"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                padding: "14px 24px",
-                minHeight: "54px",
-                borderRadius: "10px",
-                textDecoration: "none",
-                color: "#1e293b",
-                background: "#ffffff",
-                border: "1.5px solid #cbd5e1",
-                whiteSpace: "nowrap",
-                transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
-              }}
-              className="group w-full sm:w-auto text-role-button max-[768px]:!border max-[768px]:!border-white/[0.18] max-[768px]:!bg-white/[0.04] max-[768px]:!text-[#F1F5F9] max-[768px]:hover:!bg-white/[0.08] max-[768px]:active:!bg-white/[0.08]"
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "rgba(124,58,237,0.48)";
-                e.currentTarget.style.boxShadow = "0 8px 20px rgba(15,23,42,0.08)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "#cbd5e1";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              Projelerimizi İncele{" "}
-              <span className="inline-flex transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none">
-                <ArrowRight size={14} />
-              </span>
-            </Link>
-          </motion.div>
-
-          {/* Trust note */}
-          <motion.p
-            variants={heroFadeUp}
-            className="font-body max-[768px]:!text-[#8993A4]"
-            style={{
-              fontSize: "12px",
-              color: "#94a3b8",
-              margin: "10px 0 0",
-              lineHeight: 1.5,
-            }}
-          >
-            15 dakikalık ücretsiz keşif görüşmesi. Projeniz için net ihtiyaç ve kapsam belirlenir.
-          </motion.p>
         </motion.div>
 
         {/* Right: Product showcase visual */}
@@ -837,27 +997,27 @@ function HeroSection() {
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
+      <motion.a
+        href="#services"
+        aria-label="Aşağı kaydır ve Hizmetlerimiz bölümüne git"
+        onClick={(event) => {
+          event.preventDefault();
+          const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          document.getElementById("services")?.scrollIntoView({
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+            block: "start",
+          });
+        }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        style={{
-          position: "absolute",
-          bottom: "28px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "6px",
-        }}
+        className="home-hero-scroll-cue max-[768px]:!text-[#8993A4]"
       >
-        <div style={{ width: "1px", height: "36px", background: "linear-gradient(to bottom, transparent, #cbd5e1)" }} />
-        <div
-          style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#7c3aed" }}
-          className="pulse-glow"
-        />
-      </motion.div>
+        <span className="home-hero-scroll-cue__mouse" aria-hidden="true">
+          <span className="home-hero-scroll-cue__wheel" />
+        </span>
+        <span className="home-hero-scroll-cue__label">Aşağı Kaydır</span>
+      </motion.a>
     </section>
   );
 }
@@ -929,13 +1089,116 @@ const SECTORAL_SOFTWARE = [
   },
 ];
 
-function ServicesSection({ settings }: { settings: SiteSettings }) {
+function ServicesSection() {
   const [activeServiceIndex, setActiveServiceIndex] = useState(0);
   const activeService = MAIN_SERVICES[activeServiceIndex] ?? MAIN_SERVICES[0];
   const ActiveIcon = SERVICE_ICON_MAP[activeService.icon] ?? Code2;
+  const sectionRef = useRef<HTMLElement>(null);
+  const naturalTopRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 1024px)");
+    let ticking = false;
+
+    const updateFromScroll = () => {
+      ticking = false;
+      const el = sectionRef.current;
+      if (!el || !mql.matches) return;
+      const topOffset = parseFloat(getComputedStyle(el).top) || 0;
+      const rectTop = el.getBoundingClientRect().top;
+      // While the section hasn't reached its sticky offset yet, rectTop moves
+      // normally with scroll — keep recording its true document position.
+      // Once stuck, rectTop freezes at topOffset, so we stop updating and
+      // reuse the last known (accurate) document position instead.
+      if (rectTop > topOffset + 1) {
+        naturalTopRef.current = rectTop + window.scrollY;
+      }
+      if (naturalTopRef.current == null) return;
+      const total = el.offsetHeight - window.innerHeight;
+      if (total <= 0) return;
+      const scrolled = window.scrollY - (naturalTopRef.current - topOffset);
+      const progress = Math.min(1, Math.max(0, scrolled / total));
+      const step = Math.min(MAIN_SERVICES.length - 1, Math.floor(progress * MAIN_SERVICES.length));
+      setActiveServiceIndex(step);
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateFromScroll);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    updateFromScroll();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  const swipeTrackRef = useRef<HTMLDivElement>(null);
+  const [activeSwipeIndex, setActiveSwipeIndex] = useState(0);
+
+  useEffect(() => {
+    const track = swipeTrackRef.current;
+    if (!track) return;
+    let ticking = false;
+
+    const updateActiveFromScroll = () => {
+      ticking = false;
+      const cards = Array.from(track.children) as HTMLElement[];
+      if (cards.length === 0) return;
+      const trackCenter = track.scrollLeft + track.clientWidth / 2;
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+      cards.forEach((card, index) => {
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const distance = Math.abs(cardCenter - trackCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+      setActiveSwipeIndex(closestIndex);
+    };
+
+    const onSwipeScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateActiveFromScroll);
+      }
+    };
+
+    track.addEventListener("scroll", onSwipeScroll, { passive: true });
+    updateActiveFromScroll();
+
+    return () => track.removeEventListener("scroll", onSwipeScroll);
+  }, []);
+
+  const scrollToSwipeCard = (index: number) => {
+    const track = swipeTrackRef.current;
+    const card = track?.children[index] as HTMLElement | undefined;
+    if (!track || !card) return;
+    const trackPaddingLeft = parseFloat(getComputedStyle(track).paddingLeft) || 0;
+    const targetLeft =
+      track.scrollLeft + (card.getBoundingClientRect().left - track.getBoundingClientRect().left) - trackPaddingLeft;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    track.scrollTo({
+      left: targetLeft,
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+  };
 
   return (
-    <section style={{ position: "relative", background: "var(--paper-alt)" }} className="pt-14 pb-16 md:pt-16 md:pb-20 lg:pt-16 lg:pb-24">
+    <section
+      id="services"
+      ref={sectionRef}
+      style={{ background: "var(--paper-alt)", scrollMarginTop: "var(--header-h, 0px)" }}
+      className="home-services-scene pt-10 pb-12 md:pt-12 md:pb-14 lg:pt-14 lg:pb-20"
+    >
       <div
         style={{
           position: "absolute",
@@ -946,27 +1209,11 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
       />
       <div style={{ maxWidth: "1280px", margin: "0 auto", position: "relative" }} className="px-5 sm:px-6">
         <AnimatedSection>
-          <motion.div variants={fadeUp} className="mb-10 text-center sm:mb-12 lg:mb-14">
-            <div
-              className="text-role-eyebrow"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "6px 14px",
-                borderRadius: "100px",
-                background: "rgba(6,182,212,0.1)",
-                border: "1px solid rgba(6,182,212,0.35)",
-                marginBottom: "20px",
-              }}
-            >
-              <Layers size={12} />
-              Hizmetlerimiz
-            </div>
+          <motion.div variants={fadeUp} className="mb-6 text-center sm:mb-7 lg:mb-8">
             <h2
               className="text-role-section-heading"
               style={{
-                margin: "0 0 16px 0",
+                margin: "0 0 12px 0",
                 wordBreak: "break-word",
               }}
             >
@@ -976,12 +1223,82 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
             <p
               className="text-role-body-lg"
               style={{
-                maxWidth: "520px",
+                maxWidth: "640px",
                 margin: "0 auto",
               }}
             >
-              {settings.homepageIntro}
+              Kurumsal web sitelerinden yönetim panellerine, randevu sistemlerinden özel iş yazılımlarına kadar ihtiyacınıza göre tasarlanan dijital sistemleri geliştiriyor, yayına alıyor ve teknik desteğini sağlıyoruz.
             </p>
+
+            <motion.div
+              variants={fadeUp}
+              className="mt-5 flex w-full flex-col items-center gap-3 sm:w-auto sm:flex-row sm:justify-center"
+            >
+              <Link
+                href="/randevual"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  padding: "14px 24px",
+                  minHeight: "54px",
+                  borderRadius: "10px",
+                  textDecoration: "none",
+                  color: "white",
+                  background: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
+                  boxShadow: "0 6px 20px rgba(124,58,237,0.35)",
+                  whiteSpace: "nowrap",
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                }}
+                className="group w-full sm:w-auto text-role-button"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 10px 26px rgba(124,58,237,0.42)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 6px 20px rgba(124,58,237,0.35)";
+                }}
+              >
+                Ücretsiz Keşif Görüşmesi{" "}
+                <span className="inline-flex transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none">
+                  <ArrowRight size={14} />
+                </span>
+              </Link>
+              <Link
+                href="/site-ornekleri"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  padding: "14px 24px",
+                  minHeight: "54px",
+                  borderRadius: "10px",
+                  textDecoration: "none",
+                  color: "#1e293b",
+                  background: "#ffffff",
+                  border: "1.5px solid #cbd5e1",
+                  whiteSpace: "nowrap",
+                  transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
+                }}
+                className="group w-full sm:w-auto text-role-button"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(124,58,237,0.48)";
+                  e.currentTarget.style.boxShadow = "0 8px 20px rgba(15,23,42,0.08)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "#cbd5e1";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
+                Projelerimizi İncele{" "}
+                <span className="inline-flex transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none">
+                  <ArrowRight size={14} />
+                </span>
+              </Link>
+            </motion.div>
           </motion.div>
         </AnimatedSection>
 
@@ -1074,35 +1391,35 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
             </div>
           </div>
 
-          <div className="home-service-accordion lg:hidden">
-            {MAIN_SERVICES.map((service, index) => {
-              const Icon = SERVICE_ICON_MAP[service.icon] ?? Code2;
-              const isActive = index === activeServiceIndex;
-              const contentId = `home-service-accordion-${service.id}`;
+          <div className="home-service-swipe lg:hidden -mx-5 sm:-mx-6">
+            <div
+              ref={swipeTrackRef}
+              className="home-service-swipe__track"
+              tabIndex={0}
+              role="region"
+              aria-label="Hizmetler, sağa ve sola kaydırarak inceleyin"
+            >
+              {MAIN_SERVICES.map((service) => {
+                const Icon = SERVICE_ICON_MAP[service.icon] ?? Code2;
 
-              return (
-                <div key={service.id} className="home-service-accordion__item">
-                  <button
-                    type="button"
-                    className={`home-service-accordion__trigger ${isActive ? "is-active" : ""}`}
-                    aria-expanded={isActive}
-                    aria-controls={contentId}
-                    onClick={() => setActiveServiceIndex(index)}
-                  >
-                    <span className="home-service-accordion__number">{service.number}</span>
-                    <span className="home-service-accordion__title">{service.shortTitle}</span>
-                    <span className="home-service-accordion__icon" aria-hidden="true">
-                      <Icon size={18} color="currentColor" />
-                    </span>
-                    <span className="home-service-accordion__state" aria-hidden="true">
-                      {isActive ? "×" : "+"}
-                    </span>
-                  </button>
+                return (
+                  <div key={service.id} className="home-service-swipe__card" role="group" aria-roledescription="slide">
+                    <div className="mb-5 flex items-center gap-4">
+                      <span className="home-service-detail__icon" aria-hidden="true">
+                        <Icon size={22} color="currentColor" />
+                      </span>
+                      <h3
+                        className="text-role-subheading"
+                        style={{ margin: 0, fontSize: "clamp(22px, 6vw, 26px)", lineHeight: 1.1 }}
+                      >
+                        {service.number}/ {service.shortTitle}
+                      </h3>
+                    </div>
 
-                  <div id={contentId} hidden={!isActive} className="home-service-accordion__content">
                     <p className="text-role-body" style={{ margin: 0, lineHeight: 1.7 }}>
                       {service.description}
                     </p>
+
                     <div className="mt-5 flex flex-wrap gap-2">
                       {service.tags.map((tag) => (
                         <span key={tag} className="home-service-tag home-service-tag--light">
@@ -1110,18 +1427,39 @@ function ServicesSection({ settings }: { settings: SiteSettings }) {
                         </span>
                       ))}
                     </div>
+
                     <Link
                       href={service.href}
-                      className="home-service-accordion__link text-role-button"
+                      className="home-service-detail__link text-role-button"
                       aria-label={`${service.shortTitle} detaylarını incele`}
                     >
                       Detayları İncele
                       <ArrowRight className="home-service-detail__arrow h-4 w-4" aria-hidden="true" />
                     </Link>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+
+            <div className="home-service-swipe__indicator" role="tablist" aria-label="Hizmet göstergesi">
+              {MAIN_SERVICES.map((service, index) => {
+                const isActive = index === activeSwipeIndex;
+                return (
+                  <button
+                    key={service.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    aria-label={`${service.number} / ${String(MAIN_SERVICES.length).padStart(2, "0")} — ${service.shortTitle}`}
+                    className={`home-service-swipe__dash ${isActive ? "is-active" : ""}`}
+                    onClick={() => scrollToSwipeCard(index)}
+                  >
+                    <span className="home-service-swipe__dash-number">{service.number}</span>
+                    <span className="home-service-swipe__dash-bar" aria-hidden="true" />
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </AnimatedSection>
       </div>
@@ -1174,7 +1512,7 @@ function HowWeWorkSection() {
 // ─────────────────────────────────────────────
 function IndustryProductsSection() {
   return (
-    <section style={{ position: "relative" }} className="pt-14 pb-16 md:pt-16 md:pb-20 lg:pt-16 lg:pb-24">
+    <section className="home-industry-scene pt-14 pb-16 md:pt-16 md:pb-20 lg:pt-16 lg:pb-24">
       <div
         style={{
           position: "absolute",
@@ -1687,13 +2025,15 @@ export default function HomeClient({ faqs = [] }: { faqs?: HomeFaq[] }) {
   }, []);
 
   return (
-    <div style={{ background: "#ffffff", minHeight: "100vh", color: "#0f172a", overflowX: "hidden" }}>
+    <div style={{ background: "#ffffff", minHeight: "100vh", color: "#0f172a" }}>
       <HeroSection />
-      <ServicesSection settings={settings} />
-      <div ref={howItWorksRef}>
-        <HowWeWorkSection />
+      <div className="home-scene-stack">
+        <ServicesSection />
+        <div ref={howItWorksRef} className="home-how-we-work-scene">
+          <HowWeWorkSection />
+        </div>
+        <IndustryProductsSection />
       </div>
-      <IndustryProductsSection />
       <SiteExamplesPreviewSection />
       <WhyUsSection />
       {faqs.length > 0 && (
