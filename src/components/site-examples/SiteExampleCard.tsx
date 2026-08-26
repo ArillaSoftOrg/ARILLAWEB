@@ -19,7 +19,16 @@ export type CatalogCardProject = {
   } | null;
 };
 
-export default function SiteExampleCard({ project }: { project: CatalogCardProject }) {
+export default function SiteExampleCard({
+  project,
+  linkLocale,
+}: {
+  project: CatalogCardProject;
+  /** Force the detail-page link to this locale. Used when this card renders on a page whose
+   * own locale doesn't have a site-ornekleri implementation (e.g. the EN design-examples gallery,
+   * which always links back to the TR detail pages). Defaults to the current locale. */
+  linkLocale?: 'tr' | 'en';
+}) {
   if (!project.category || !project.designCode) return null;
   const display = getSiteExampleDisplay(project);
   if (!display.previewSrc) return null;
@@ -27,6 +36,7 @@ export default function SiteExampleCard({ project }: { project: CatalogCardProje
   return (
     <Link
       href={`/site-ornekleri/${project.category.slug}/${project.slug}`}
+      locale={linkLocale}
       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-950/5"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">

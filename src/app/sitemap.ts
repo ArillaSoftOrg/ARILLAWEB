@@ -2,6 +2,25 @@ import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/constants';
 import { prisma } from '@/lib/prisma';
 import { routing } from '@/i18n/routing';
+import { INDUSTRIES, SERVICES } from '@/lib/en-site-data';
+
+// EN-only routes (locale-gated to `en`, they 404 under `/tr`) — listed once, not looped
+// across routing.locales like STATIC_PATHS below.
+const EN_ONLY_PATHS = [
+  { path: '/services', priority: 0.9, changeFrequency: 'weekly' as const },
+  ...SERVICES.map((service) => ({
+    path: `/services/${service.slug}`,
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  })),
+  { path: '/sectoral-software', priority: 0.9, changeFrequency: 'weekly' as const },
+  ...INDUSTRIES.map((industry) => ({
+    path: `/sectoral-software/${industry.slug}`,
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  })),
+  { path: '/web-design-examples', priority: 0.8, changeFrequency: 'weekly' as const },
+];
 
 const STATIC_LAST_MODIFIED = new Date('2026-05-06T00:00:00+03:00');
 
@@ -85,6 +104,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'weekly',
     priority: 0.8,
   });
+
+  // EN-only routes (Sectoral Software / Services / Web Design Examples) — not looped across
+  // locales since they 404 under /tr.
+  for (const { path, priority, changeFrequency } of EN_ONLY_PATHS) {
+    entries.push({
+      url: `${SITE_URL}/en${path}`,
+      lastModified: STATIC_LAST_MODIFIED,
+      changeFrequency,
+      priority,
+    });
+  }
 
   // Dynamic blog posts
   for (const post of posts) {

@@ -6,6 +6,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Menu, X, ArrowRight, ChevronDown } from 'lucide-react';
 import BrandLockup from '@/components/BrandLockup';
+import MegaMenuNav from '@/components/layout/MegaMenuNav';
+import MobileNavAccordion from '@/components/layout/MobileNavAccordion';
 
 type NavChild = {
   labelKey: string;
@@ -103,7 +105,10 @@ export default function Navbar({
   const otherLocale = locale === 'tr' ? 'en' : 'tr';
   const showLocaleSwitcher =
     !pathname.startsWith('/site-ornekleri') &&
-    !pathname.startsWith('/demo-siteler');
+    !pathname.startsWith('/demo-siteler') &&
+    !pathname.startsWith('/services') &&
+    !pathname.startsWith('/sectoral-software') &&
+    !pathname.startsWith('/web-design-examples');
   const isHomePath = pathname === '/';
   const isHomeTop = isHomePath && !scrolled;
   const publicHeaderClassName = isHomePath ? 'bg-transparent' : 'bg-slate-900 md:bg-white';
@@ -333,7 +338,10 @@ export default function Navbar({
 
           {/* Nav links — center */}
           <nav className="hidden lg:flex items-center" style={{ gap: '2px' }}>
-            {NAV_ITEMS.map((item) => {
+            {locale === 'en' ? (
+              <MegaMenuNav pathname={pathname} />
+            ) : (
+            NAV_ITEMS.map((item) => {
               const active = isItemActive(item);
               const hasChildren = Boolean(item.children?.length);
               const isDropdownOpen = openDropdown === item.labelKey;
@@ -514,7 +522,8 @@ export default function Navbar({
               }
 
               return null;
-            })}
+            })
+            )}
           </nav>
 
           {/* CTA + locale switcher + mobile toggle — right */}
@@ -614,7 +623,10 @@ export default function Navbar({
           className="lg:hidden top-14 text-slate-100 md:bg-white md:border-slate-200 md:text-slate-900"
         >
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            {NAV_ITEMS.map((item) => {
+            {locale === 'en' ? (
+              <MobileNavAccordion pathname={pathname} onNavigate={() => setIsOpen(false)} />
+            ) : (
+            NAV_ITEMS.map((item) => {
               const active = isItemActive(item);
               const hasChildren = Boolean(item.children?.length);
               const isExpanded = mobileExpanded === item.labelKey;
@@ -719,7 +731,8 @@ export default function Navbar({
               }
 
               return null;
-            })}
+            })
+            )}
 
             {/* Locale switcher in mobile */}
             {showLocaleSwitcher && (

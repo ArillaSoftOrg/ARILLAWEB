@@ -348,7 +348,7 @@ const HERO_TYPEWRITER_MESSAGES = [
   "Dijital fikirleri\nçalışan ürünlere\ndönüştüren sistemler\ngeliştiriyoruz.",
   "Özgün ve kullanıcı\nodaklı dijital\ndeneyimler\ntasarlıyoruz.",
   "İşinize özel\nyazılım sistemleri\nuçtan uca\ngeliştiriyoruz.",
-  "Web'den otomasyona\ndijitalin her alanında\nişinize değer\nkatıyoruz.",
+  "Web'den otomasyona\ndijital çözümlerle\nişinize değer\nkatıyoruz.",
 ] as const;
 
 const HERO_TYPEWRITER_CHARSETS = HERO_TYPEWRITER_MESSAGES.map((message) => Array.from(message.replace(/\n/g, "")));
@@ -940,10 +940,12 @@ function HeroSection() {
     });
 
     resizeObserver.observe(typewriterElement);
+    window.addEventListener("resize", scheduleRecompute);
 
     return () => {
       isCancelled = true;
       resizeObserver.disconnect();
+      window.removeEventListener("resize", scheduleRecompute);
       if (frameId !== null) {
         window.cancelAnimationFrame(frameId);
       }
@@ -965,7 +967,7 @@ function HeroSection() {
       }}
       >
         <div
-          className="relative mx-auto flex w-full max-w-[1360px] flex-col items-center gap-6 px-4 pt-5 pb-12 sm:gap-8 sm:px-6 sm:pt-8 sm:pb-14 lg:px-8 xl:grid xl:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] xl:gap-10 xl:py-8"
+          className="relative mx-auto flex w-full max-w-[1360px] flex-col items-center gap-6 px-4 pt-5 pb-12 sm:gap-8 sm:px-6 sm:pt-8 sm:pb-14 lg:grid lg:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] lg:gap-10 lg:px-8 lg:py-8"
           style={{
             minHeight: "calc(100svh - var(--header-h) - var(--bar-h, 0px))",
           }}
@@ -987,6 +989,8 @@ function HeroSection() {
               ref={typewriterRef}
               className="home-hero-typewriter text-role-hero max-[768px]:!text-[#F8F7F4]"
               aria-label={HERO_TYPEWRITER_MESSAGES[0].replace(/\n/g, " ")}
+              data-hero-typewriter-line-counts={wrappedMessages.map((lines) => lines.length).join(",")}
+              data-hero-typewriter-reserved-height={reservedTitleHeight ?? undefined}
               style={{
                 height: reservedHeightStyle,
                 maxWidth: "100%",
@@ -1022,7 +1026,7 @@ function HeroSection() {
           variants={heroVisualIn}
           initial="hidden"
           animate="visible"
-          className="relative z-10 flex w-full items-center justify-center xl:justify-start"
+          className="relative z-10 flex w-full items-center justify-center lg:justify-start"
         >
           <div className="w-full">
             <HeroShowcase />
