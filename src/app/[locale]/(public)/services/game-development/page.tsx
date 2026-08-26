@@ -28,5 +28,5 @@ export default async function GameDevelopmentPage({ params }: Props) {
   const { locale } = await params;
   if (locale !== 'en') notFound();
 
-  return <GameDevelopmentContent />;
+  return <GameDevelopmentContent locale="en" />;
 }

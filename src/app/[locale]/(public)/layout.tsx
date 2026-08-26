@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+import Script from 'next/script';
 import BrandIntroShell from '@/components/layout/BrandIntroShell';
 import AnimatedShaderBackground from '@/components/AnimatedShaderBackground';
 import FAQSection from '@/components/layout/FAQSection';
@@ -16,6 +18,16 @@ import { routing } from '@/i18n/routing';
 import { getSiteSettings } from '@/lib/settings-actions';
 
 export const dynamic = 'force-dynamic';
+
+// Scoped to the public site only (excludes /admin) — AdSense ad inventory and
+// site verification are not needed on the internal CMS. Google's own CMP
+// (AdSense > Privacy & messaging) owns ad/IAB TCF consent; this script is not
+// gated on the app's own cookie-consent state (see ConsentedScripts.tsx).
+export const metadata: Metadata = {
+  other: {
+    'google-adsense-account': 'ca-pub-8376062562948187',
+  },
+};
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const headerList = await headers();
@@ -40,6 +52,12 @@ export default async function PublicLayout({ children }: { children: React.React
 
   return (
     <CookieConsentProvider>
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8376062562948187"
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
       <BrandIntroBootScript />
       <BrandIntroShell
         developerLoginOnly={

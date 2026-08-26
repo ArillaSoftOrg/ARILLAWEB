@@ -6,6 +6,7 @@ import { getPublishedServicesForPublic, type PublicService } from "@/lib/service
 import type { LucideProps } from "lucide-react";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import HeroBookingForm from "@/components/hero/HeroBookingForm";
+import ServicesHubContent from "../services/HubContent";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -49,7 +50,12 @@ const ICON_MAP: Record<string, IconComponent> = {
     Wrench,
 };
 
-export default async function ServicesPage() {
+export default async function ServicesPage({ params }: Props) {
+    const { locale } = await params;
+    if (locale === "tr") {
+        return <ServicesHubContent locale="tr" />;
+    }
+
     let services: PublicService[] = [];
     try {
         services = await getPublishedServicesForPublic();

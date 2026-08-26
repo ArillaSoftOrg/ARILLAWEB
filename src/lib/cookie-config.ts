@@ -1,7 +1,11 @@
-export const CONSENT_VERSION = 1;
+export const CONSENT_VERSION = 2;
 export const CONSENT_STORAGE_KEY = 'cookie-consent';
 
-export type CategoryId = 'required' | 'functional' | 'analytics' | 'marketing';
+// Scope: app-specific functional preferences only (session drafts, announcement
+// dismissal, chat trigger timing). Google ad/analytics consent (AdSense, IAB TCF)
+// is owned exclusively by Google's certified CMP (AdSense > Privacy & messaging)
+// and must not be duplicated here — see src/components/cookie/ConsentedScripts.tsx.
+export type CategoryId = 'required' | 'functional';
 export type StorageType = 'cookie' | 'localStorage' | 'sessionStorage';
 
 export type CookieEntry = {
@@ -23,8 +27,6 @@ export type CookieCategory = {
 export type ConsentCategories = {
   required: true;
   functional: boolean;
-  analytics: boolean;
-  marketing: boolean;
 };
 
 export type ConsentRecord = {
@@ -36,7 +38,7 @@ export type ConsentRecord = {
 
 export const DEFAULT_CONSENT: ConsentRecord = {
   hasDecided: false,
-  categories: { required: true, functional: false, analytics: false, marketing: false },
+  categories: { required: true, functional: false },
   savedAt: 0,
   version: CONSENT_VERSION,
 };
@@ -52,18 +54,6 @@ export const COOKIE_CATEGORIES: CookieCategory[] = [
     id: 'functional',
     label: 'İşlevsel Çerezler',
     description: 'Form taslakları ve oturum tercihlerinizi hatırlayarak kullanıcı deneyimini iyileştirir.',
-    required: false,
-  },
-  {
-    id: 'analytics',
-    label: 'Analitik Çerezler',
-    description: 'Siteyi nasıl kullandığınızı anlamamızı sağlar. Toplanan veriler anonim tutulur.',
-    required: false,
-  },
-  {
-    id: 'marketing',
-    label: 'Pazarlama Çerezleri',
-    description: 'İlgi alanlarınıza uygun içerik ve reklamlar sunmak için kullanılır.',
     required: false,
   },
 ];

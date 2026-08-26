@@ -25,5 +25,5 @@ export default async function CustomSoftwareAdminPanelsPage({ params }: Props) {
   const { locale } = await params;
   if (locale !== 'en') notFound();
 
-  return <CustomSoftwareAdminPanelsContent />;
+  return <CustomSoftwareAdminPanelsContent locale="en" />;
 }

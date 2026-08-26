@@ -41,7 +41,7 @@ export function useCookieConsent() {
   const acceptAll = useCallback(() => {
     const record: ConsentRecord = {
       hasDecided: true,
-      categories: { required: true, functional: true, analytics: true, marketing: true },
+      categories: { required: true, functional: true },
       savedAt: Date.now(),
       version: CONSENT_VERSION,
     };
@@ -52,7 +52,7 @@ export function useCookieConsent() {
   const rejectOptional = useCallback(() => {
     const record: ConsentRecord = {
       hasDecided: true,
-      categories: { required: true, functional: false, analytics: false, marketing: false },
+      categories: { required: true, functional: false },
       savedAt: Date.now(),
       version: CONSENT_VERSION,
     };

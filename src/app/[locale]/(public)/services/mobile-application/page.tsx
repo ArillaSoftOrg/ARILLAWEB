@@ -28,5 +28,5 @@ export default async function MobileApplicationPage({ params }: Props) {
   const { locale } = await params;
   if (locale !== 'en') notFound();
 
-  return <MobileApplicationContent />;
+  return <MobileApplicationContent locale="en" />;
 }

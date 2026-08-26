@@ -30,5 +30,5 @@ export default async function IntegrationsAutomationPage({ params }: Props) {
   const { locale } = await params;
   if (locale !== 'en') notFound();
 
-  return <IntegrationsAutomationContent />;
+  return <IntegrationsAutomationContent locale="en" />;
 }

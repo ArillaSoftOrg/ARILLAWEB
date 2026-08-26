@@ -2,32 +2,33 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { SITE_URL } from '@/lib/constants';
 import { getCatalogSectorBySlug } from '@/lib/project-actions';
-import { getIndustryMeta, getServicesForIndustry, industryHref, t } from '@/lib/en-site-data';
-import IndustryContent from './IndustryContent';
+import { getIndustryMetaByUrlSlug, getServicesForIndustry, industryHref, t } from '@/lib/en-site-data';
+import IndustryContent from '../../sectoral-software/[industry]/IndustryContent';
 
 type Props = { params: Promise<{ locale: string; industry: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, industry: slug } = await params;
-  const industry = getIndustryMeta(slug);
-  if (!industry || locale !== 'en') return {};
+  if (locale !== 'tr') return {};
+  const industry = getIndustryMetaByUrlSlug(slug, 'tr');
+  if (!industry) return {};
 
-  const title = `Software for ${t(industry.title, 'en')} Businesses`;
-  const description = t(industry.summary, 'en');
+  const title = `${t(industry.title, 'tr')} İşletmeleri İçin Yazılım`;
+  const description = t(industry.summary, 'tr');
   return {
     title,
     description,
-    alternates: { canonical: `/${locale}${industryHref('en', industry)}` },
-    openGraph: { title, description, url: `${SITE_URL}/${locale}${industryHref('en', industry)}`, type: 'website' },
+    alternates: { canonical: `/${locale}${industryHref('tr', industry)}` },
+    openGraph: { title, description, url: `${SITE_URL}/${locale}${industryHref('tr', industry)}`, type: 'website' },
     twitter: { card: 'summary_large_image', title, description },
   };
 }
 
-export default async function IndustryPage({ params }: Props) {
+export default async function TrIndustryPage({ params }: Props) {
   const { locale, industry: slug } = await params;
-  if (locale !== 'en') notFound();
+  if (locale !== 'tr') notFound();
 
-  const industry = getIndustryMeta(slug);
+  const industry = getIndustryMetaByUrlSlug(slug, 'tr');
   if (!industry) notFound();
 
   const relatedServices = getServicesForIndustry(industry);
@@ -38,6 +39,6 @@ export default async function IndustryPage({ params }: Props) {
   }));
 
   return (
-    <IndustryContent locale="en" industry={industry} relatedServices={relatedServices} exampleProjects={exampleProjects} />
+    <IndustryContent locale="tr" industry={industry} relatedServices={relatedServices} exampleProjects={exampleProjects} />
   );
 }

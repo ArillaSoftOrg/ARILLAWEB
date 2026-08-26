@@ -7,10 +7,10 @@ export function ConsentedScripts() {
 
   if (!isMounted) return null;
 
-  // No third-party scripts are configured yet.
-  // When adding analytics or marketing scripts, read consentRecord.categories here
-  // and render <Script> tags conditionally, e.g.:
-  //   const { analytics, marketing } = consentRecord.categories;
-  //   {analytics && <Script src="..." strategy="afterInteractive" />}
+  // Google ad/analytics consent (AdSense, IAB TCF) is owned exclusively by
+  // Google's certified CMP — do not gate Google scripts on this app's own
+  // consentRecord.categories, and do not reimplement TCF/consent state here.
+  // This component is only for non-Google, app-specific third-party scripts
+  // that should respect the site's own functional-cookie preference.
   return null;
 }

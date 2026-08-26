@@ -29,6 +29,8 @@ export async function generateMetadata({
     params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
     const { locale, slug } = await params;
+    if (locale === "tr") return {};
+
     let service = null;
     try {
         service = await getServiceBySlug(slug);
@@ -76,11 +78,15 @@ const ICON_MAP: Record<string, IconComponent> = {
 };
 
 type PageProps = {
-    params: Promise<{ slug: string }>;
+    params: Promise<{ locale: string; slug: string }>;
 };
 
 export default async function ServiceDetailPage({ params }: PageProps) {
-    const { slug } = await params;
+    const { locale, slug } = await params;
+    if (locale === "tr") {
+        notFound();
+    }
+
     let service = null;
     try {
         service = await getServiceBySlug(slug);

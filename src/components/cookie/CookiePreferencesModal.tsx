@@ -31,7 +31,7 @@ const LABELS = {
   } as Record<string, string>,
 };
 
-type Draft = { functional: boolean; analytics: boolean; marketing: boolean };
+type Draft = { functional: boolean };
 
 export function CookiePreferencesModal() {
   const {
@@ -45,8 +45,6 @@ export function CookiePreferencesModal() {
 
   const [draft, setDraft] = useState<Draft>({
     functional: consentRecord.categories.functional,
-    analytics: consentRecord.categories.analytics,
-    marketing: consentRecord.categories.marketing,
   });
   const [expandedCategory, setExpandedCategory] = useState<CategoryId | null>(null);
 
@@ -55,8 +53,6 @@ export function CookiePreferencesModal() {
 
     setDraft({
       functional: consentRecord.categories.functional,
-      analytics: consentRecord.categories.analytics,
-      marketing: consentRecord.categories.marketing,
     });
   }, [preferencesOpen, consentRecord]);
 

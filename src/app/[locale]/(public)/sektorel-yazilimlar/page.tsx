@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
 import { SITE_URL } from "@/lib/constants";
 import SektorelYazilimlarClient from "./SektorelYazilimlarClient";
+import SectoralHubContent from "../sectoral-software/HubContent";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -31,6 +32,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function SektorelYazilimlarPage() {
+export default async function SektorelYazilimlarPage({ params }: Props) {
+  const { locale } = await params;
+  if (locale === "tr") {
+    return <SectoralHubContent locale="tr" />;
+  }
+
   return <SektorelYazilimlarClient />;
 }

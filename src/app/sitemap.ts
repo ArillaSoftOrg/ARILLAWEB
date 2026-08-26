@@ -2,25 +2,42 @@ import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/constants';
 import { prisma } from '@/lib/prisma';
 import { routing } from '@/i18n/routing';
-import { INDUSTRIES, SERVICES } from '@/lib/en-site-data';
+import {
+  INDUSTRIES,
+  SERVICES,
+  designExamplesHref,
+  industriesHubHref,
+  industryHref,
+  serviceHref,
+  servicesHubHref,
+  type Locale,
+} from '@/lib/en-site-data';
 
-// EN-only routes (locale-gated to `en`, they 404 under `/tr`) — listed once, not looped
-// across routing.locales like STATIC_PATHS below.
-const EN_ONLY_PATHS = [
-  { path: '/services', priority: 0.9, changeFrequency: 'weekly' as const },
-  ...SERVICES.map((service) => ({
-    path: `/services/${service.slug}`,
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  })),
-  { path: '/sectoral-software', priority: 0.9, changeFrequency: 'weekly' as const },
-  ...INDUSTRIES.map((industry) => ({
-    path: `/sectoral-software/${industry.slug}`,
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  })),
-  { path: '/web-design-examples', priority: 0.8, changeFrequency: 'weekly' as const },
-];
+// Sectoral Software / Services / Web Design Examples routes for a given locale. EN uses
+// `/services`, `/sectoral-software`, `/web-design-examples`; TR reuses the site's existing
+// `/hizmetler`, `/sektorel-yazilimlar` segments plus `/site-ornekleri` for design examples
+// (the latter is already covered by the site-ornekleri entries below, so it's excluded here
+// to avoid duplicate URLs).
+function mirroredArchitecturePaths(locale: Locale) {
+  const paths = [
+    { path: servicesHubHref(locale), priority: 0.9, changeFrequency: 'weekly' as const },
+    ...SERVICES.map((service) => ({
+      path: serviceHref(locale, service),
+      priority: 0.7,
+      changeFrequency: 'monthly' as const,
+    })),
+    { path: industriesHubHref(locale), priority: 0.9, changeFrequency: 'weekly' as const },
+    ...INDUSTRIES.map((industry) => ({
+      path: industryHref(locale, industry),
+      priority: 0.7,
+      changeFrequency: 'monthly' as const,
+    })),
+  ];
+  if (locale === 'en') {
+    paths.push({ path: designExamplesHref('en'), priority: 0.8, changeFrequency: 'weekly' as const });
+  }
+  return paths;
+}
 
 const STATIC_LAST_MODIFIED = new Date('2026-05-06T00:00:00+03:00');
 
@@ -105,15 +122,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   });
 
-  // EN-only routes (Sectoral Software / Services / Web Design Examples) — not looped across
-  // locales since they 404 under /tr.
-  for (const { path, priority, changeFrequency } of EN_ONLY_PATHS) {
-    entries.push({
-      url: `${SITE_URL}/en${path}`,
-      lastModified: STATIC_LAST_MODIFIED,
-      changeFrequency,
-      priority,
-    });
+  // Sectoral Software / Services / Web Design Examples — mirrored per locale (EN at
+  // /services + /sectoral-software, TR at /hizmetler + /sektorel-yazilimlar).
+  for (const locale of routing.locales as readonly Locale[]) {
+    for (const { path, priority, changeFrequency } of mirroredArchitecturePaths(locale)) {
+      entries.push({
+        url: `${SITE_URL}/${locale}${path}`,
+        lastModified: STATIC_LAST_MODIFIED,
+        changeFrequency,
+        priority,
+      });
+    }
   }
 
   // Dynamic blog posts
@@ -126,13 +145,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  // Dynamic service pages
+  // Dynamic CMS service pages (legacy Service model) — only render under /en/hizmetler/[slug]
+  // now; the /tr/hizmetler hub and its new mirrored service pages replaced the CMS listing
+  // on the Turkish side (see hizmetler/page.tsx and hizmetler/[slug]/page.tsx).
   for (const service of services) {
     entries.push({
-      url: `${SITE_URL}/tr/hizmetler/${service.slug}`,
+      url: `${SITE_URL}/en/hizmetler/${service.slug}`,
       lastModified: service.updatedAt,
       changeFrequency: 'monthly',
-      priority: 0.7,
+      priority: 0.5,
     });
   }
 

@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import { EN_CORPORATE_ITEMS, EN_SECTORAL_MENU, EN_SERVICES_MENU } from '@/lib/en-site-data';
+import { CORPORATE_LINKS, getSectoralMenu, getServicesMenu, type Locale } from '@/lib/en-site-data';
 
 type MenuKey = 'sectoral' | 'services' | 'corporate';
 
@@ -15,14 +16,19 @@ function isGroupActive(group: NavGroup, pathname: string) {
 }
 
 /**
- * Desktop navigation for the EN-only IA: two data-driven mega menus (Sectoral Software,
- * Services) plus a flat Corporate dropdown. Rendered only when locale === 'en' — the
- * legacy TR NAV_ITEMS render path in Navbar.tsx is untouched and unaffected by this file.
+ * Desktop navigation shared by both locales: two data-driven mega menus (Sectoral
+ * Software, Services) plus a flat Corporate dropdown, all driven by `locale`. This
+ * replaced the old TR-only flat-dropdown NAV_ITEMS render path in Navbar.tsx.
  */
-export default function MegaMenuNav({ pathname }: { pathname: string }) {
+export default function MegaMenuNav({ locale, pathname }: { locale: Locale; pathname: string }) {
+  const tNav = useTranslations('nav');
   const [open, setOpen] = useState<MenuKey | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+
+  const sectoralMenu = getSectoralMenu(locale);
+  const servicesMenu = getServicesMenu(locale);
+  const corporateLabel = tNav('kurumsal');
 
   function openMenu(key: MenuKey) {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -72,11 +78,11 @@ export default function MegaMenuNav({ pathname }: { pathname: string }) {
     whiteSpace: 'nowrap' as const,
   });
 
-  const sectoralActive = EN_SECTORAL_MENU.groups.some((group) => isGroupActive(group, pathname));
+  const corporateHrefs = CORPORATE_LINKS.map((item) => item.href);
+  const sectoralActive = sectoralMenu.groups.some((group) => isGroupActive(group, pathname));
   const servicesActive =
-    EN_SERVICES_MENU.groups.some((group) => isGroupActive(group, pathname)) ||
-    pathname === EN_SERVICES_MENU.secondaryHref;
-  const corporateActive = EN_CORPORATE_ITEMS.some((item) => pathname === item.href);
+    servicesMenu.groups.some((group) => isGroupActive(group, pathname)) || pathname === servicesMenu.secondaryHref;
+  const corporateActive = corporateHrefs.some((href) => pathname === href);
 
   return (
     <div ref={rootRef} style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
@@ -90,23 +96,23 @@ export default function MegaMenuNav({ pathname }: { pathname: string }) {
           aria-expanded={open === 'sectoral'}
           onClick={() => setOpen(open === 'sectoral' ? null : 'sectoral')}
         >
-          {EN_SECTORAL_MENU.label}
+          {sectoralMenu.label}
           <ChevronDown size={14} style={{ transition: 'transform 0.2s ease', transform: open === 'sectoral' ? 'rotate(180deg)' : 'rotate(0deg)' }} />
         </button>
         {open === 'sectoral' && (
           <MegaPanel
-            groups={EN_SECTORAL_MENU.groups}
+            groups={sectoralMenu.groups}
             pathname={pathname}
             columns={3}
             onMouseEnter={() => openMenu('sectoral')}
             onMouseLeave={scheduleClose}
             footer={
               <>
-                <Link href={EN_SECTORAL_MENU.viewAllHref} onClick={closeNow} style={footerLinkStyle}>
-                  {EN_SECTORAL_MENU.viewAllLabel}
+                <Link href={sectoralMenu.viewAllHref} onClick={closeNow} style={footerLinkStyle}>
+                  {sectoralMenu.viewAllLabel}
                 </Link>
-                <Link href={EN_SECTORAL_MENU.ctaHref} onClick={closeNow} style={{ ...footerLinkStyle, color: '#7c3aed', fontWeight: 600 }}>
-                  {EN_SECTORAL_MENU.ctaLabel}
+                <Link href={sectoralMenu.ctaHref} onClick={closeNow} style={{ ...footerLinkStyle, color: '#7c3aed', fontWeight: 600 }}>
+                  {sectoralMenu.ctaLabel}
                 </Link>
               </>
             }
@@ -124,23 +130,23 @@ export default function MegaMenuNav({ pathname }: { pathname: string }) {
           aria-expanded={open === 'services'}
           onClick={() => setOpen(open === 'services' ? null : 'services')}
         >
-          {EN_SERVICES_MENU.label}
+          {servicesMenu.label}
           <ChevronDown size={14} style={{ transition: 'transform 0.2s ease', transform: open === 'services' ? 'rotate(180deg)' : 'rotate(0deg)' }} />
         </button>
         {open === 'services' && (
           <MegaPanel
-            groups={EN_SERVICES_MENU.groups}
+            groups={servicesMenu.groups}
             pathname={pathname}
             columns={2}
             onMouseEnter={() => openMenu('services')}
             onMouseLeave={scheduleClose}
             footer={
               <>
-                <Link href={EN_SERVICES_MENU.viewAllHref} onClick={closeNow} style={footerLinkStyle}>
-                  {EN_SERVICES_MENU.viewAllLabel}
+                <Link href={servicesMenu.viewAllHref} onClick={closeNow} style={footerLinkStyle}>
+                  {servicesMenu.viewAllLabel}
                 </Link>
-                <Link href={EN_SERVICES_MENU.secondaryHref} onClick={closeNow} style={{ ...footerLinkStyle, color: '#7c3aed', fontWeight: 600 }}>
-                  {EN_SERVICES_MENU.secondaryLabel}
+                <Link href={servicesMenu.secondaryHref} onClick={closeNow} style={{ ...footerLinkStyle, color: '#7c3aed', fontWeight: 600 }}>
+                  {servicesMenu.secondaryLabel}
                 </Link>
               </>
             }
@@ -148,7 +154,7 @@ export default function MegaMenuNav({ pathname }: { pathname: string }) {
         )}
       </div>
 
-      {/* Corporate — flat dropdown, unchanged shape/behavior from the legacy pattern */}
+      {/* Corporate — flat dropdown, content unchanged from the legacy pattern */}
       <div style={{ position: 'relative' }} onMouseEnter={() => openMenu('corporate')} onMouseLeave={scheduleClose}>
         <button
           type="button"
@@ -158,7 +164,7 @@ export default function MegaMenuNav({ pathname }: { pathname: string }) {
           aria-expanded={open === 'corporate'}
           onClick={() => setOpen(open === 'corporate' ? null : 'corporate')}
         >
-          Corporate
+          {corporateLabel}
           <ChevronDown size={14} style={{ transition: 'transform 0.2s ease', transform: open === 'corporate' ? 'rotate(180deg)' : 'rotate(0deg)' }} />
         </button>
         {open === 'corporate' && (
@@ -181,7 +187,7 @@ export default function MegaMenuNav({ pathname }: { pathname: string }) {
             onMouseEnter={() => openMenu('corporate')}
             onMouseLeave={scheduleClose}
           >
-            {EN_CORPORATE_ITEMS.map((item) => (
+            {CORPORATE_LINKS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -197,7 +203,7 @@ export default function MegaMenuNav({ pathname }: { pathname: string }) {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {item.label}
+                {tNav(item.navKey)}
               </Link>
             ))}
           </motion.div>
@@ -244,7 +250,7 @@ function MegaPanel({
         top: 'calc(100% + 4px)',
         left: '50%',
         transform: 'translateX(-50%)',
-        width: `min(${columns === 3 ? '860px' : '600px'}, calc(100vw - 32px))`,
+        width: `min(${columns === 3 ? '900px' : '620px'}, calc(100vw - 32px))`,
         maxWidth: 'calc(100vw - 32px)',
         background: '#FFFFFF',
         border: '1px solid rgba(0,0,0,0.08)',
@@ -291,6 +297,7 @@ function MegaPanel({
                     background: pathname === item.href ? 'rgba(124,58,237,0.08)' : 'transparent',
                     textDecoration: 'none',
                     fontSize: '13.5px',
+                    lineHeight: 1.4,
                   }}
                 >
                   {item.label}

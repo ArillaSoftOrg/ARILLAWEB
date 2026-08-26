@@ -1,27 +1,14 @@
 'use client';
 
-import { useState, useEffect, useRef, startTransition, type Ref } from 'react';
+import { useState, useEffect, startTransition, type Ref } from 'react';
 import { usePathname, Link } from '@/i18n/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { Menu, X, ArrowRight, ChevronDown } from 'lucide-react';
+import { Menu, X, ArrowRight } from 'lucide-react';
 import BrandLockup from '@/components/BrandLockup';
 import MegaMenuNav from '@/components/layout/MegaMenuNav';
 import MobileNavAccordion from '@/components/layout/MobileNavAccordion';
-
-type NavChild = {
-  labelKey: string;
-  href?: string;
-  locale?: 'tr' | 'en';
-  children?: NavChild[];
-};
-
-type NavItem = {
-  labelKey: string;
-  href?: string;
-  locale?: 'tr' | 'en';
-  children?: NavChild[];
-};
+import type { Locale } from '@/lib/en-site-data';
 
 type NavbarProps = {
   brandIntroActive?: boolean;
@@ -36,42 +23,9 @@ export default function Navbar({
 }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const pathname = usePathname();
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const t = useTranslations('nav');
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const NAV_ITEMS: NavItem[] = [
-    { labelKey: 'projeler', href: '/site-ornekleri', locale: 'tr' },
-    {
-      labelKey: 'sektorelYazilimlar',
-      children: [
-        { labelKey: 'tumSektorelYazilimlar', href: '/sektorel-yazilimlar' },
-        { labelKey: 'qrMenu', href: '/sektorel-yazilimlar/qr-menu' },
-        { labelKey: 'randevuSistemi', href: '/sektorel-yazilimlar/randevu-sistemi' },
-        { labelKey: 'kuaforRandevu', href: '/sektorel-yazilimlar/randevu-sistemi/kuafor-randevu-sistemi' },
-        { labelKey: 'klinikRandevu', href: '/sektorel-yazilimlar/randevu-sistemi/klinik-randevu-sistemi' },
-        { labelKey: 'guzellikRandevu', href: '/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi' },
-      ],
-    },
-    {
-      labelKey: 'hizmetler',
-      children: [
-        { labelKey: 'tumHizmetler', href: '/hizmetler' },
-      ],
-    },
-    {
-      labelKey: 'kurumsal',
-      children: [
-        { labelKey: 'hakkimizda', href: '/kurumsal/hakkimizda' },
-        { labelKey: 'blog', href: '/kurumsal/blog' },
-        { labelKey: 'kariyer', href: '/kurumsal/kariyer' },
-        { labelKey: 'iletisim', href: '/kurumsal/iletisim' },
-      ],
-    },
-  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -83,24 +37,8 @@ export default function Navbar({
   useEffect(() => {
     startTransition(() => {
       setIsOpen(false);
-      setMobileExpanded(null);
     });
   }, [pathname]);
-
-  function handleMouseEnter(key: string) {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    setOpenDropdown(key);
-  }
-
-  function handleMouseLeave() {
-    closeTimer.current = setTimeout(() => setOpenDropdown(null), 120);
-  }
-
-  function isItemActive(item: NavItem): boolean {
-    if (item.href && pathname === item.href) return true;
-    if (item.children) return item.children.some((c) => pathname === c.href);
-    return false;
-  }
 
   const otherLocale = locale === 'tr' ? 'en' : 'tr';
   const showLocaleSwitcher =
@@ -108,7 +46,9 @@ export default function Navbar({
     !pathname.startsWith('/demo-siteler') &&
     !pathname.startsWith('/services') &&
     !pathname.startsWith('/sectoral-software') &&
-    !pathname.startsWith('/web-design-examples');
+    !pathname.startsWith('/web-design-examples') &&
+    !pathname.startsWith('/hizmetler') &&
+    !pathname.startsWith('/sektorel-yazilimlar');
   const isHomePath = pathname === '/';
   const isHomeTop = isHomePath && !scrolled;
   const publicHeaderClassName = isHomePath ? 'bg-transparent' : 'bg-slate-900 md:bg-white';
@@ -338,192 +278,7 @@ export default function Navbar({
 
           {/* Nav links — center */}
           <nav className="hidden lg:flex items-center" style={{ gap: '2px' }}>
-            {locale === 'en' ? (
-              <MegaMenuNav pathname={pathname} />
-            ) : (
-            NAV_ITEMS.map((item) => {
-              const active = isItemActive(item);
-              const hasChildren = Boolean(item.children?.length);
-              const isDropdownOpen = openDropdown === item.labelKey;
-
-              if (hasChildren) {
-                return (
-                  <div
-                    key={item.labelKey}
-                    style={{ position: 'relative' }}
-                    onMouseEnter={() => handleMouseEnter(item.labelKey)}
-                    onMouseLeave={handleMouseLeave}
-                  >
-                    <button
-                      className="text-role-navigation"
-                      style={{
-                        position: 'relative',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        padding: '8px 14px',
-                        paddingBottom: '10px',
-                        borderRadius: '7px',
-                        color: active ? '#7c3aed' : isDropdownOpen ? '#7c3aed' : '#334155',
-                        background: active ? 'rgba(124,58,237,0.06)' : isDropdownOpen ? 'rgba(124,58,237,0.10)' : 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                        transition: 'color 0.2s ease, background 0.2s ease',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {t(item.labelKey)}
-                      <ChevronDown
-                        size={14}
-                        style={{
-                          transition: 'transform 0.2s ease',
-                          transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                          color: active ? '#7c3aed' : isDropdownOpen ? '#7c3aed' : '#64748B',
-                        }}
-                      />
-                      {active && (
-                        <motion.span
-                          layoutId="active-underline"
-                          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                          style={{
-                            position: 'absolute',
-                            bottom: '4px',
-                            left: '14px',
-                            right: '14px',
-                            height: '2px',
-                            borderRadius: '1px',
-                            background: '#7c3aed',
-                          }}
-                        />
-                      )}
-                    </button>
-
-                    {isDropdownOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.15, ease: 'easeOut' }}
-                        style={{
-                          position: 'absolute',
-                          top: 'calc(100% + 4px)',
-                          left: 0,
-                          minWidth: '220px',
-                          background: '#FFFFFF',
-                          border: '1px solid rgba(0,0,0,0.08)',
-                          borderRadius: '12px',
-                          boxShadow: '0 12px 40px rgba(0,0,0,0.12)',
-                          padding: '6px',
-                          zIndex: 200,
-                        }}
-                        onMouseEnter={() => handleMouseEnter(item.labelKey)}
-                        onMouseLeave={handleMouseLeave}
-                      >
-                        {item.children!.map((child) => {
-                          if (child.href) {
-                            return (
-                              <Link
-                                key={child.labelKey}
-                                href={child.href}
-                                locale={child.locale}
-                                className="text-role-navigation"
-                                style={{
-                                  display: 'block',
-                                  padding: '9px 14px',
-                                  borderRadius: '8px',
-                                  color: pathname === child.href ? '#7c3aed' : '#334155',
-                                  background: pathname === child.href ? 'rgba(124,58,237,0.08)' : 'transparent',
-                                  textDecoration: 'none',
-                                  transition: 'background 0.15s ease, color 0.15s ease',
-                                  whiteSpace: 'nowrap',
-                                }}
-                                onMouseEnter={(e) => {
-                                  if (pathname !== child.href) {
-                                    e.currentTarget.style.background = 'rgba(124,58,237,0.06)';
-                                    e.currentTarget.style.color = '#7c3aed';
-                                  }
-                                }}
-                                onMouseLeave={(e) => {
-                                  if (pathname !== child.href) {
-                                    e.currentTarget.style.background = 'transparent';
-                                    e.currentTarget.style.color = '#334155';
-                                  }
-                                }}
-                              >
-                                {t(child.labelKey)}
-                              </Link>
-                            );
-                          }
-                          return (
-                            <div
-                              className="text-role-navigation"
-                              key={child.labelKey}
-                              style={{
-                                display: 'block',
-                                padding: '9px 14px',
-                                borderRadius: '8px',
-                                color: '#334155',
-                                background: 'transparent',
-                                whiteSpace: 'nowrap',
-                              }}
-                            >
-                              {t(child.labelKey)}
-                            </div>
-                          );
-                        })}
-                      </motion.div>
-                    )}
-                  </div>
-                );
-              }
-
-              if (item.href) {
-                return (
-                  <Link
-                    key={item.labelKey}
-                    href={item.href}
-                    locale={item.locale}
-                    className="text-role-navigation"
-                    style={{
-                      position: 'relative',
-                      padding: '8px 14px',
-                      paddingBottom: '10px',
-                      borderRadius: '7px',
-                      color: active ? '#7c3aed' : '#334155',
-                      textDecoration: 'none',
-                      transition: 'color 0.2s ease',
-                      whiteSpace: 'nowrap',
-                      background: active ? 'rgba(124,58,237,0.06)' : 'transparent',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!active) e.currentTarget.style.color = '#7c3aed';
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!active) e.currentTarget.style.color = '#334155';
-                    }}
-                  >
-                    {t(item.labelKey)}
-                    {active && (
-                      <motion.span
-                        layoutId="active-underline"
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                        style={{
-                          position: 'absolute',
-                          bottom: '4px',
-                          left: '14px',
-                          right: '14px',
-                          height: '2px',
-                          borderRadius: '1px',
-                          background: '#7c3aed',
-                        }}
-                      />
-                    )}
-                  </Link>
-                );
-              }
-
-              return null;
-            })
-            )}
+            <MegaMenuNav locale={locale} pathname={pathname} />
           </nav>
 
           {/* CTA + locale switcher + mobile toggle — right */}
@@ -623,116 +378,7 @@ export default function Navbar({
           className="lg:hidden top-14 text-slate-100 md:bg-white md:border-slate-200 md:text-slate-900"
         >
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            {locale === 'en' ? (
-              <MobileNavAccordion pathname={pathname} onNavigate={() => setIsOpen(false)} />
-            ) : (
-            NAV_ITEMS.map((item) => {
-              const active = isItemActive(item);
-              const hasChildren = Boolean(item.children?.length);
-              const isExpanded = mobileExpanded === item.labelKey;
-
-              if (hasChildren) {
-                return (
-                  <div key={item.labelKey}>
-                    <button
-                      onClick={() => setMobileExpanded(isExpanded ? null : item.labelKey)}
-                      className="text-role-navigation"
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '10px 14px',
-                        borderRadius: '8px',
-                        color: active ? '#a78bfa' : '#cbd5e1',
-                        background: active ? 'rgba(124,58,237,0.15)' : 'transparent',
-                        border: 'none',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                      }}
-                    >
-                      {t(item.labelKey)}
-                      <ChevronDown
-                        size={15}
-                        style={{
-                          transition: 'transform 0.2s ease',
-                          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                          color: active ? '#a78bfa' : '#cbd5e1',
-                          flexShrink: 0,
-                        }}
-                      />
-                    </button>
-                    {isExpanded && (
-                      <div style={{ paddingLeft: '12px', paddingBottom: '4px', display: 'flex', flexDirection: 'column', gap: '1px' }}>
-                        {item.children!.map((child) => {
-                          if (child.href) {
-                            return (
-                              <Link
-                                key={child.labelKey}
-                                href={child.href}
-                                locale={child.locale}
-                                onClick={() => setIsOpen(false)}
-                                className="text-role-navigation"
-                                style={{
-                                  display: 'block',
-                                  padding: '8px 14px',
-                                  borderRadius: '7px',
-                                  color: pathname === child.href ? '#a78bfa' : '#cbd5e1',
-                                  background: pathname === child.href ? 'rgba(124,58,237,0.15)' : 'transparent',
-                                  textDecoration: 'none',
-                                }}
-                              >
-                                {t(child.labelKey)}
-                              </Link>
-                            );
-                          }
-                          return (
-                            <div
-                              key={child.labelKey}
-                              className="text-role-navigation"
-                              style={{
-                                display: 'block',
-                                padding: '8px 14px',
-                                borderRadius: '7px',
-                                color: '#cbd5e1',
-                                background: 'transparent',
-                              }}
-                            >
-                              {t(child.labelKey)}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-
-              if (item.href) {
-                return (
-                  <Link
-                    key={item.labelKey}
-                    href={item.href}
-                    locale={item.locale}
-                    onClick={() => setIsOpen(false)}
-                    className="text-role-navigation"
-                    style={{
-                      padding: '10px 14px',
-                      borderRadius: '8px',
-                      color: active ? '#a78bfa' : '#cbd5e1',
-                      background: active ? 'rgba(124,58,237,0.15)' : 'transparent',
-                      textDecoration: 'none',
-                      transition: 'color 0.2s ease',
-                    }}
-                  >
-                    {t(item.labelKey)}
-                  </Link>
-                );
-              }
-
-              return null;
-            })
-            )}
+            <MobileNavAccordion locale={locale} pathname={pathname} onNavigate={() => setIsOpen(false)} />
 
             {/* Locale switcher in mobile */}
             {showLocaleSwitcher && (

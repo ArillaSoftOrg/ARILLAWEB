@@ -28,5 +28,5 @@ export default async function MaintenanceTechnicalSupportPage({ params }: Props)
   const { locale } = await params;
   if (locale !== 'en') notFound();
 
-  return <MaintenanceTechnicalSupportContent />;
+  return <MaintenanceTechnicalSupportContent locale="en" />;
 }

@@ -30,5 +30,5 @@ export default async function WebsiteWebApplicationPage({ params }: Props) {
   const { locale } = await params;
   if (locale !== 'en') notFound();
 
-  return <WebsiteWebApplicationContent />;
+  return <WebsiteWebApplicationContent locale="en" />;
 }
