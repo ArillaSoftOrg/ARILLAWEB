@@ -309,6 +309,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
           <button
             type="button"
+            aria-label="Önceki ay"
             onClick={handlePrevMonth}
             disabled={calendarYear === todayYear && calendarMonth === todayMonth}
             style={{
@@ -330,6 +331,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
           </span>
           <button
             type="button"
+            aria-label="Sonraki ay"
             onClick={handleNextMonth}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: labelColor, padding: 4 }}
           >

@@ -1,6 +1,6 @@
 'use client';
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { QrCode, Clock, Smile, Stethoscope, Palette, ArrowRight, CheckCircle2 } from "lucide-react";
 import HeroBookingForm from "@/components/hero/HeroBookingForm";

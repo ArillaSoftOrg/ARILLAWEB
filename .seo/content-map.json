@@ -1,0 +1,406 @@
+{
+  "generatedAt": "2026-08-22T14:07:42.665Z",
+  "source": "sitemap",
+  "clusters": [
+    {
+      "keyword": "data unavailable",
+      "intent": "navigational",
+      "existingUrl": "https://arillasoft.com/tr",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "navigational",
+      "existingUrl": "https://arillasoft.com/en",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/tr/hizmetler",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/en/hizmetler",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/tr/sektorel-yazilimlar",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/en/sektorel-yazilimlar",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/tr/sektorel-yazilimlar/qr-menu",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/en/sektorel-yazilimlar/qr-menu",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/tr/sektorel-yazilimlar/randevu-sistemi",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/en/sektorel-yazilimlar/randevu-sistemi",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/tr/sektorel-yazilimlar/randevu-sistemi/kuafor-randevu-sistemi",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/en/sektorel-yazilimlar/randevu-sistemi/kuafor-randevu-sistemi",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/tr/sektorel-yazilimlar/randevu-sistemi/klinik-randevu-sistemi",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/en/sektorel-yazilimlar/randevu-sistemi/klinik-randevu-sistemi",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/tr/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "commercial",
+      "existingUrl": "https://arillasoft.com/en/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/blog",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/blog",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "navigational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/hakkimizda",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "navigational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/hakkimizda",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "navigational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/kariyer",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "navigational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/kariyer",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "navigational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/iletisim",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "navigational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/iletisim",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "transactional",
+      "existingUrl": "https://arillasoft.com/tr/teklif-al",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "transactional",
+      "existingUrl": "https://arillasoft.com/en/teklif-al",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/blog/4",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/blog/4",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/blog/8",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/blog/8",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/blog/9",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/blog/9",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/blog/7",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/blog/7",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/blog/10",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/blog/10",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/blog/3",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/blog/3",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/tr/kurumsal/blog/5",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    },
+    {
+      "keyword": "data unavailable",
+      "intent": "informational",
+      "existingUrl": "https://arillasoft.com/en/kurumsal/blog/5",
+      "shouldOptimize": false,
+      "newPageNeeded": false,
+      "internalLinkOpportunity": true,
+      "priority": "low",
+      "metrics": "data unavailable"
+    }
+  ]
+}

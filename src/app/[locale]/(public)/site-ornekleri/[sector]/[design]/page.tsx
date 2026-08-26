@@ -24,13 +24,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = await getCatalogProject(sector, design);
   if (!project || !project.category) return {};
   const url = `${SITE_URL}/tr/site-ornekleri/${sector}/${design}`;
+  const description = `${project.category.name} için ${project.title}: ${project.summary}`;
   return {
     title: `${project.title} | ${project.designCode}`,
-    description: project.summary,
-    alternates: { canonical: `/tr/site-ornekleri/${sector}/${design}` },
+    description,
+    alternates: {
+      canonical: `/tr/site-ornekleri/${sector}/${design}`,
+    },
     openGraph: {
       title: project.title,
-      description: project.summary,
+      description,
       url,
       type: "website",
       images: project.coverImage ? [{ url: project.coverImage, alt: project.title }] : undefined,

@@ -1,0 +1,164 @@
+{
+  "generatedAt": "2026-08-22T14:07:42.667Z",
+  "sources": {
+    "lighthouse": "passed",
+    "siteone": "completed",
+    "gsc": "credentials required",
+    "sitemapUrls": 79
+  },
+  "topOpportunities": [
+    {
+      "type": "broken-or-error-url",
+      "priority": "high",
+      "count": 17,
+      "source": "siteone"
+    },
+    {
+      "type": "redirect",
+      "priority": "medium",
+      "count": 19,
+      "source": "siteone"
+    },
+    {
+      "type": "missing-h1",
+      "priority": "medium",
+      "count": 2,
+      "source": "siteone"
+    },
+    {
+      "type": "heading-order",
+      "priority": "medium",
+      "count": 24,
+      "source": "siteone"
+    },
+    {
+      "type": "duplicate-title",
+      "priority": "medium",
+      "count": 10,
+      "source": "siteone"
+    },
+    {
+      "type": "duplicate-description",
+      "priority": "medium",
+      "count": 10,
+      "source": "siteone"
+    },
+    {
+      "type": "canonical",
+      "priority": "medium",
+      "count": 81,
+      "source": "siteone"
+    },
+    {
+      "type": "performance-lcp-tbt",
+      "priority": "low",
+      "page": "http://localhost:3001/tr",
+      "score": 40
+    },
+    {
+      "type": "color-contrast",
+      "priority": "low",
+      "page": "http://localhost:3001/tr"
+    },
+    {
+      "type": "performance-lcp-tbt",
+      "priority": "low",
+      "page": "http://localhost:3001/tr/hizmetler",
+      "score": 39
+    }
+  ],
+  "opportunities": [
+    {
+      "type": "broken-or-error-url",
+      "priority": "high",
+      "count": 17,
+      "source": "siteone"
+    },
+    {
+      "type": "redirect",
+      "priority": "medium",
+      "count": 19,
+      "source": "siteone"
+    },
+    {
+      "type": "missing-h1",
+      "priority": "medium",
+      "count": 2,
+      "source": "siteone"
+    },
+    {
+      "type": "heading-order",
+      "priority": "medium",
+      "count": 24,
+      "source": "siteone"
+    },
+    {
+      "type": "duplicate-title",
+      "priority": "medium",
+      "count": 10,
+      "source": "siteone"
+    },
+    {
+      "type": "duplicate-description",
+      "priority": "medium",
+      "count": 10,
+      "source": "siteone"
+    },
+    {
+      "type": "canonical",
+      "priority": "medium",
+      "count": 81,
+      "source": "siteone"
+    },
+    {
+      "type": "performance-lcp-tbt",
+      "priority": "low",
+      "page": "http://localhost:3001/tr",
+      "score": 40
+    },
+    {
+      "type": "color-contrast",
+      "priority": "low",
+      "page": "http://localhost:3001/tr"
+    },
+    {
+      "type": "performance-lcp-tbt",
+      "priority": "low",
+      "page": "http://localhost:3001/tr/hizmetler",
+      "score": 39
+    },
+    {
+      "type": "color-contrast",
+      "priority": "low",
+      "page": "http://localhost:3001/tr/hizmetler"
+    },
+    {
+      "type": "performance-lcp-tbt",
+      "priority": "low",
+      "page": "http://localhost:3001/tr/sektorel-yazilimlar/qr-menu",
+      "score": 38
+    },
+    {
+      "type": "color-contrast",
+      "priority": "low",
+      "page": "http://localhost:3001/tr/sektorel-yazilimlar/qr-menu"
+    },
+    {
+      "type": "performance-lcp-tbt",
+      "priority": "low",
+      "page": "http://localhost:3001/tr/kurumsal/blog",
+      "score": 66
+    },
+    {
+      "type": "performance-lcp-tbt",
+      "priority": "low",
+      "page": "http://localhost:3001/tr/site-ornekleri",
+      "score": 43
+    },
+    {
+      "type": "color-contrast",
+      "priority": "low",
+      "page": "http://localhost:3001/tr/site-ornekleri"
+    }
+  ]
+}

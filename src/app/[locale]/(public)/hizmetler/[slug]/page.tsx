@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import {
     ArrowLeft,
@@ -26,9 +26,9 @@ import HeroBookingForm from "@/components/hero/HeroBookingForm";
 export async function generateMetadata({
     params,
 }: {
-    params: Promise<{ slug: string }>;
+    params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-    const { slug } = await params;
+    const { locale, slug } = await params;
     let service = null;
     try {
         service = await getServiceBySlug(slug);
@@ -37,16 +37,19 @@ export async function generateMetadata({
     }
     if (!service) return { title: "Hizmet Bulunamadı" };
 
+    const isTurkish = locale === "tr";
+
     return {
         title: service.title,
         description: service.shortDescription,
+        robots: isTurkish ? undefined : { index: false, follow: true },
         alternates: {
-            canonical: `/hizmetler/${slug}`,
+            canonical: `/tr/hizmetler/${slug}`,
         },
         openGraph: {
             title: `${service.title} | ${SITE_NAME}`,
             description: service.shortDescription,
-            url: `${SITE_URL}/hizmetler/${slug}`,
+            url: `${SITE_URL}/${locale}/hizmetler/${slug}`,
             type: "website",
         },
         twitter: {

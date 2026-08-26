@@ -2,7 +2,7 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import ProductHero from '@/components/sections/ProductHero';
 import HeroBookingForm from '@/components/hero/HeroBookingForm';
 import FeatureGrid from '@/components/sections/FeatureGrid';

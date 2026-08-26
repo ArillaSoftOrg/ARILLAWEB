@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ArrowRight, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import type { BlogMediaItem, BlogPost } from "@/lib/blog-data";
 

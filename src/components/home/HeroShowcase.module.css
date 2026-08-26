@@ -231,22 +231,22 @@
   }
 
   .showcaseFrame {
-    aspect-ratio: auto;
-    height: 100%;
-    margin: 0;
-    max-height: none !important;
-    max-width: none;
-    overflow: hidden;
+    aspect-ratio: 31 / 32;
+    height: auto;
+    margin-inline: auto;
+    max-height: min(46svh, 390px) !important;
+    max-width: min(84vw, 380px);
+    overflow: visible;
     width: 100%;
   }
 
   .personLayer {
-    bottom: auto;
-    left: auto;
-    right: -18%;
-    top: 14%;
-    width: min(112vw, 520px);
-    transform: translate3d(0, 0, 0);
+    bottom: -1%;
+    left: 50%;
+    right: auto;
+    top: auto;
+    width: min(82vw, 360px);
+    transform: translate3d(-44%, 0, 0);
   }
 
   .browserLayer {
@@ -291,7 +291,7 @@
   }
 
   .personLayer {
-    right: -20%;
+    width: min(86vw, 340px);
   }
 
   .floatLayer {

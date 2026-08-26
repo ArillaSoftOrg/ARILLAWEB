@@ -5,11 +5,8 @@ import SupportChatWidget from "@/components/SupportChatWidget";
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import BlogMediaCard from "@/components/blog/BlogMediaCard";
 import HeroShowcase from "@/components/home/HeroShowcase";
 import HowItWorks from "@/components/sections/HowItWorks";
-import FAQSection from "@/components/sections/FAQSection";
-import type { BlogPost } from "@/lib/blog-data";
 import { getSiteExampleDisplay } from "@/lib/site-example-display";
 import { TESTIMONIALS } from "@/lib/constants/testimonials";
 import { motion, useInView, useScroll, useTransform, type Variants } from "framer-motion";
@@ -39,7 +36,6 @@ import {
   ExternalLink,
   Sparkles,
   MonitorSmartphone,
-  BookOpen,
   Wrench,
 } from "lucide-react";
 
@@ -348,11 +344,11 @@ function WhyUsSection() {
 // Hero Section
 // ─────────────────────────────────────────────
 const HERO_TYPEWRITER_MESSAGES = [
-  "İş süreçlerinizi\ndijitalleştiren özel\nyazılım ve web\nçözümleri\ngeliştiriyoruz.",
-  "Dijital Fikirleri\nÇalışan Ürünlere\nDönüştürüyoruz.",
-  "Özgün ve Kullanıcı\nOdaklı Deneyimler\nTasarlıyoruz.",
-  "İşinize Özel\nYazılım Sistemleri\nGeliştiriyoruz.",
-  "Web'den Otomasyona\nDijitalin Her Alanında\nYanınızdayız.",
+  "İş süreçlerinizi\ndijitalleştiren özel\nyazılım ve web çözümleri\ngeliştiriyoruz.",
+  "Dijital fikirleri\nçalışan ürünlere\ndönüştüren sistemler\ngeliştiriyoruz.",
+  "Özgün ve kullanıcı\nodaklı dijital\ndeneyimler\ntasarlıyoruz.",
+  "İşinize özel\nyazılım sistemleri\nuçtan uca\ngeliştiriyoruz.",
+  "Web'den otomasyona\ndijitalin her alanında\nişinize değer\nkatıyoruz.",
 ] as const;
 
 const HERO_TYPEWRITER_CHARSETS = HERO_TYPEWRITER_MESSAGES.map((message) => Array.from(message.replace(/\n/g, "")));
@@ -436,6 +432,42 @@ function getHeroActiveLineIndex(lines: string[], visibleCount: number) {
   }
 
   return 0;
+}
+
+function measureHeroMessageHeight(messageLines: string[], sourceElement: HTMLElement, availableWidth: number) {
+  const computedStyle = window.getComputedStyle(sourceElement);
+  const measurementElement = document.createElement("div");
+
+  measurementElement.style.position = "absolute";
+  measurementElement.style.left = "-10000px";
+  measurementElement.style.top = "0";
+  measurementElement.style.visibility = "hidden";
+  measurementElement.style.pointerEvents = "none";
+  measurementElement.style.width = `${availableWidth}px`;
+  measurementElement.style.fontFamily = computedStyle.fontFamily;
+  measurementElement.style.fontSize = computedStyle.fontSize;
+  measurementElement.style.fontStyle = computedStyle.fontStyle;
+  measurementElement.style.fontWeight = computedStyle.fontWeight;
+  measurementElement.style.letterSpacing = computedStyle.letterSpacing;
+  measurementElement.style.lineHeight = computedStyle.lineHeight;
+  measurementElement.style.whiteSpace = "normal";
+  measurementElement.style.overflowWrap = computedStyle.overflowWrap;
+  measurementElement.style.wordBreak = computedStyle.wordBreak;
+
+  messageLines.forEach((line, lineIndex) => {
+    const lineElement = document.createElement("span");
+    lineElement.style.display = "block";
+    lineElement.style.minHeight = "1lh";
+    lineElement.style.whiteSpace = "nowrap";
+    lineElement.textContent = `${line}${lineIndex === messageLines.length - 1 ? "_" : ""}`;
+    measurementElement.appendChild(lineElement);
+  });
+
+  document.body.appendChild(measurementElement);
+  const height = measurementElement.getBoundingClientRect().height;
+  measurementElement.remove();
+
+  return Math.ceil(height);
 }
 
 function usePrefersReducedMotion() {
@@ -538,49 +570,49 @@ const SITE_EXAMPLES = [
     title: "Pet Kuaförü — Modern Dönüşüm",
     sector: "Pet Kuaförü ve Pet Hizmetleri",
     designCode: "PET-01",
-    href: "/site-ornekleri/pet-kuaforu-pet-hizmetleri/pet-kuaforu-modern-donusum",
+    href: "/tr/site-ornekleri/pet-kuaforu-pet-hizmetleri/pet-kuaforu-modern-donusum",
   },
   {
     title: "Kuaför — Modern Dönüşüm",
     sector: "Kuaför ve Berber",
     designCode: "KUA-01",
-    href: "/site-ornekleri/kuafor-berber/kuafor-modern-donusum",
+    href: "/tr/site-ornekleri/kuafor-berber/kuafor-modern-donusum",
   },
   {
     title: "Güzellik — Modern Dönüşüm",
     sector: "Güzellik ve Bakım Merkezi",
     designCode: "GUZ-01",
-    href: "/site-ornekleri/guzellik-bakim-merkezi/guzellik-modern-donusum",
+    href: "/tr/site-ornekleri/guzellik-bakim-merkezi/guzellik-modern-donusum",
   },
   {
     title: "Diş Kliniği — Modern Dönüşüm",
     sector: "Diş Kliniği ve Özel Klinik",
     designCode: "KLI-01",
-    href: "/site-ornekleri/dis-klinigi-ozel-klinik/dis-klinigi-modern-donusum",
+    href: "/tr/site-ornekleri/dis-klinigi-ozel-klinik/dis-klinigi-modern-donusum",
   },
   {
     title: "Restoran — Modern Dönüşüm",
     sector: "Restoran ve Kafe",
     designCode: "RES-01",
-    href: "/site-ornekleri/restoran-kafe/restoran-modern-donusum",
+    href: "/tr/site-ornekleri/restoran-kafe/restoran-modern-donusum",
   },
   {
     title: "Emlak — Modern Dönüşüm",
     sector: "Emlak Danışmanlığı",
     designCode: "EML-01",
-    href: "/site-ornekleri/emlak-danismanligi/emlak-danismanligi-modern-donusum",
+    href: "/tr/site-ornekleri/emlak-danismanligi/emlak-danismanligi-modern-donusum",
   },
   {
     title: "Otomotiv — Modern Dönüşüm",
     sector: "Otomotiv Servisi ve Araç Bakım",
     designCode: "OTO-01",
-    href: "/site-ornekleri/otomotiv-servisi-arac-bakim/otomotiv-servisi-modern-donusum",
+    href: "/tr/site-ornekleri/otomotiv-servisi-arac-bakim/otomotiv-servisi-modern-donusum",
   },
   {
     title: "Mimarlık — Modern Dönüşüm",
     sector: "Mimarlık, Dekorasyon ve İnşaat",
     designCode: "MIM-01",
-    href: "/site-ornekleri/mimarlik-dekorasyon-insaat/mimarlik-dekorasyon-modern-donusum",
+    href: "/tr/site-ornekleri/mimarlik-dekorasyon-insaat/mimarlik-dekorasyon-modern-donusum",
   },
 ] as const;
 
@@ -589,7 +621,7 @@ function SiteExampleTile({ example, hidden = false }: { example: (typeof SITE_EX
   if (!display.previewSrc) return null;
 
   return (
-    <Link
+    <a
       href={example.href}
       aria-hidden={hidden || undefined}
       tabIndex={hidden ? -1 : undefined}
@@ -615,7 +647,7 @@ function SiteExampleTile({ example, hidden = false }: { example: (typeof SITE_EX
           Tasarımı incele <ArrowRight size={14} className="transition group-hover:translate-x-1" />
         </span>
       </div>
-    </Link>
+    </a>
   );
 }
 
@@ -645,12 +677,12 @@ function SiteExamplesPreviewSection() {
             </p>
           </motion.div>
           <motion.div variants={fadeUp}>
-            <Link
-              href="/site-ornekleri"
+            <a
+              href="/tr/site-ornekleri"
               className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-bold text-white"
             >
               Tüm tasarımları gör <ArrowRight size={15} />
-            </Link>
+            </a>
           </motion.div>
         </AnimatedSection>
 
@@ -827,6 +859,7 @@ function HeroSection() {
   const typewriterRef = useRef<HTMLHeadingElement>(null);
   const measureRef = useRef<HTMLSpanElement>(null);
   const [isLineLayoutReady, setIsLineLayoutReady] = useState(false);
+  const [reservedTitleHeight, setReservedTitleHeight] = useState<number | null>(null);
   const { messageIndex, visibleCount, isWaiting, prefersReducedMotion } = useHeroTypewriter(isLineLayoutReady);
   const [wrappedMessages, setWrappedMessages] = useState<string[][]>(
     () => HERO_TYPEWRITER_MESSAGES.map((message) => message.split("\n"))
@@ -839,7 +872,8 @@ function HeroSection() {
   // which real width-measured wrapping can only ever grow, never shrink. A floor here keeps
   // the reserved heading height from under-shooting on the very first paint (before the
   // client-side ResizeObserver measurement lands) so the box can't visibly grow afterward.
-  const maxLineCount = isLineLayoutReady ? measuredMaxLineCount : Math.max(measuredMaxLineCount, 6);
+  const maxLineCount = isLineLayoutReady ? measuredMaxLineCount : Math.max(measuredMaxLineCount, 5);
+  const reservedHeightStyle = reservedTitleHeight === null ? undefined : `${reservedTitleHeight}px`;
 
   useLayoutEffect(() => {
     const typewriterElement = typewriterRef.current;
@@ -861,12 +895,18 @@ function HeroSection() {
       const nextWrappedMessages = HERO_TYPEWRITER_MESSAGES.map((message) =>
         wrapHeroMessage(message, measureElement, availableWidth)
       );
+      const nextReservedHeight = Math.max(
+        ...nextWrappedMessages.map((lines) => measureHeroMessageHeight(lines, typewriterElement, availableWidth))
+      );
       measureElement.textContent = "";
 
       setWrappedMessages((currentWrappedMessages) =>
         areHeroLineLayoutsEqual(currentWrappedMessages, nextWrappedMessages)
           ? currentWrappedMessages
           : nextWrappedMessages
+      );
+      setReservedTitleHeight((currentHeight) =>
+        currentHeight === nextReservedHeight ? currentHeight : nextReservedHeight
       );
 
       return true;
@@ -912,10 +952,10 @@ function HeroSection() {
 
   return (
     <section
-      className="max-[768px]:!min-h-0 max-[768px]:!bg-[#0B0F17]"
+      className="max-[768px]:!bg-[#0B0F17]"
       style={{
         position: "relative",
-        minHeight: "calc(100dvh - var(--bar-h, 0px))",
+        minHeight: "calc(100svh - var(--bar-h, 0px))",
         display: "flex",
         alignItems: "center",
         overflowX: "hidden",
@@ -925,31 +965,33 @@ function HeroSection() {
       }}
       >
         <div
-          className="relative w-full max-w-[1360px] mx-auto flex flex-col xl:grid xl:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] items-center gap-9 max-[768px]:gap-5 xl:gap-10 px-4 sm:px-6 lg:px-8 pt-6 max-[768px]:!min-h-0 max-[768px]:overflow-hidden max-[768px]:pt-3 pb-10 sm:pt-8 sm:pb-14 xl:py-8"
+          className="relative mx-auto flex w-full max-w-[1360px] flex-col items-center gap-6 px-4 pt-5 pb-12 sm:gap-8 sm:px-6 sm:pt-8 sm:pb-14 lg:px-8 xl:grid xl:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] xl:gap-10 xl:py-8"
           style={{
-            minHeight: "calc(100dvh - var(--header-h) - var(--bar-h, 0px))",
+            minHeight: "calc(100svh - var(--header-h) - var(--bar-h, 0px))",
           }}
         >
 
         {/* Left: Text */}
-        <motion.div
-          variants={heroStagger}
-          initial="hidden"
-          animate="visible"
-          className="relative z-10 flex w-full max-w-[640px] flex-col items-start text-left"
-        >
+          <motion.div
+            variants={heroStagger}
+            initial="hidden"
+            animate="visible"
+            className="relative z-10 flex w-full max-w-[640px] flex-col items-start text-left"
+          >
           {/* Headline */}
           <motion.div
             variants={heroFadeUp}
-            className="flex flex-col items-start"
+            className="flex w-full flex-col items-start"
           >
             <h1
               ref={typewriterRef}
               className="home-hero-typewriter text-role-hero max-[768px]:!text-[#F8F7F4]"
               aria-label={HERO_TYPEWRITER_MESSAGES[0].replace(/\n/g, " ")}
               style={{
+                height: reservedHeightStyle,
                 maxWidth: "100%",
                 width: "100%",
+                ["--home-hero-typewriter-height" as string]: reservedHeightStyle,
                 ["--home-hero-typewriter-lines" as string]: maxLineCount,
               }}
             >
@@ -980,20 +1022,12 @@ function HeroSection() {
           variants={heroVisualIn}
           initial="hidden"
           animate="visible"
-          className="flex w-full items-center justify-center max-[768px]:pointer-events-none max-[768px]:absolute max-[768px]:inset-0 max-[768px]:z-0 max-[768px]:overflow-hidden xl:justify-start"
+          className="relative z-10 flex w-full items-center justify-center xl:justify-start"
         >
-          <div className="w-full max-[768px]:absolute max-[768px]:inset-0 max-[768px]:max-w-none max-[768px]:opacity-[0.95] max-[768px]:[filter:saturate(0.85)_contrast(1.05)]">
+          <div className="w-full">
             <HeroShowcase />
           </div>
         </motion.div>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[1] hidden max-[768px]:block"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(11,15,23,0.96) 0%, rgba(11,15,23,0.84) 45%, rgba(11,15,23,0.45) 100%)",
-          }}
-        />
       </div>
 
       {/* Scroll indicator */}
@@ -1034,7 +1068,7 @@ const MAIN_SERVICES = [
     description: "Hızlı, SEO uyumlu ve ölçeklenebilir web siteleri ile web uygulamaları geliştiriyoruz.",
     tags: ["Next.js", "React", "Node.js"],
     icon: "Globe",
-    href: "/hizmetler/web-uygulama-gelistirme",
+    href: "/hizmetler",
   },
   {
     id: "2",
@@ -1044,7 +1078,7 @@ const MAIN_SERVICES = [
     description: "İşletmenizin süreçlerine uyumlanan, verimli ve ölçeklenebilir yazılım çözümleri tasarlarız.",
     tags: [".NET", "Python", "Bulut"],
     icon: "Code2",
-    href: "/hizmetler/ozel-yazilim-gelistirme",
+    href: "/hizmetler",
   },
   {
     id: "3",
@@ -1054,7 +1088,7 @@ const MAIN_SERVICES = [
     description: "Sistemlerinizi birbirine bağlayan, veri akışını ve iş süreçlerini otomatikleştiren çözümler kurarız.",
     tags: ["API", "Backend", "ERP"],
     icon: "Zap",
-    href: "/hizmetler/backend-ve-api-gelistirme",
+    href: "/hizmetler",
   },
   {
     id: "4",
@@ -1064,7 +1098,7 @@ const MAIN_SERVICES = [
     description: "Yayın sonrası güncelleme, performans izleme, teknik destek ve sürekli iyileştirme sağlarız.",
     tags: ["Destek", "Güncelleme", "İzleme"],
     icon: "Wrench",
-    href: "/hizmetler/bakim-ve-teknik-destek",
+    href: "/hizmetler",
   },
 ];
 
@@ -1266,8 +1300,8 @@ function ServicesSection() {
                   <ArrowRight size={14} />
                 </span>
               </Link>
-              <Link
-                href="/site-ornekleri"
+              <a
+                href="/tr/site-ornekleri"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1297,7 +1331,7 @@ function ServicesSection() {
                 <span className="inline-flex transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none">
                   <ArrowRight size={14} />
                 </span>
-              </Link>
+              </a>
             </motion.div>
           </motion.div>
         </AnimatedSection>
@@ -1797,219 +1831,9 @@ function CTASection({ settings }: { settings: SiteSettings }) {
 }
 
 // ─────────────────────────────────────────────
-// Blog Section
-// ─────────────────────────────────────────────
-const FALLBACK_BLOG_POSTS: BlogPost[] = [
-  {
-    slug: "dijital-donusum-neden-onemlidir",
-    title: "İşletmeler İçin Dijital Dönüşüm Neden Önemlidir?",
-    description: "Dijital dönüşüm artık isteğe bağlı değil, zorunludur. İşletmenizi nasıl dönüştürebilir ve rekabetçi avantaj sağlayabilirsiniz?",
-    category: "Dijital Dönüşüm",
-    date: "2024-12-01",
-    readTime: "5 dk",
-    emoji: "🚀",
-    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    accentColor: "#667eea",
-    categoryColor: "#a78bfa",
-    categoryBg: "rgba(102, 126, 234, 0.1)",
-    categoryBorder: "rgba(102, 126, 234, 0.3)",
-    content: [],
-  },
-  {
-    slug: "kurumsal-web-sitesi-neden-gerekli",
-    title: "Kurumsal Web Sitesi İşletmeye Ne Kazandırır?",
-    description: "Profesyonel bir web sitesi, müşteri güveni, marka imajı ve satışları arttırır. İşletmeniz için neden gerekli olduğunu öğrenin.",
-    category: "Web Tasarımı",
-    date: "2024-11-25",
-    readTime: "6 dk",
-    emoji: "💻",
-    gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-    accentColor: "#f093fb",
-    categoryColor: "#f472b6",
-    categoryBg: "rgba(240, 147, 251, 0.1)",
-    categoryBorder: "rgba(240, 147, 251, 0.3)",
-    content: [],
-  },
-  {
-    slug: "ozel-yazilim-ne-zaman-gerekli",
-    title: "Özel Yazılım Ne Zaman Gerekli Hale Gelir?",
-    description: "Off-the-shelf çözümler her zaman yeterli olmayabilir. Özel yazılıma ihtiyacınız olduğunu nasıl anlayabilirsiniz?",
-    category: "Yazılım Geliştirme",
-    date: "2024-11-18",
-    readTime: "7 dk",
-    emoji: "⚙️",
-    gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-    accentColor: "#4facfe",
-    categoryColor: "#06b6d4",
-    categoryBg: "rgba(79, 172, 254, 0.1)",
-    categoryBorder: "rgba(79, 172, 254, 0.3)",
-    content: [],
-  },
-];
-
-function BlogSection() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-
-  useEffect(() => {
-    fetch("/api/blog")
-      .then((r) => r.json())
-      .then((data) => setPosts(Array.isArray(data) ? data.slice(0, 4) : []))
-      .catch(() => { });
-  }, []);
-
-  return (
-    <section
-      style={{ position: "relative", overflow: "hidden" }}
-      className="py-16 sm:py-20 lg:py-28"
-      id="blog"
-    >
-      {/* Ambient background glow */}
-      <div
-        style={{
-          position: "absolute",
-          top: "30%",
-          right: "-10%",
-          width: "500px",
-          height: "500px",
-          background: "radial-gradient(ellipse, rgba(124,58,237,0.07) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "10%",
-          left: "-5%",
-          width: "400px",
-          height: "400px",
-          background: "radial-gradient(ellipse, rgba(6,182,212,0.06) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div style={{ maxWidth: "1280px", margin: "0 auto" }} className="px-5 sm:px-6">
-        {/* Section header */}
-        <AnimatedSection className="mb-10 sm:mb-14">
-          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-            <div>
-              {/* Label */}
-              <div
-                className="text-role-eyebrow"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "6px 14px",
-                  borderRadius: "100px",
-                  background: "rgba(124,58,237,0.1)",
-                  border: "1px solid rgba(124,58,237,0.40)",
-                  marginBottom: "20px",
-                }}
-              >
-                <BookOpen size={12} />
-                Blog
-              </div>
-              <h2
-                className="text-role-section-heading"
-                style={{
-                  margin: "0 0 14px 0",
-                }}
-              >
-                Son <span style={{ color: "#7c3aed", fontWeight: 900 }}>Yazılar</span>
-              </h2>
-              <p
-                className="text-role-body-lg"
-                style={{
-                  margin: 0,
-                  maxWidth: "520px",
-                }}
-              >
-                Yazılım, teknoloji ve dijital dönüşüm dünyasındaki gelişmeleri paylaşıyoruz.
-              </p>
-            </div>
-
-            {/* View all — desktop */}
-            <div className="hidden sm:block">
-              <Link
-                href="/kurumsal/blog"
-                className="text-role-button"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "10px 22px",
-                  borderRadius: "100px",
-                  color: "#7c3aed",
-                  background: "rgba(124,58,237,0.08)",
-                  border: "1px solid rgba(124,58,237,0.35)",
-                  textDecoration: "none",
-                  transition: "all 0.2s",
-                  whiteSpace: "nowrap",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(124,58,237,0.16)";
-                  e.currentTarget.style.borderColor = "rgba(124,58,237,0.45)";
-                  e.currentTarget.style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(124,58,237,0.08)";
-                  e.currentTarget.style.borderColor = "rgba(124,58,237,0.22)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }}
-              >
-                Tüm Yazılar <ArrowRight size={14} />
-              </Link>
-            </div>
-          </motion.div>
-        </AnimatedSection>
-
-        {/* Cards grid */}
-        <AnimatedSection className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          {(posts.length > 0 ? posts : FALLBACK_BLOG_POSTS).map((post, i) => (
-            <motion.div
-              key={post.slug}
-              variants={scaleIn}
-              custom={i}
-              transition={{ delay: i * 0.08 }}
-            >
-              <BlogMediaCard post={post} />
-            </motion.div>
-          ))}
-        </AnimatedSection>
-        {/* View all — mobile */}
-        <AnimatedSection className="flex justify-center sm:hidden">
-          <motion.div variants={fadeUp}>
-            <Link
-              href="/kurumsal/blog"
-              className="text-role-button"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "12px 28px",
-                borderRadius: "100px",
-                color: "#a78bfa",
-                background: "rgba(124,58,237,0.08)",
-                border: "1px solid rgba(124,58,237,0.22)",
-                textDecoration: "none",
-                transition: "all 0.2s",
-              }}
-            >
-              Tüm Yazıları Gör <ArrowRight size={14} />
-            </Link>
-          </motion.div>
-        </AnimatedSection>
-      </div>
-    </section>
-  );
-}
-
-// ─────────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────────
-type HomeFaq = { question: string; answer: string };
-
-export default function HomeClient({ faqs = [] }: { faqs?: HomeFaq[] }) {
+export default function HomeClient() {
   const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
   const howItWorksRef = useRef<HTMLDivElement>(null);
 
@@ -2036,17 +1860,7 @@ export default function HomeClient({ faqs = [] }: { faqs?: HomeFaq[] }) {
       </div>
       <SiteExamplesPreviewSection />
       <WhyUsSection />
-      {faqs.length > 0 && (
-        <FAQSection
-          title="Sıkça Sorulan Sorular"
-          description="Projeye başlamadan önce merak edilenler."
-          faqs={faqs}
-          accentColor="#7c3aed"
-          darkMode={false}
-        />
-      )}
       <CTASection settings={settings} />
-      <BlogSection />
       <TestimonialsSection />
       <SupportChatWidget triggerRef={howItWorksRef} />
     </div>

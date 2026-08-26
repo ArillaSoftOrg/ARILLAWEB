@@ -42,3 +42,12 @@ dev-server.*.log
 *.tsbuildinfo
 next-env.d.ts
 .supervisor/
+
+# seo tooling
+.seo/bin/
+.seo/tmp/
+.seo/siteone-raw/
+.seo/**/*.html
+.seo/**/*.txt
+.seo/**/*offline*/
+.seo/**/*export*/

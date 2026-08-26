@@ -9,9 +9,9 @@ import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const post = await prisma.blogPost.findUnique({
     where: { slug },
     select: {
@@ -31,21 +31,25 @@ export async function generateMetadata({
 
   const metaTitle = post.seoTitle ?? post.title;
   const metaDescription = post.seoDescription ?? post.excerpt;
+  const isTurkish = locale === 'tr';
+  const title = isTurkish ? metaTitle : `${metaTitle} (Turkish)`;
+  const description = isTurkish ? metaDescription : `${metaDescription} Turkish archive.`;
   const images = post.coverImage
-    ? [{ url: post.coverImage, width: 1200, height: 630, alt: metaTitle }]
+    ? [{ url: post.coverImage, width: 1200, height: 630, alt: title }]
     : [];
 
   return {
-    title: metaTitle,
-    description: metaDescription,
+    title,
+    description,
+    robots: isTurkish ? undefined : { index: false, follow: true },
     alternates: {
-      canonical: `/kurumsal/blog/${slug}`,
+      canonical: `/tr/kurumsal/blog/${slug}`,
     },
     openGraph: {
-      title: `${metaTitle} | ${SITE_NAME}`,
-      description: metaDescription,
+      title: `${title} | ${SITE_NAME}`,
+      description,
       type: "article",
-      url: `${SITE_URL}/kurumsal/blog/${slug}`,
+      url: `${SITE_URL}/${isTurkish ? 'tr' : locale}/kurumsal/blog/${slug}`,
       publishedTime: post.publishedAt?.toISOString(),
       modifiedTime: post.updatedAt?.toISOString(),
       section: post.category?.name,
@@ -53,8 +57,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${metaTitle} | ${SITE_NAME}`,
-      description: metaDescription,
+      title: `${title} | ${SITE_NAME}`,
+      description,
       images: post.coverImage ? [post.coverImage] : [],
     },
   };

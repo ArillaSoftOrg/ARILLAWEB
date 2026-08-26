@@ -73,7 +73,7 @@ function buildHeadingIds(sections: BlogSection[]) {
     counts.set(base, seen);
     const id = seen === 1 ? base : `${base}-${seen}`;
     idByIndex.set(index, id);
-    toc.push({ id, text, level: section.type === "heading2" ? 2 : 3 });
+    toc.push({ id, text, level: 2 });
   });
 
   return { idByIndex, toc };
@@ -147,13 +147,13 @@ function ContentBlock({
         <span className={styles.subHeadingBadge} aria-hidden="true">
           {String(headingNumber ?? 1).padStart(2, "0")}
         </span>
-        <h3
+        <h2
           id={headingId}
           className={styles.subHeading}
           style={{ scrollMarginTop: HEADING_SCROLL_OFFSET }}
         >
           {section.text}
-        </h3>
+        </h2>
       </div>
     );
   }

@@ -14,7 +14,6 @@ const STATIC_PATHS = [
   { path: '/sektorel-yazilimlar/randevu-sistemi/kuafor-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
   { path: '/sektorel-yazilimlar/randevu-sistemi/klinik-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
   { path: '/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
-  { path: '/kurumsal/blog', priority: 0.8, changeFrequency: 'weekly' as const },
   { path: '/kurumsal/hakkimizda', priority: 0.7, changeFrequency: 'monthly' as const },
   { path: '/kurumsal/kariyer', priority: 0.5, changeFrequency: 'monthly' as const },
   { path: '/kurumsal/iletisim', priority: 0.6, changeFrequency: 'monthly' as const },
@@ -80,28 +79,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
+  entries.push({
+    url: `${SITE_URL}/tr/kurumsal/blog`,
+    lastModified: STATIC_LAST_MODIFIED,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  });
+
   // Dynamic blog posts
   for (const post of posts) {
-    for (const locale of routing.locales) {
-      entries.push({
-        url: `${SITE_URL}/${locale}/kurumsal/blog/${post.slug}`,
-        lastModified: post.updatedAt,
-        changeFrequency: 'weekly',
-        priority: 0.7,
-      });
-    }
+    entries.push({
+      url: `${SITE_URL}/tr/kurumsal/blog/${post.slug}`,
+      lastModified: post.updatedAt,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    });
   }
 
   // Dynamic service pages
   for (const service of services) {
-    for (const locale of routing.locales) {
-      entries.push({
-        url: `${SITE_URL}/${locale}/hizmetler/${service.slug}`,
-        lastModified: service.updatedAt,
-        changeFrequency: 'monthly',
-        priority: 0.7,
-      });
-    }
+    entries.push({
+      url: `${SITE_URL}/tr/hizmetler/${service.slug}`,
+      lastModified: service.updatedAt,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    });
   }
 
   entries.push({

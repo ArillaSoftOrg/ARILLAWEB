@@ -18,7 +18,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: t('description'),
     alternates: {
       canonical: `/${locale}/sektorel-yazilimlar/qr-menu`,
-      languages: { tr: '/tr/sektorel-yazilimlar/qr-menu', en: '/en/sektorel-yazilimlar/qr-menu', 'x-default': '/tr/sektorel-yazilimlar/qr-menu' },
     },
     openGraph: {
       title: t('title'),

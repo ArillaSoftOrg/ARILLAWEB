@@ -10,12 +10,14 @@ import BrandLockup from '@/components/BrandLockup';
 type NavChild = {
   labelKey: string;
   href?: string;
+  locale?: 'tr' | 'en';
   children?: NavChild[];
 };
 
 type NavItem = {
   labelKey: string;
   href?: string;
+  locale?: 'tr' | 'en';
   children?: NavChild[];
 };
 
@@ -40,7 +42,7 @@ export default function Navbar({
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const NAV_ITEMS: NavItem[] = [
-    { labelKey: 'projeler', href: '/site-ornekleri' },
+    { labelKey: 'projeler', href: '/site-ornekleri', locale: 'tr' },
     {
       labelKey: 'sektorelYazilimlar',
       children: [
@@ -414,6 +416,7 @@ export default function Navbar({
                               <Link
                                 key={child.labelKey}
                                 href={child.href}
+                                locale={child.locale}
                                 className="text-role-navigation"
                                 style={{
                                   display: 'block',
@@ -470,6 +473,7 @@ export default function Navbar({
                   <Link
                     key={item.labelKey}
                     href={item.href}
+                    locale={item.locale}
                     className="text-role-navigation"
                     style={{
                       position: 'relative',
@@ -654,6 +658,7 @@ export default function Navbar({
                               <Link
                                 key={child.labelKey}
                                 href={child.href}
+                                locale={child.locale}
                                 onClick={() => setIsOpen(false)}
                                 className="text-role-navigation"
                                 style={{
@@ -696,6 +701,7 @@ export default function Navbar({
                   <Link
                     key={item.labelKey}
                     href={item.href}
+                    locale={item.locale}
                     onClick={() => setIsOpen(false)}
                     className="text-role-navigation"
                     style={{

@@ -1,0 +1,12 @@
+{
+  "status": "credentials required",
+  "generatedAt": "2026-08-22T14:07:27.679Z",
+  "siteUrl": "https://arillasoft.com/",
+  "requiredEnv": [
+    "GSC_CLIENT_EMAIL",
+    "GSC_PRIVATE_KEY"
+  ],
+  "alternativeEnv": "GSC_SERVICE_ACCOUNT_JSON",
+  "queriesAnalyzed": 0,
+  "data": {}
+}

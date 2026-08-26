@@ -24,7 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function RandevualPage() {
+export default async function RandevualPage({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'pages.randevual' });
+
   return (
     <main
       style={{
@@ -38,6 +41,7 @@ export default function RandevualPage() {
       }}
     >
       <div style={{ width: '100%', maxWidth: '1200px', padding: '0 16px' }}>
+        <h1 className="sr-only">{t('title')}</h1>
         <RandevualClient />
       </div>
     </main>

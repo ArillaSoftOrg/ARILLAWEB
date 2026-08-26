@@ -104,9 +104,9 @@ export default function ContactPage() {
 
                         {/* Decorative gradient card */}
                         <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-violet-500/10 via-slate-900 to-cyan-500/10 p-6">
-                            <h3 className="text-base font-semibold text-white">
+                            <h2 className="text-base font-semibold text-white">
                                 Neden Arillasoft?
-                            </h3>
+                            </h2>
                             <ul className="mt-4 space-y-3">
                                 {[
                                     "Hızlı dönüş garantisi — 24 saat içinde",

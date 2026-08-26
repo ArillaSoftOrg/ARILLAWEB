@@ -8,13 +8,18 @@ interface Props {
   areaServed?: string;
 }
 
+function toAbsoluteUrl(path: string) {
+  const normalizedPath = /^\/(tr|en)(\/|$)/.test(path) ? path : `/tr${path}`;
+  return `${SITE_URL}${normalizedPath}`;
+}
+
 export default function ServiceJsonLd({ name, description, url, serviceType, areaServed }: Props) {
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Service',
     name,
     description,
-    url: `${SITE_URL}${url}`,
+    url: toAbsoluteUrl(url),
     provider: {
       '@type': 'Organization',
       name: 'ArillaSoft',

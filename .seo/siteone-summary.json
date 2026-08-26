@@ -1,0 +1,106 @@
+{
+  "status": "completed",
+  "generatedAt": "2026-08-22T19:58:59.440Z",
+  "baseUrl": "http://localhost:3001",
+  "rawReport": "C:\\Users\\YUSUF\\Documents\\GitHub\\arillaweb\\ARILLAWEB\\.seo\\siteone-raw\\tmp\\localhost.output.20260822-225642.json",
+  "crawledPages": 81,
+  "fetchedUrls": 656,
+  "qualityScores": [
+    {
+      "code": "performance",
+      "score": 9.5,
+      "deductions": [
+        {
+          "fix": "Reduce server response time: enable server-side caching and a CDN, and optimize backend/database queries.",
+          "points": 0.25,
+          "reason": "90th percentile HTML response time 633ms > 600ms"
+        },
+        {
+          "fix": "Reduce page weight: compress/resize images, defer or split JavaScript, and remove unused CSS.",
+          "points": 0.3,
+          "reason": "3 page(s) over the page-weight budget"
+        }
+      ]
+    },
+    {
+      "code": "seo",
+      "score": 7.5,
+      "deductions": [
+        {
+          "fix": "Point rel=canonical at the page's own URL (or the correct same-site canonical).",
+          "points": 2.5,
+          "reason": "70 page(s) with an off-host canonical"
+        }
+      ]
+    },
+    {
+      "code": "security",
+      "score": 6.5,
+      "deductions": [
+        {
+          "fix": "Add the missing security headers (CSP, HSTS, X-Content-Type-Options) and harden cookies (Secure/HttpOnly/SameSite).",
+          "points": 3.5,
+          "reason": "81 page(s) with critical security findings"
+        }
+      ]
+    },
+    {
+      "code": "accessibility",
+      "score": 6.9,
+      "deductions": [
+        {
+          "fix": "Associate every form control with a <label> (for=id or wrapping) or an aria-label.",
+          "points": 2.5,
+          "reason": "59 page(s) without form labels"
+        },
+        {
+          "fix": "Make every id unique and ensure aria-labelledby/-describedby and label[for] reference existing ids.",
+          "points": 0.6,
+          "reason": "2 page(s) with HTML structural issues"
+        }
+      ]
+    },
+    {
+      "code": "best-practices",
+      "score": 8.8,
+      "deductions": [
+        {
+          "fix": "Wrap phone numbers in tel: links (<a href=\"tel:+...\">) so they are tappable on mobile.",
+          "points": 0.6,
+          "reason": "2 page(s) with non-clickable phone numbers"
+        },
+        {
+          "fix": "Enable Brotli (or at least gzip) compression for text assets on the server/CDN.",
+          "points": 0.5,
+          "reason": "No Brotli compression support"
+        },
+        {
+          "fix": "Consider AVIF for the best image compression (alongside or instead of WebP).",
+          "points": 0.1,
+          "reason": "No AVIF image support"
+        }
+      ]
+    }
+  ],
+  "statusCodes": {
+    "200": 81
+  },
+  "technicalIssues": [
+    {
+      "type": "canonical",
+      "count": 70,
+      "reason": "70 page(s) with an off-host canonical"
+    }
+  ],
+  "samples": {
+    "brokenInternalLinks": [],
+    "redirects": [],
+    "missingTitle": [],
+    "missingDescription": [],
+    "missingH1": [],
+    "headingIssues": [],
+    "duplicateTitles": [],
+    "duplicateDescriptions": [],
+    "sitemapMissingFromCrawl": []
+  }
+}

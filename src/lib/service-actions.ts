@@ -85,7 +85,7 @@ export async function getPublishedServicesForPublic(): Promise<PublicService[]> 
 }
 
 export async function getServiceBySlug(slug: string): Promise<PublicService | null> {
-  const s = await prisma.service.findUnique({
+  const s = await prisma.service.findFirst({
     where: { slug, published: true },
   });
   if (!s) return null;
