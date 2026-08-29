@@ -954,7 +954,7 @@ function HeroSection() {
 
   return (
     <section
-      className="max-[768px]:!bg-[#0B0F17]"
+      className="max-[768px]:!bg-[#0245EC]"
       style={{
         position: "relative",
         minHeight: "calc(100svh - var(--bar-h, 0px))",
@@ -963,7 +963,7 @@ function HeroSection() {
         overflowX: "hidden",
         overflowY: "clip",
         paddingTop: "var(--header-h)",
-        background: "#F4FAF7",
+        background: "#0245EC",
       }}
       >
         <div
@@ -987,7 +987,7 @@ function HeroSection() {
           >
             <h1
               ref={typewriterRef}
-              className="home-hero-typewriter text-role-hero max-[768px]:!text-[#F8F7F4]"
+              className="home-hero-typewriter text-role-hero !text-[#F8F7F4]"
               aria-label={HERO_TYPEWRITER_MESSAGES[0].replace(/\n/g, " ")}
               data-hero-typewriter-line-counts={wrappedMessages.map((lines) => lines.length).join(",")}
               data-hero-typewriter-reserved-height={reservedTitleHeight ?? undefined}
@@ -1049,7 +1049,8 @@ function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="home-hero-scroll-cue max-[768px]:!text-[#8993A4]"
+        className="home-hero-scroll-cue"
+        style={{ color: "rgba(248,247,244,0.8)" }}
       >
         <span className="home-hero-scroll-cue__mouse" aria-hidden="true">
           <span className="home-hero-scroll-cue__wheel" />
@@ -1234,7 +1235,7 @@ function ServicesSection() {
     <section
       id="services"
       ref={sectionRef}
-      style={{ background: "var(--paper-alt)", scrollMarginTop: "var(--header-h, 0px)" }}
+      style={{ background: "#D9FF3A", scrollMarginTop: "var(--header-h, 0px)" }}
       className="home-services-scene pt-10 pb-12 md:pt-12 md:pb-14 lg:pt-14 lg:pb-20"
     >
       <div
