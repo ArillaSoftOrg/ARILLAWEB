@@ -164,7 +164,397 @@
   "pages": {
     "home": {
       "title": "Web, Mobile & Custom Software Solutions",
-      "description": "We take your business to the digital future with modern software solutions. Web, mobile and enterprise software development."
+      "description": "We take your business to the digital future with modern software solutions. Web, mobile and enterprise software development.",
+      "sections": {
+        "hero": {
+          "headline": "We build custom software and web solutions that digitalize your business processes.",
+          "body": "From corporate websites to management panels, from appointment systems to custom business software, we design, launch, and provide ongoing technical support for digital systems built around your needs.",
+          "benefits": [
+            "Tailored Systems",
+            "Efficient Workflows",
+            "Reliable Digital Infrastructure"
+          ],
+          "ctaPrimary": "Free Discovery Call",
+          "ctaSecondary": "Explore Our Projects",
+          "microcopy": "A free 15-minute discovery call to define the exact needs and scope of your project."
+        },
+        "capabilityStrip": {
+          "heading": "Built on Modern Technology Infrastructure",
+          "items": [
+            "Google Premier Partner",
+            "Meta Business Partner",
+            "LinkedIn Marketing Partner",
+            "AWS Partner",
+            "WhatsApp Business",
+            "OpenAI",
+            "Anthropic",
+            "xAI"
+          ]
+        },
+        "businessTool": {
+          "heading": "Your website shouldn't just look good. It should work for your business.",
+          "body": "At Arillasoft, we don't treat a website as a separate showcase — we treat it as the starting point of your business's digital systems. From a visitor finding you, to booking an appointment, to making a payment, to receiving automatic updates, we plan the whole structure as one connected system.",
+          "concepts": [
+            {
+              "key": "discover",
+              "title": "Get Found",
+              "description": "Strengthen your visibility in search engines and AI-powered answer systems with SEO and GEO foundations."
+            },
+            {
+              "key": "convert",
+              "title": "Convert",
+              "description": "Turn visitors into real actions — forms, appointments, reservations, orders, or payments."
+            },
+            {
+              "key": "connect",
+              "title": "Connect",
+              "description": "Integrate your website with payments, shipping, WhatsApp Business, and other services."
+            },
+            {
+              "key": "manage",
+              "title": "Manage",
+              "description": "Manage customer, order, appointment, or operational data through panels built for your business."
+            }
+          ],
+          "stepExpandAriaLabel": "Open {title} screen",
+          "stepCollapseAriaLabel": "Close {title} screen"
+        },
+        "webCommerce": {
+          "heading": "We build a strong foundation for your digital presence.",
+          "body": "We develop fast, manageable, growth-ready web solutions — from corporate websites to e-commerce platforms. Alongside design, we treat performance, technical infrastructure, measurement, and conversion as core parts of every project.",
+          "solutions": [
+            {
+              "id": "corporate",
+              "title": "Corporate Websites",
+              "description": "Fast, easily manageable corporate websites that tell your brand's story correctly."
+            },
+            {
+              "id": "ecommerce",
+              "title": "E-Commerce",
+              "description": "Sales-ready e-commerce systems — from product management to payment infrastructure, order flow to shipping integration."
+            },
+            {
+              "id": "webapps",
+              "title": "Web Applications",
+              "description": "Web applications that go beyond a standard website — user accounts, dashboards, transaction screens, and custom functionality."
+            },
+            {
+              "id": "landing",
+              "title": "Landing Pages",
+              "description": "Conversion-focused, measurable landing pages for campaigns, products, or services."
+            }
+          ],
+          "capabilities": [
+            "Responsive",
+            "Performance",
+            "SEO-ready",
+            "GEO-ready",
+            "Analytics",
+            "CMS",
+            "Security",
+            "Conversion"
+          ]
+        },
+        "businessSystems": {
+          "heading": "We also build the business systems running behind your website.",
+          "body": "Every business works differently. When off-the-shelf software isn't enough, we build custom systems around your appointment, reservation, customer management, order, or operational processes.",
+          "capabilities": [
+            {
+              "id": "appointments",
+              "title": "Appointment Systems",
+              "description": "Customers see available times and book instantly; your business manages the whole process from a central panel."
+            },
+            {
+              "id": "reservations",
+              "title": "Reservation Systems",
+              "description": "Reservation flows customizable for hotels, restaurants, or service businesses."
+            },
+            {
+              "id": "crm",
+              "title": "Customer Management",
+              "description": "Customer records, transaction history, and related data managed in one place."
+            },
+            {
+              "id": "admin",
+              "title": "Admin Panels",
+              "description": "Custom panels for controlling your content, users, orders, or operational data."
+            },
+            {
+              "id": "dashboards",
+              "title": "Dashboards",
+              "description": "Interfaces that let a business track its key metrics and processes on a single screen."
+            },
+            {
+              "id": "workflows",
+              "title": "Custom Workflows",
+              "description": "Systems built around how your business actually works, for processes off-the-shelf products don't fit."
+            }
+          ],
+          "highlight": "We fit the software to your business — not your business to the software."
+        },
+        "industrySolutions": {
+          "heading": "Every business's website doesn't have to do the same job.",
+          "body": "We shape the digital infrastructure around the real needs of your industry and operations.",
+          "sectors": [
+            {
+              "id": "clinic",
+              "label": "Clinic",
+              "title": "One flow, from search visibility to appointment.",
+              "description": "Patients find you in search, review your services, and book an appointment directly by picking a suitable time.",
+              "features": [
+                "Corporate website",
+                "Doctor & service pages",
+                "Online booking",
+                "Appointment management",
+                "WhatsApp notifications",
+                "SEO & GEO"
+              ]
+            },
+            {
+              "id": "hotel",
+              "label": "Hotel",
+              "title": "Connect the guest experience from your website to your management.",
+              "description": "We can design your hotel's digital showcase alongside reservations and customer processes as one connected system, instead of separate ones.",
+              "features": [
+                "Hotel website",
+                "Room & service pages",
+                "Reservation requests",
+                "Customer records",
+                "Management panel",
+                "Automatic notifications"
+              ]
+            },
+            {
+              "id": "restaurant",
+              "label": "Restaurant / Café",
+              "title": "Digitize everything from your menu to the customer experience.",
+              "description": "Instead of reprinting menus for every change, update products and prices from a central panel.",
+              "features": [
+                "Website",
+                "QR Menu",
+                "Category & product management",
+                "Price updates",
+                "Campaign areas",
+                "Management panel"
+              ]
+            },
+            {
+              "id": "ecommerce",
+              "label": "E-Commerce",
+              "title": "A connected sales infrastructure, from order to delivery.",
+              "description": "We can build a system where the sale doesn't end at checkout — order and customer communication continue automatically.",
+              "features": [
+                "E-commerce site",
+                "Payment infrastructure",
+                "Order management",
+                "Shipping integration",
+                "WhatsApp Business",
+                "Analytics"
+              ]
+            }
+          ]
+        },
+        "automation": {
+          "heading": "Connect your systems. Automate repetitive work.",
+          "body": "We connect your website or business software with the other services you use, so manual data entry drops and customers get the right information at the right time.",
+          "pipeline": [
+            "Order",
+            "Payment",
+            "Shipping",
+            "WhatsApp Business",
+            "Customer"
+          ],
+          "example": "For example, when an e-commerce order is handed to a courier, the system can detect it and automatically notify the customer via WhatsApp Business.",
+          "capabilities": [
+            "WhatsApp Business",
+            "Payment systems",
+            "Shipping providers",
+            "API integrations",
+            "Webhooks",
+            "Email",
+            "CRM connections",
+            "Analytics"
+          ]
+        },
+        "growthFoundation": {
+          "heading": "Publishing is the start. Being found and growing is what follows.",
+          "body": "A good website shouldn't just work — it should be found quickly, load quickly, and learn from how people use it. That's why we address technical visibility and performance from the start of development.",
+          "items": [
+            {
+              "id": "seo",
+              "title": "SEO",
+              "description": "The technical foundation, content structure, and core optimizations search engines need to understand your site correctly."
+            },
+            {
+              "id": "geo",
+              "title": "GEO",
+              "description": "Content and technical structure that help AI-powered search and answer systems understand your content clearly and accurately."
+            },
+            {
+              "id": "performance",
+              "title": "Performance",
+              "description": "Technical performance improvements affecting page load times, Core Web Vitals, and real user experience."
+            },
+            {
+              "id": "analytics",
+              "title": "Analytics",
+              "description": "The analytics foundation for measuring how users interact with your site and grounding decisions in data."
+            }
+          ]
+        },
+        "howWeWork": {
+          "heading": "We don't start building before we understand the need.",
+          "body": "We don't see a project as just a set of screens to deliver. We first understand the business's problem and goal, then shape the digital system together.",
+          "steps": [
+            {
+              "number": "01",
+              "title": "Analysis",
+              "description": "We work to understand your business, your target audience, your current processes, and the problem that needs solving."
+            },
+            {
+              "number": "02",
+              "title": "Plan",
+              "description": "We define the project's scope, required features, user flows, and technical approach."
+            },
+            {
+              "number": "03",
+              "title": "Design",
+              "description": "We bring together brand, content, and user experience to design the interface and interactions."
+            },
+            {
+              "number": "04",
+              "title": "Development",
+              "description": "We build the website, the required backend systems, and integrations with a focus on performance and maintainability."
+            },
+            {
+              "number": "05",
+              "title": "Launch & Grow",
+              "description": "We launch the system, run the necessary checks, and keep improving it based on your needs."
+            }
+          ]
+        },
+        "pricing": {
+          "heading": "Start with what you need. Scale as you grow.",
+          "body": "Fixed packages for web projects and productized solutions; scope-based pricing for custom business systems and integrations.",
+          "recommendedBadge": "Recommended",
+          "freePriceLabel": "Free",
+          "fromPriceLine": "Starting from <amount>{price}</amount>",
+          "customPriceLabel": "Custom pricing for your project",
+          "customPriceNote": "Determined by scope and technical requirements.",
+          "plans": [
+            {
+              "id": "discovery",
+              "name": "Free Discovery",
+              "tagline": "Let's clarify what you need together.",
+              "priceType": "free",
+              "ctaLabel": "Book a Free Consultation",
+              "features": [
+                "30–45 min discovery call",
+                "Assessment of your current digital presence",
+                "Identifying your needs",
+                "A tailored solution recommendation",
+                "Clarifying the project scope",
+                "A rough project roadmap"
+              ]
+            },
+            {
+              "id": "starter",
+              "name": "Starter",
+              "tagline": "Build a professional digital presence.",
+              "priceType": "from",
+              "ctaLabel": "Get Started",
+              "features": [
+                "Corporate website",
+                "Responsive, mobile-friendly build",
+                "Service or product pages",
+                "Contact and conversion forms",
+                "Manageable content infrastructure",
+                "Basic technical SEO",
+                "Basic performance optimization",
+                "Basic Analytics setup",
+                "SSL / baseline security"
+              ]
+            },
+            {
+              "id": "business",
+              "name": "Business",
+              "featured": true,
+              "tagline": "Turn your website into a system that works for your business.",
+              "priceType": "from",
+              "featuresIntro": "Everything in Starter, plus:",
+              "ctaLabel": "Start with Business",
+              "features": [
+                "Custom pages and user flows",
+                "Advanced SEO & GEO foundation",
+                "Advanced Analytics / event tracking",
+                "Appointment or reservation flows",
+                "Basic API integrations",
+                "WhatsApp Business integration",
+                "Conversion optimization",
+                "Custom management screens as needed"
+              ]
+            },
+            {
+              "id": "custom",
+              "name": "Custom Solution",
+              "isCustom": true,
+              "tagline": "Custom software, integrations, and automation for your business.",
+              "priceType": "custom",
+              "featuresIntro": "Everything in Business, plus:",
+              "ctaLabel": "Let's Discuss Your Project",
+              "features": [
+                "Business-specific software",
+                "Advanced admin panel",
+                "Customer / order / appointment management",
+                "Custom API integrations",
+                "Automation workflows",
+                "Roles and permissions",
+                "Third-party system integrations",
+                "Custom reporting and dashboards",
+                "Scalable backend infrastructure"
+              ]
+            }
+          ]
+        },
+        "faq": {
+          "heading": "What you should know before we start.",
+          "items": [
+            {
+              "question": "How long does it take to build a website?",
+              "answer": "It depends on the project's scope. For corporate web projects, design, development, and launch follow the plan set at project kickoff."
+            },
+            {
+              "question": "Can you redesign our existing website?",
+              "answer": "Yes. We can analyze your current infrastructure, content, and technical state to build either a full redesign or a controlled modernization plan."
+            },
+            {
+              "question": "Can we just get a website built?",
+              "answer": "Yes. Appointment systems, automation, or custom software are not required. Project scope is defined by the business's actual needs."
+            },
+            {
+              "question": "Can you build custom software for our business?",
+              "answer": "Yes. Where off-the-shelf solutions fall short, we can build custom admin panels, appointment systems, customer management, and similar web-based systems as needed."
+            },
+            {
+              "question": "Is SEO work included?",
+              "answer": "Core technical SEO can be addressed during development. More extensive SEO and GEO work is planned separately based on project scope."
+            },
+            {
+              "question": "How does the WhatsApp Business integration work?",
+              "answer": "System events like appointments, orders, or shipping can be connected to WhatsApp Business messaging flows. Integration scope depends on the systems in use."
+            },
+            {
+              "question": "Do you provide support after the project?",
+              "answer": "After launch, we can set up an ongoing support model for maintenance, technical support, and new development based on your needs."
+            }
+          ]
+        },
+        "finalCta": {
+          "heading": "Let's talk about what we can build for your business.",
+          "body": "Tell us what you need. Let's define the right scope together — from your website to business systems and integrations.",
+          "cta": "Let's Talk About Your Project"
+        }
+      }
     },
     "hizmetler": {
       "title": "Services",

@@ -41,6 +41,49 @@
   --hairline: #E2DED4;
   --type-dark-text: #F2EEE4;
   --type-dark-text-muted: #A9A192;
+
+  /* ── Homepage redesign tokens (design.md) ──────────────────────────
+     Additive namespace only. Used by the new homepage sections under
+     src/components/home/** plus the homepage HeroSection (HomeClient.tsx)
+     and its HeroShowcase visual. Never referenced by Navbar, Footer,
+     TestimonialsSection, or any other route — those keep using the
+     tokens above unchanged. */
+  --home-bg: #FFFFFF;
+  --home-fg: #101010;
+  --home-surface: #F7F7F7;
+  --home-surface-warm: #F6F5F1;
+  --home-surface-dark: #101010;
+  --home-surface-dark-raised: #181818;
+  --home-surface-dark-elevated: #202020;
+
+  --home-primary: #C7F36B;
+  --home-primary-hover: #B9E85A;
+  --home-primary-active: #AAD84B;
+  --home-primary-soft: #F1FAD8;
+  --home-primary-foreground: #101010;
+
+  --home-text-secondary: #60605C;
+  --home-text-muted: #858580;
+  --home-text-inverse: #FFFFFF;
+  --home-text-inverse-secondary: #B3B3B0;
+
+  --home-border: #E8E7E3;
+  --home-border-strong: #D4D3CE;
+  --home-border-dark: #333333;
+
+  --home-radius-sm: 8px;
+  --home-radius-md: 12px;
+  --home-radius-lg: 16px;
+  --home-radius-xl: 24px;
+  --home-radius-full: 999px;
+
+  --home-font-sans: "Open Sauce One", "Inter", "Helvetica Neue", Arial, sans-serif;
+
+  /* Homepage motion language — see src/components/home/motion.ts for the
+     matching framer-motion tokens (EASE_PREMIUM/DURATION). Kept in sync
+     manually since CSS custom properties and JS constants can't share a
+     single source. */
+  --home-ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
@@ -51,6 +94,42 @@
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
   --color-accent: var(--color-accent);
+
+  /* Homepage redesign — additive utilities (bg-home-*, text-home-*,
+     border-home-*, rounded-home-*, font-home-sans). Zero effect on any
+     existing utility class. */
+  --color-home-bg: var(--home-bg);
+  --color-home-fg: var(--home-fg);
+  --color-home-surface: var(--home-surface);
+  --color-home-surface-warm: var(--home-surface-warm);
+  --color-home-surface-dark: var(--home-surface-dark);
+  --color-home-surface-dark-raised: var(--home-surface-dark-raised);
+  --color-home-surface-dark-elevated: var(--home-surface-dark-elevated);
+
+  --color-home-primary: var(--home-primary);
+  --color-home-primary-hover: var(--home-primary-hover);
+  --color-home-primary-active: var(--home-primary-active);
+  --color-home-primary-soft: var(--home-primary-soft);
+  --color-home-primary-foreground: var(--home-primary-foreground);
+
+  --color-home-text-secondary: var(--home-text-secondary);
+  --color-home-text-muted: var(--home-text-muted);
+  --color-home-text-inverse: var(--home-text-inverse);
+  --color-home-text-inverse-secondary: var(--home-text-inverse-secondary);
+
+  --color-home-border: var(--home-border);
+  --color-home-border-strong: var(--home-border-strong);
+  --color-home-border-dark: var(--home-border-dark);
+
+  --radius-home-sm: var(--home-radius-sm);
+  --radius-home-md: var(--home-radius-md);
+  --radius-home-lg: var(--home-radius-lg);
+  --radius-home-xl: var(--home-radius-xl);
+  --radius-home-full: var(--home-radius-full);
+
+  --font-home-sans: var(--home-font-sans);
+
+  --ease-home-premium: var(--home-ease-premium);
 }
 
 * {
@@ -295,76 +374,6 @@ html[data-brand-intro="running"] [data-brand-logo-target] {
   }
 }
 
-.home-hero-typewriter {
-  position: relative;
-  display: block;
-  height: var(--home-hero-typewriter-height, auto);
-  min-height: calc(var(--home-hero-typewriter-lines, 5) * 1lh);
-  white-space: normal;
-  overflow-wrap: break-word;
-  word-break: normal;
-  hyphens: auto;
-}
-
-.home-hero-typewriter__lines {
-  display: block;
-}
-
-.home-hero-typewriter__line {
-  display: block;
-  min-height: 1lh;
-  white-space: nowrap;
-}
-
-@media (max-width: 768px) {
-  .home-hero-typewriter {
-    max-width: 100%;
-  }
-}
-
-.home-hero-typewriter__measure {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 0;
-  overflow: hidden;
-  visibility: hidden;
-  white-space: nowrap;
-  pointer-events: none;
-  font: inherit;
-  letter-spacing: inherit;
-  line-height: inherit;
-}
-
-.home-hero-typewriter__cursor {
-  display: inline-block;
-  margin-left: 0.03em;
-  color: currentColor;
-  opacity: 0.58;
-}
-
-.home-hero-typewriter__cursor[data-waiting="true"] {
-  animation: home-hero-cursor-blink 1s steps(1, end) infinite;
-}
-
-@keyframes home-hero-cursor-blink {
-  0%,
-  48% {
-    opacity: 0.58;
-  }
-
-  49%,
-  100% {
-    opacity: 0.16;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .home-hero-typewriter__cursor {
-    animation: none;
-  }
-}
-
 /* Hero scroll-down cue */
 .home-hero-scroll-cue {
   position: absolute;
@@ -376,7 +385,8 @@ html[data-brand-intro="running"] [data-brand-logo-target] {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  color: #94a3b8;
+  color: var(--home-text-muted);
+  font-family: var(--home-font-sans);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1102,6 +1112,45 @@ html[data-brand-intro="running"] [data-brand-logo-target] {
   }
 }
 
+/* Technology/partner marquee (homepage, below hero) — single continuous
+   line, slow seamless loop. Static, horizontally scrollable fallback for
+   prefers-reduced-motion is rendered separately (no animation class). */
+.tech-marquee-track {
+  animation: tech-marquee-scroll 36s linear infinite;
+}
+
+/* Pause on hover — desktop only */
+@media (hover: hover) {
+  .tech-marquee-track:hover {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes tech-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.tech-marquee-static {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.tech-marquee-static::-webkit-scrollbar {
+  display: none;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .tech-marquee-track {
+    animation: none;
+  }
+}
+
 /* ── Blog reading theme ── */
 [data-blog-theme="dark"] {
   --blog-bg:              #08090d;
@@ -1145,9 +1194,9 @@ html[data-brand-intro="running"] [data-brand-logo-target] {
 
 /* Support chat widget — one-shot attention pulse before auto-open */
 @keyframes supportChatAttentionPulse {
-  0% { box-shadow: 0 8px 24px rgba(124,58,237,0.35), 0 0 0 0 rgba(124,58,237,0.45); }
-  70% { box-shadow: 0 8px 24px rgba(124,58,237,0.35), 0 0 0 14px rgba(124,58,237,0); }
-  100% { box-shadow: 0 8px 24px rgba(124,58,237,0.35), 0 0 0 0 rgba(124,58,237,0); }
+  0% { box-shadow: 0 8px 24px rgba(16,16,16,0.3), 0 0 0 0 rgba(16,16,16,0.4); }
+  70% { box-shadow: 0 8px 24px rgba(16,16,16,0.3), 0 0 0 14px rgba(16,16,16,0); }
+  100% { box-shadow: 0 8px 24px rgba(16,16,16,0.3), 0 0 0 0 rgba(16,16,16,0); }
 }
 
 .support-chat-attention {
@@ -1156,6 +1205,294 @@ html[data-brand-intro="running"] [data-brand-logo-target] {
 
 @media (prefers-reduced-motion: reduce) {
   .support-chat-attention {
+    animation: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Navbar + chat interaction states (design.md core rule):
+   Ink #101010 = primary/default strong action.
+   Lime #C7F36B = hover, active, selected, focus.
+   Warm neutral/white = surfaces. Gray = secondary information.
+   Scoped to Navbar/MegaMenuNav/MobileNavAccordion/SupportChatWidget only.
+   ───────────────────────────────────────────────────────────── */
+
+/* Generic lime focus-visible ring for elements whose fill does not itself
+   turn lime on focus (icon buttons, dropdown items). Elements that DO fill
+   lime on hover/focus (Navbar CTA, HomeButton primary/outline) define their
+   own focus-visible outline color instead, to keep the ring visible against
+   a lime background. */
+.focus-ring-lime:focus-visible {
+  outline: 2px solid #c7f36b;
+  outline-offset: 2px;
+}
+
+/* Desktop mega-menu dropdown triggers (Sektörel Yazılımlar / Hizmetler / Kurumsal) */
+.navmenu-trigger {
+  position: relative;
+  color: #60605c;
+  background: transparent;
+  transition: color 180ms ease, background-color 180ms ease;
+}
+
+.navmenu-trigger::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 999px;
+  background: #c7f36b;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 180ms ease;
+}
+
+.navmenu-trigger:hover,
+.navmenu-trigger:focus-visible {
+  color: #101010;
+}
+
+.navmenu-trigger:hover::after,
+.navmenu-trigger:focus-visible::after,
+.navmenu-trigger[data-open="true"]::after,
+.navmenu-trigger[data-active="true"]::after {
+  transform: scaleX(1);
+}
+
+.navmenu-trigger[data-open="true"] {
+  background: #f1fad8;
+  color: #101010;
+}
+
+.navmenu-trigger[data-active="true"] {
+  color: #101010;
+}
+
+.navmenu-trigger:focus-visible {
+  outline: 2px solid #c7f36b;
+  outline-offset: 2px;
+}
+
+/* Desktop dropdown panel items + footer links (mega panel + flat corporate menu) */
+.navmenu-item {
+  color: #334155;
+  background: transparent;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.navmenu-item:hover,
+.navmenu-item:focus-visible {
+  background: #f1fad8;
+  color: #101010;
+}
+
+.navmenu-item[data-active="true"] {
+  background: rgba(16, 16, 16, 0.06);
+  color: #101010;
+}
+
+.navmenu-item:focus-visible {
+  outline: 2px solid #c7f36b;
+  outline-offset: -2px;
+}
+
+/* Navbar primary CTA — Ink default, Lime hover/focus (Navbar-only; not the
+   shared HomeButton "primary" variant, since this button is plain inline-
+   styled markup in Navbar.tsx). */
+.navbar-cta {
+  background-color: #101010;
+  color: #ffffff;
+  border: 1px solid #101010;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.navbar-cta:hover,
+.navbar-cta:focus-visible {
+  background-color: #c7f36b;
+  color: #101010;
+  border-color: #c7f36b;
+}
+
+.navbar-cta:hover [data-arrow],
+.navbar-cta:focus-visible [data-arrow] {
+  transform: translateX(3px);
+}
+
+.navbar-cta:focus-visible {
+  outline: 2px solid #101010;
+  outline-offset: 2px;
+}
+
+/* Desktop language switcher (EN/TR) — neutral by default, lime-soft on hover/focus */
+.navbar-locale {
+  color: #64748b;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.navbar-locale:hover,
+.navbar-locale:focus-visible {
+  color: #101010;
+  background: #f1fad8;
+  border-color: #c7f36b;
+}
+
+.navbar-locale:focus-visible {
+  outline: 2px solid #c7f36b;
+  outline-offset: 2px;
+}
+
+/* Mobile language switcher (on the dark mobile menu panel) */
+.navbar-locale-mobile {
+  color: #94a3b8;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.navbar-locale-mobile:hover,
+.navbar-locale-mobile:focus-visible {
+  color: #c7f36b;
+  background: rgba(199, 243, 107, 0.08);
+  border-color: #c7f36b;
+}
+
+.navbar-locale-mobile:focus-visible {
+  outline: 2px solid #c7f36b;
+  outline-offset: 2px;
+}
+
+/* Floating chat toggle — fills lime on hover/focus, so its focus ring needs
+   Ink (not lime) to stay visible against the lime fill. */
+.chat-toggle-btn:focus-visible {
+  outline: 2px solid #101010;
+  outline-offset: 3px;
+}
+
+/* Mobile accordion menu items (dark panel) */
+.navmenu-mobile-item {
+  color: #cbd5e1;
+  background: transparent;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.navmenu-mobile-item:hover,
+.navmenu-mobile-item:focus-visible {
+  background: rgba(199, 243, 107, 0.12);
+  color: #c7f36b;
+}
+
+.navmenu-mobile-item[data-active="true"] {
+  background: rgba(199, 243, 107, 0.14);
+  color: #c7f36b;
+}
+
+.navmenu-mobile-item:focus-visible {
+  outline: 2px solid #c7f36b;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navmenu-trigger,
+  .navmenu-trigger::after,
+  .navmenu-item,
+  .navbar-cta,
+  .navbar-cta [data-arrow],
+  .navbar-locale,
+  .navbar-locale-mobile,
+  .navmenu-mobile-item,
+  .chat-toggle-btn {
+    transition: none;
+  }
+}
+
+/* Final CTA — four INDEPENDENT wave systems (A–D) layered in the lower
+   portion of the closing section, not one master curve sliced into depth
+   offsets (each group's terrain shape is generated separately in
+   FinalCtaWaveField.tsx). Single SVG, no duplicated canvases — every group
+   duplicates its own line set once, side by side, inside one <g>.
+   Motion is a pure right-to-left translateX per group, linear, never
+   alternating — no scale/rotate/perspective anywhere, so nothing reads as
+   depth travel. `transform-box: fill-box` is what makes the loop gapless:
+   each track's own rendered width is exactly two copies (2 * VIEW_WIDTH), so
+   `translateX(-50%)` always moves it by exactly one copy's width — a
+   percentage can't drift out of sync with VIEW_WIDTH the way a hardcoded
+   pixel offset can. Each group's `animation-delay` is a distinct negative
+   value purely to stagger their starting phase (a static positional offset
+   would instead leave a gap at some point in the loop, since the two-copy
+   track is only ever exactly viewport-covering when unshifted). The mask
+   fades the whole field out before it reaches the headline/body/CTA above
+   it. */
+.final-cta-wave-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.5) 55%, #000 72%);
+  mask-image: linear-gradient(to bottom, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.5) 55%, #000 72%);
+}
+
+.final-cta-wave-field__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive line density: "core" lines always render (~half the field,
+   mobile included); "extra" lines join at the lg breakpoint for the full
+   density. Split per-group in FinalCtaWaveField.tsx so every group stays
+   recognizable at every size instead of one group emptying out first. */
+.final-cta-wave-field__svg path[data-tier="extra"] {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .final-cta-wave-field__svg path[data-tier="extra"] {
+    display: inline;
+  }
+}
+
+.final-cta-wave-field__track {
+  transform-box: fill-box;
+  animation-name: finalCtaWaveTravel;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.final-cta-wave-field__track--A {
+  animation-duration: 30s;
+  animation-delay: -3s;
+}
+
+.final-cta-wave-field__track--B {
+  animation-duration: 25s;
+  animation-delay: -9s;
+}
+
+.final-cta-wave-field__track--C {
+  animation-duration: 21s;
+  animation-delay: -14s;
+}
+
+.final-cta-wave-field__track--D {
+  animation-duration: 17s;
+  animation-delay: -6s;
+}
+
+@keyframes finalCtaWaveTravel {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .final-cta-wave-field__track {
     animation: none;
   }
 }

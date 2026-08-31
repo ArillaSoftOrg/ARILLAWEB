@@ -62,21 +62,17 @@ export default function MegaMenuNav({ locale, pathname }: { locale: Locale; path
     };
   }, [open]);
 
-  const triggerStyle = (key: MenuKey, active: boolean) => ({
-    position: 'relative' as const,
+  const triggerStyle = {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '4px',
     padding: '8px 14px',
     paddingBottom: '10px',
     borderRadius: '7px',
-    color: active || open === key ? '#7c3aed' : '#334155',
-    background: active ? 'rgba(124,58,237,0.06)' : open === key ? 'rgba(124,58,237,0.10)' : 'transparent',
     border: 'none',
     cursor: 'pointer',
-    transition: 'color 0.2s ease, background 0.2s ease',
     whiteSpace: 'nowrap' as const,
-  });
+  };
 
   const corporateHrefs = CORPORATE_LINKS.map((item) => item.href);
   const sectoralActive = sectoralMenu.groups.some((group) => isGroupActive(group, pathname));
@@ -90,8 +86,10 @@ export default function MegaMenuNav({ locale, pathname }: { locale: Locale; path
       <div style={{ position: 'relative' }} onMouseEnter={() => openMenu('sectoral')} onMouseLeave={scheduleClose}>
         <button
           type="button"
-          className="text-role-navigation"
-          style={triggerStyle('sectoral', sectoralActive)}
+          className="navmenu-trigger text-role-navigation"
+          style={triggerStyle}
+          data-open={open === 'sectoral'}
+          data-active={sectoralActive}
           aria-haspopup="true"
           aria-expanded={open === 'sectoral'}
           onClick={() => setOpen(open === 'sectoral' ? null : 'sectoral')}
@@ -108,10 +106,10 @@ export default function MegaMenuNav({ locale, pathname }: { locale: Locale; path
             onMouseLeave={scheduleClose}
             footer={
               <>
-                <Link href={sectoralMenu.viewAllHref} onClick={closeNow} style={footerLinkStyle}>
+                <Link href={sectoralMenu.viewAllHref} onClick={closeNow} className="navmenu-item" style={footerLinkStyle}>
                   {sectoralMenu.viewAllLabel}
                 </Link>
-                <Link href={sectoralMenu.ctaHref} onClick={closeNow} style={{ ...footerLinkStyle, color: '#7c3aed', fontWeight: 600 }}>
+                <Link href={sectoralMenu.ctaHref} onClick={closeNow} className="navmenu-item" data-active="true" style={{ ...footerLinkStyle, fontWeight: 600 }}>
                   {sectoralMenu.ctaLabel}
                 </Link>
               </>
@@ -124,8 +122,10 @@ export default function MegaMenuNav({ locale, pathname }: { locale: Locale; path
       <div style={{ position: 'relative' }} onMouseEnter={() => openMenu('services')} onMouseLeave={scheduleClose}>
         <button
           type="button"
-          className="text-role-navigation"
-          style={triggerStyle('services', servicesActive)}
+          className="navmenu-trigger text-role-navigation"
+          style={triggerStyle}
+          data-open={open === 'services'}
+          data-active={servicesActive}
           aria-haspopup="true"
           aria-expanded={open === 'services'}
           onClick={() => setOpen(open === 'services' ? null : 'services')}
@@ -142,10 +142,10 @@ export default function MegaMenuNav({ locale, pathname }: { locale: Locale; path
             onMouseLeave={scheduleClose}
             footer={
               <>
-                <Link href={servicesMenu.viewAllHref} onClick={closeNow} style={footerLinkStyle}>
+                <Link href={servicesMenu.viewAllHref} onClick={closeNow} className="navmenu-item" style={footerLinkStyle}>
                   {servicesMenu.viewAllLabel}
                 </Link>
-                <Link href={servicesMenu.secondaryHref} onClick={closeNow} style={{ ...footerLinkStyle, color: '#7c3aed', fontWeight: 600 }}>
+                <Link href={servicesMenu.secondaryHref} onClick={closeNow} className="navmenu-item" data-active="true" style={{ ...footerLinkStyle, fontWeight: 600 }}>
                   {servicesMenu.secondaryLabel}
                 </Link>
               </>
@@ -158,8 +158,10 @@ export default function MegaMenuNav({ locale, pathname }: { locale: Locale; path
       <div style={{ position: 'relative' }} onMouseEnter={() => openMenu('corporate')} onMouseLeave={scheduleClose}>
         <button
           type="button"
-          className="text-role-navigation"
-          style={triggerStyle('corporate', corporateActive)}
+          className="navmenu-trigger text-role-navigation"
+          style={triggerStyle}
+          data-open={open === 'corporate'}
+          data-active={corporateActive}
           aria-haspopup="true"
           aria-expanded={open === 'corporate'}
           onClick={() => setOpen(open === 'corporate' ? null : 'corporate')}
@@ -192,13 +194,12 @@ export default function MegaMenuNav({ locale, pathname }: { locale: Locale; path
                 key={item.href}
                 href={item.href}
                 onClick={closeNow}
-                className="text-role-navigation"
+                className="navmenu-item text-role-navigation"
+                data-active={pathname === item.href}
                 style={{
                   display: 'block',
                   padding: '9px 14px',
                   borderRadius: '8px',
-                  color: pathname === item.href ? '#7c3aed' : '#334155',
-                  background: pathname === item.href ? 'rgba(124,58,237,0.08)' : 'transparent',
                   textDecoration: 'none',
                   whiteSpace: 'nowrap',
                 }}
@@ -218,7 +219,6 @@ const footerLinkStyle: React.CSSProperties = {
   alignItems: 'center',
   padding: '10px 14px',
   borderRadius: '8px',
-  color: '#475569',
   textDecoration: 'none',
   fontSize: '13px',
   whiteSpace: 'nowrap',
@@ -288,13 +288,12 @@ function MegaPanel({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-role-navigation"
+                  className="navmenu-item text-role-navigation"
+                  data-active={pathname === item.href}
                   style={{
                     display: 'block',
                     padding: '8px',
                     borderRadius: '8px',
-                    color: pathname === item.href ? '#7c3aed' : '#334155',
-                    background: pathname === item.href ? 'rgba(124,58,237,0.08)' : 'transparent',
                     textDecoration: 'none',
                     fontSize: '13.5px',
                     lineHeight: 1.4,

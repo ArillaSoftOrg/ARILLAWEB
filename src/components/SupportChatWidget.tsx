@@ -3,13 +3,12 @@
 import { useState, useRef, useEffect, type RefObject } from "react";
 import { MessageCircle, Send, X } from "lucide-react";
 import { useTranslations } from 'next-intl';
-import { useInView } from 'framer-motion';
 import { useCookieConsentContext } from '@/components/cookie/CookieConsentProvider';
 
 const AUTO_TRIGGERED_KEY = 'support-chat-auto-triggered';
 const INTERACTED_KEY = 'support-chat-interacted';
 const DISMISSED_KEY = 'support-chat-dismissed';
-const DWELL_MS = 1800;
+const AUTO_OPEN_DELAY_MS = 5000;
 const TEASER_AUTO_HIDE_MS = 8000;
 const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
 // audio.volume caps at 1 — this drives loudness above that via a GainNode instead.
@@ -18,10 +17,12 @@ const DESKTOP_MEDIA_QUERY = '(min-width: 1024px)';
 const NOTIFICATION_GAIN = 1.1;
 
 interface SupportChatWidgetProps {
+  // No longer used for auto-open (that trigger is now time-based) — kept optional
+  // so existing call sites passing a section ref don't need to change.
   triggerRef?: RefObject<HTMLDivElement | null>;
 }
 
-export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps = {}) {
+export default function SupportChatWidget(_props: SupportChatWidgetProps = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [showTeaser, setShowTeaser] = useState(false);
@@ -34,14 +35,11 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
   const hasAutoTriggeredRef = useRef(false);
   const hasInteractedRef = useRef(false);
   const hasDismissedRef = useRef(false);
-  const dwellTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoOpenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const teaserHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const fallbackRef = useRef<HTMLDivElement>(null);
   const notificationAudioRef = useRef<HTMLAudioElement | null>(null);
   const notificationGraphRef = useRef<{ context: AudioContext; gainNode: GainNode } | null>(null);
   const notificationUnlockedRef = useRef(false);
-
-  const isSectionInView = useInView(triggerRef ?? fallbackRef, { amount: 0.4 });
 
   const quickOptions = [
     { label: t('consultationLabel'), message: t('consultationMsg') },
@@ -81,7 +79,7 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
 
   // Prepares (but does not play) the audio -> gainNode -> destination graph.
   // Must run inside a real user gesture to satisfy autoplay policy — the later
-  // scroll-triggered playNotificationSound() call is not itself a gesture.
+  // timer-triggered playNotificationSound() call is not itself a gesture.
   const unlockNotificationAudio = async () => {
     if (notificationUnlockedRef.current) return;
     notificationUnlockedRef.current = true;
@@ -120,7 +118,7 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
   };
 
   // Listen once for the first real user gesture anywhere on the page (not tied
-  // to the chat widget itself) so a later scroll-triggered notification sound
+  // to the chat widget itself) so the later timer-triggered notification sound
   // has already-unlocked audio to play through.
   useEffect(() => {
     const events: Array<keyof WindowEventMap> = ['pointerdown', 'touchend', 'keydown'];
@@ -141,7 +139,7 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
 
     if (!audio || !graph) {
       // Never unlocked by a real gesture (pointerdown/touchend/keydown) — e.g. a
-      // scroll-only visit. Skip the sound silently; the widget still opens.
+      // no-interaction visit. Skip the sound silently; the widget still opens.
       if (process.env.NODE_ENV !== 'production') {
         console.debug('[SupportChatWidget] Notification sound skipped — audio not unlocked (no prior interaction).');
       }
@@ -191,32 +189,26 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
     }
   };
 
-  // Dwell-time: only auto-trigger once the "How It Works" section has stayed in view.
+  // Auto-open once, 5s after mount — runs regardless of scroll position.
+  // Skipped entirely if the user already opened/dismissed the widget this
+  // session (flags hydrated from sessionStorage just above).
   useEffect(() => {
-    if (!triggerRef || isOpen) return;
-
-    if (!isSectionInView) {
-      if (dwellTimerRef.current) {
-        clearTimeout(dwellTimerRef.current);
-        dwellTimerRef.current = null;
-      }
-      return;
-    }
-
     if (hasAutoTriggeredRef.current || hasInteractedRef.current || hasDismissedRef.current) return;
 
-    dwellTimerRef.current = setTimeout(() => {
+    autoOpenTimerRef.current = setTimeout(() => {
+      // Re-check at fire time — the user may have interacted/dismissed in the interim.
+      if (hasInteractedRef.current || hasDismissedRef.current) return;
       fireAutoTrigger();
-    }, DWELL_MS);
+    }, AUTO_OPEN_DELAY_MS);
 
     return () => {
-      if (dwellTimerRef.current) {
-        clearTimeout(dwellTimerRef.current);
-        dwellTimerRef.current = null;
+      if (autoOpenTimerRef.current) {
+        clearTimeout(autoOpenTimerRef.current);
+        autoOpenTimerRef.current = null;
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSectionInView, isOpen]);
+  }, []);
 
   // Escape closes an open panel, mirroring the explicit X-close dismissal.
   useEffect(() => {
@@ -247,9 +239,9 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
   };
 
   const handleToggleClick = () => {
-    if (dwellTimerRef.current) {
-      clearTimeout(dwellTimerRef.current);
-      dwellTimerRef.current = null;
+    if (autoOpenTimerRef.current) {
+      clearTimeout(autoOpenTimerRef.current);
+      autoOpenTimerRef.current = null;
     }
     if (!isOpen) {
       markInteracted();
@@ -331,7 +323,7 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
       <button
         onClick={handleToggleClick}
         aria-label={t('toggleAriaLabel')}
-        className={!reducedMotion && attentionPulse ? "support-chat-attention" : undefined}
+        className={`chat-toggle-btn${!reducedMotion && attentionPulse ? " support-chat-attention" : ""}`}
         style={{
           position: "fixed",
           bottom: "20px",
@@ -339,26 +331,36 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
           width: "52px",
           height: "52px",
           borderRadius: "50%",
-          background: "linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)",
+          background: "#101010",
           border: "none",
-          color: "white",
+          color: "#C7F36B",
           cursor: "pointer",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          boxShadow: "0 8px 24px rgba(124,58,237,0.35)",
+          boxShadow: "0 8px 24px rgba(16,16,16,0.3)",
           zIndex: 50,
-          transition: "all 0.3s ease",
+          transition: "background-color 180ms ease, color 180ms ease, box-shadow 180ms ease",
           opacity: isOpen ? 0 : 1,
           pointerEvents: isOpen ? "none" : "auto",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "scale(1.1)";
-          e.currentTarget.style.boxShadow = "0 12px 32px rgba(124,58,237,0.5)";
+          e.currentTarget.style.background = "#C7F36B";
+          e.currentTarget.style.color = "#101010";
+          e.currentTarget.style.boxShadow = "0 12px 32px rgba(16,16,16,0.32)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "scale(1)";
-          e.currentTarget.style.boxShadow = "0 8px 24px rgba(124,58,237,0.35)";
+          e.currentTarget.style.background = "#101010";
+          e.currentTarget.style.color = "#C7F36B";
+          e.currentTarget.style.boxShadow = "0 8px 24px rgba(16,16,16,0.3)";
+        }}
+        onFocus={(e) => {
+          e.currentTarget.style.background = "#C7F36B";
+          e.currentTarget.style.color = "#101010";
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.background = "#101010";
+          e.currentTarget.style.color = "#C7F36B";
         }}
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
@@ -513,8 +515,8 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
                 transition: "all 0.2s",
               }}
               onFocus={(e) => {
-                e.currentTarget.style.borderColor = "#7c3aed";
-                e.currentTarget.style.boxShadow = "0 0 0 2px rgba(124,58,237,0.1)";
+                e.currentTarget.style.borderColor = "#101010";
+                e.currentTarget.style.boxShadow = "0 0 0 2px rgba(16,16,16,0.12)";
               }}
               onBlur={(e) => {
                 e.currentTarget.style.borderColor = "#d1d5db";
@@ -527,7 +529,7 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
               style={{
                 padding: "10px 12px",
                 borderRadius: "8px",
-                background: message.trim() ? "linear-gradient(135deg, #7c3aed, #6d28d9)" : "#d1d5db",
+                background: message.trim() ? "#101010" : "#d1d5db",
                 border: "none",
                 color: "white",
                 cursor: message.trim() ? "pointer" : "not-allowed",
@@ -539,7 +541,7 @@ export default function SupportChatWidget({ triggerRef }: SupportChatWidgetProps
               onMouseEnter={(e) => {
                 if (message.trim()) {
                   e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = "0 6px 16px rgba(124,58,237,0.4)";
+                  e.currentTarget.style.boxShadow = "0 6px 16px rgba(16,16,16,0.35)";
                 }
               }}
               onMouseLeave={(e) => {

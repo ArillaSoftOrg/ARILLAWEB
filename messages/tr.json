@@ -164,7 +164,397 @@
   "pages": {
     "home": {
       "title": "Web, Mobil ve Özel Yazılım Çözümleri",
-      "description": "Modern yazılım çözümleri ile işletmenizi dijital geleceğe taşıyoruz. Web, mobil ve kurumsal yazılım geliştirme."
+      "description": "Modern yazılım çözümleri ile işletmenizi dijital geleceğe taşıyoruz. Web, mobil ve kurumsal yazılım geliştirme.",
+      "sections": {
+        "hero": {
+          "headline": "İş süreçlerinizi dijitalleştiren özel yazılım ve web çözümleri geliştiriyoruz.",
+          "body": "Kurumsal web sitelerinden yönetim panellerine, randevu sistemlerinden özel iş yazılımlarına kadar ihtiyacınıza göre tasarlanan dijital sistemleri geliştiriyor, yayına alıyor ve teknik desteğini sağlıyoruz.",
+          "benefits": [
+            "İhtiyaca Özel Sistemler",
+            "Verimli İş Süreçleri",
+            "Güvenilir Dijital Altyapı"
+          ],
+          "ctaPrimary": "Ücretsiz Keşif Görüşmesi",
+          "ctaSecondary": "Projelerimizi İncele",
+          "microcopy": "15 dakikalık ücretsiz keşif görüşmesi. Projeniz için net ihtiyaç ve kapsam belirlenir."
+        },
+        "capabilityStrip": {
+          "heading": "Modern Teknoloji Altyapısıyla Çalışıyoruz",
+          "items": [
+            "Google Premier Partner",
+            "Meta Business Partner",
+            "LinkedIn Marketing Partner",
+            "AWS Partner",
+            "WhatsApp Business",
+            "OpenAI",
+            "Anthropic",
+            "xAI"
+          ]
+        },
+        "businessTool": {
+          "heading": "Web siteniz yalnızca güzel görünmemeli. İşletmeniz için çalışmalı.",
+          "body": "Arillasoft'ta web sitesini ayrı bir vitrin olarak değil, işletmenizin dijital sistemlerinin başlangıç noktası olarak ele alıyoruz. Ziyaretçinin sizi bulmasından randevu almasına, ödeme yapmasından otomatik bilgilendirme almasına kadar ihtiyaç duyulan yapıyı tek bir bütün olarak planlıyoruz.",
+          "concepts": [
+            {
+              "key": "discover",
+              "title": "Bulunun",
+              "description": "SEO ve GEO altyapısıyla arama motorlarında ve yapay zekâ destekli aramalarda görünürlüğünüzü güçlendirin."
+            },
+            {
+              "key": "convert",
+              "title": "Dönüştürün",
+              "description": "Ziyaretçileri form, randevu, rezervasyon, sipariş veya ödeme gibi gerçek aksiyonlara yönlendirin."
+            },
+            {
+              "key": "connect",
+              "title": "Bağlayın",
+              "description": "Web sitenizi ödeme, kargo, WhatsApp Business ve diğer servislerle entegre edin."
+            },
+            {
+              "key": "manage",
+              "title": "Yönetin",
+              "description": "Müşteri, sipariş, randevu veya operasyon verilerini işletmenize özel paneller üzerinden yönetin."
+            }
+          ],
+          "stepExpandAriaLabel": "{title} ekranını aç",
+          "stepCollapseAriaLabel": "{title} ekranını kapat"
+        },
+        "webCommerce": {
+          "heading": "Dijital varlığınız için güçlü bir temel kuruyoruz.",
+          "body": "Kurumsal web sitelerinden e-ticaret platformlarına kadar hızlı, yönetilebilir ve büyümeye hazır web çözümleri geliştiriyoruz. Tasarımın yanında performans, teknik altyapı, ölçümleme ve dönüşüm süreçlerini de projenin parçası olarak ele alıyoruz.",
+          "solutions": [
+            {
+              "id": "corporate",
+              "title": "Kurumsal Web Siteleri",
+              "description": "Markanızı doğru anlatan, hızlı çalışan ve içeriklerinizi kolayca yönetebileceğiniz kurumsal web siteleri."
+            },
+            {
+              "id": "ecommerce",
+              "title": "E-Ticaret",
+              "description": "Ürün yönetiminden ödeme altyapısına, sipariş sürecinden kargo entegrasyonuna kadar satışa hazır e-ticaret sistemleri."
+            },
+            {
+              "id": "webapps",
+              "title": "Web Uygulamaları",
+              "description": "Standart bir web sitesinin ötesine geçen; kullanıcı hesabı, dashboard, işlem ekranları ve özel işlevler içeren web uygulamaları."
+            },
+            {
+              "id": "landing",
+              "title": "Landing Page",
+              "description": "Kampanya, ürün veya hizmetler için dönüşüm odaklı ve ölçümlenebilir açılış sayfaları."
+            }
+          ],
+          "capabilities": [
+            "Responsive",
+            "Performance",
+            "SEO-ready",
+            "GEO-ready",
+            "Analytics",
+            "CMS",
+            "Security",
+            "Conversion"
+          ]
+        },
+        "businessSystems": {
+          "heading": "Web sitenizin arkasında çalışan iş sistemlerini de geliştiriyoruz.",
+          "body": "Her işletmenin çalışma şekli farklıdır. Hazır yazılımların yeterli olmadığı durumlarda randevu, rezervasyon, müşteri yönetimi, sipariş veya operasyon süreçlerinize göre özel sistemler geliştiriyoruz.",
+          "capabilities": [
+            {
+              "id": "appointments",
+              "title": "Randevu Sistemleri",
+              "description": "Müşteriler uygun saatleri görür, randevu oluşturur; işletme tüm süreci merkezi panelden yönetir."
+            },
+            {
+              "id": "reservations",
+              "title": "Rezervasyon Sistemleri",
+              "description": "Otel, restoran veya hizmet işletmelerine göre özelleştirilebilir rezervasyon akışları."
+            },
+            {
+              "id": "crm",
+              "title": "Müşteri Yönetimi",
+              "description": "Müşteri kayıtları, geçmiş işlemler ve ilişkili verilerin tek yerde yönetilmesi."
+            },
+            {
+              "id": "admin",
+              "title": "Admin Panelleri",
+              "description": "İşletmenin içerik, kullanıcı, sipariş veya operasyon verilerini kontrol edebileceği özel paneller."
+            },
+            {
+              "id": "dashboards",
+              "title": "Dashboardlar",
+              "description": "İşletmenin önemli metriklerini ve süreçlerini tek ekranda takip etmesini sağlayan arayüzler."
+            },
+            {
+              "id": "workflows",
+              "title": "Özel İş Akışları",
+              "description": "Hazır ürünlere uymayan süreçler için işletmenin çalışma biçimine göre geliştirilen sistemler."
+            }
+          ],
+          "highlight": "Yazılımı işletmenize uyduruyoruz; işletmenizi yazılıma değil."
+        },
+        "industrySolutions": {
+          "heading": "Her işletmenin web sitesi aynı işi yapmak zorunda değil.",
+          "body": "Dijital altyapıyı sektörünüzün ve operasyonunuzun gerçek ihtiyaçlarına göre şekillendiriyoruz.",
+          "sectors": [
+            {
+              "id": "clinic",
+              "label": "Klinik",
+              "title": "Dijital görünürlükten randevuya kadar tek akış.",
+              "description": "Hasta sizi aramada bulur, hizmetlerinizi inceler ve uygun zamanı seçerek doğrudan randevu oluşturabilir.",
+              "features": [
+                "Kurumsal web sitesi",
+                "Doktor ve hizmet sayfaları",
+                "Online randevu",
+                "Randevu yönetimi",
+                "WhatsApp bildirimleri",
+                "SEO & GEO"
+              ]
+            },
+            {
+              "id": "hotel",
+              "label": "Otel",
+              "title": "Misafir deneyimini web sitesinden yönetime bağlayın.",
+              "description": "Otelin dijital vitrini ile rezervasyon ve müşteri süreçlerini birbirinden bağımsız sistemler yerine birlikte çalışacak şekilde tasarlayabiliriz.",
+              "features": [
+                "Otel web sitesi",
+                "Oda ve hizmet sayfaları",
+                "Rezervasyon talebi",
+                "Müşteri kayıtları",
+                "Yönetim paneli",
+                "Otomatik bildirimler"
+              ]
+            },
+            {
+              "id": "restaurant",
+              "label": "Restoran / Kafe",
+              "title": "Menünüzden müşteri deneyimine kadar dijitalleştirin.",
+              "description": "Menü değişikliklerinde tekrar baskı yaptırmak yerine ürünleri ve fiyatları merkezi panelden güncelleyebilirsiniz.",
+              "features": [
+                "Web sitesi",
+                "QR Menü",
+                "Kategori ve ürün yönetimi",
+                "Fiyat güncellemeleri",
+                "Kampanya alanları",
+                "Yönetim paneli"
+              ]
+            },
+            {
+              "id": "ecommerce",
+              "label": "E-Ticaret",
+              "title": "Siparişten teslimata kadar birbirine bağlı bir satış altyapısı.",
+              "description": "Satışın yalnızca checkout ekranında bitmediği, sipariş ve müşteri iletişiminin de otomatik ilerlediği bir yapı kurabiliriz.",
+              "features": [
+                "E-ticaret sitesi",
+                "Ödeme altyapısı",
+                "Sipariş yönetimi",
+                "Kargo entegrasyonu",
+                "WhatsApp Business",
+                "Analytics"
+              ]
+            }
+          ]
+        },
+        "automation": {
+          "heading": "Sistemlerinizi birbirine bağlayın. Tekrarlanan işleri otomatikleştirin.",
+          "body": "Web sitenizin veya işletme yazılımınızın kullandığınız diğer servislerle iletişim kurmasını sağlıyoruz. Böylece manuel veri girişi azalır, müşteriye doğru bilgi doğru anda ulaştırılır.",
+          "pipeline": [
+            "Sipariş",
+            "Ödeme",
+            "Kargo",
+            "WhatsApp Business",
+            "Müşteri"
+          ],
+          "example": "Örneğin bir e-ticaret siparişi kargoya teslim edildiğinde sistem ilgili veriyi algılayabilir ve müşteriye WhatsApp Business üzerinden otomatik bilgilendirme gönderebilir.",
+          "capabilities": [
+            "WhatsApp Business",
+            "Ödeme sistemleri",
+            "Kargo servisleri",
+            "API entegrasyonları",
+            "Webhooks",
+            "E-posta",
+            "CRM bağlantıları",
+            "Analytics"
+          ]
+        },
+        "growthFoundation": {
+          "heading": "Yayınlamak başlangıç. Bulunmak ve büyümek devamı.",
+          "body": "İyi bir web sitesi yalnızca çalışmamalı; hızlı bulunmalı, hızlı açılmalı ve kullanıcı davranışlarından öğrenebilmelidir. Bu nedenle teknik görünürlük ve performansı geliştirme sürecinin başından itibaren ele alıyoruz.",
+          "items": [
+            {
+              "id": "seo",
+              "title": "SEO",
+              "description": "Teknik altyapı, içerik yapısı ve arama motorlarının siteyi doğru anlayabilmesi için gerekli temel optimizasyonlar."
+            },
+            {
+              "id": "geo",
+              "title": "GEO",
+              "description": "İçeriğin yapay zekâ destekli arama ve cevap sistemleri tarafından daha açık ve anlamlı biçimde anlaşılmasına yönelik içerik ve teknik yapı."
+            },
+            {
+              "id": "performance",
+              "title": "Performance",
+              "description": "Sayfa yükleme süreleri, Core Web Vitals ve gerçek kullanıcı deneyimini etkileyen teknik performans iyileştirmeleri."
+            },
+            {
+              "id": "analytics",
+              "title": "Analytics",
+              "description": "Kullanıcıların siteyle nasıl etkileşime girdiğini ölçmek ve geliştirme kararlarını veriye dayandırmak için analitik altyapı."
+            }
+          ]
+        },
+        "howWeWork": {
+          "heading": "İhtiyacı anlamadan geliştirmeye başlamıyoruz.",
+          "body": "Projeyi yalnızca teslim edilecek ekranlardan ibaret görmüyoruz. Önce işletmenin problemini ve hedefini anlıyor, ardından gerekli dijital sistemi birlikte şekillendiriyoruz.",
+          "steps": [
+            {
+              "number": "01",
+              "title": "Analiz",
+              "description": "İşletmenizi, hedef kitlenizi, mevcut süreçlerinizi ve çözülmesi gereken problemi anlamaya çalışıyoruz."
+            },
+            {
+              "number": "02",
+              "title": "Plan",
+              "description": "Projenin kapsamını, gerekli özellikleri, kullanıcı akışlarını ve teknik yaklaşımı belirliyoruz."
+            },
+            {
+              "number": "03",
+              "title": "Tasarım",
+              "description": "Marka, içerik ve kullanıcı deneyimini bir araya getirerek arayüzü ve etkileşimleri tasarlıyoruz."
+            },
+            {
+              "number": "04",
+              "title": "Geliştirme",
+              "description": "Web sitesini, gerekli backend sistemlerini ve entegrasyonları performans ve sürdürülebilirlik odaklı geliştiriyoruz."
+            },
+            {
+              "number": "05",
+              "title": "Yayınla & Geliştir",
+              "description": "Sistemi yayına alıyor, gerekli kontrolleri gerçekleştiriyor ve ihtiyaçlara göre geliştirmeye devam ediyoruz."
+            }
+          ]
+        },
+        "pricing": {
+          "heading": "İhtiyacınız kadar başlayın. Gerektikçe büyütün.",
+          "body": "Web projeleri ve ürünleşmiş çözümler için belirli paketler; özel iş sistemleri ve entegrasyonlar için proje kapsamına göre fiyatlandırma sunuyoruz.",
+          "recommendedBadge": "Önerilen",
+          "freePriceLabel": "Ücretsiz",
+          "fromPriceLine": "<amount>{price}</amount>'den başlayan fiyatlarla",
+          "customPriceLabel": "Projenize özel fiyatlandırma",
+          "customPriceNote": "Kapsam ve teknik gereksinimlere göre belirlenir.",
+          "plans": [
+            {
+              "id": "discovery",
+              "name": "Ücretsiz Keşif",
+              "tagline": "İhtiyacınızı birlikte netleştirelim.",
+              "priceType": "free",
+              "ctaLabel": "Ücretsiz Görüşme Planla",
+              "features": [
+                "30–45 dk keşif görüşmesi",
+                "Mevcut dijital durumun değerlendirilmesi",
+                "İhtiyaçların belirlenmesi",
+                "Uygun çözüm önerisi",
+                "Proje kapsamının netleştirilmesi",
+                "Yaklaşık proje yol haritası"
+              ]
+            },
+            {
+              "id": "starter",
+              "name": "Başlangıç",
+              "tagline": "Profesyonel dijital varlığınızı oluşturun.",
+              "priceType": "from",
+              "ctaLabel": "Başlayalım",
+              "features": [
+                "Kurumsal web sitesi",
+                "Responsive / mobil uyumlu yapı",
+                "Hizmet veya ürün sayfaları",
+                "İletişim ve dönüşüm formları",
+                "Yönetilebilir içerik altyapısı",
+                "Temel teknik SEO",
+                "Temel performans optimizasyonu",
+                "Temel Analytics kurulumu",
+                "SSL / temel güvenlik altyapısı"
+              ]
+            },
+            {
+              "id": "business",
+              "name": "Business",
+              "featured": true,
+              "tagline": "Web sitenizi işletmeniz için çalışan bir sisteme dönüştürün.",
+              "priceType": "from",
+              "featuresIntro": "Başlangıç paketindeki her şeye ek olarak:",
+              "ctaLabel": "Business ile Başlayın",
+              "features": [
+                "Özel sayfa ve kullanıcı akışları",
+                "Gelişmiş SEO & GEO altyapısı",
+                "Gelişmiş Analytics / event tracking",
+                "Randevu veya rezervasyon akışları",
+                "Temel API entegrasyonları",
+                "WhatsApp Business entegrasyonu",
+                "Dönüşüm optimizasyonu",
+                "İhtiyaca göre özel yönetim ekranları"
+              ]
+            },
+            {
+              "id": "custom",
+              "name": "Özel Çözüm",
+              "isCustom": true,
+              "tagline": "İşletmenize özel yazılım, entegrasyon ve otomasyon çözümleri.",
+              "priceType": "custom",
+              "featuresIntro": "Business paketindeki her şeye ek olarak:",
+              "ctaLabel": "Projenizi Konuşalım",
+              "features": [
+                "İşletmeye özel yazılım",
+                "Gelişmiş admin paneli",
+                "Müşteri / sipariş / randevu yönetimi",
+                "Özel API entegrasyonları",
+                "Otomasyon akışları",
+                "Rol ve yetkilendirme",
+                "Üçüncü taraf sistem entegrasyonları",
+                "Özel raporlama ve dashboard",
+                "Ölçeklenebilir backend altyapısı"
+              ]
+            }
+          ]
+        },
+        "faq": {
+          "heading": "Başlamadan önce bilmeniz gerekenler.",
+          "items": [
+            {
+              "question": "Web sitesi ne kadar sürede hazırlanır?",
+              "answer": "Projenin kapsamına göre değişir. Kurumsal web projelerinde tasarım, geliştirme ve yayın süreçleri proje başlangıcında oluşturulan plana göre ilerler."
+            },
+            {
+              "question": "Mevcut web sitemizi yenileyebilir misiniz?",
+              "answer": "Evet. Mevcut altyapıyı, içerikleri ve teknik durumu analiz ederek tamamen yenileme veya kontrollü bir modernizasyon planı oluşturabiliriz."
+            },
+            {
+              "question": "Sadece web sitesi yaptırabilir miyiz?",
+              "answer": "Evet. Randevu, otomasyon veya özel yazılım çözümleri zorunlu değildir. Projenin kapsamı işletmenin gerçek ihtiyacına göre belirlenir."
+            },
+            {
+              "question": "İşletmemize özel yazılım geliştirebilir misiniz?",
+              "answer": "Evet. Hazır çözümlerin yeterli olmadığı süreçlerde ihtiyaca göre özel yönetim panelleri, randevu sistemleri, müşteri yönetimi ve benzeri web tabanlı sistemler geliştirilebilir."
+            },
+            {
+              "question": "SEO çalışmaları dahil mi?",
+              "answer": "Teknik SEO temelleri geliştirme sürecinde ele alınabilir. Daha kapsamlı SEO ve GEO çalışmaları proje kapsamına göre ayrıca planlanabilir."
+            },
+            {
+              "question": "WhatsApp Business entegrasyonu nasıl çalışıyor?",
+              "answer": "Randevu, sipariş veya kargo gibi sistem olayları WhatsApp Business mesaj akışlarıyla bağlanabilir. Entegrasyon kapsamı kullanılan sistemlere göre belirlenir."
+            },
+            {
+              "question": "Proje sonrasında destek veriyor musunuz?",
+              "answer": "Proje sonrasında bakım, teknik destek ve yeni geliştirmeler için ihtiyaca göre devam eden destek modeli oluşturulabilir."
+            }
+          ]
+        },
+        "finalCta": {
+          "heading": "İşletmeniz için ne kurabileceğimizi konuşalım.",
+          "body": "İhtiyacınızı anlatın. Web sitesinden işletme sistemlerine ve entegrasyonlara kadar doğru çözümün kapsamını birlikte belirleyelim.",
+          "cta": "Projenizi Konuşalım"
+        }
+      }
     },
     "hizmetler": {
       "title": "Hizmetler",

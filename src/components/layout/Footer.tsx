@@ -13,8 +13,7 @@ export default function Footer() {
   return (
     <footer
       style={{
-        background: '#0a0a0a',
-        borderTop: '1px solid rgba(124,58,237,0.2)',
+        background: '#101010',
         color: '#94a3b8',
       }}
     >

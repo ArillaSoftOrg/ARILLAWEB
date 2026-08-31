@@ -270,7 +270,7 @@ export default function Navbar({
               >
                 <BrandLockup
                   rotationEnabled={!brandIntroActive}
-                  variant={isHomePath && !isHomeTop ? 'surface' : 'default'}
+                  variant={isHomePath ? 'surface' : 'default'}
                 />
               </span>
             </Link>
@@ -288,24 +288,12 @@ export default function Navbar({
               <Link
                 href={pathname}
                 locale={otherLocale}
-                className="hidden lg:inline-flex items-center text-role-metadata"
+                className="navbar-locale hidden lg:inline-flex items-center text-role-metadata"
                 style={{
                   padding: '6px 12px',
                   borderRadius: '6px',
                   textDecoration: 'none',
-                  color: '#64748b',
-                  background: 'transparent',
-                  border: '1px solid #e2e8f0',
-                  transition: 'color 0.2s ease, border-color 0.2s ease',
                   textTransform: 'uppercase',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#7c3aed';
-                  e.currentTarget.style.borderColor = '#7c3aed';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#64748b';
-                  e.currentTarget.style.borderColor = '#e2e8f0';
                 }}
               >
                 {otherLocale.toUpperCase()}
@@ -314,38 +302,22 @@ export default function Navbar({
 
             <Link
               href="/teklif-al"
-              className="hidden lg:inline-flex items-center text-role-button"
+              className="navbar-cta hidden lg:inline-flex items-center text-role-button"
               style={{
                 gap: '6px',
                 padding: '10px 24px',
                 borderRadius: '8px',
                 textDecoration: 'none',
-                color: '#FFFFFF',
-                background: '#7c3aed',
-                boxShadow: '0 1px 3px rgba(124,58,237,0.25)',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)';
-                (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 14px rgba(124,58,237,0.35)';
-                const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
-                if (arrow) arrow.style.transform = 'translateX(3px)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)';
-                (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 1px 3px rgba(124,58,237,0.25)';
-                const arrow = e.currentTarget.querySelector('[data-arrow]') as HTMLElement;
-                if (arrow) arrow.style.transform = 'translateX(0)';
               }}
             >
               {t('teklifAl')}{' '}
-              <span data-arrow="" style={{ display: 'inline-flex', transition: 'transform 0.2s ease' }}>
+              <span data-arrow="" style={{ display: 'inline-flex', transition: 'transform 180ms ease' }}>
                 <ArrowRight size={14} />
               </span>
             </Link>
 
             <button
-              className={`flex items-center justify-center lg:hidden ${isHomePath && !isHomeTop ? 'text-slate-700' : 'text-slate-100 md:text-slate-700'}`}
+              className={`focus-ring-lime flex items-center justify-center lg:hidden ${isHomePath && !isHomeTop ? 'text-slate-700' : 'text-slate-100 md:text-slate-700'}`}
               onClick={() => setIsOpen(!isOpen)}
               style={{ background: 'transparent', border: 'none', padding: '12px', margin: '-12px', cursor: 'pointer' }}
               aria-label={t('menuToggle')}
@@ -386,14 +358,11 @@ export default function Navbar({
                 href={pathname}
                 locale={otherLocale}
                 onClick={() => setIsOpen(false)}
-                className="text-role-metadata"
+                className="navbar-locale-mobile text-role-metadata"
                 style={{
                   marginTop: '4px',
                   padding: '10px 14px',
                   borderRadius: '8px',
-                  color: '#94a3b8',
-                  background: 'transparent',
-                  border: '1px solid rgba(255,255,255,0.1)',
                   textDecoration: 'none',
                   textAlign: 'center',
                   textTransform: 'uppercase',
@@ -406,15 +375,13 @@ export default function Navbar({
             <Link
               href="/teklif-al"
               onClick={() => setIsOpen(false)}
-              className="text-role-button"
+              className="navbar-cta text-role-button"
               style={{
                 marginTop: '8px',
                 padding: '11px 20px',
                 borderRadius: '8px',
                 textAlign: 'center',
                 textDecoration: 'none',
-                color: '#FFFFFF',
-                background: '#7c3aed',
               }}
             >
               {t('teklifAl')}

@@ -69,7 +69,7 @@ export default async function PublicLayout({ children }: { children: React.React
           {showMaintenance ? <MaintenanceNotice locale={locale} /> : children}
         </main>
         {!showMaintenance && !isBlogPath && !isHomePath && <FAQSection faqs={faqs} />}
-        {!showMaintenance && !isBlogPath && <NewsletterSection />}
+        {!showMaintenance && !isBlogPath && !isHomePath && <NewsletterSection />}
         {!showMaintenance && !isBlogPath && <Footer />}
       </BrandIntroShell>
       <CookieBanner />

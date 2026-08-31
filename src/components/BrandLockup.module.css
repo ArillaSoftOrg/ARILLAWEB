@@ -16,7 +16,11 @@
 }
 
 .lockup[data-variant="surface"] {
-  color: #0f172a;
+  color: #101010;
+}
+
+.lockup[data-variant="surface"] .descriptor {
+  color: #60605c;
 }
 
 .mark {
@@ -78,11 +82,11 @@
 @media (min-width: 769px) {
   .lockup[data-variant="default"],
   .lockup[data-variant="maintenance"] {
-    color: #0f172a;
+    color: #101010;
   }
 
   .descriptor {
-    color: #64748b;
+    color: #60605c;
   }
 }
 
