@@ -108,7 +108,7 @@
 .backBottom:focus-visible,
 .toggle:focus-visible,
 .tocLink:focus-visible {
-  outline: 2px solid var(--post-accent, #38bdf8);
+  outline: 2px solid var(--post-accent, #c7f36b);
   outline-offset: 2px;
 }
 
@@ -367,7 +367,7 @@
 
 .tocActive {
   color: var(--blog-title);
-  border-left-color: var(--post-accent, #38bdf8);
+  border-left-color: var(--post-accent, #c7f36b);
   font-weight: 600;
 }
 
@@ -420,9 +420,9 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #a78bfa;
-  background: rgba(124, 58, 237, 0.1);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  color: var(--blog-title);
+  background: var(--blog-card-bg);
+  border: 1px solid var(--blog-border);
 }
 
 .relatedTitle {

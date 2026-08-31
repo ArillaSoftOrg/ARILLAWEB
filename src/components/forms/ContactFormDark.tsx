@@ -7,17 +7,27 @@ import { useTranslations } from 'next-intl';
 import { contactSchema, type ContactFormValues } from "@/lib/validations/contact";
 import { submitContactMessage } from "@/lib/contact-actions";
 import { CheckCircle, AlertCircle, Loader2, Send } from "lucide-react";
+import "@/lib/home-fonts";
 
 const fieldBase =
-    "w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-cyan-500/50 focus:bg-white/[0.05] focus:ring-2 focus:ring-cyan-500/20";
+    "font-home-sans w-full rounded-home-md border border-home-border-strong bg-home-bg px-4 py-3 text-sm text-home-fg placeholder-home-text-muted outline-none transition focus:border-home-primary focus:ring-2 focus:ring-home-primary-soft";
 const fieldError =
-    "border-red-500/40 focus:border-red-500/60 focus:ring-red-500/20";
-const labelBase = "mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-500";
-const errorText = "mt-1.5 text-xs text-red-400";
+    "border-red-400/60 focus:border-red-400 focus:ring-red-100";
+const labelBase = "font-home-sans mb-1.5 block text-xs font-medium uppercase tracking-wider text-home-text-muted";
+const errorText = "font-home-sans mt-1.5 text-xs text-red-500";
+
+// Zod issues carry translation keys under `forms.contact.errors` (see
+// src/lib/validations/contact.ts) rather than display strings, so error
+// copy stays locale-aware without duplicating messages in the schema.
+function useErrorMessage() {
+    const te = useTranslations('forms.contact.errors');
+    return (key?: string) => (key ? te(key as Parameters<typeof te>[0]) : undefined);
+}
 
 export default function ContactFormDark() {
     const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
     const t = useTranslations('forms.contact');
+    const errorMessage = useErrorMessage();
 
     const {
         register,
@@ -41,15 +51,15 @@ export default function ContactFormDark() {
 
     if (status === "success") {
         return (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-emerald-500/20 bg-emerald-500/5 px-8 py-16 text-center">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10">
-                    <CheckCircle className="h-8 w-8 text-emerald-400" />
+            <div className="flex flex-col items-center justify-center rounded-home-lg border border-home-border bg-home-surface px-8 py-16 text-center">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-home-lg bg-home-primary-soft">
+                    <CheckCircle className="h-8 w-8 text-home-fg" />
                 </div>
-                <h3 className="text-xl font-semibold text-white">{t('successTitle')}</h3>
-                <p className="mt-2 text-slate-400">{t('successBody')}</p>
+                <h3 className="font-home-sans text-xl font-semibold text-home-fg">{t('successTitle')}</h3>
+                <p className="font-home-sans mt-2 text-home-text-secondary">{t('successBody')}</p>
                 <button
                     onClick={() => setStatus("idle")}
-                    className="mt-6 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-2.5 text-sm text-slate-300 transition hover:border-white/20 hover:text-white"
+                    className="font-home-sans mt-6 rounded-home-full border border-home-border-strong bg-home-bg px-5 py-2.5 text-sm text-home-fg transition hover:bg-home-surface"
                 >
                     {t('newMessage')}
                 </button>
@@ -60,9 +70,9 @@ export default function ContactFormDark() {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             {status === "error" && (
-                <div className="flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3">
-                    <AlertCircle className="h-4 w-4 shrink-0 text-red-400" />
-                    <p className="text-sm text-red-400">{t('error')}</p>
+                <div className="flex items-center gap-3 rounded-home-md border border-red-200 bg-red-50 px-4 py-3">
+                    <AlertCircle className="h-4 w-4 shrink-0 text-red-500" />
+                    <p className="font-home-sans text-sm text-red-600">{t('error')}</p>
                 </div>
             )}
 
@@ -75,7 +85,7 @@ export default function ContactFormDark() {
                         className={`${fieldBase} ${errors.fullName ? fieldError : ""}`}
                         {...register("fullName")}
                     />
-                    {errors.fullName && <p className={errorText}>{errors.fullName.message}</p>}
+                    {errors.fullName && <p className={errorText}>{errorMessage(errors.fullName.message)}</p>}
                 </div>
                 <div>
                     <label htmlFor="email" className={labelBase}>{t('email')}</label>
@@ -86,7 +96,7 @@ export default function ContactFormDark() {
                         className={`${fieldBase} ${errors.email ? fieldError : ""}`}
                         {...register("email")}
                     />
-                    {errors.email && <p className={errorText}>{errors.email.message}</p>}
+                    {errors.email && <p className={errorText}>{errorMessage(errors.email.message)}</p>}
                 </div>
             </div>
 
@@ -119,7 +129,7 @@ export default function ContactFormDark() {
                     className={`${fieldBase} ${errors.subject ? fieldError : ""}`}
                     {...register("subject")}
                 />
-                {errors.subject && <p className={errorText}>{errors.subject.message}</p>}
+                {errors.subject && <p className={errorText}>{errorMessage(errors.subject.message)}</p>}
             </div>
 
             <div>
@@ -131,13 +141,13 @@ export default function ContactFormDark() {
                     className={`${fieldBase} resize-none ${errors.message ? fieldError : ""}`}
                     {...register("message")}
                 />
-                {errors.message && <p className={errorText}>{errors.message.message}</p>}
+                {errors.message && <p className={errorText}>{errorMessage(errors.message.message)}</p>}
             </div>
 
             <button
                 type="submit"
                 disabled={status === "loading"}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 px-6 py-3.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                className="font-home-sans inline-flex w-full items-center justify-center gap-2 rounded-home-full bg-home-fg px-6 py-3.5 text-sm font-medium text-home-text-inverse transition hover:bg-home-primary hover:text-home-primary-foreground disabled:cursor-not-allowed disabled:opacity-60"
             >
                 {status === "loading" ? (
                     <>

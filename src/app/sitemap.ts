@@ -50,10 +50,17 @@ const STATIC_PATHS = [
   { path: '/sektorel-yazilimlar/randevu-sistemi/kuafor-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
   { path: '/sektorel-yazilimlar/randevu-sistemi/klinik-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
   { path: '/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
+  { path: '/teklif-al', priority: 0.7, changeFrequency: 'monthly' as const },
+];
+
+// Kurumsal pages (About/Career/Contact) have no real English body copy yet —
+// their /en routes are intentionally noindexed (see generateMetadata on each
+// page), so they're TR-only here too, matching the blog's existing pattern
+// below rather than sitemapping a noindexed URL.
+const KURUMSAL_TR_ONLY_PATHS = [
   { path: '/kurumsal/hakkimizda', priority: 0.7, changeFrequency: 'monthly' as const },
   { path: '/kurumsal/kariyer', priority: 0.5, changeFrequency: 'monthly' as const },
   { path: '/kurumsal/iletisim', priority: 0.6, changeFrequency: 'monthly' as const },
-  { path: '/teklif-al', priority: 0.7, changeFrequency: 'monthly' as const },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -113,6 +120,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority,
       });
     }
+  }
+
+  for (const { path, priority, changeFrequency } of KURUMSAL_TR_ONLY_PATHS) {
+    entries.push({
+      url: `${SITE_URL}/tr${path}`,
+      lastModified: STATIC_LAST_MODIFIED,
+      changeFrequency,
+      priority,
+    });
   }
 
   entries.push({

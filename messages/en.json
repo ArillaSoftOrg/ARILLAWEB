@@ -60,7 +60,16 @@
       "successTitle": "Message Received!",
       "successBody": "We will get back to you as soon as possible.",
       "newMessage": "Send New Message",
-      "error": "Message could not be sent. Please try again."
+      "error": "Message could not be sent. Please try again.",
+      "errors": {
+        "fullNameMin": "Full name must be at least 2 characters",
+        "fullNameMax": "Full name must be at most 100 characters",
+        "emailInvalid": "Enter a valid email address",
+        "subjectMin": "Subject must be at least 3 characters",
+        "subjectMax": "Subject must be at most 200 characters",
+        "messageMin": "Message must be at least 10 characters",
+        "messageMax": "Message must be at most 5000 characters"
+      }
     },
     "quote": {
       "contactSection": "Contact Information",
@@ -586,7 +595,22 @@
     },
     "blog": {
       "title": "Blog",
-      "description": "Up-to-date content about software, digital transformation, QR Menu and technology."
+      "description": "Up-to-date content about software, digital transformation, QR Menu and technology.",
+      "detail": {
+        "backTop": "Back to Blog",
+        "backBottom": "Back to Blog",
+        "readingSuffix": "read",
+        "toggleLabel": "Toggle reading mode",
+        "toLight": "Switch to light reading mode",
+        "toDark": "Switch to dark reading mode",
+        "light": "Light",
+        "dark": "Dark",
+        "tableOfContents": "Table of contents",
+        "summaryLabel": "Summary",
+        "summaryAria": "Post summary",
+        "relatedBadge": "Related Posts",
+        "relatedTitle": "More Posts You Might Like"
+      }
     },
     "hakkimizda": {
       "title": "About Us",

@@ -60,7 +60,16 @@
       "successTitle": "Mesajınız Alındı!",
       "successBody": "En kısa sürede size dönüş yapacağız.",
       "newMessage": "Yeni Mesaj Gönder",
-      "error": "Mesaj gönderilemedi. Lütfen tekrar deneyin."
+      "error": "Mesaj gönderilemedi. Lütfen tekrar deneyin.",
+      "errors": {
+        "fullNameMin": "Ad soyad en az 2 karakter olmalıdır",
+        "fullNameMax": "Ad soyad en fazla 100 karakter olabilir",
+        "emailInvalid": "Geçerli bir e-posta adresi girin",
+        "subjectMin": "Konu en az 3 karakter olmalıdır",
+        "subjectMax": "Konu en fazla 200 karakter olabilir",
+        "messageMin": "Mesaj en az 10 karakter olmalıdır",
+        "messageMax": "Mesaj en fazla 5000 karakter olabilir"
+      }
     },
     "quote": {
       "contactSection": "İletişim Bilgileri",
@@ -586,7 +595,22 @@
     },
     "blog": {
       "title": "Blog",
-      "description": "Yazılım, dijital dönüşüm, QR Menü ve teknoloji hakkında güncel içerikler."
+      "description": "Yazılım, dijital dönüşüm, QR Menü ve teknoloji hakkında güncel içerikler.",
+      "detail": {
+        "backTop": "Blog'a Dön",
+        "backBottom": "Blog'a Geri Dön",
+        "readingSuffix": "okuma",
+        "toggleLabel": "Okuma modunu değiştir",
+        "toLight": "Açık okuma moduna geç",
+        "toDark": "Koyu okuma moduna geç",
+        "light": "Açık",
+        "dark": "Koyu",
+        "tableOfContents": "İçindekiler",
+        "summaryLabel": "Özet",
+        "summaryAria": "Yazı özeti",
+        "relatedBadge": "İlgili Yazılar",
+        "relatedTitle": "İlginizi Çekebilecek Diğer Yazılar"
+      }
     },
     "hakkimizda": {
       "title": "Hakkımızda",

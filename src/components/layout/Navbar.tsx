@@ -1,14 +1,23 @@
 'use client';
 
-import { useState, useEffect, startTransition, type Ref } from 'react';
+import { useState, useEffect, useSyncExternalStore, startTransition, type Ref } from 'react';
 import { usePathname, Link } from '@/i18n/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { Menu, X, ArrowRight } from 'lucide-react';
+import { Menu, X, ArrowRight, MessageSquare } from 'lucide-react';
 import BrandLockup from '@/components/BrandLockup';
 import MegaMenuNav from '@/components/layout/MegaMenuNav';
 import MobileNavAccordion from '@/components/layout/MobileNavAccordion';
 import type { Locale } from '@/lib/en-site-data';
+import {
+  getSupportChatIsOpen,
+  requestSupportChatOpen,
+  subscribeSupportChatIsOpen,
+} from '@/lib/supportChatBridge';
+
+function useSupportChatIsOpen() {
+  return useSyncExternalStore(subscribeSupportChatIsOpen, getSupportChatIsOpen, () => false);
+}
 
 type NavbarProps = {
   brandIntroActive?: boolean;
@@ -26,6 +35,8 @@ export default function Navbar({
   const pathname = usePathname();
   const locale = useLocale() as Locale;
   const t = useTranslations('nav');
+  const tChat = useTranslations('chat');
+  const supportChatOpen = useSupportChatIsOpen();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -317,10 +328,22 @@ export default function Navbar({
             </Link>
 
             <button
-              className={`focus-ring-lime flex items-center justify-center lg:hidden ${isHomePath && !isHomeTop ? 'text-slate-700' : 'text-slate-100 md:text-slate-700'}`}
+              type="button"
+              className={`navbar-support-mobile-btn md:hidden flex items-center justify-center ${isHomePath ? 'navbar-menu-toggle' : 'text-slate-100 md:navbar-menu-toggle'}`}
+              onClick={() => requestSupportChatOpen()}
+              style={{ background: 'transparent', border: 'none', padding: '12px', cursor: 'pointer' }}
+              aria-label={tChat('toggleAriaLabel')}
+              aria-expanded={supportChatOpen}
+            >
+              <MessageSquare size={20} />
+            </button>
+
+            <button
+              className={`focus-ring-lime flex items-center justify-center lg:hidden ${isHomePath ? 'navbar-menu-toggle' : 'text-slate-100 md:navbar-menu-toggle'}`}
               onClick={() => setIsOpen(!isOpen)}
               style={{ background: 'transparent', border: 'none', padding: '12px', margin: '-12px', cursor: 'pointer' }}
               aria-label={t('menuToggle')}
+              aria-expanded={isOpen}
             >
               {isOpen ? <X size={20} /> : <Menu size={20} />}
             </button>

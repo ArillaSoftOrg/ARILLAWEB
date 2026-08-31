@@ -230,7 +230,7 @@ export default function BlogMediaCard({ post }: { post: BlogPost }) {
               display: "inline-flex",
               alignItems: "center",
               gap: "6px",
-              color: "#1d4ed8",
+              color: "var(--home-fg, #101010)",
               fontSize: "12px",
               fontWeight: 800,
               letterSpacing: "0.02em",

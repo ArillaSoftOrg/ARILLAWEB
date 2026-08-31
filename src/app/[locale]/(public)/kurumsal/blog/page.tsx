@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { getTranslations } from 'next-intl/server';
 import { getAllPosts } from "@/lib/blog-db";
-import BlogClient from "./BlogClient";
 import { SITE_URL } from "@/lib/constants";
+import { CorporatePageHero } from "@/components/corporate/CorporatePageHero";
+import { ArticleGrid } from "@/components/corporate/blog/ArticleGrid";
+import BreadcrumbJsonLd from "@/components/seo/BreadcrumbJsonLd";
 
 type BlogPost = Awaited<ReturnType<typeof getAllPosts>>[number];
 
@@ -31,12 +33,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function BlogPage() {
+export default async function BlogPage({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'pages.blog' });
+
   let posts: BlogPost[] = [];
   try {
     posts = await getAllPosts();
-  } catch (error) {
+  } catch {
     // Database unavailable or Prisma error - render empty state
   }
-  return <BlogClient posts={posts} />;
+
+  return (
+    <>
+      <BreadcrumbJsonLd items={[{ label: 'Anasayfa', href: '/' }, { label: 'Blog' }]} />
+
+      <CorporatePageHero title={t('title')} description={t('description')} />
+
+      <section className="bg-home-bg py-14 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-[1280px] px-5 sm:px-6 lg:px-8">
+          <ArticleGrid posts={posts} emptyState={{ title: 'Henüz blog yazısı yok.' }} />
+        </div>
+      </section>
+    </>
+  );
 }

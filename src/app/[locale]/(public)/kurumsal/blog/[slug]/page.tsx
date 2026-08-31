@@ -73,8 +73,29 @@ export default async function BlogDetailPage({
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
+  const dbPost = await prisma.blogPost.findUnique({
+    where: { slug },
+    select: { publishedAt: true, updatedAt: true, createdAt: true },
+  });
+
   const allPosts = await getAllPosts();
   const related = allPosts.filter((p) => p.slug !== slug).slice(0, 3);
+
+  // author: Organization (schema.org permits a non-Person author) — the
+  // BlogPost model has no author field/system, so a Person author would
+  // require a Prisma migration that's out of scope here.
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    image: post.coverImage ?? undefined,
+    datePublished: (dbPost?.publishedAt ?? dbPost?.createdAt)?.toISOString(),
+    dateModified: dbPost?.updatedAt?.toISOString(),
+    author: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+    mainEntityOfPage: `${SITE_URL}/tr/kurumsal/blog/${slug}`,
+  };
 
   return (
     <>
@@ -84,6 +105,11 @@ export default async function BlogDetailPage({
           { label: 'Blog', href: '/kurumsal/blog' },
           { label: post.title },
         ]}
+      />
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
       />
       <BlogDetailClient post={post} related={related} />
     </>

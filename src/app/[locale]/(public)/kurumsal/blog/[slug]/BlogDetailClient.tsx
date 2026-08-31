@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ArrowLeft, Calendar, Clock, Sun, Moon } from "lucide-react";
 import BlogMediaCard from "@/components/blog/BlogMediaCard";
@@ -228,11 +229,12 @@ function TableOfContents({
   toc: TocEntry[];
   activeId: string;
 }) {
+  const t = useTranslations("pages.blog.detail");
   if (toc.length === 0) return null;
   return (
     <aside className={styles.tocCol}>
-      <nav aria-label="İçindekiler">
-        <p className={styles.tocTitle}>İçindekiler</p>
+      <nav aria-label={t("tableOfContents")}>
+        <p className={styles.tocTitle}>{t("tableOfContents")}</p>
         <ul className={styles.tocList}>
           {toc.map((entry) => {
             const linkClass = [
@@ -271,6 +273,7 @@ export default function BlogDetailClient({
   related: BlogPost[];
 }) {
   const { theme, toggle } = useBlogTheme();
+  const t = useTranslations("pages.blog.detail");
 
   // Lead summary: keep the first paragraph, and drop ONLY that exact index
   // from the body. No text-equality / excerpt comparison.
@@ -328,7 +331,7 @@ export default function BlogDetailClient({
             {/* Back button */}
             <Link href="/kurumsal/blog" className={styles.backTop}>
               <ArrowLeft size={15} />
-              Blog&apos;a Dön
+              {t("backTop")}
             </Link>
 
             {/* Header */}
@@ -343,22 +346,18 @@ export default function BlogDetailClient({
                 <span className={styles.metaDot} />
                 <span className={styles.metaItem}>
                   <Clock size={13} />
-                  {post.readTime} okuma
+                  {post.readTime} {t("readingSuffix")}
                 </span>
                 <button
                   type="button"
                   onClick={toggle}
-                  title="Okuma modunu değiştir"
-                  aria-label={
-                    theme === "dark"
-                      ? "Açık okuma moduna geç"
-                      : "Koyu okuma moduna geç"
-                  }
+                  title={t("toggleLabel")}
+                  aria-label={theme === "dark" ? t("toLight") : t("toDark")}
                   aria-pressed={theme === "light"}
                   className={styles.toggle}
                 >
                   {theme === "dark" ? <Sun size={13} /> : <Moon size={13} />}
-                  {theme === "dark" ? "Açık" : "Koyu"}
+                  {theme === "dark" ? t("light") : t("dark")}
                 </button>
               </div>
 
@@ -396,7 +395,7 @@ export default function BlogDetailClient({
             {leadText && (
               <section
                 className={styles.summary}
-                aria-label="Yazı özeti"
+                aria-label={t("summaryAria")}
                 style={
                   {
                     "--summary-border": post.categoryBorder,
@@ -404,7 +403,7 @@ export default function BlogDetailClient({
                   } as React.CSSProperties
                 }
               >
-                <p className={styles.summaryLabel}>Özet</p>
+                <p className={styles.summaryLabel}>{t("summaryLabel")}</p>
                 <p className={styles.summaryText}>{leadText}</p>
               </section>
             )}
@@ -413,7 +412,7 @@ export default function BlogDetailClient({
             <div className={styles.backFooter}>
               <Link href="/kurumsal/blog" className={styles.backBottom}>
                 <ArrowLeft size={16} />
-                Blog&apos;a Geri Dön
+                {t("backBottom")}
               </Link>
             </div>
           </div>
@@ -426,10 +425,8 @@ export default function BlogDetailClient({
           <section className={styles.related}>
             <div className={styles.relatedInner}>
               <div className={styles.relatedHead}>
-                <span className={styles.relatedBadge}>✦ İlgili Yazılar</span>
-                <h2 className={styles.relatedTitle}>
-                  İlginizi Çekebilecek Diğer Yazılar
-                </h2>
+                <span className={styles.relatedBadge}>{t("relatedBadge")}</span>
+                <h2 className={styles.relatedTitle}>{t("relatedTitle")}</h2>
               </div>
 
               <div className={styles.relatedGrid}>

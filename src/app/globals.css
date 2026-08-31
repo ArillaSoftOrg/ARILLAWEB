@@ -1372,6 +1372,38 @@ html[data-brand-intro="running"] [data-brand-logo-target] {
   outline-offset: 3px;
 }
 
+/* Below 768px the mobile navbar's own support icon replaces this launcher. */
+@media (max-width: 767.98px) {
+  .chat-toggle-btn {
+    display: none;
+  }
+}
+
+/* Navbar hamburger + mobile support icon default color on a light/white
+   navbar surface (home scrolled, or any non-home page). */
+.navbar-menu-toggle {
+  color: #101010;
+}
+
+/* Mobile navbar support icon (opens the same panel as the floating chat
+   launcher) — Ink default comes from navbar-menu-toggle/text-slate-100
+   above; this only adds the Lime fill on hover/focus, no glow. */
+.navbar-support-mobile-btn {
+  border-radius: 999px;
+  transition: color 180ms ease, background-color 180ms ease;
+}
+
+.navbar-support-mobile-btn:hover,
+.navbar-support-mobile-btn:focus-visible {
+  color: #101010;
+  background-color: #c7f36b;
+}
+
+.navbar-support-mobile-btn:focus-visible {
+  outline: 2px solid #101010;
+  outline-offset: 2px;
+}
+
 /* Mobile accordion menu items (dark panel) */
 .navmenu-mobile-item {
   color: #cbd5e1;
@@ -1404,7 +1436,8 @@ html[data-brand-intro="running"] [data-brand-logo-target] {
   .navbar-locale,
   .navbar-locale-mobile,
   .navmenu-mobile-item,
-  .chat-toggle-btn {
+  .chat-toggle-btn,
+  .navbar-support-mobile-btn {
     transition: none;
   }
 }

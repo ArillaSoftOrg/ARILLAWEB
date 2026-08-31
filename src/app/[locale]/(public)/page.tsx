@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/constants';
+import { SITE_NAME, SITE_URL } from '@/lib/constants';
 import HomeClient from './HomeClient';
+import OrganizationJsonLd from '@/components/seo/OrganizationJsonLd';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -37,29 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function HomePage() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Organization',
-            name: SITE_NAME,
-            url: SITE_URL,
-            description: SITE_DESCRIPTION,
-            sameAs: [
-              'https://linkedin.com/company/arillasoft',
-              'https://github.com/arillasoft',
-              'https://instagram.com/arillasoft',
-            ],
-            contactPoint: {
-              '@type': 'ContactPoint',
-              contactType: 'Customer Service',
-              url: `${SITE_URL}/kurumsal/iletisim`,
-            },
-          }),
-        }}
-      />
+      <OrganizationJsonLd />
       <HomeClient />
     </>
   );

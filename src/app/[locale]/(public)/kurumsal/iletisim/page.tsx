@@ -2,29 +2,42 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { SITE_URL } from '@/lib/constants';
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { CorporatePageHero } from '@/components/corporate/CorporatePageHero';
+import { HomeCard } from '@/components/home/ui/HomeCard';
+import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
+import ContactFormDark from "@/components/forms/ContactFormDark";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'pages.iletisim' });
+  const isTurkish = locale === 'tr';
+  const title = isTurkish ? t('title') : `${t('title')} (Turkish)`;
+  const description = isTurkish ? t('description') : `${t('description')} Turkish archive.`;
   return {
-    title: t('title'),
-    description: t('description'),
+    title,
+    description,
+    // No English body copy exists yet (see redesign plan) — noindex the EN
+    // route rather than presenting Turkish content as real English content,
+    // matching the pattern already used for the blog's EN routes.
+    robots: isTurkish ? undefined : { index: false, follow: true },
     alternates: {
-      canonical: `/${locale}/kurumsal/iletisim`,
-      languages: { tr: '/tr/kurumsal/iletisim', en: '/en/kurumsal/iletisim', 'x-default': '/tr/kurumsal/iletisim' },
+      canonical: '/tr/kurumsal/iletisim',
     },
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: `${SITE_URL}/${locale}/kurumsal/iletisim`,
+      url: `${SITE_URL}/${isTurkish ? 'tr' : locale}/kurumsal/iletisim`,
       type: 'website',
     },
   };
 }
-import ContactFormDark from "@/components/forms/ContactFormDark";
 
+// NOTE: values below are carried over from the pre-redesign page as-is.
+// Email/phone are flagged in the redesign plan pending confirmation
+// (three different emails exist across the codebase; the phone number is a
+// known placeholder) — do not treat these as verified real contact details.
 const contactDetails = [
     {
         icon: Mail,
@@ -52,86 +65,82 @@ const contactDetails = [
     },
 ];
 
+const whyUs = [
+    "Hızlı dönüş garantisi — 24 saat içinde",
+    "Deneyimli ve uzman ekip",
+    "Şeffaf fiyatlandırma",
+    "Proje sonrası destek",
+];
+
 export default function ContactPage() {
     return (
-        <main className="min-h-screen bg-[#08090d] px-6 py-20 text-slate-100">
-            <div className="mx-auto max-w-6xl">
-                {/* Header */}
-                <div className="mb-14 text-center">
-                    <p className="mb-3 inline-flex rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-1 text-sm text-cyan-300">
-                        İletişim
-                    </p>
-                    <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl">
-                        Bizimle İletişime Geçin
-                    </h1>
-                    <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400 md:text-lg">
-                        Projeniz hakkında konuşmak, fiyat teklifi almak ya da sadece merhaba
-                        demek için mesaj gönderin.
-                    </p>
-                </div>
+        <>
+            <BreadcrumbJsonLd items={[{ label: 'Anasayfa', href: '/' }, { label: 'İletişim' }]} />
 
-                <div className="grid gap-10 lg:grid-cols-5">
-                    {/* Left: contact info */}
-                    <div className="space-y-6 lg:col-span-2">
-                        {/* Info cards */}
-                        <div className="space-y-3">
-                            {contactDetails.map(({ icon: Icon, label, value, href }) => (
-                                <div
-                                    key={label}
-                                    className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-white/20"
-                                >
-                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-500/20 bg-cyan-500/10">
-                                        <Icon className="h-4 w-4 text-cyan-300" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
-                                            {label}
-                                        </p>
-                                        {href ? (
-                                            <a
-                                                href={href}
-                                                className="mt-1 text-sm text-slate-200 transition hover:text-cyan-300"
-                                            >
-                                                {value}
-                                            </a>
-                                        ) : (
-                                            <p className="mt-1 text-sm text-slate-200">{value}</p>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+            <CorporatePageHero
+                eyebrow="İletişim"
+                title="Bizimle İletişime Geçin"
+                description="Projeniz hakkında konuşmak, fiyat teklifi almak ya da sadece merhaba demek için mesaj gönderin."
+            />
 
-                        {/* Decorative gradient card */}
-                        <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-violet-500/10 via-slate-900 to-cyan-500/10 p-6">
-                            <h2 className="text-base font-semibold text-white">
-                                Neden Arillasoft?
-                            </h2>
-                            <ul className="mt-4 space-y-3">
-                                {[
-                                    "Hızlı dönüş garantisi — 24 saat içinde",
-                                    "Deneyimli ve uzman ekip",
-                                    "Şeffaf fiyatlandırma",
-                                    "Proje sonrası destek",
-                                ].map((item) => (
-                                    <li key={item} className="flex items-center gap-2 text-sm text-slate-300">
-                                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-400" />
-                                        {item}
-                                    </li>
+            <section className="bg-home-bg py-14 sm:py-16 lg:py-20">
+                <div className="mx-auto max-w-[1280px] px-5 sm:px-6 lg:px-8">
+                    <div className="grid gap-10 lg:grid-cols-5">
+                        {/* Left: contact info */}
+                        <div className="space-y-6 lg:col-span-2">
+                            <div className="space-y-3">
+                                {contactDetails.map(({ icon: Icon, label, value, href }) => (
+                                    <div
+                                        key={label}
+                                        className="flex items-start gap-4 rounded-home-lg border border-home-border bg-home-surface p-5 transition hover:border-home-border-strong"
+                                    >
+                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-home-md bg-home-bg">
+                                            <Icon className="h-4 w-4 text-home-fg" />
+                                        </div>
+                                        <div>
+                                            <p className="font-home-sans text-xs font-medium uppercase tracking-wider text-home-text-muted">
+                                                {label}
+                                            </p>
+                                            {href ? (
+                                                <a
+                                                    href={href}
+                                                    className="font-home-sans mt-1 block text-sm text-home-fg transition hover:text-home-primary-active"
+                                                >
+                                                    {value}
+                                                </a>
+                                            ) : (
+                                                <p className="font-home-sans mt-1 text-sm text-home-fg">{value}</p>
+                                            )}
+                                        </div>
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
+
+                            <HomeCard surface="neutral">
+                                <h2 className="font-home-sans text-base font-semibold text-home-fg">
+                                    Neden Arillasoft?
+                                </h2>
+                                <ul className="mt-4 space-y-3">
+                                    {whyUs.map((item) => (
+                                        <li key={item} className="font-home-sans flex items-center gap-2 text-sm text-home-text-secondary">
+                                            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-home-primary" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </HomeCard>
+                        </div>
+
+                        {/* Right: form */}
+                        <div className="rounded-home-lg border border-home-border bg-home-surface p-7 lg:col-span-3 md:p-9">
+                            <h2 className="font-home-sans mb-6 text-xl font-semibold text-home-fg">
+                                Mesaj Gönderin
+                            </h2>
+                            <ContactFormDark />
                         </div>
                     </div>
-
-                    {/* Right: form */}
-                    <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-7 lg:col-span-3 md:p-9">
-                        <h2 className="mb-6 text-xl font-semibold text-white">
-                            Mesaj Gönderin
-                        </h2>
-                        <ContactFormDark />
-                    </div>
                 </div>
-            </div>
-        </main>
+            </section>
+        </>
     );
 }

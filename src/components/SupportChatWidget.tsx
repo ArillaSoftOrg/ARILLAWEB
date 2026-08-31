@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, type RefObject } from "react";
 import { MessageCircle, Send, X } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { useCookieConsentContext } from '@/components/cookie/CookieConsentProvider';
+import { reportSupportChatOpen, subscribeSupportChatOpenRequest } from '@/lib/supportChatBridge';
 
 const AUTO_TRIGGERED_KEY = 'support-chat-auto-triggered';
 const INTERACTED_KEY = 'support-chat-interacted';
@@ -207,6 +208,29 @@ export default function SupportChatWidget(_props: SupportChatWidgetProps = {}) {
         autoOpenTimerRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Publishes isOpen to the shared bridge (for the mobile navbar icon's
+  // aria-expanded) and resets it on unmount, since a client-side route
+  // change away from this page leaves no component here to report "closed".
+  useEffect(() => {
+    reportSupportChatOpen(isOpen);
+    return () => reportSupportChatOpen(false);
+  }, [isOpen]);
+
+  // Mobile navbar icon requests opening the same panel as the floating
+  // launcher — mirrors handleTeaserClick's open side effects.
+  useEffect(() => {
+    return subscribeSupportChatOpenRequest(() => {
+      if (autoOpenTimerRef.current) {
+        clearTimeout(autoOpenTimerRef.current);
+        autoOpenTimerRef.current = null;
+      }
+      closeTeaser();
+      markInteracted();
+      setIsOpen(true);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
