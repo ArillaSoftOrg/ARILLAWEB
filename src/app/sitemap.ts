@@ -12,6 +12,7 @@ import {
   servicesHubHref,
   type Locale,
 } from '@/lib/en-site-data';
+import { getAllSolutionSlugs } from '@/lib/solutions';
 
 // Sectoral Software / Services / Web Design Examples routes for a given locale. EN uses
 // `/services`, `/sectoral-software`, `/web-design-examples`; TR reuses the site's existing
@@ -197,6 +198,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.7,
     });
+  }
+
+  // Solution/package catalog — TR at /cozumler, EN at /solutions, same slug
+  // in both trees (see src/lib/solutions/data.ts).
+  entries.push(
+    { url: `${SITE_URL}/tr/cozumler`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${SITE_URL}/en/solutions`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'weekly', priority: 0.9 }
+  );
+  for (const slug of getAllSolutionSlugs()) {
+    entries.push(
+      { url: `${SITE_URL}/tr/cozumler/${slug}`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.7 },
+      { url: `${SITE_URL}/en/solutions/${slug}`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.7 }
+    );
   }
 
   return Array.from(new Map(entries.map((e) => [e.url, e])).values());

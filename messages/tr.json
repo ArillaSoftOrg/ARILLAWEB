@@ -267,6 +267,7 @@
         "businessSystems": {
           "heading": "Web sitenizin arkasında çalışan iş sistemlerini de geliştiriyoruz.",
           "body": "Her işletmenin çalışma şekli farklıdır. Hazır yazılımların yeterli olmadığı durumlarda randevu, rezervasyon, müşteri yönetimi, sipariş veya operasyon süreçlerinize göre özel sistemler geliştiriyoruz.",
+          "coreLabel": "İşletme Sistemi",
           "capabilities": [
             {
               "id": "appointments",
@@ -414,33 +415,77 @@
         "howWeWork": {
           "heading": "İhtiyacı anlamadan geliştirmeye başlamıyoruz.",
           "body": "Projeyi yalnızca teslim edilecek ekranlardan ibaret görmüyoruz. Önce işletmenin problemini ve hedefini anlıyor, ardından gerekli dijital sistemi birlikte şekillendiriyoruz.",
+          "deliverablesLabel": "Bu aşamada",
           "steps": [
             {
+              "id": "kesif",
               "number": "01",
-              "title": "Analiz",
-              "description": "İşletmenizi, hedef kitlenizi, mevcut süreçlerinizi ve çözülmesi gereken problemi anlamaya çalışıyoruz."
+              "title": "Keşif",
+              "description": "İşletmenizi, hedeflerinizi ve çözülmesi gereken problemi anlıyoruz.",
+              "deliverables": ["İhtiyaç Analizi", "Hedefler", "Mevcut Durum"]
             },
             {
+              "id": "kapsam",
               "number": "02",
-              "title": "Plan",
-              "description": "Projenin kapsamını, gerekli özellikleri, kullanıcı akışlarını ve teknik yaklaşımı belirliyoruz."
+              "title": "Kapsam",
+              "description": "Sayfaları, özellikleri, entegrasyonları ve proje sınırlarını netleştiriyoruz.",
+              "deliverables": ["Sayfa Yapısı", "Özellikler", "Entegrasyonlar"]
             },
             {
+              "id": "yapi-ux",
               "number": "03",
-              "title": "Tasarım",
-              "description": "Marka, içerik ve kullanıcı deneyimini bir araya getirerek arayüzü ve etkileşimleri tasarlıyoruz."
+              "title": "Yapı & UX",
+              "description": "Site haritasını, kullanıcı akışlarını ve sayfa iskeletlerini oluşturuyoruz.",
+              "deliverables": ["Site Haritası", "Kullanıcı Akışları", "Wireframe"]
             },
             {
+              "id": "gorsel-tasarim",
               "number": "04",
-              "title": "Geliştirme",
-              "description": "Web sitesini, gerekli backend sistemlerini ve entegrasyonları performans ve sürdürülebilirlik odaklı geliştiriyoruz."
+              "title": "Görsel Tasarım",
+              "description": "Marka dilini ve gerçek kullanıcı arayüzlerini tasarlıyoruz.",
+              "deliverables": ["UI Sistemi", "Responsive Ekranlar", "Component Tasarımı"]
             },
             {
+              "id": "frontend",
               "number": "05",
-              "title": "Yayınla & Geliştir",
-              "description": "Sistemi yayına alıyor, gerekli kontrolleri gerçekleştiriyor ve ihtiyaçlara göre geliştirmeye devam ediyoruz."
+              "title": "Frontend",
+              "description": "Onaylanan tasarımları responsive ve performanslı çalışan arayüzlere dönüştürüyoruz.",
+              "deliverables": ["Responsive UI", "Componentler", "Etkileşimler"]
+            },
+            {
+              "id": "sistemler-entegrasyonlar",
+              "number": "06",
+              "title": "Sistemler & Entegrasyonlar",
+              "description": "Backend, yönetim paneli, ödeme, WhatsApp, CRM veya gerekli diğer sistemleri bağlıyoruz.",
+              "deliverables": ["Backend", "Admin Panel", "API Entegrasyonları"]
+            },
+            {
+              "id": "icerik-gorunurluk",
+              "number": "07",
+              "title": "İçerik & Görünürlük",
+              "description": "İçerikleri yerleştiriyor; SEO, GEO, analytics ve teknik görünürlük altyapısını hazırlıyoruz.",
+              "deliverables": ["İçerik", "SEO", "GEO", "Analytics"]
+            },
+            {
+              "id": "test-revizyon",
+              "number": "08",
+              "title": "Test & Revizyon",
+              "description": "Farklı cihazlarda sistemi test ediyor, hataları gideriyor ve son geri bildirimleri uyguluyoruz.",
+              "deliverables": ["Responsive Test", "Performans", "Revizyon"]
+            },
+            {
+              "id": "yayin-destek",
+              "number": "09",
+              "title": "Yayın & Destek",
+              "description": "Projeyi production ortamına alıyor, son kontrolleri yapıyor ve geliştirmeye devam ediyoruz.",
+              "deliverables": ["Production", "Son Kontroller", "Teknik Destek"]
             }
           ]
+        },
+        "featuredSolutions": {
+          "heading": "Çözüm kataloğundan öne çıkanlar.",
+          "body": "Web sitelerinden sektörel sistemlere kadar sunduğumuz çözümlerden bir seçki. Fiyat ve süreler geçici örnek değerlerdir.",
+          "viewAllLabel": "Tüm Çözümleri Gör"
         },
         "pricing": {
           "heading": "İhtiyacınız kadar başlayın. Gerektikçe büyütün.",
@@ -568,6 +613,28 @@
     "hizmetler": {
       "title": "Hizmetler",
       "description": "Web sitesi ve web uygulama, mobil uygulama, oyun geliştirme, özel yazılım, entegrasyon ve bakım — uçtan uca yazılım geliştirme hizmetleri."
+    },
+    "solutions": {
+      "title": "Çözümler",
+      "description": "Web sitelerinden e-ticarete, SEO'dan sektörel sistemlere kadar Arillasoft çözüm kataloğu.",
+      "heroHeading": "Çözüm Kataloğu",
+      "heroBody": "İhtiyacınıza uygun paketi seçin veya birlikte netleştirelim. Gösterilen fiyat ve süreler geçici örnek değerlerdir.",
+      "allCategoriesLabel": "Tümü",
+      "backToCatalog": "Tüm Çözümler",
+      "notFoundTitle": "Çözüm bulunamadı",
+      "detail": {
+        "featuresHeading": "Neler Dahil",
+        "extrasHeading": "Ek Hizmetler (opsiyonel)",
+        "requirementsHeading": "Sizden Beklenenler",
+        "suitableForHeading": "Kimler İçin Uygun",
+        "processHeading": "Süreç Nasıl İşliyor",
+        "deliverablesHeading": "Teslim Edilenler",
+        "faqHeading": "Sıkça Sorulan Sorular",
+        "tiersHeading": "Paket Seçenekleri",
+        "ctaHeading": "Bu çözüm size uygun mu?",
+        "ctaBody": "İhtiyacınızı birlikte netleştirelim; kapsam ve fiyat görüşme sonrası kesinleşir.",
+        "otherSolutionsCta": "Diğer Çözümlere Göz At"
+      }
     },
     "sektorelYazilimlar": {
       "title": "Sektörel Yazılımlar",

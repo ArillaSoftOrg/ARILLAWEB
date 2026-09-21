@@ -30,6 +30,14 @@ import {
   Webhook,
   Mail,
   Link as LinkIcon,
+  ListChecks,
+  LayoutTemplate,
+  Palette,
+  Code2,
+  Server,
+  Megaphone,
+  Bug,
+  Cpu,
   type LucideIcon,
 } from "lucide-react";
 
@@ -56,6 +64,20 @@ export const WEB_COMMERCE_SOLUTION_ICONS: Record<string, LucideIcon> = {
   landing: Rocket,
 };
 
+// HowWeWork stacked process cards — one icon per project stage, keyed by
+// the same stable step `id` used in messages/{tr,en}.json.
+export const HOW_WE_WORK_STEP_ICONS: Record<string, LucideIcon> = {
+  kesif: Search,
+  kapsam: ListChecks,
+  "yapi-ux": LayoutTemplate,
+  "gorsel-tasarim": Palette,
+  frontend: Code2,
+  "sistemler-entegrasyonlar": Server,
+  "icerik-gorunurluk": Megaphone,
+  "test-revizyon": Bug,
+  "yayin-destek": Rocket,
+};
+
 export const BUSINESS_SYSTEMS_CAPABILITY_ICONS: Record<string, LucideIcon> = {
   appointments: CalendarCheck,
   reservations: BedDouble,
@@ -64,6 +86,27 @@ export const BUSINESS_SYSTEMS_CAPABILITY_ICONS: Record<string, LucideIcon> = {
   dashboards: Gauge,
   workflows: Workflow,
 };
+
+// Central "system core" node icon for the BusinessSystems module-builder
+// diagram — distinct from the 6 module icons above.
+export const BUSINESS_SYSTEMS_CORE_ICON: LucideIcon = Cpu;
+
+// Radial positions (percent of the diagram container, and matching
+// coordinates in the 600x480 connector-line SVG viewBox) for the 6 module
+// nodes around the core, in the same clockwise order as the capabilities
+// array: appointments (top) -> reservations -> crm -> admin -> dashboards
+// (bottom-left) -> workflows (top-left) -> back to appointments. This order
+// also drives the first-view assembly sequence.
+export const BUSINESS_SYSTEMS_NODE_POSITIONS = [
+  { xPct: 50, yPct: 14.6, xSvg: 300, ySvg: 70 },
+  { xPct: 81.7, yPct: 32.3, xSvg: 490, ySvg: 155 },
+  { xPct: 81.7, yPct: 67.7, xSvg: 490, ySvg: 325 },
+  { xPct: 50, yPct: 85.4, xSvg: 300, ySvg: 410 },
+  { xPct: 18.3, yPct: 67.7, xSvg: 110, ySvg: 325 },
+  { xPct: 18.3, yPct: 32.3, xSvg: 110, ySvg: 155 },
+] as const;
+
+export const BUSINESS_SYSTEMS_CORE_POSITION = { xPct: 50, yPct: 50, xSvg: 300, ySvg: 240 } as const;
 
 export const INDUSTRY_SECTOR_ICONS: Record<string, LucideIcon> = {
   clinic: Stethoscope,

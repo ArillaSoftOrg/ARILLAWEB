@@ -267,6 +267,7 @@
         "businessSystems": {
           "heading": "We also build the business systems running behind your website.",
           "body": "Every business works differently. When off-the-shelf software isn't enough, we build custom systems around your appointment, reservation, customer management, order, or operational processes.",
+          "coreLabel": "Business System",
           "capabilities": [
             {
               "id": "appointments",
@@ -414,33 +415,77 @@
         "howWeWork": {
           "heading": "We don't start building before we understand the need.",
           "body": "We don't see a project as just a set of screens to deliver. We first understand the business's problem and goal, then shape the digital system together.",
+          "deliverablesLabel": "In this phase",
           "steps": [
             {
+              "id": "kesif",
               "number": "01",
-              "title": "Analysis",
-              "description": "We work to understand your business, your target audience, your current processes, and the problem that needs solving."
+              "title": "Discovery",
+              "description": "We understand your business, your goals, and the problem that needs solving.",
+              "deliverables": ["Needs Analysis", "Goals", "Current State"]
             },
             {
+              "id": "kapsam",
               "number": "02",
-              "title": "Plan",
-              "description": "We define the project's scope, required features, user flows, and technical approach."
+              "title": "Scope",
+              "description": "We define the pages, features, integrations, and boundaries of the project.",
+              "deliverables": ["Page Structure", "Features", "Integrations"]
             },
             {
+              "id": "yapi-ux",
               "number": "03",
-              "title": "Design",
-              "description": "We bring together brand, content, and user experience to design the interface and interactions."
+              "title": "Structure & UX",
+              "description": "We build the sitemap, user flows, and page wireframes.",
+              "deliverables": ["Sitemap", "User Flows", "Wireframes"]
             },
             {
+              "id": "gorsel-tasarim",
               "number": "04",
-              "title": "Development",
-              "description": "We build the website, the required backend systems, and integrations with a focus on performance and maintainability."
+              "title": "Visual Design",
+              "description": "We design the brand language and the real user interfaces.",
+              "deliverables": ["UI System", "Responsive Screens", "Component Design"]
             },
             {
+              "id": "frontend",
               "number": "05",
-              "title": "Launch & Grow",
-              "description": "We launch the system, run the necessary checks, and keep improving it based on your needs."
+              "title": "Frontend",
+              "description": "We turn the approved designs into responsive, high-performing working interfaces.",
+              "deliverables": ["Responsive UI", "Components", "Interactions"]
+            },
+            {
+              "id": "sistemler-entegrasyonlar",
+              "number": "06",
+              "title": "Systems & Integrations",
+              "description": "We connect the backend, admin panel, payments, WhatsApp, CRM, or any other systems the project needs.",
+              "deliverables": ["Backend", "Admin Panel", "API Integrations"]
+            },
+            {
+              "id": "icerik-gorunurluk",
+              "number": "07",
+              "title": "Content & Visibility",
+              "description": "We place the content and set up the SEO, GEO, analytics, and technical visibility foundations.",
+              "deliverables": ["Content", "SEO", "GEO", "Analytics"]
+            },
+            {
+              "id": "test-revizyon",
+              "number": "08",
+              "title": "Testing & Revisions",
+              "description": "We test the system across devices, fix issues, and apply the final round of feedback.",
+              "deliverables": ["Responsive Testing", "Performance", "Revisions"]
+            },
+            {
+              "id": "yayin-destek",
+              "number": "09",
+              "title": "Launch & Support",
+              "description": "We take the project into production, run final checks, and keep improving it.",
+              "deliverables": ["Production", "Final Checks", "Technical Support"]
             }
           ]
+        },
+        "featuredSolutions": {
+          "heading": "Highlights from the solution catalog.",
+          "body": "A selection from the solutions we offer, from websites to sector-specific systems. Prices and timelines are temporary placeholder figures.",
+          "viewAllLabel": "View All Solutions"
         },
         "pricing": {
           "heading": "Start with what you need. Scale as you grow.",
@@ -568,6 +613,28 @@
     "hizmetler": {
       "title": "Services",
       "description": "Web development, mobile apps, UI/UX design and more — end-to-end software solutions."
+    },
+    "solutions": {
+      "title": "Solutions",
+      "description": "From websites and e-commerce to SEO and sector-specific systems — the Arillasoft solution catalog.",
+      "heroHeading": "Solution Catalog",
+      "heroBody": "Pick the package that fits, or let's scope it together. Prices and timelines shown are temporary placeholder figures.",
+      "allCategoriesLabel": "All",
+      "backToCatalog": "All Solutions",
+      "notFoundTitle": "Solution not found",
+      "detail": {
+        "featuresHeading": "What's Included",
+        "extrasHeading": "Optional Extras",
+        "requirementsHeading": "What We Need From You",
+        "suitableForHeading": "Who This Is For",
+        "processHeading": "How the Process Works",
+        "deliverablesHeading": "Deliverables",
+        "faqHeading": "Frequently Asked Questions",
+        "tiersHeading": "Package Options",
+        "ctaHeading": "Is this solution right for you?",
+        "ctaBody": "Let's clarify what you need together — scope and price are finalized after the call.",
+        "otherSolutionsCta": "Browse Other Solutions"
+      }
     },
     "sektorelYazilimlar": {
       "title": "Industry Software",

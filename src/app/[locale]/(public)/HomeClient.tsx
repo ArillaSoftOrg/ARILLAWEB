@@ -21,6 +21,7 @@ import IndustrySolutions from "@/components/home/sections/IndustrySolutions";
 import AutomationIntegrations from "@/components/home/sections/AutomationIntegrations";
 import SeoGeoPerformance from "@/components/home/sections/SeoGeoPerformance";
 import HowWeWork from "@/components/home/sections/HowWeWork";
+import FeaturedSolutions from "@/components/home/sections/FeaturedSolutions";
 import Pricing from "@/components/home/sections/Pricing";
 import Faq from "@/components/home/sections/Faq";
 import FinalCta from "@/components/home/sections/FinalCta";
@@ -588,6 +589,7 @@ export default function HomeClient() {
         <HowWeWork />
       </div>
       <TestimonialsSection />
+      <FeaturedSolutions />
       <Pricing />
       <Faq />
       <FinalCta />

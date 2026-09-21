@@ -12,6 +12,13 @@ const intlMiddleware = createMiddleware(routing);
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Standalone public route outside the [locale] tree (e.g. Google Play
+  // privacy policy URL) — must stay reachable at its literal path, not
+  // redirected to /tr/last-hope/... by the intl middleware.
+  if (pathname.startsWith('/last-hope')) {
+    return NextResponse.next();
+  }
+
   // Admin JWT auth — runs first, bypasses locale routing entirely
   if (pathname.startsWith('/admin')) {
     if (pathname === '/admin/login') return NextResponse.next();
