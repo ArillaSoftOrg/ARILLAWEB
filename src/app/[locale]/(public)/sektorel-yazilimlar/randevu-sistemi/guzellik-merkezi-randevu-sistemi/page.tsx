@@ -6,6 +6,7 @@ import FAQJsonLd from '@/components/seo/FAQJsonLd';
 import ServiceJsonLd from '@/components/seo/ServiceJsonLd';
 
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { SITE_URL } from '@/lib/constants';
 
@@ -13,18 +14,18 @@ type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  if (locale !== 'tr') return {};
   const t = await getTranslations({ locale, namespace: 'pages.guzellikRandevu' });
   return {
     title: t('title'),
     description: t('description'),
     alternates: {
-      canonical: `/${locale}/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi`,
-      languages: { tr: '/tr/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi', en: '/en/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi', 'x-default': '/tr/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi' },
+      canonical: '/tr/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi',
     },
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: `${SITE_URL}/${locale}/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi`,
+      url: `${SITE_URL}/tr/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi`,
       type: 'website',
     },
     twitter: { card: 'summary_large_image', title: t('title'), description: t('description') },
@@ -58,7 +59,10 @@ const faqs = [
   },
 ];
 
-export default function GuzellikMerkeziRandevuSistemiPage() {
+export default async function GuzellikMerkeziRandevuSistemiPage({ params }: Props) {
+  const { locale } = await params;
+  if (locale !== 'tr') notFound();
+
   return (
     <>
       <BreadcrumbJsonLd

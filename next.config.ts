@@ -19,15 +19,37 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // Services → /tr/hizmetler (default locale)
+      // Bare (unprefixed) hits on English-slug route trees. next-intl's
+      // localePrefix:"always" auto-prefixes any unprefixed path with the
+      // *default* locale (tr), which would send these straight into a
+      // TR-locale request for an English-only slug and 404 (see the
+      // locale gates in services/page.tsx, sectoral-software/page.tsx,
+      // web-design-examples/page.tsx). Route them to their real /en/ home
+      // instead. Do NOT translate the slug — these trees don't have a TR
+      // equivalent path (see src/lib/en-site-data.ts href builders).
       {
         source: "/services",
-        destination: "/tr/hizmetler",
+        destination: "/en/services",
         permanent: true,
       },
       {
         source: "/services/:slug",
-        destination: "/tr/hizmetler/:slug",
+        destination: "/en/services/:slug",
+        permanent: true,
+      },
+      {
+        source: "/sectoral-software",
+        destination: "/en/sectoral-software",
+        permanent: true,
+      },
+      {
+        source: "/sectoral-software/:slug",
+        destination: "/en/sectoral-software/:slug",
+        permanent: true,
+      },
+      {
+        source: "/web-design-examples",
+        destination: "/en/web-design-examples",
         permanent: true,
       },
       // Blog → /tr/kurumsal/blog

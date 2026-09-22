@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { SITE_URL } from '@/lib/constants';
 import RandevuSistemiClient from './RandevuSistemiClient';
@@ -11,18 +12,18 @@ type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  if (locale !== 'tr') return {};
   const t = await getTranslations({ locale, namespace: 'pages.randevuSistemi' });
   return {
     title: t('title'),
     description: t('description'),
     alternates: {
-      canonical: `/${locale}/sektorel-yazilimlar/randevu-sistemi`,
-      languages: { tr: '/tr/sektorel-yazilimlar/randevu-sistemi', en: '/en/sektorel-yazilimlar/randevu-sistemi', 'x-default': '/tr/sektorel-yazilimlar/randevu-sistemi' },
+      canonical: '/tr/sektorel-yazilimlar/randevu-sistemi',
     },
     openGraph: {
       title: t('title'),
       description: t('description'),
-      url: `${SITE_URL}/${locale}/sektorel-yazilimlar/randevu-sistemi`,
+      url: `${SITE_URL}/tr/sektorel-yazilimlar/randevu-sistemi`,
       type: 'website',
     },
     twitter: { card: 'summary_large_image', title: t('title'), description: t('description') },
@@ -56,7 +57,10 @@ const faqs = [
   },
 ];
 
-export default function RandevuSistemiPage() {
+export default async function RandevuSistemiPage({ params }: Props) {
+  const { locale } = await params;
+  if (locale !== 'tr') notFound();
+
   return (
     <>
       <BreadcrumbJsonLd

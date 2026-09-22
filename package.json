@@ -20,7 +20,8 @@
     "seo:crawl": "node scripts/seo/crawl.mjs",
     "seo:gsc": "node scripts/seo/gsc.mjs",
     "seo:analyze": "node scripts/seo/analyze.mjs",
-    "seo:audit": "node scripts/seo/audit.mjs"
+    "seo:audit": "node scripts/seo/audit.mjs",
+    "seo:validate-urls": "node scripts/seo/validate-urls.mjs"
   },
   "dependencies": {
     "@fontsource/archivo": "^5.3.0",

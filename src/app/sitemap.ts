@@ -42,8 +42,19 @@ function mirroredArchitecturePaths(locale: Locale) {
 
 const STATIC_LAST_MODIFIED = new Date('2026-05-06T00:00:00+03:00');
 
+// Genuinely bilingual at the same path (translated in both locales) —
+// mirrored across every locale in `routing.locales` below.
 const STATIC_PATHS = [
   { path: '', priority: 1.0, changeFrequency: 'weekly' as const },
+  { path: '/teklif-al', priority: 0.7, changeFrequency: 'monthly' as const },
+];
+
+// TR-slug-only paths — these routes 404 for any other locale (see their
+// page.tsx locale gates), so they must NOT be mirrored across
+// `routing.locales` like STATIC_PATHS above. The EN equivalents live at a
+// different path entirely (/services, /sectoral-software — see
+// mirroredArchitecturePaths) rather than under these TR slugs.
+const TR_ONLY_STATIC_PATHS = [
   { path: '/hizmetler', priority: 0.9, changeFrequency: 'weekly' as const },
   { path: '/sektorel-yazilimlar', priority: 0.9, changeFrequency: 'weekly' as const },
   { path: '/sektorel-yazilimlar/qr-menu', priority: 0.8, changeFrequency: 'weekly' as const },
@@ -51,7 +62,6 @@ const STATIC_PATHS = [
   { path: '/sektorel-yazilimlar/randevu-sistemi/kuafor-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
   { path: '/sektorel-yazilimlar/randevu-sistemi/klinik-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
   { path: '/sektorel-yazilimlar/randevu-sistemi/guzellik-merkezi-randevu-sistemi', priority: 0.7, changeFrequency: 'monthly' as const },
-  { path: '/teklif-al', priority: 0.7, changeFrequency: 'monthly' as const },
 ];
 
 // Kurumsal pages (About/Career/Contact) have no real English body copy yet —
@@ -121,6 +131,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority,
       });
     }
+  }
+
+  // TR-slug-only routes — /tr entry only, never mirrored to /en.
+  for (const { path, priority, changeFrequency } of TR_ONLY_STATIC_PATHS) {
+    entries.push({
+      url: `${SITE_URL}/tr${path}`,
+      lastModified: STATIC_LAST_MODIFIED,
+      changeFrequency,
+      priority,
+    });
   }
 
   for (const { path, priority, changeFrequency } of KURUMSAL_TR_ONLY_PATHS) {

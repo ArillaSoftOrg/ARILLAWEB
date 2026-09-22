@@ -5,6 +5,7 @@ import FAQJsonLd from '@/components/seo/FAQJsonLd';
 import ServiceJsonLd from '@/components/seo/ServiceJsonLd';
 
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { SITE_URL } from '@/lib/constants';
 
@@ -12,6 +13,7 @@ type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  if (locale !== 'tr') return {};
   const t = await getTranslations({ locale, namespace: 'pages.qrMenu' });
   return {
     title: t('title'),
@@ -56,7 +58,10 @@ const faqs = [
   },
 ];
 
-export default function QrMenuPage() {
+export default async function QrMenuPage({ params }: Props) {
+  const { locale } = await params;
+  if (locale !== 'tr') notFound();
+
   return (
     <>
       <BreadcrumbJsonLd
