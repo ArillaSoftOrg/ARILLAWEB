@@ -1,5 +1,5 @@
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/constants';
-import { SOCIAL_LINKS } from '@/lib/constants/company';
+import { SOCIAL_LINKS, COMPANY_CONTACT } from '@/lib/constants/company';
 
 interface Props {
   contactUrl?: string;
@@ -12,12 +12,25 @@ export default function OrganizationJsonLd({ contactUrl = `${SITE_URL}/kurumsal/
     name: SITE_NAME,
     url: SITE_URL,
     description: SITE_DESCRIPTION,
-    // Previously missing the X/Twitter link that the footer already shows —
-    // now sourced from the same single list so this can't drift again.
+    email: COMPANY_CONTACT.email,
+    telephone: COMPANY_CONTACT.phone,
+    // City/district/country only — no street address, postal code, or
+    // lat/long. The supplied Google location link didn't resolve to a
+    // verifiable street address in this environment; do not add
+    // streetAddress/postalCode/geo fields until one is confirmed (see
+    // src/lib/constants/company.ts).
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Konyaaltı',
+      addressRegion: 'Antalya',
+      addressCountry: 'TR',
+    },
     sameAs: Object.values(SOCIAL_LINKS),
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'Customer Service',
+      email: COMPANY_CONTACT.email,
+      telephone: COMPANY_CONTACT.phone,
       url: contactUrl,
     },
   };

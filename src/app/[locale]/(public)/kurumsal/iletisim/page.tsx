@@ -6,6 +6,7 @@ import { CorporatePageHero } from '@/components/corporate/CorporatePageHero';
 import { HomeCard } from '@/components/home/ui/HomeCard';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import ContactFormDark from "@/components/forms/ContactFormDark";
+import { COMPANY_CONTACT } from '@/lib/constants/company';
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -34,30 +35,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// NOTE: values below are carried over from the pre-redesign page as-is.
-// Email/phone/address are flagged pending confirmation — do not treat
-// these as verified real contact details. Once confirmed, populate
-// COMPANY_CONTACT in src/lib/constants/company.ts and migrate every
-// conflicting call site (this file, Footer.tsx, layout.tsx's maintenance
-// notice) to import from there instead of repeating a literal.
+// Verified in Phase 4 — sourced from src/lib/constants/company.ts, the
+// single source of truth for these fields (see COMPANY_CONTACT there).
 const contactDetails = [
     {
         icon: Mail,
         label: "E-posta",
-        value: "info@arillasoft.com",
-        href: "mailto:info@arillasoft.com",
+        value: COMPANY_CONTACT.email,
+        href: `mailto:${COMPANY_CONTACT.email}`,
     },
     {
         icon: Phone,
         label: "Telefon",
-        value: "+90 (555) 000 00 00",
-        href: "tel:+905550000000",
+        value: COMPANY_CONTACT.phoneDisplay,
+        href: `tel:${COMPANY_CONTACT.phone.replace(/\s+/g, '')}`,
     },
     {
         icon: MapPin,
         label: "Adres",
-        value: "İstanbul, Türkiye",
-        href: null,
+        value: COMPANY_CONTACT.location,
+        href: COMPANY_CONTACT.googleMapsUrl,
     },
     {
         icon: Clock,

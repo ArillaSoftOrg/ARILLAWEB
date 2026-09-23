@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from '@/i18n/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCookieConsentContext } from '@/components/cookie/CookieConsentProvider';
-import { SOCIAL_LINKS, whatsappUrl } from '@/lib/constants/company';
+import { SOCIAL_LINKS, whatsappUrl, COMPANY_CONTACT } from '@/lib/constants/company';
 
 export default function Footer() {
   const { setPreferencesOpen } = useCookieConsentContext();
@@ -123,12 +123,8 @@ export default function Footer() {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <svg viewBox="0 0 24 24" fill="white" style={{ width: '14px', height: '14px', marginTop: '2px', flexShrink: 0 }}><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                {/* CONFLICT (see src/lib/constants/company.ts COMPANY_CONTACT.email):
-                    this differs from the contact page's "info@arillasoft.com" and the
-                    maintenance notice's "hello@arillasoft.com". Not migrated to the
-                    shared constant until the real address is confirmed. */}
-                <a href="mailto:iletisim@arillasoft.com" className="text-role-footer no-underline transition-colors duration-200">
-                  iletisim@arillasoft.com
+                <a href={`mailto:${COMPANY_CONTACT.email}`} className="text-role-footer no-underline transition-colors duration-200">
+                  {COMPANY_CONTACT.email}
                 </a>
               </li>
               <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
@@ -144,12 +140,15 @@ export default function Footer() {
               </li>
               <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <svg viewBox="0 0 24 24" fill="white" style={{ width: '14px', height: '14px', marginTop: '2px', flexShrink: 0 }}><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5z"/></svg>
-                {/* CONFLICT (see src/lib/constants/company.ts COMPANY_CONTACT.location):
-                    this differs from the contact page's "İstanbul, Türkiye". Not
-                    migrated to the shared constant until the real city is confirmed. */}
-                <span className="text-role-footer" style={{ lineHeight: 1.6 }}>
-                  {t('location')}
-                </span>
+                <a
+                  href={COMPANY_CONTACT.googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-role-footer no-underline transition-colors duration-200"
+                  style={{ lineHeight: 1.6 }}
+                >
+                  {COMPANY_CONTACT.locationShort}
+                </a>
               </li>
             </ul>
             <div style={{ marginTop: '20px' }}>

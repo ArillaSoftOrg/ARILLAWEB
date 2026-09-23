@@ -38,7 +38,10 @@ export interface CityMeta {
 export const CITIES: CityMeta[] = [
   { slug: 'adana', name: 'Adana', status: 'draft' },
   { slug: 'ankara', name: 'Ankara', status: 'draft' },
-  { slug: 'antalya', name: 'Antalya', status: 'draft' },
+  // Verified office location (Phase 4) — the only city with a real,
+  // confirmed local-presence fact. See src/lib/constants/company.ts
+  // COMPANY_CONTACT for the underlying verified data.
+  { slug: 'antalya', name: 'Antalya', status: 'indexable', isVerifiedOffice: true },
   { slug: 'bursa', name: 'Bursa', status: 'draft' },
   { slug: 'eskisehir', name: 'Eskişehir', status: 'draft' },
   { slug: 'gaziantep', name: 'Gaziantep', status: 'draft' },

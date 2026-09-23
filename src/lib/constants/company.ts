@@ -1,34 +1,29 @@
 /**
  * Single source of truth for ArillaSoft's company identity data — the
  * fields that must stay identical across the footer, contact page,
- * structured data (Organization JSON-LD), maintenance notice, and any
- * future CTA/local-SEO content.
+ * structured data (Organization JSON-LD), maintenance notice, WhatsApp
+ * CTAs, and local SEO content (city pages).
  *
- * PHASE 3 TRUST AUDIT (see the Phase 3 report in conversation history for
- * the full conflict matrix): several of these fields have multiple,
- * contradictory values live in the repo today. This file intentionally
- * does NOT pick a winner — that requires the business owner to confirm
- * the real value. Until then:
- *   - Fields with ONE consistent value across the codebase are
- *     consolidated here for real, and their call sites now import from
- *     here instead of repeating the literal.
- *   - Fields that are IN CONFLICT are exported as `null` here. Existing
- *     call sites keep their current (historical, possibly wrong) literal
- *     value unchanged — migrating them to `null` would put a blank/broken
- *     contact detail in front of real visitors, which is worse than a
- *     known inconsistency. Each such call site has a comment pointing
- *     back to this file. Once a field below is confirmed, update it here
- *     and then migrate every commented call site to import it.
+ * PHASE 4 UPDATE: location, phone, and email are now verified by the
+ * business owner (see the Phase 4 report in conversation history) and
+ * populated below. Every call site that used to carry a conflicting
+ * literal (contact page's "info@..."/"İstanbul, Türkiye/placeholder
+ * phone", footer's "iletisim@...", the maintenance notice's "hello@...")
+ * has been migrated to import from here — see each file's own diff.
+ *
+ * The one thing still deliberately NOT touched by this file: /cozumler
+ * package pricing. That remains `isPlaceholder: true` and out of scope —
+ * never reference it from here or from local SEO content.
  */
 
-/** Consistent across all 3 call sites found in the repo (Footer, DesignInquiryForm, SupportChatWidget) — safe to centralize. */
+/** Consistent across all 3 call sites found in the repo (Footer, DesignInquiryForm, SupportChatWidget) — verified correct in Phase 4. */
 export const WHATSAPP_NUMBER = '905422535192';
 
 export function whatsappUrl(message: string): string {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-/** Consistent across Footer and OrganizationJsonLd (Footer additionally has X/Twitter, which OrganizationJsonLd was missing — added here). */
+/** Consistent across Footer and OrganizationJsonLd. */
 export const SOCIAL_LINKS = {
   linkedin: 'https://linkedin.com/company/arillasoft',
   github: 'https://github.com/arillasoft',
@@ -37,15 +32,22 @@ export const SOCIAL_LINKS = {
 } as const;
 
 /**
- * CONFLICTING — do not populate without explicit confirmation from the
- * business owner. See the Phase 3 report for every location each
- * candidate value currently appears in.
+ * Verified by the business owner in Phase 4. `location` intentionally
+ * stays district/city/country text only — the supplied Google location
+ * link (see `googleMapsUrl` below) did not resolve to a verifiable street
+ * address in this environment (Google's share.google redirect requires a
+ * live browser session/JS this tooling doesn't have), so no street
+ * address, postal code, or lat/long is invented here. If a precise
+ * address is later confirmed, add it here — nowhere else.
  */
 export const COMPANY_CONTACT = {
-  /** Conflict: "info@arillasoft.com" (contact page) vs "iletisim@arillasoft.com" (footer) vs "hello@arillasoft.com" (maintenance notice). */
-  email: null as string | null,
-  /** Conflict: "+90 (555) 000 00 00" (contact page, explicitly a known placeholder) vs the real-looking WhatsApp number above. */
-  phone: null as string | null,
-  /** Conflict: "İstanbul, Türkiye" (contact page) vs "Konyaaltı / Antalya" (footer, both locales). The admin-managed SiteSetting DB record's `address` field is also null — no authoritative source exists yet anywhere in the system. */
-  location: null as string | null,
+  email: 'arillasoft@gmail.com',
+  /** E.164-ish international form, for tel: links and structured data. */
+  phone: '+90 542 253 51 92',
+  /** Turkish local display form, for on-page text. */
+  phoneDisplay: '0542 253 51 92',
+  location: 'Konyaaltı, Antalya, Türkiye',
+  locationShort: 'Antalya, Konyaaltı',
+  /** Supplied by the business owner; kept as the "view on the map" link. Not parsed for an address — see the note above. */
+  googleMapsUrl: 'https://share.google/YmxPBVWI2D0QtPh0o',
 } as const;

@@ -16,6 +16,7 @@ import { CookiePreferencesModal } from '@/components/cookie/CookiePreferencesMod
 import { ConsentedScripts } from '@/components/cookie/ConsentedScripts';
 import { routing } from '@/i18n/routing';
 import { getSiteSettings } from '@/lib/settings-actions';
+import { COMPANY_CONTACT } from '@/lib/constants/company';
 
 export const dynamic = 'force-dynamic';
 
@@ -207,9 +208,6 @@ function MaintenanceNotice({ locale }: { locale: string }) {
         >
           Blog&apos;a Git
         </a>
-        {/* CONFLICT (see src/lib/constants/company.ts COMPANY_CONTACT.email):
-            a third, different email from the contact page's "info@..." and
-            the footer's "iletisim@...". Not migrated until confirmed. */}
         <p
           style={{
             marginTop: '40px',
@@ -218,7 +216,7 @@ function MaintenanceNotice({ locale }: { locale: string }) {
             letterSpacing: '0.02em',
           }}
         >
-          İletişim için: hello@arillasoft.com
+          İletişim için: {COMPANY_CONTACT.email}
         </p>
       </div>
     </section>
