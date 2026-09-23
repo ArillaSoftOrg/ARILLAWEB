@@ -4,7 +4,7 @@ interface FAQ {
 }
 
 interface Props {
-  faqs: FAQ[];
+  faqs: readonly FAQ[];
 }
 
 export default function FAQJsonLd({ faqs }: Props) {

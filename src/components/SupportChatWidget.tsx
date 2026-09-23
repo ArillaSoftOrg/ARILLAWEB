@@ -5,6 +5,7 @@ import { MessageCircle, Send, X } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import { useCookieConsentContext } from '@/components/cookie/CookieConsentProvider';
 import { reportSupportChatOpen, subscribeSupportChatOpenRequest } from '@/lib/supportChatBridge';
+import { whatsappUrl as buildWhatsappUrl } from '@/lib/constants/company';
 
 const AUTO_TRIGGERED_KEY = 'support-chat-auto-triggered';
 const INTERACTED_KEY = 'support-chat-interacted';
@@ -49,8 +50,7 @@ export default function SupportChatWidget(_props: SupportChatWidgetProps = {}) {
   ];
 
   const sendToWhatsApp = (text: string) => {
-    const encoded = encodeURIComponent(text);
-    const whatsappUrl = `https://wa.me/905422535192?text=${encoded}`;
+    const whatsappUrl = buildWhatsappUrl(text);
     window.open(whatsappUrl, "_blank");
     setIsOpen(false);
     setMessage("");

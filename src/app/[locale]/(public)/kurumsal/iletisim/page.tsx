@@ -35,9 +35,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // NOTE: values below are carried over from the pre-redesign page as-is.
-// Email/phone are flagged in the redesign plan pending confirmation
-// (three different emails exist across the codebase; the phone number is a
-// known placeholder) — do not treat these as verified real contact details.
+// Email/phone/address are flagged pending confirmation — do not treat
+// these as verified real contact details. Once confirmed, populate
+// COMPANY_CONTACT in src/lib/constants/company.ts and migrate every
+// conflicting call site (this file, Footer.tsx, layout.tsx's maintenance
+// notice) to import from there instead of repeating a literal.
 const contactDetails = [
     {
         icon: Mail,

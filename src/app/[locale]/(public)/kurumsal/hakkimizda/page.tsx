@@ -53,7 +53,9 @@ const whyUs = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage({ params }: Props) {
+  const { locale } = await params;
+
   return (
     <>
       <BreadcrumbJsonLd items={[{ label: 'Anasayfa', href: '/' }, { label: 'Hakkımızda' }]} />
@@ -102,7 +104,14 @@ export default function AboutPage() {
         heading="Projenizi birlikte hayata geçirelim"
         body="İşletmeniz için modern bir web sitesi, özel yazılım çözümü veya dijital dönüşüm projesi planlıyorsanız bizimle iletişime geçin."
         primaryCta={{ label: 'Bizimle İletişime Geçin', href: '/kurumsal/iletisim' }}
-        secondaryCta={{ label: 'Projelerimizi İnceleyin', href: '/' }}
+        // /yazilim-firmasi is TR-only (notFound() for other locales) — this
+        // page renders the same Turkish body regardless of locale, so guard
+        // the link the same way rather than letting it 404 for EN visitors.
+        secondaryCta={
+          locale === 'tr'
+            ? { label: 'Özel Yazılım Firmamızı Tanıyın', href: '/yazilim-firmasi' }
+            : { label: 'Projelerimizi İnceleyin', href: '/' }
+        }
       />
     </>
   );

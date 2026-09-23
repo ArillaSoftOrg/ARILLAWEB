@@ -5,6 +5,8 @@ import { Link } from '@/i18n/navigation';
 import Breadcrumbs from '@/components/sections/Breadcrumbs';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import ServiceJsonLd from '@/components/seo/ServiceJsonLd';
+import FAQJsonLd from '@/components/seo/FAQJsonLd';
+import FAQSection from '@/components/sections/FAQSection';
 import FeatureGrid from '@/components/sections/FeatureGrid';
 import HowItWorks from '@/components/sections/HowItWorks';
 import ProductCTASection from '@/components/sections/ProductCTASection';
@@ -74,6 +76,24 @@ const COPY = {
     ctaSecondary: 'Contact Us',
     ctaBadge: 'Free Discovery Call',
     serviceJsonServiceType: 'Mobile Application Development',
+    faqHeading: 'Frequently Asked Questions',
+    faqs: [
+      {
+        question: 'Should I build a native app, a cross-platform app, or just a mobile-friendly website?',
+        answer:
+          "It depends on what the app needs to do and your budget. We help you decide during discovery — sometimes a mobile-friendly website or web application already covers the need, and a native app isn't the right first investment.",
+      },
+      {
+        question: 'Do you build for both iOS and Android?',
+        answer:
+          'Yes, either as fully native apps for each platform or as a single cross-platform codebase, depending on what fits your project.',
+      },
+      {
+        question: 'Do you handle app store submission?',
+        answer:
+          'Yes — app store submission and release is part of our process, along with ongoing updates and technical support after launch.',
+      },
+    ],
   },
   tr: {
     servicesBreadcrumb: 'Hizmetler',
@@ -130,6 +150,24 @@ const COPY = {
     ctaSecondary: 'Bize Ulaşın',
     ctaBadge: 'Ücretsiz Keşif Görüşmesi',
     serviceJsonServiceType: 'Mobil Uygulama Geliştirme',
+    faqHeading: 'Sıkça Sorulan Sorular',
+    faqs: [
+      {
+        question: 'Native uygulama mı, çoklu platform uygulama mı, yoksa mobil uyumlu bir web sitesi mi geliştirmeliyim?',
+        answer:
+          'Uygulamanın ne yapması gerektiğine ve bütçenize bağlıdır. Keşif aşamasında birlikte karar veriyoruz — bazen mobil uyumlu bir web sitesi veya web uygulaması ihtiyacı zaten karşılıyor ve native uygulama doğru ilk yatırım olmayabilir.',
+      },
+      {
+        question: 'Hem iOS hem Android için geliştirme yapıyor musunuz?',
+        answer:
+          'Evet, projenize uygun olarak her platform için tamamen native uygulamalar ya da tek bir çoklu platform kod tabanı şeklinde geliştirebiliriz.',
+      },
+      {
+        question: 'Uygulama mağazasına gönderim işlemini siz mi yapıyorsunuz?',
+        answer:
+          'Evet — mağaza gönderimi ve yayına alma sürecimizin bir parçasıdır; yayın sonrası güncelleme ve teknik destek de dahildir.',
+      },
+    ],
   },
 } as const;
 
@@ -166,6 +204,7 @@ export default function MobileApplicationContent({ locale }: { locale: Locale })
         url={`/${locale}${serviceHref(locale, service)}`}
         serviceType={copy.serviceJsonServiceType}
       />
+      <FAQJsonLd faqs={copy.faqs} />
       <Breadcrumbs
         items={[
           { label: copy.servicesBreadcrumb, href: servicesHubHref(locale) },
@@ -249,6 +288,8 @@ export default function MobileApplicationContent({ locale }: { locale: Locale })
           </div>
         </section>
       )}
+
+      <FAQSection title={copy.faqHeading} faqs={copy.faqs} darkMode={false} columns={1} />
 
       <ProductCTASection
         title={copy.ctaTitle}

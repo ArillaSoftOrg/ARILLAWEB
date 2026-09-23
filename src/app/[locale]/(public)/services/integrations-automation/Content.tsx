@@ -5,6 +5,8 @@ import { Link } from '@/i18n/navigation';
 import Breadcrumbs from '@/components/sections/Breadcrumbs';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import ServiceJsonLd from '@/components/seo/ServiceJsonLd';
+import FAQJsonLd from '@/components/seo/FAQJsonLd';
+import FAQSection from '@/components/sections/FAQSection';
 import FeatureGrid from '@/components/sections/FeatureGrid';
 import HowItWorks from '@/components/sections/HowItWorks';
 import ProductCTASection from '@/components/sections/ProductCTASection';
@@ -76,6 +78,24 @@ const COPY = {
     ctaBadge: 'Free Discovery Call',
     serviceJsonServiceType: 'Integrations and Business Process Automation',
     learnMore: 'Learn more',
+    faqHeading: 'Frequently Asked Questions',
+    faqs: [
+      {
+        question: 'What kind of systems can you integrate?',
+        answer:
+          'It depends on the tools you use and whether they expose an API. Common examples are CRM, accounting, appointment, and e-commerce systems, plus third-party services like payment providers or messaging platforms — each integration is scoped individually.',
+      },
+      {
+        question: "We don't have a specific tool to integrate — can automation still help?",
+        answer:
+          'Yes. A lot of automation work is about removing repetitive manual steps within your own systems — notifications, approvals, data syncing — not just connecting to outside tools.',
+      },
+      {
+        question: 'How do you make sure an integration keeps working reliably?',
+        answer:
+          "We design for error handling and test with real data and edge cases before launch, then monitor the integration after it's live so issues get caught early rather than silently failing.",
+      },
+    ],
   },
   tr: {
     servicesBreadcrumb: 'Hizmetler',
@@ -131,6 +151,24 @@ const COPY = {
     ctaBadge: 'Ücretsiz Keşif Görüşmesi',
     serviceJsonServiceType: 'Entegrasyon ve İş Süreci Otomasyonu',
     learnMore: 'Daha fazla bilgi',
+    faqHeading: 'Sıkça Sorulan Sorular',
+    faqs: [
+      {
+        question: 'Hangi sistemleri entegre edebiliyorsunuz?',
+        answer:
+          'Kullandığınız araçlara ve API desteği sunup sunmadığına bağlıdır. CRM, muhasebe, randevu ve e-ticaret sistemleri ile ödeme sağlayıcıları veya mesajlaşma platformları gibi üçüncü taraf servisler yaygın örneklerdir — her entegrasyon ayrı olarak kapsamlandırılır.',
+      },
+      {
+        question: 'Entegre edecek belirli bir aracımız yok — otomasyon yine de işe yarar mı?',
+        answer:
+          'Evet. Otomasyon çalışmalarının büyük bir kısmı dış araçlara bağlanmaktan çok, kendi sistemleriniz içindeki tekrarlayan manuel adımları (bildirimler, onaylar, veri senkronizasyonu) ortadan kaldırmakla ilgilidir.',
+      },
+      {
+        question: 'Bir entegrasyonun güvenilir çalışmaya devam etmesini nasıl sağlıyorsunuz?',
+        answer:
+          'Hata yönetimini baştan tasarlıyor, yayına almadan önce gerçek verilerle ve uç senaryolarla test ediyoruz; yayına aldıktan sonra da sorunların fark edilmeden büyümemesi için izlemeye devam ediyoruz.',
+      },
+    ],
   },
 } as const;
 
@@ -169,6 +207,7 @@ export default function IntegrationsAutomationContent({ locale }: { locale: Loca
         url={`/${locale}${serviceHref(locale, service)}`}
         serviceType={copy.serviceJsonServiceType}
       />
+      <FAQJsonLd faqs={copy.faqs} />
       <Breadcrumbs
         items={[
           { label: copy.servicesBreadcrumb, href: servicesHubHref(locale) },
@@ -252,6 +291,8 @@ export default function IntegrationsAutomationContent({ locale }: { locale: Loca
           </div>
         </section>
       )}
+
+      <FAQSection title={copy.faqHeading} faqs={copy.faqs} darkMode={false} columns={1} />
 
       <ProductCTASection
         title={copy.ctaTitle}

@@ -14,6 +14,8 @@ import { Link } from '@/i18n/navigation';
 import Breadcrumbs from '@/components/sections/Breadcrumbs';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import ServiceJsonLd from '@/components/seo/ServiceJsonLd';
+import FAQJsonLd from '@/components/seo/FAQJsonLd';
+import FAQSection from '@/components/sections/FAQSection';
 import FeatureGrid from '@/components/sections/FeatureGrid';
 import HowItWorks from '@/components/sections/HowItWorks';
 import ProductCTASection from '@/components/sections/ProductCTASection';
@@ -85,6 +87,34 @@ const COPY = {
     ctaSecondary: 'Contact Us',
     ctaBadge: 'Free Discovery Call',
     serviceJsonServiceType: 'Custom Software Development',
+    faqHeading: 'Frequently Asked Questions',
+    faqs: [
+      {
+        question: 'How is custom software different from off-the-shelf software?',
+        answer:
+          'Off-the-shelf software is built for a general business model and often has screens you don\'t need and gaps for what you do need. Custom software is built around your actual workflow — you work with the screens you actually use, and it grows with your business.',
+      },
+      {
+        question: 'How long does a custom software project take?',
+        answer:
+          'It depends entirely on scope — a single admin panel and a multi-role management system with several workflows take different amounts of time. We give you a concrete timeline after scoping the project.',
+      },
+      {
+        question: 'Can the system integrate with tools we already use?',
+        answer:
+          'Often, yes — this is part of what our integrations and automation service covers. Specific integrations depend on the tool and its API, and are scoped as part of the project.',
+      },
+      {
+        question: 'What happens after the software is live?',
+        answer:
+          'We provide post-launch maintenance and technical support, so there\'s a clear path for updates, fixes, and changes as your business evolves.',
+      },
+      {
+        question: 'Do you build SaaS products, or just internal tools?',
+        answer:
+          "Both fall under custom software development. If you're building a product you plan to run as a subscription-based system with multiple customer accounts and role-based access, that's the same underlying architecture — multi-role panels, permission-based access, and a maintainable backend — as the internal tools and management panels we build. Scope, roles, and subscription/billing logic are defined together during discovery.",
+      },
+    ],
   },
   tr: {
     servicesBreadcrumb: 'Hizmetler',
@@ -140,6 +170,34 @@ const COPY = {
     ctaSecondary: 'Bize Ulaşın',
     ctaBadge: 'Ücretsiz Keşif Görüşmesi',
     serviceJsonServiceType: 'Özel Yazılım Geliştirme',
+    faqHeading: 'Sıkça Sorulan Sorular',
+    faqs: [
+      {
+        question: 'Özel yazılım, hazır yazılımdan farkı nedir?',
+        answer:
+          'Hazır yazılımlar genel bir işletme modeline göre tasarlanır ve genellikle ihtiyacınız olmayan ekranlar içerirken gerçek ihtiyaçlarınızda eksik kalır. Özel yazılım, gerçek iş akışınıza göre tasarlanır — yalnızca kullandığınız ekranlarla ilerlersiniz ve işletmeniz büyüdükçe sistem sizinle birlikte gelişir.',
+      },
+      {
+        question: 'Özel yazılım projesi ne kadar sürer?',
+        answer:
+          'Tamamen kapsama bağlıdır — tek bir yönetim paneli ile birden fazla rol ve iş akışı içeren çok daha kapsamlı bir sistem farklı sürelerde tamamlanır. Kapsamı belirledikten sonra net bir zaman çizelgesi paylaşırız.',
+      },
+      {
+        question: 'Sistem, hâlihazırda kullandığımız araçlarla entegre olabilir mi?',
+        answer:
+          'Çoğu zaman evet — bu, entegrasyon ve otomasyon hizmetimizin kapsamına girer. Belirli entegrasyonlar kullandığınız araca ve API desteğine bağlıdır ve proje kapsamında ayrıca netleştirilir.',
+      },
+      {
+        question: 'Yazılım yayına alındıktan sonra ne oluyor?',
+        answer:
+          'Yayın sonrası bakım ve teknik destek hizmeti sağlıyoruz; işletmeniz geliştikçe güncelleme ve değişiklikler için net bir yol haritanız oluyor.',
+      },
+      {
+        question: 'SaaS ürünü mü geliştiriyorsunuz, yoksa yalnızca iç araçlar mı?',
+        answer:
+          'İkisi de özel yazılım geliştirme kapsamına girer. Birden fazla müşteri hesabı ve role dayalı erişimle çalışan, abonelik tabanlı bir ürün geliştirmek istiyorsanız, bu da iç araçlarda ve yönetim panellerinde kullandığımız aynı temel mimariye dayanır — çok rollü paneller, yetkilendirme ve sürdürülebilir bir altyapı. Kapsam, roller ve abonelik/faturalama mantığı keşif aşamasında birlikte netleştirilir.',
+      },
+    ],
   },
 } as const;
 
@@ -161,6 +219,7 @@ export default function CustomSoftwareAdminPanelsContent({ locale }: { locale: L
         url={`/${locale}${serviceHref(locale, service)}`}
         serviceType={copy.serviceJsonServiceType}
       />
+      <FAQJsonLd faqs={copy.faqs} />
       <BreadcrumbJsonLd
         items={[
           { label: copy.servicesBreadcrumb, href: `/${locale}${servicesHubHref(locale)}` },
@@ -277,6 +336,8 @@ export default function CustomSoftwareAdminPanelsContent({ locale }: { locale: L
           </div>
         </div>
       </section>
+
+      <FAQSection title={copy.faqHeading} faqs={copy.faqs} darkMode={false} columns={1} />
 
       <ProductCTASection
         title={copy.ctaTitle}

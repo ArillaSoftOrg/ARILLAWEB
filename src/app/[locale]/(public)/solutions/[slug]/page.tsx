@@ -18,7 +18,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const solution = getSolutionBySlug(slug);
   if (!solution) return {};
 
-  const title = solution.title.en;
+  // "Package" distinguishes this priced-package page's <title> from the
+  // capability/informational page for the same topic elsewhere on the site
+  // (see the matching comment in cozumler/[slug]/page.tsx).
+  const title = `${solution.title.en} Package`;
   const description = solution.shortDescription.en;
 
   return {

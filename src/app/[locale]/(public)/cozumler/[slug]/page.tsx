@@ -18,7 +18,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const solution = getSolutionBySlug(slug);
   if (!solution) return {};
 
-  const title = solution.title.tr;
+  // "Paketi" distinguishes this priced-package page's <title> from the
+  // capability/informational page for the same topic elsewhere on the site
+  // (e.g. /cozumler/online-randevu-sistemi vs /sektorel-yazilimlar/randevu-sistemi
+  // otherwise render the identical literal title — caught by
+  // scripts/seo/validate-urls.mjs's duplicate-title check).
+  const title = `${solution.title.tr} Paketi`;
   const description = solution.shortDescription.tr;
 
   return {

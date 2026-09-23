@@ -5,6 +5,7 @@ import { CheckCircle2, Loader2, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { whatsappUrl as buildWhatsappUrl } from "@/lib/constants/company";
 
 type DesignInquiryFormProps = {
   projectId: string;
@@ -31,7 +32,7 @@ export default function DesignInquiryForm({
     `Sektör: ${sector}`,
     `Bağlantı: ${detailUrl}`,
   ].join("\n");
-  const whatsappUrl = `https://wa.me/905422535192?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappUrl = buildWhatsappUrl(whatsappMessage);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

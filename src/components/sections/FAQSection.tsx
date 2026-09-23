@@ -12,7 +12,7 @@ interface FAQItem {
 interface FAQSectionProps {
   title: string;
   description?: string;
-  faqs: FAQItem[];
+  faqs: readonly FAQItem[];
   accentColor?: string;
   darkMode?: boolean;
   columns?: 1 | 2;

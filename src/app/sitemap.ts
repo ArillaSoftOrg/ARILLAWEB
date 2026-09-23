@@ -13,6 +13,7 @@ import {
   type Locale,
 } from '@/lib/en-site-data';
 import { getAllSolutionSlugs } from '@/lib/solutions';
+import { getIndexableCities, cityHref } from '@/lib/cities-data';
 
 // Sectoral Software / Services / Web Design Examples routes for a given locale. EN uses
 // `/services`, `/sectoral-software`, `/web-design-examples`; TR reuses the site's existing
@@ -55,6 +56,7 @@ const STATIC_PATHS = [
 // different path entirely (/services, /sectoral-software — see
 // mirroredArchitecturePaths) rather than under these TR slugs.
 const TR_ONLY_STATIC_PATHS = [
+  { path: '/yazilim-firmasi', priority: 0.9, changeFrequency: 'monthly' as const },
   { path: '/hizmetler', priority: 0.9, changeFrequency: 'weekly' as const },
   { path: '/sektorel-yazilimlar', priority: 0.9, changeFrequency: 'weekly' as const },
   { path: '/sektorel-yazilimlar/qr-menu', priority: 0.8, changeFrequency: 'weekly' as const },
@@ -231,6 +233,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: `${SITE_URL}/tr/cozumler/${slug}`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${SITE_URL}/en/solutions/${slug}`, lastModified: STATIC_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.7 }
     );
+  }
+
+  // Local SEO city pages — TR-only, and only cities marked `indexable` in
+  // src/lib/cities-data.ts. Currently an empty list (see the Phase 3
+  // report): no city has verified, differentiated content yet.
+  for (const city of getIndexableCities()) {
+    entries.push({
+      url: `${SITE_URL}/tr${cityHref(city)}`,
+      lastModified: STATIC_LAST_MODIFIED,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    });
   }
 
   return Array.from(new Map(entries.map((e) => [e.url, e])).values());

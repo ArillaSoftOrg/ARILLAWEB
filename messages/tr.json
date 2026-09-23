@@ -34,6 +34,7 @@
     "maintenance": "Bakım & Destek",
     "companyHeading": "Şirket",
     "about": "Hakkımızda",
+    "yazilimFirmasi": "Özel Yazılım Firması",
     "blog": "Blog",
     "career": "Kariyer",
     "contact": "İletişim",
@@ -613,6 +614,10 @@
     "hizmetler": {
       "title": "Hizmetler",
       "description": "Web sitesi ve web uygulama, mobil uygulama, oyun geliştirme, özel yazılım, entegrasyon ve bakım — uçtan uca yazılım geliştirme hizmetleri."
+    },
+    "yazilimFirmasi": {
+      "title": "Özel Yazılım Firması",
+      "description": "İşletmeniz için özel yazılım geliştiren yazılım firması. Web, mobil ve kurumsal yazılım çözümleri, sektörel uzmanlık ve uçtan uca geliştirme süreci."
     },
     "solutions": {
       "title": "Çözümler",

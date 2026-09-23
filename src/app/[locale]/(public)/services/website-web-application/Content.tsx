@@ -5,6 +5,8 @@ import { Link } from '@/i18n/navigation';
 import Breadcrumbs from '@/components/sections/Breadcrumbs';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import ServiceJsonLd from '@/components/seo/ServiceJsonLd';
+import FAQJsonLd from '@/components/seo/FAQJsonLd';
+import FAQSection from '@/components/sections/FAQSection';
 import FeatureGrid from '@/components/sections/FeatureGrid';
 import HowItWorks from '@/components/sections/HowItWorks';
 import ProductCTASection from '@/components/sections/ProductCTASection';
@@ -81,6 +83,29 @@ const COPY = {
     ctaSecondary: 'Contact Us',
     ctaBadge: 'Free Discovery Call',
     serviceJsonServiceType: 'Website & Web Application Development',
+    faqHeading: 'Frequently Asked Questions',
+    faqs: [
+      {
+        question: 'Do you use a website builder (WordPress, Wix, etc.) or is this custom-built?',
+        answer:
+          "It's custom-built rather than a template-based builder — the site is designed and developed around your business's actual structure and content, not adapted from a generic theme.",
+      },
+      {
+        question: 'How long does a website or web application take?',
+        answer:
+          "It depends on scope — a marketing website and a full web application with a management panel take different amounts of time. We give you a clear timeline once the scope is defined.",
+      },
+      {
+        question: "What's the difference between a website and a web application?",
+        answer:
+          'A website presents your business and content to visitors. A web application adds interactive functionality — logins, dashboards, booking flows, data management — for a specific task your business needs done online.',
+      },
+      {
+        question: 'Do you provide support after launch?',
+        answer:
+          'Yes — post-launch maintenance and technical support is one of our services, so you have somewhere to go for updates and fixes after the site is live.',
+      },
+    ],
   },
   tr: {
     servicesBreadcrumb: 'Hizmetler',
@@ -140,6 +165,29 @@ const COPY = {
     ctaSecondary: 'Bize Ulaşın',
     ctaBadge: 'Ücretsiz Keşif Görüşmesi',
     serviceJsonServiceType: 'Web Sitesi ve Web Uygulama Geliştirme',
+    faqHeading: 'Sıkça Sorulan Sorular',
+    faqs: [
+      {
+        question: 'Hazır bir site oluşturucu (WordPress, Wix vb.) mi kullanıyorsunuz, yoksa özel mi geliştiriyorsunuz?',
+        answer:
+          'Özel olarak geliştiriyoruz — site, genel bir temadan uyarlanmak yerine işletmenizin gerçek yapısına ve içeriğine göre tasarlanır ve kodlanır.',
+      },
+      {
+        question: 'Bir web sitesi veya web uygulaması ne kadar sürede tamamlanır?',
+        answer:
+          'Kapsama bağlıdır — bir kurumsal web sitesi ile yönetim paneli içeren uçtan uca bir web uygulaması farklı sürelerde tamamlanır. Kapsamı netleştirdikten sonra net bir zaman çizelgesi paylaşıyoruz.',
+      },
+      {
+        question: 'Web sitesi ile web uygulaması arasındaki fark nedir?',
+        answer:
+          'Web sitesi, işletmenizi ve içeriğinizi ziyaretçilere sunar. Web uygulaması ise giriş sistemi, panel, randevu akışı veya veri yönetimi gibi işletmenizin çevrimiçi yapmasını istediğiniz belirli bir işlevi ekler.',
+      },
+      {
+        question: 'Yayına aldıktan sonra destek sağlıyor musunuz?',
+        answer:
+          'Evet — yayın sonrası bakım ve teknik destek hizmetlerimizden biridir; sitenizin yayına alınmasından sonra güncelleme ve düzeltmeler için yanınızda oluyoruz.',
+      },
+    ],
   },
 } as const;
 
@@ -178,6 +226,7 @@ export default function WebsiteWebApplicationContent({ locale }: { locale: Local
         url={`/${locale}${serviceHref(locale, service)}`}
         serviceType={copy.serviceJsonServiceType}
       />
+      <FAQJsonLd faqs={copy.faqs} />
       <Breadcrumbs
         items={[
           { label: copy.servicesBreadcrumb, href: servicesHubHref(locale) },
@@ -281,6 +330,8 @@ export default function WebsiteWebApplicationContent({ locale }: { locale: Local
           </Link>
         </div>
       </section>
+
+      <FAQSection title={copy.faqHeading} faqs={copy.faqs} darkMode={false} columns={1} />
 
       <ProductCTASection
         title={copy.ctaTitle}

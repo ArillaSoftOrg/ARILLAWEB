@@ -207,6 +207,9 @@ function MaintenanceNotice({ locale }: { locale: string }) {
         >
           Blog&apos;a Git
         </a>
+        {/* CONFLICT (see src/lib/constants/company.ts COMPANY_CONTACT.email):
+            a third, different email from the contact page's "info@..." and
+            the footer's "iletisim@...". Not migrated until confirmed. */}
         <p
           style={{
             marginTop: '40px',
