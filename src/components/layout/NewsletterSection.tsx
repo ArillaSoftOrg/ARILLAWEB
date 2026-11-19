@@ -25,8 +25,6 @@ export default function NewsletterSection() {
   const onSubmit = async (data: NewsletterFormValues) => {
     setStatus('loading');
     try {
-      // Integration point: POST /api/newsletter — route not yet implemented.
-      // Once a newsletter backend exists, this call will start working as-is.
       const res = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

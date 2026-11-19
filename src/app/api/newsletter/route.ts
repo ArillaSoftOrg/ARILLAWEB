@@ -2,8 +2,12 @@ import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { newsletterSchema } from "@/lib/validations/newsletter";
+import { clientIp, rateLimit, TOO_MANY_REQUESTS } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
+    if (!rateLimit(`newsletter:${clientIp(req.headers)}`, 5, 10 * 60_000)) {
+        return NextResponse.json(TOO_MANY_REQUESTS, { status: 429 });
+    }
     try {
         const body = await req.json();
         const { email } = newsletterSchema.parse(body);

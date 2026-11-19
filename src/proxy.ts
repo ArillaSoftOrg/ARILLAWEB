@@ -3,9 +3,7 @@ import { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
-
-const secret = () =>
-  new TextEncoder().encode(process.env.ADMIN_AUTH_SECRET!);
+import { getAdminSecret } from './lib/admin-secret';
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -28,7 +26,7 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
 
     try {
-      await jwtVerify(token, secret());
+      await jwtVerify(token, getAdminSecret());
     } catch {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }

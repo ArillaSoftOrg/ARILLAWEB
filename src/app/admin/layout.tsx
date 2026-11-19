@@ -67,6 +67,12 @@ const navItems = [
     exact: false,
   },
   {
+    label: "Teklif Talepleri",
+    href: "/admin/quotes",
+    icon: FileText,
+    exact: false,
+  },
+  {
     label: "Bülten Aboneleri",
     href: "/admin/newsletter",
     icon: Send,

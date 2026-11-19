@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowRight, CheckCircle2, Menu, Sparkles } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import SiteExampleVisual from "@/components/site-examples/SiteExampleVisual";
 
 type Props = { params: Promise<{ locale: string; design: string }> };
+
+// Demo pages are not part of the sitemap and must not be indexed (or inherit the locale canonical).
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export default async function LiveDemoPage({ params }: Props) {
   const { locale, design } = await params;

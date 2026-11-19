@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { designInquirySchema } from "@/lib/validations/design-inquiry";
+import { clientIp, rateLimit, TOO_MANY_REQUESTS } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
+  if (!rateLimit(`design:${clientIp(request.headers)}`, 5, 10 * 60_000)) {
+      return NextResponse.json(TOO_MANY_REQUESTS, { status: 429 });
+  }
   try {
     const parsed = designInquirySchema.safeParse(await request.json());
 

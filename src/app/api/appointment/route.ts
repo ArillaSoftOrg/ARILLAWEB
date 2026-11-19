@@ -3,10 +3,14 @@ import { prisma } from '@/lib/prisma';
 import { appointmentSchema } from '@/lib/validations/appointment';
 import { generateSlots, isDateInPast, isTimeSlotInPast } from '@/lib/availability';
 import { SERVICE_SLUGS } from '@/lib/services';
+import { clientIp, rateLimit, TOO_MANY_REQUESTS } from '@/lib/rate-limit';
 
 const CONFLICT_ERROR = 'Seçtiğiniz saat artık uygun değil. Lütfen farklı bir saat seçiniz.';
 
 export async function POST(req: NextRequest) {
+  if (!rateLimit(`appointment:${clientIp(req.headers)}`, 10, 10 * 60_000)) {
+      return NextResponse.json(TOO_MANY_REQUESTS, { status: 429 });
+  }
   try {
     const body = await req.json();
     const result = appointmentSchema.safeParse(body);

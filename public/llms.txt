@@ -1,0 +1,27 @@
+# Arillasoft
+
+> Arillasoft is a software company based in Konyaaltı, Antalya, Turkey. It builds websites, web applications, mobile apps, custom software and admin panels, integrations and automation, and provides ongoing maintenance and technical support. It also offers ready-made sector software such as QR menus and online appointment systems.
+
+The site is available in Turkish (default) and English.
+
+## Services
+- [Services (TR)](https://arillasoft.com/tr/hizmetler): overview of all services
+- [Services (EN)](https://arillasoft.com/en/services): overview of all services
+- [Website & web application](https://arillasoft.com/en/services/website-web-application)
+- [Mobile application](https://arillasoft.com/en/services/mobile-application)
+- [Custom software & admin panels](https://arillasoft.com/en/services/custom-software-admin-panels)
+- [Integrations & automation](https://arillasoft.com/en/services/integrations-automation)
+- [Maintenance & technical support](https://arillasoft.com/en/services/maintenance-technical-support)
+
+## Sector software
+- [Sector software (TR)](https://arillasoft.com/tr/sektorel-yazilimlar)
+- [Sector software (EN)](https://arillasoft.com/en/sectoral-software)
+- [QR menu](https://arillasoft.com/tr/sektorel-yazilimlar/qr-menu)
+- [Appointment system](https://arillasoft.com/tr/sektorel-yazilimlar/randevu-sistemi)
+
+## Company
+- [Software company in Antalya](https://arillasoft.com/tr/yazilim-firmasi)
+- [About](https://arillasoft.com/tr/kurumsal/hakkimizda)
+- [Blog](https://arillasoft.com/tr/kurumsal/blog)
+- [Contact](https://arillasoft.com/tr/kurumsal/iletisim)
+- [Request a quote](https://arillasoft.com/tr/teklif-al)

@@ -3,14 +3,12 @@ import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
+import { getAdminSecret } from '@/lib/admin-secret';
 
 async function assertAdminAuth() {
   const token = (await cookies()).get('admin-auth')?.value;
   if (!token) throw new Error('Unauthorized');
-  await jwtVerify(
-    token,
-    new TextEncoder().encode(process.env.ADMIN_AUTH_SECRET!)
-  );
+  await jwtVerify(token, getAdminSecret());
 }
 
 export async function getAppointmentRequests() {

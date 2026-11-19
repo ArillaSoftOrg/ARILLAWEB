@@ -219,21 +219,6 @@ export default function SupportChatWidget(_props: SupportChatWidgetProps = {}) {
     return () => reportSupportChatOpen(false);
   }, [isOpen]);
 
-  // Mobile navbar icon requests opening the same panel as the floating
-  // launcher — mirrors handleTeaserClick's open side effects.
-  useEffect(() => {
-    return subscribeSupportChatOpenRequest(() => {
-      if (autoOpenTimerRef.current) {
-        clearTimeout(autoOpenTimerRef.current);
-        autoOpenTimerRef.current = null;
-      }
-      closeTeaser();
-      markInteracted();
-      setIsOpen(true);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // Escape closes an open panel, mirroring the explicit X-close dismissal.
   useEffect(() => {
     if (!isOpen) return;
@@ -261,6 +246,21 @@ export default function SupportChatWidget(_props: SupportChatWidgetProps = {}) {
     hasInteractedRef.current = true;
     sessionStorage.setItem(INTERACTED_KEY, '1');
   };
+
+  // Mobile navbar icon requests opening the same panel as the floating
+  // launcher — mirrors handleTeaserClick's open side effects.
+  useEffect(() => {
+    return subscribeSupportChatOpenRequest(() => {
+      if (autoOpenTimerRef.current) {
+        clearTimeout(autoOpenTimerRef.current);
+        autoOpenTimerRef.current = null;
+      }
+      closeTeaser();
+      markInteracted();
+      setIsOpen(true);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleToggleClick = () => {
     if (autoOpenTimerRef.current) {
