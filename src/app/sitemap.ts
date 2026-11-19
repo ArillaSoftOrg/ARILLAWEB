@@ -78,7 +78,6 @@ const KURUMSAL_TR_ONLY_PATHS = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let posts: { slug: string; updatedAt: Date }[] = [];
-  let services: { slug: string; updatedAt: Date }[] = [];
   let catalogSectors: { slug: string }[] = [];
   let catalogProjects: {
     slug: string;
@@ -87,12 +86,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }[] = [];
 
   try {
-    const [blogPosts, publishedServices, sectors, projects] = await prisma.$transaction([
+    const [blogPosts, sectors, projects] = await prisma.$transaction([
       prisma.blogPost.findMany({
-        where: { published: true },
-        select: { slug: true, updatedAt: true },
-      }),
-      prisma.service.findMany({
         where: { published: true },
         select: { slug: true, updatedAt: true },
       }),
@@ -114,7 +109,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }),
     ]);
     posts = blogPosts;
-    services = publishedServices;
     catalogSectors = sectors;
     catalogProjects = projects;
   } catch {
@@ -181,18 +175,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: post.updatedAt,
       changeFrequency: 'weekly',
       priority: 0.7,
-    });
-  }
-
-  // Dynamic CMS service pages (legacy Service model) — only render under /en/hizmetler/[slug]
-  // now; the /tr/hizmetler hub and its new mirrored service pages replaced the CMS listing
-  // on the Turkish side (see hizmetler/page.tsx and hizmetler/[slug]/page.tsx).
-  for (const service of services) {
-    entries.push({
-      url: `${SITE_URL}/en/hizmetler/${service.slug}`,
-      lastModified: service.updatedAt,
-      changeFrequency: 'monthly',
-      priority: 0.5,
     });
   }
 

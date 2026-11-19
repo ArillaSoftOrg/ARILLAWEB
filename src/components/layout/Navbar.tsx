@@ -62,26 +62,20 @@ export default function Navbar({
     !pathname.startsWith('/sektorel-yazilimlar');
   const isHomePath = pathname === '/';
   const isHomeTop = isHomePath && !scrolled;
-  const publicHeaderClassName = isHomePath ? 'bg-transparent' : 'bg-slate-900 md:bg-white';
+  // Same light, translucent header on every page (transparent only at the top of the home page),
+  // so mobile and desktop no longer switch between dark and white bars.
+  const publicHeaderClassName = '';
   const publicHeaderStyle = {
     position: 'fixed' as const,
     top: 0,
     left: 0,
     right: 0,
     zIndex: 50,
-    backgroundColor: isHomeTop ? 'transparent' : isHomePath ? 'rgba(255,255,255,0.84)' : undefined,
-    backdropFilter: isHomePath ? (isHomeTop ? 'none' : 'blur(14px)') : 'blur(6px)',
-    WebkitBackdropFilter: isHomePath ? (isHomeTop ? 'none' : 'blur(14px)') : 'blur(6px)',
-    borderBottom: isHomeTop
-      ? '1px solid transparent'
-      : isHomePath
-        ? '1px solid rgba(15,23,42,0.08)'
-        : scrolled ? '1px solid rgba(0,0,0,0.2)' : '1px solid rgba(0,0,0,0.1)',
-    boxShadow: isHomeTop
-      ? 'none'
-      : isHomePath
-        ? '0 10px 30px rgba(15,23,42,0.06)'
-        : scrolled ? '0 4px 24px rgba(0,0,0,0.15)' : 'none',
+    backgroundColor: isHomeTop ? 'transparent' : 'rgba(255,255,255,0.84)',
+    backdropFilter: isHomeTop ? 'none' : 'blur(14px)',
+    WebkitBackdropFilter: isHomeTop ? 'none' : 'blur(14px)',
+    borderBottom: isHomeTop ? '1px solid transparent' : '1px solid rgba(15,23,42,0.08)',
+    boxShadow: isHomeTop ? 'none' : '0 10px 30px rgba(15,23,42,0.06)',
     transition: 'background-color 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease, backdrop-filter 0.28s ease',
   };
 
@@ -281,7 +275,7 @@ export default function Navbar({
               >
                 <BrandLockup
                   rotationEnabled={!brandIntroActive}
-                  variant={isHomePath ? 'surface' : 'default'}
+                  variant="surface"
                 />
               </span>
             </Link>
@@ -329,7 +323,7 @@ export default function Navbar({
 
             <button
               type="button"
-              className={`navbar-support-mobile-btn md:hidden flex items-center justify-center ${isHomePath ? 'navbar-menu-toggle' : 'text-slate-100 md:navbar-menu-toggle'}`}
+              className="navbar-support-mobile-btn md:hidden flex items-center justify-center navbar-menu-toggle"
               onClick={() => requestSupportChatOpen()}
               style={{ background: 'transparent', border: 'none', padding: '12px', cursor: 'pointer' }}
               aria-label={tChat('toggleAriaLabel')}
@@ -339,7 +333,7 @@ export default function Navbar({
             </button>
 
             <button
-              className={`focus-ring-lime flex items-center justify-center lg:hidden ${isHomePath ? 'navbar-menu-toggle' : 'text-slate-100 md:navbar-menu-toggle'}`}
+              className="focus-ring-lime flex items-center justify-center lg:hidden navbar-menu-toggle"
               onClick={() => setIsOpen(!isOpen)}
               style={{ background: 'transparent', border: 'none', padding: '12px', margin: '-12px', cursor: 'pointer' }}
               aria-label={t('menuToggle')}

@@ -51,3 +51,20 @@ next-env.d.ts
 .seo/**/*.txt
 .seo/**/*offline*/
 .seo/**/*export*/
+
+# local logs, scratch and generated reports
+*.log
+/tmp/
+.lighthouse/
+.claude/settings.local.json
+/build-output.log
+/AppIcon_*.png
+/Last_Hope_*.png
+/ChatGPT Image*.png
+/görsel *.png
+/check_rules.js
+/test_e2e*.js
+/design-reference/
+/docs/*.xlsx
+/hero-final-1280x720.png
+/last-hope-privacy-policy.md

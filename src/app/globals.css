@@ -45,7 +45,7 @@
   /* ── Homepage redesign tokens (design.md) ──────────────────────────
      Additive namespace only. Used by the new homepage sections under
      src/components/home/** plus the homepage HeroSection (HomeClient.tsx)
-     and its HeroShowcase visual. Never referenced by Navbar, Footer,
+     and its hero visual. Never referenced by Navbar, Footer,
      TestimonialsSection, or any other route — those keep using the
      tokens above unchanged. */
   --home-bg: #FFFFFF;
@@ -1439,93 +1439,5 @@ html[data-brand-intro="running"] [data-brand-logo-target] {
   .chat-toggle-btn,
   .navbar-support-mobile-btn {
     transition: none;
-  }
-}
-
-/* Final CTA — four INDEPENDENT wave systems (A–D) layered in the lower
-   portion of the closing section, not one master curve sliced into depth
-   offsets (each group's terrain shape is generated separately in
-   FinalCtaWaveField.tsx). Single SVG, no duplicated canvases — every group
-   duplicates its own line set once, side by side, inside one <g>.
-   Motion is a pure right-to-left translateX per group, linear, never
-   alternating — no scale/rotate/perspective anywhere, so nothing reads as
-   depth travel. `transform-box: fill-box` is what makes the loop gapless:
-   each track's own rendered width is exactly two copies (2 * VIEW_WIDTH), so
-   `translateX(-50%)` always moves it by exactly one copy's width — a
-   percentage can't drift out of sync with VIEW_WIDTH the way a hardcoded
-   pixel offset can. Each group's `animation-delay` is a distinct negative
-   value purely to stagger their starting phase (a static positional offset
-   would instead leave a gap at some point in the loop, since the two-copy
-   track is only ever exactly viewport-covering when unshifted). The mask
-   fades the whole field out before it reaches the headline/body/CTA above
-   it. */
-.final-cta-wave-field {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.5) 55%, #000 72%);
-  mask-image: linear-gradient(to bottom, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.5) 55%, #000 72%);
-}
-
-.final-cta-wave-field__svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* Responsive line density: "core" lines always render (~half the field,
-   mobile included); "extra" lines join at the lg breakpoint for the full
-   density. Split per-group in FinalCtaWaveField.tsx so every group stays
-   recognizable at every size instead of one group emptying out first. */
-.final-cta-wave-field__svg path[data-tier="extra"] {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .final-cta-wave-field__svg path[data-tier="extra"] {
-    display: inline;
-  }
-}
-
-.final-cta-wave-field__track {
-  transform-box: fill-box;
-  animation-name: finalCtaWaveTravel;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-.final-cta-wave-field__track--A {
-  animation-duration: 30s;
-  animation-delay: -3s;
-}
-
-.final-cta-wave-field__track--B {
-  animation-duration: 25s;
-  animation-delay: -9s;
-}
-
-.final-cta-wave-field__track--C {
-  animation-duration: 21s;
-  animation-delay: -14s;
-}
-
-.final-cta-wave-field__track--D {
-  animation-duration: 17s;
-  animation-delay: -6s;
-}
-
-@keyframes finalCtaWaveTravel {
-  from {
-    transform: translateX(0%);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .final-cta-wave-field__track {
-    animation: none;
   }
 }

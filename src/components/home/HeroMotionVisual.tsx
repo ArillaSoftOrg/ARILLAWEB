@@ -20,9 +20,8 @@ function usePrefersReducedMotion() {
   return prefersReducedMotion;
 }
 
-// TEMPORARY APPROVED HERO ASSET — renders /public/MOTION.mp4 in place of the
-// hero-person photo composition (see HeroShowcase.tsx, kept on disk unused).
-// Swap back by rendering <HeroShowcase /> again in HomeClient.tsx.
+// Hero visual: renders /public/MOTION.mp4 (the previous photo composition,
+// HeroShowcase, was removed; restore it from git history if ever needed).
 export default function HeroMotionVisual() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();

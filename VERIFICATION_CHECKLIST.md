@@ -133,8 +133,8 @@ Response: { ok: true }
 1. **Open browser:** `http://localhost:3000/admin/login`
 
 2. **Enter credentials:**
-   - **Email:** `arillasoft@gmail.com`
-   - **Password:** `Arilla!1`
+   - **Email:** your admin account email
+   - **Password:** your admin password (never commit real credentials)
 
 3. **Click "Giriş Yap"**
 

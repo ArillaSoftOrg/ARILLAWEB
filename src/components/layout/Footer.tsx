@@ -5,6 +5,7 @@ import { Link } from '@/i18n/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCookieConsentContext } from '@/components/cookie/CookieConsentProvider';
 import { SOCIAL_LINKS, whatsappUrl, COMPANY_CONTACT } from '@/lib/constants/company';
+import '@/lib/home-fonts';
 
 export default function Footer() {
   const { setPreferencesOpen } = useCookieConsentContext();
@@ -15,8 +16,8 @@ export default function Footer() {
   return (
     <footer
       style={{
-        background: '#101010',
-        color: '#94a3b8',
+        background: 'var(--home-surface-dark)',
+        color: 'var(--home-text-inverse-secondary)',
       }}
     >
       <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="px-5 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-16">
@@ -29,7 +30,7 @@ export default function Footer() {
             >
               <img src="/logoarilla.png" alt="Arillasoft" style={{ height: '40px', width: 'auto' }} />
             </Link>
-            <p className="text-role-footer" style={{ lineHeight: 1.8, marginBottom: '24px' }}>
+            <p className="font-home-sans text-[14px] text-home-text-inverse-secondary" style={{ lineHeight: 1.8, marginBottom: '24px' }}>
               {t('tagline')}
             </p>
             <div style={{ display: 'flex', gap: '10px' }}>
@@ -61,7 +62,7 @@ export default function Footer() {
                   aria-label={label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-white/10 border border-white/20 text-white transition-all duration-200 hover:text-violet-300 hover:border-violet-400/50 hover:bg-violet-500/20"
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-white/10 border border-white/20 text-white transition-all duration-200 hover:text-home-primary hover:border-home-primary/50 hover:bg-home-primary/10"
                 >
                   {svg}
                 </a>
@@ -71,7 +72,7 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h3 className="text-role-footer-header" style={{ marginBottom: '16px' }}>
+            <h3 className="font-home-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-home-text-inverse" style={{ marginBottom: '16px' }}>
               {t('servicesHeading')}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -79,7 +80,7 @@ export default function Footer() {
                 <li key={key}>
                   <Link
                     href="/hizmetler"
-                    className="text-role-footer no-underline transition-colors duration-200"
+                    className="font-home-sans text-[14px] text-home-text-inverse-secondary no-underline transition-colors duration-200 hover:text-home-primary"
                   >
                     {t(key)}
                   </Link>
@@ -90,7 +91,7 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="text-role-footer-header" style={{ marginBottom: '16px' }}>
+            <h3 className="font-home-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-home-text-inverse" style={{ marginBottom: '16px' }}>
               {t('companyHeading')}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -106,7 +107,7 @@ export default function Footer() {
                 <li key={item.key}>
                   <Link
                     href={item.href}
-                    className="text-role-footer no-underline transition-colors duration-200"
+                    className="font-home-sans text-[14px] text-home-text-inverse-secondary no-underline transition-colors duration-200 hover:text-home-primary"
                   >
                     {t(item.key)}
                   </Link>
@@ -117,13 +118,13 @@ export default function Footer() {
 
           {/* Contact */}
           <div className="col-span-2 lg:col-span-1">
-            <h3 className="text-role-footer-header" style={{ marginBottom: '16px' }}>
+            <h3 className="font-home-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-home-text-inverse" style={{ marginBottom: '16px' }}>
               {t('contactHeading')}
             </h3>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <svg viewBox="0 0 24 24" fill="white" style={{ width: '14px', height: '14px', marginTop: '2px', flexShrink: 0 }}><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                <a href={`mailto:${COMPANY_CONTACT.email}`} className="text-role-footer no-underline transition-colors duration-200">
+                <a href={`mailto:${COMPANY_CONTACT.email}`} className="font-home-sans text-[14px] text-home-text-inverse-secondary no-underline transition-colors duration-200 hover:text-home-primary">
                   {COMPANY_CONTACT.email}
                 </a>
               </li>
@@ -133,7 +134,7 @@ export default function Footer() {
                   href={whatsappUrl('Merhaba, hizmetlerinizle ilgili detaylı bilgi almak istiyorum.')}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-role-footer no-underline transition-colors duration-200"
+                  className="font-home-sans text-[14px] text-home-text-inverse-secondary no-underline transition-colors duration-200 hover:text-home-primary"
                 >
                   WhatsApp
                 </a>
@@ -144,7 +145,7 @@ export default function Footer() {
                   href={COMPANY_CONTACT.googleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-role-footer no-underline transition-colors duration-200"
+                  className="font-home-sans text-[14px] text-home-text-inverse-secondary no-underline transition-colors duration-200 hover:text-home-primary"
                   style={{ lineHeight: 1.6 }}
                 >
                   {COMPANY_CONTACT.locationShort}
@@ -154,7 +155,7 @@ export default function Footer() {
             <div style={{ marginTop: '20px' }}>
               <Link
                 href="/kurumsal/iletisim"
-                className="inline-flex items-center gap-1.5 px-4.5 py-2 rounded-lg text-white bg-gradient-to-br from-violet-600 to-purple-700 no-underline transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/30 hover:-translate-y-0.5 text-role-button"
+                className="inline-flex items-center gap-1.5 px-4.5 py-2 rounded-lg bg-home-primary text-home-primary-foreground no-underline transition-colors duration-200 hover:bg-home-primary-hover font-home-sans text-[15px] font-medium"
               >
                 {t('contactCta')}
               </Link>
@@ -177,23 +178,23 @@ export default function Footer() {
             gap: '12px',
           }}
         >
-          <p className="text-role-footer-legal">
+          <p className="font-home-sans text-[12.5px] text-home-text-muted">
             © {currentYear} Arillasoft. {t('copyright')}
           </p>
           <button
             type="button"
             onClick={() => setPreferencesOpen(true)}
-            className="text-role-footer-legal"
+            className="font-home-sans text-[12.5px] text-home-text-muted"
             style={{
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              color: '#475569',
+              color: 'var(--home-text-muted)',
               padding: '0',
               transition: 'color 0.15s',
             }}
-            onMouseOver={(e) => (e.currentTarget.style.color = '#94a3b8')}
-            onMouseOut={(e) => (e.currentTarget.style.color = '#475569')}
+            onMouseOver={(e) => (e.currentTarget.style.color = 'var(--home-primary)')}
+            onMouseOut={(e) => (e.currentTarget.style.color = 'var(--home-text-muted)')}
           >
             {t('cookiePrefs')}
           </button>

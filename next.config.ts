@@ -27,6 +27,27 @@ const nextConfig: NextConfig = {
       // web-design-examples/page.tsx). Route them to their real /en/ home
       // instead. Do NOT translate the slug — these trees don't have a TR
       // equivalent path (see src/lib/en-site-data.ts href builders).
+      // Removed service: Game Development (page deleted). Send old URLs to the hubs.
+      {
+        source: "/hizmetler/oyun-gelistirme",
+        destination: "/tr/hizmetler",
+        permanent: true,
+      },
+      {
+        source: "/tr/hizmetler/oyun-gelistirme",
+        destination: "/tr/hizmetler",
+        permanent: true,
+      },
+      {
+        source: "/services/game-development",
+        destination: "/en/services",
+        permanent: true,
+      },
+      {
+        source: "/en/services/game-development",
+        destination: "/en/services",
+        permanent: true,
+      },
       {
         source: "/services",
         destination: "/en/services",
