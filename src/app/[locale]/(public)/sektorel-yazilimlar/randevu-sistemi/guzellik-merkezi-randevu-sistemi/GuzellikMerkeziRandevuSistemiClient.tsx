@@ -85,7 +85,7 @@ function ProblemSection() {
           transform: 'translate(-50%, -50%)',
           width: '800px',
           height: '800px',
-          background: 'radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(199,243,107,0.06) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -151,7 +151,7 @@ function ProblemSection() {
                 }}
                 whileHover={{
                   y: -4,
-                  borderColor: '#7c3aed40',
+                  borderColor: '#10101040',
                   boxShadow: '0 10px 28px rgba(0,0,0,0.09)',
                 }}
               >
@@ -211,19 +211,19 @@ function TargetUsersSection() {
       icon: Sparkles,
       title: 'Güzellik Salonları',
       description: 'Makyöz, epilasyon, cilt bakımı ve estetik hizmetleri sunan salonlar için ideal çözüm.',
-      color: '#ec4899',
+      color: '#101010',
     },
     {
       icon: Droplet,
       title: 'Spa & Masaj Salonları',
       description: 'Masaj paketleri, aromaterapi, vücut bakımı gibi uzun süreli hizmetlerin planlanması kolay hale gelir.',
-      color: '#06b6d4',
+      color: '#101010',
     },
     {
       icon: Palette,
       title: 'Tırnak Tasarımı (Nail Studio)',
       description: 'Manicure, pedicure, nail art randevuları ve paket satışları sistematik yönetilir.',
-      color: '#8b5cf6',
+      color: '#101010',
     },
     {
       icon: Heart,
@@ -369,37 +369,37 @@ export default function GuzellikMerkeziRandevuSistemiClient() {
       icon: Palette,
       title: 'Hizmet & Paket Yönetimi',
       description: 'Saç, cilt, masaj vb. hizmetleri ve paket satışlarını tanımlayın. Fiyat ve süresi otomatik hesaplanır.',
-      color: '#7c3aed',
+      color: '#101010',
     },
     {
       icon: Calendar,
       title: 'Terapeut Takvimi',
       description: 'Her terapeut/stilistin ayrı takvimi. Tatiller, nöbet saatleri, çalışma periyotları yönetilir.',
-      color: '#06b6d4',
+      color: '#101010',
     },
     {
       icon: Gift,
       title: 'Paket & Abonelik Planları',
       description: '10 seans masaj paketi, 5 haftalık cilt bakımı serisi. Otomatik takip ve hatırlatma yapılır.',
-      color: '#8b5cf6',
+      color: '#101010',
     },
     {
       icon: MessageSquare,
       title: 'Müşteri İletişimi & Hatırlatma',
       description: 'SMS ve email ile randevu hatırlatması. Paket süresi bittiğinde yenileme teklifi gönderilir.',
-      color: '#06b6d4',
+      color: '#101010',
     },
     {
       icon: BarChart3,
       title: 'Satış & Performans Raporları',
       description: 'Hangi hizmet en çok satılıyor, hangi terapeut meşgul, müşteri memnuniyeti. Akıllı pazarlama yapın.',
-      color: '#7c3aed',
+      color: '#101010',
     },
     {
       icon: Heart,
       title: 'Sadakat Programı & Kupon',
       description: 'Sık gelen müşterilere bonus hizmet, sezon kuponları, doğum günü hediyesi otomatik sunun.',
-      color: '#8b5cf6',
+      color: '#101010',
     },
   ];
 
@@ -525,7 +525,7 @@ export default function GuzellikMerkeziRandevuSistemiClient() {
             style={{
               padding: '40px 32px',
               borderRadius: '12px',
-              border: '1px solid rgba(124,58,237,0.2)',
+              border: '1px solid rgba(199,243,107,0.2)',
               background: '#ffffff',
               display: 'flex',
               flexDirection: 'column',
@@ -556,17 +556,17 @@ export default function GuzellikMerkeziRandevuSistemiClient() {
                 fontWeight: 600,
                 textDecoration: 'none',
                 color: '#FFFFFF',
-                background: '#7c3aed',
-                boxShadow: '0 2px 8px rgba(124,58,237,0.3)',
+                background: '#101010',
+                boxShadow: '0 2px 8px rgba(199,243,107,0.3)',
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(124,58,237,0.4)';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(199,243,107,0.4)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(124,58,237,0.3)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(199,243,107,0.3)';
               }}
             >
               Ücretsiz Demo Al

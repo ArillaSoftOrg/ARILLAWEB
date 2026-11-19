@@ -78,7 +78,7 @@ export function CookiePreferencesModal() {
         style={{
           maxHeight: '90vh',
           background: '#0f0f0f',
-          border: '1px solid rgba(124,58,237,0.25)',
+          border: '1px solid rgba(199,243,107,0.25)',
           color: '#e2e8f0',
         }}
       >
@@ -140,7 +140,7 @@ export function CookiePreferencesModal() {
                           border: 'none',
                           cursor: 'pointer',
                           transition: 'background 0.2s',
-                          background: isChecked ? '#7c3aed' : 'rgba(255,255,255,0.15)',
+                          background: isChecked ? '#C7F36B' : 'rgba(255,255,255,0.15)',
                           position: 'relative',
                           flexShrink: 0,
                         }}
@@ -221,8 +221,8 @@ export function CookiePreferencesModal() {
                                       display: 'inline-block',
                                       padding: '2px 7px',
                                       borderRadius: '4px',
-                                      background: 'rgba(124,58,237,0.2)',
-                                      color: '#a78bfa',
+                                      background: 'rgba(199,243,107,0.2)',
+                                      color: '#C7F36B',
                                       fontSize: '11px',
                                       whiteSpace: 'nowrap',
                                     }}
@@ -279,15 +279,15 @@ export function CookiePreferencesModal() {
             onClick={handleAcceptAll}
             style={{
               background: 'transparent',
-              border: '1px solid rgba(124,58,237,0.5)',
+              border: '1px solid rgba(199,243,107,0.5)',
               cursor: 'pointer',
               fontSize: '13px',
-              color: '#a78bfa',
+              color: '#C7F36B',
               padding: '8px 16px',
               borderRadius: '8px',
               transition: 'background 0.15s',
             }}
-            onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(124,58,237,0.1)')}
+            onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(199,243,107,0.1)')}
             onMouseOut={(e) => (e.currentTarget.style.background = 'transparent')}
           >
             {LABELS.acceptAll}
@@ -296,23 +296,23 @@ export function CookiePreferencesModal() {
             type="button"
             onClick={handleSave}
             style={{
-              background: 'linear-gradient(135deg, #7c3aed, #6d28d9)',
+              background: '#C7F36B',
               border: 'none',
               cursor: 'pointer',
               fontSize: '13px',
               fontWeight: 600,
-              color: '#fff',
+              color: '#101010',
               padding: '8px 20px',
               borderRadius: '8px',
               transition: 'box-shadow 0.2s, transform 0.2s',
-              boxShadow: '0 2px 10px rgba(124,58,237,0.35)',
+              boxShadow: '0 2px 10px rgba(199,243,107,0.3)',
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.boxShadow = '0 4px 18px rgba(124,58,237,0.55)';
+              e.currentTarget.style.boxShadow = '0 4px 18px rgba(199,243,107,0.45)';
               e.currentTarget.style.transform = 'translateY(-1px)';
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.boxShadow = '0 2px 10px rgba(124,58,237,0.35)';
+              e.currentTarget.style.boxShadow = '0 2px 10px rgba(199,243,107,0.3)';
               e.currentTarget.style.transform = 'translateY(0)';
             }}
           >

@@ -245,14 +245,16 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
 
   // Theme-based styling
   const isDark = theme === 'dark';
+  const accent = isDark ? '#C7F36B' : '#101010';
+  const onAccent = isDark ? '#101010' : '#FFFFFF';
   const cardBg = isDark ? 'rgba(255,255,255,0.04)' : '#fff';
   const cardBorder = isDark ? '1px solid rgba(255,255,255,0.08)' : 'none';
-  const borderTop = '3px solid #7c3aed';
+  const borderTop = '3px solid #C7F36B';
   const labelColor = isDark ? '#cbd5e1' : '#475569';
   const inputBg = isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc';
   const inputBorder = isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0';
   const inputColor = isDark ? '#f8fafc' : '#0f172a';
-  const buttonGradient = 'linear-gradient(135deg, #8b5cf6, #6d28d9)';
+  const buttonGradient = '#C7F36B';
   const errorColor = isDark ? '#fca5a5' : '#ef4444';
 
   return (
@@ -397,11 +399,11 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
               cellBg = isDark ? 'rgba(148,163,184,0.08)' : 'rgba(148,163,184,0.08)';
               cellTitle = 'Bloke';
             } else if (dayStatus === 'no_remaining_today_slots') {
-              cellColor = '#7c3aed';
+              cellColor = accent;
               cellOpacity = 0.64;
               cellCursor = 'not-allowed';
-              cellBorder = '1.5px solid #7c3aed';
-              cellBg = isDark ? 'rgba(124,58,237,0.08)' : 'rgba(124,58,237,0.05)';
+              cellBorder = `1.5px solid ${accent}`;
+              cellBg = isDark ? 'rgba(199,243,107,0.08)' : 'rgba(199,243,107,0.05)';
               cellTitle = 'Bugün için kalan saat yok';
             } else if (dayStatus === 'loading' || dayStatus === 'unknown') {
               cellColor = isDark ? 'rgba(255,255,255,0.58)' : '#64748b';
@@ -411,9 +413,9 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
             }
 
             if (isToday && !isSelected && dayStatus !== 'past') {
-              cellBorder = cellBorder === 'none' ? '1.5px solid #7c3aed' : cellBorder;
+              cellBorder = cellBorder === 'none' ? `1.5px solid ${accent}` : cellBorder;
               if (isClickable) {
-                cellColor = '#7c3aed';
+                cellColor = accent;
               }
             }
 
@@ -423,12 +425,12 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
             }
 
             if (isToday && !isSelected && isClickable) {
-              cellColor = '#7c3aed';
+              cellColor = accent;
             }
 
             if (isSelected) {
-              cellBg = '#7c3aed';
-              cellColor = 'white';
+              cellBg = accent;
+              cellColor = onAccent;
               cellCursor = 'pointer';
             }
 
@@ -454,12 +456,12 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                 }}
                 onMouseEnter={(e) => {
                   if (cellCursor === 'pointer' && !isSelected) {
-                    e.currentTarget.style.background = isDark ? 'rgba(124,58,237,0.15)' : 'rgba(124,58,237,0.08)';
+                    e.currentTarget.style.background = isDark ? 'rgba(199,243,107,0.15)' : 'rgba(199,243,107,0.08)';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (isSelected) {
-                    e.currentTarget.style.background = '#7c3aed';
+                    e.currentTarget.style.background = accent;
                   } else {
                     e.currentTarget.style.background = cellBg;
                   }
@@ -528,9 +530,9 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                 }
 
                 if (isSlotSelected) {
-                  slotBg = '#7c3aed';
-                  slotColor = 'white';
-                  slotBorder = '#7c3aed';
+                  slotBg = accent;
+                  slotColor = onAccent;
+                  slotBorder = accent;
                   slotOpacity = 1;
                   slotTextDecoration = 'none';
                 }
@@ -561,8 +563,8 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
                     onMouseEnter={(e) => {
                       if (isAvailable && !isSlotSelected) {
                         e.currentTarget.style.background = isDark
-                          ? 'rgba(124,58,237,0.15)'
-                          : 'rgba(124,58,237,0.08)';
+                          ? 'rgba(199,243,107,0.15)'
+                          : 'rgba(199,243,107,0.08)';
                       }
                     }}
                     onMouseLeave={(e) => {
@@ -607,7 +609,7 @@ export default function HeroBookingForm({ defaultService, theme = 'light' }: Her
         style={{
           width: '100%',
           background: buttonGradient,
-          color: 'white',
+          color: '#101010',
           border: 'none',
           borderRadius: 10,
           padding: '12px 16px',

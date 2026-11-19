@@ -24,11 +24,10 @@ export default async function SiteExamplesPage({ params }: Props) {
   const totalDesignCount = sectors.reduce((total, sector) => total + sector.projects.length, 0);
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <section className="relative overflow-hidden border-b border-slate-200 bg-white px-4 pb-20 pt-32 sm:px-6 lg:pt-40">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(37,99,235,.10),transparent_28%),radial-gradient(circle_at_85%_10%,rgba(124,58,237,.09),transparent_28%)]" />
-        <div className="relative mx-auto max-w-6xl text-center">
-          <p className="mx-auto mb-5 inline-flex rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-blue-700">
+    <main className="min-h-screen bg-home-surface-warm">
+      <section className="relative overflow-hidden border-b border-home-border bg-home-surface-warm px-4 pb-20 pt-32 sm:px-6 lg:pt-40">
+                <div className="relative mx-auto max-w-6xl text-center">
+          <p className="mx-auto mb-5 inline-flex rounded-full border border-home-border bg-home-bg px-4 py-2 text-xs font-medium tracking-[0.04em] text-home-fg">
             Sektörünü seç · Tasarımını incele
           </p>
           <h1 className="mx-auto max-w-4xl text-4xl font-black tracking-[-0.04em] text-slate-950 sm:text-6xl">
@@ -44,7 +43,7 @@ export default async function SiteExamplesPage({ params }: Props) {
               </span>
             ))}
           </div>
-          <a href="#katalog" className="mt-9 inline-flex items-center gap-2 text-sm font-bold text-blue-700">
+          <a href="#katalog" className="mt-9 inline-flex items-center gap-2 text-sm font-semibold text-home-fg">
             Tasarımları keşfet <ArrowDown className="h-4 w-4" />
           </a>
         </div>
@@ -54,7 +53,7 @@ export default async function SiteExamplesPage({ params }: Props) {
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.18em] text-blue-600">Sektör kataloğu</p>
+              <p className="text-sm font-semibold text-home-text-secondary">Sektör kataloğu</p>
               <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-slate-950 sm:text-4xl">
                 Önce sektörünüzü seçin.
               </h2>
@@ -72,7 +71,7 @@ export default async function SiteExamplesPage({ params }: Props) {
                 <Link
                   key={sector.id}
                   href={`/site-ornekleri/${sector.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl hover:shadow-blue-950/5"
+                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-home-fg hover:shadow-md"
                 >
                   <div className="relative aspect-[16/11] overflow-hidden bg-slate-100">
                     {previewProjects.length > 0 ? (
@@ -109,13 +108,13 @@ export default async function SiteExamplesPage({ params }: Props) {
                   </div>
 
                   <div className="flex flex-1 flex-col p-5">
-                    <h2 className="text-xl font-black tracking-tight text-slate-950 transition group-hover:text-blue-700">
+                    <h2 className="text-xl font-black tracking-tight text-slate-950 transition group-hover:text-home-fg">
                       {sector.name}
                     </h2>
                     <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">
                       {sector.description}
                     </p>
-                    <span className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-bold text-white transition group-hover:bg-blue-700">
+                    <span className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-home-full bg-home-fg px-4 text-sm font-semibold text-home-text-inverse transition group-hover:bg-home-primary group-hover:text-home-primary-foreground">
                       Bu sektördeki tasarımları gör
                       <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                     </span>

@@ -82,7 +82,7 @@ function ProblemSection() {
           transform: 'translate(-50%, -50%)',
           width: '800px',
           height: '800px',
-          background: 'radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(199,243,107,0.06) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -148,7 +148,7 @@ function ProblemSection() {
                 }}
                 whileHover={{
                   y: -4,
-                  borderColor: '#7c3aed40',
+                  borderColor: '#10101040',
                   boxShadow: '0 10px 28px rgba(0,0,0,0.09)',
                 }}
               >
@@ -362,37 +362,37 @@ export default function KuaforRandevuSistemiClient() {
       icon: Calendar,
       title: 'Hızlı & Kolay Randevu Alma',
       description: '3 tıklamada randevu alınsın. Müşteri dostu, sezgisel arayüz.',
-      color: '#7c3aed',
+      color: '#101010',
     },
     {
       icon: Clock,
       title: 'Zamanı Otomatik Yönetin',
       description: 'Her hizmetin süresi tanımlı. Sistem otomatik uygun saatleri gösterir.',
-      color: '#06b6d4',
+      color: '#101010',
     },
     {
       icon: Users,
       title: 'Çalışan Yönetimi',
       description: 'Hangi çalışan ne saatte müşterilere uygun. Adil dağıtım, verimli kullanım.',
-      color: '#8b5cf6',
+      color: '#101010',
     },
     {
       icon: Scissors,
       title: 'Hizmet Tanımlama',
       description: 'Saç kesim, ağda, tıraş, boyama vs. Her hizmetin süresi ve fiyatını belirleyin.',
-      color: '#06b6d4',
+      color: '#101010',
     },
     {
       icon: MessageSquare,
       title: 'Sms & Email Bildirim',
       description: 'Müşterilere otomatik hatırlatma gönderilir. Randevu iptalleri azalır, gelişler artar.',
-      color: '#7c3aed',
+      color: '#101010',
     },
     {
       icon: Lock,
       title: 'Güvenli & Gizli',
       description: 'Müşteri verileriniz güvenli sunucularda tutulur. KVKK uyumlu, sertifikalı.',
-      color: '#8b5cf6',
+      color: '#101010',
     },
   ];
 
@@ -521,7 +521,7 @@ export default function KuaforRandevuSistemiClient() {
             style={{
               padding: '40px 32px',
               borderRadius: '12px',
-              border: '1px solid rgba(124,58,237,0.2)',
+              border: '1px solid rgba(199,243,107,0.2)',
               background: '#ffffff',
               display: 'flex',
               flexDirection: 'column',
@@ -552,17 +552,17 @@ export default function KuaforRandevuSistemiClient() {
                 fontWeight: 600,
                 textDecoration: 'none',
                 color: '#FFFFFF',
-                background: '#7c3aed',
-                boxShadow: '0 2px 8px rgba(124,58,237,0.3)',
+                background: '#101010',
+                boxShadow: '0 2px 8px rgba(199,243,107,0.3)',
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(124,58,237,0.4)';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(199,243,107,0.4)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(124,58,237,0.3)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(199,243,107,0.3)';
               }}
             >
               Ücretsiz Demo Al

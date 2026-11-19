@@ -54,7 +54,7 @@ export default async function WebDesignExamplesPage({ params }: Props) {
       <section className="px-4 pb-10 pt-6 sm:px-6">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-blue-600">Web Design Examples</p>
+            <p className="text-sm font-semibold text-home-text-secondary">Web Design Examples</p>
             <h1 className="mt-3 text-4xl font-black tracking-[-0.04em] text-slate-950 sm:text-5xl">
               Website concepts and design examples for different industries
             </h1>

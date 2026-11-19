@@ -86,7 +86,7 @@ function ProblemSection() {
           transform: 'translate(-50%, -50%)',
           width: '800px',
           height: '800px',
-          background: 'radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(199,243,107,0.06) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -152,7 +152,7 @@ function ProblemSection() {
                 }}
                 whileHover={{
                   y: -4,
-                  borderColor: '#7c3aed40',
+                  borderColor: '#10101040',
                   boxShadow: '0 10px 28px rgba(0,0,0,0.09)',
                 }}
               >
@@ -212,13 +212,13 @@ function TargetUsersSection() {
       icon: Stethoscope,
       title: 'Pratisyen Hekimler',
       description: 'Periyodik kontroller, aşı, tıbbi tedaviler ve hasta takibi için ideal randevu sistemi.',
-      color: '#06b6d4',
+      color: '#101010',
     },
     {
       icon: Pill,
       title: 'Diş Hekimleri',
       description: 'Diş temizliği, kaplama, kanal tedavisi gibi uzun tedavilerin planlanması kolay hale gelir.',
-      color: '#8b5cf6',
+      color: '#101010',
     },
     {
       icon: Utensils,
@@ -370,37 +370,37 @@ export default function KlinikRandevuSistemiClient() {
       icon: Calendar,
       title: 'Doktor Takvimi Yönetimi',
       description: 'Her doktor/uzman için ayrı takvim. Tatiller, nöbet saatleri, cerrahiler otomatik yönetilir.',
-      color: '#7c3aed',
+      color: '#101010',
     },
     {
       icon: FileText,
       title: 'Hasta Dosyası Yönetimi',
       description: 'Muayene tarihi, teşhis, ilaçlar, reçeteler, test sonuçları. Tüm bilgiler güvenli saklanır.',
-      color: '#06b6d4',
+      color: '#101010',
     },
     {
       icon: Shield,
       title: 'Sigorta Doğrulama',
       description: 'Hasta gelmeden sigorta bilgileri doğrulanır. Ödeme garantilenir, yanlış işlem olmaz.',
-      color: '#8b5cf6',
+      color: '#101010',
     },
     {
       icon: MessageSquare,
       title: 'Otomatik Hatırlatma & Bildirim',
       description: 'SMS ve email ile randevu hatırlatması. Hasta no-show\'ları %40\'a kadar azalır.',
-      color: '#06b6d4',
+      color: '#101010',
     },
     {
       icon: BarChart3,
       title: 'Hasta & Doktor Raporları',
       description: 'Hangi doktor yoğun, hangi saatler dolgun, hasta memnuniyeti. Veriye dayalı kararlar alın.',
-      color: '#7c3aed',
+      color: '#101010',
     },
     {
       icon: Lock,
       title: 'KVKK & Tıbbi Gizlilik',
       description: 'Hasta verileri 256-bit şifreleme ile korunur. Tüm tıbbi gizlilik standartlarına uyumlu.',
-      color: '#8b5cf6',
+      color: '#101010',
     },
   ];
 
@@ -526,7 +526,7 @@ export default function KlinikRandevuSistemiClient() {
             style={{
               padding: '40px 32px',
               borderRadius: '12px',
-              border: '1px solid rgba(124,58,237,0.2)',
+              border: '1px solid rgba(199,243,107,0.2)',
               background: '#ffffff',
               display: 'flex',
               flexDirection: 'column',
@@ -557,17 +557,17 @@ export default function KlinikRandevuSistemiClient() {
                 fontWeight: 600,
                 textDecoration: 'none',
                 color: '#FFFFFF',
-                background: '#7c3aed',
-                boxShadow: '0 2px 8px rgba(124,58,237,0.3)',
+                background: '#101010',
+                boxShadow: '0 2px 8px rgba(199,243,107,0.3)',
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(124,58,237,0.4)';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(199,243,107,0.4)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(124,58,237,0.3)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(199,243,107,0.3)';
               }}
             >
               Ücretsiz Demo Al

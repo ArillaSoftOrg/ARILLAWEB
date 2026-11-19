@@ -8,8 +8,8 @@ const KIND_LABELS = {
 
 const KIND_CLASSES = {
   LIVE_DEMO: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  DESIGN_CONCEPT: "border-violet-200 bg-violet-50 text-violet-700",
-  CLIENT_PROJECT: "border-blue-200 bg-blue-50 text-blue-700",
+  DESIGN_CONCEPT: "border-home-border bg-home-surface text-home-fg",
+  CLIENT_PROJECT: "border-home-primary bg-home-primary-soft text-home-fg",
 } as const;
 
 export type ExampleKind = keyof typeof KIND_LABELS;

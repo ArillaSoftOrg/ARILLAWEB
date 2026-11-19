@@ -26,37 +26,37 @@ const features = [
     icon: Calendar,
     title: 'Online Randevu Alma',
     description: 'Müşterileriniz 7/24 web veya mobil üzerinden randevu alabilir. Telefon kuyruğu olmadan anında rezervasyon.',
-    color: '#7c3aed',
+    color: '#101010',
   },
   {
     icon: Clock,
     title: 'Randevu Yönetimi',
     description: 'Tüm randevularınızı tek panelden görüntüleyin, düzenleyin ve yönetin. Çakışma uyarıları ile hata yapmayın.',
-    color: '#06b6d4',
+    color: '#101010',
   },
   {
     icon: Users,
     title: 'Müşteri Randevu Takibi',
     description: 'Her müşterinin geçmiş randevularını, tercihlerini ve notlarını takip edin. Kişiselleştirilmiş hizmet sunun.',
-    color: '#8b5cf6',
+    color: '#101010',
   },
   {
     icon: Bell,
     title: 'Otomatik Hatırlatmalar',
     description: 'SMS ve e-posta ile otomatik randevu hatırlatmaları gönderin. Gelmeme oranını önemli ölçüde azaltın.',
-    color: '#06b6d4',
+    color: '#101010',
   },
   {
     icon: BarChart3,
     title: 'Raporlama ve Analitik',
     description: 'Randevu doluluk oranları, iptal istatistikleri ve gelir tahminleri ile işletmenizi veriye dayalı yönetin.',
-    color: '#7c3aed',
+    color: '#101010',
   },
   {
     icon: Lock,
     title: 'Güvenli Altyapı',
     description: 'KVKK uyumlu, şifreli veri saklama ile müşteri bilgileriniz ve randevu verileriniz güvende.',
-    color: '#8b5cf6',
+    color: '#101010',
   },
 ];
 
@@ -187,7 +187,7 @@ export default function RandevuSistemiClient() {
         style={{
           paddingTop: '80px',
           paddingBottom: '80px',
-          background: 'rgba(124,58,237,0.04)',
+          background: 'rgba(199,243,107,0.04)',
         }}
       >
         <div className="max-w-[1440px] mx-auto px-4 lg:px-10 xl:px-14">
@@ -222,18 +222,18 @@ export default function RandevuSistemiClient() {
                   display: 'block',
                   padding: '24px',
                   borderRadius: '12px',
-                  border: '1px solid rgba(124,58,237,0.15)',
+                  border: '1px solid rgba(199,243,107,0.15)',
                   background: '#ffffff',
                   textDecoration: 'none',
                   transition: 'all 0.2s ease',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(124,58,237,0.35)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(124,58,237,0.1)';
+                  e.currentTarget.style.borderColor = 'rgba(199,243,107,0.35)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(199,243,107,0.1)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(124,58,237,0.15)';
+                  e.currentTarget.style.borderColor = 'rgba(199,243,107,0.15)';
                   e.currentTarget.style.boxShadow = 'none';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
@@ -258,7 +258,7 @@ export default function RandevuSistemiClient() {
                     gap: '4px',
                     fontSize: '14px',
                     fontWeight: 600,
-                    color: '#7c3aed',
+                    color: '#101010',
                   }}
                 >
                   İncele <ArrowRight size={14} />

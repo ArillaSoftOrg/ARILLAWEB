@@ -204,7 +204,7 @@ export default function RandevualClient() {
         <button
           onClick={handleHomeClick}
           style={{
-            background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+            background: '#101010',
             color: 'white',
             border: 'none',
             borderRadius: 10,
@@ -228,7 +228,7 @@ export default function RandevualClient() {
       style={{
         background: '#fff',
         borderRadius: 20,
-        borderTop: '3px solid #7c3aed',
+        borderTop: '3px solid #C7F36B',
         overflow: 'hidden',
         boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
         maxWidth: '900px',
@@ -526,9 +526,9 @@ export default function RandevualClient() {
                     }
 
                     if (isSelected) {
-                      slotBg = '#7c3aed';
+                      slotBg = '#101010';
                       slotColor = 'white';
-                      slotBorder = '#7c3aed';
+                      slotBorder = '#101010';
                       slotOpacity = 1;
                       slotTextDecoration = 'none';
                     }
@@ -563,7 +563,7 @@ export default function RandevualClient() {
                         }}
                         onMouseEnter={(e) => {
                           if (isAvailable && !isSelected) {
-                            e.currentTarget.style.background = 'rgba(124,58,237,0.08)';
+                            e.currentTarget.style.background = 'rgba(199,243,107,0.08)';
                           }
                         }}
                         onMouseLeave={(e) => {
@@ -861,7 +861,7 @@ export default function RandevualClient() {
           <button
             type="submit"
             style={{
-              background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+              background: '#101010',
               color: 'white',
               border: 'none',
               borderRadius: 10,

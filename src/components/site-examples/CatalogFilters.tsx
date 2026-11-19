@@ -97,7 +97,7 @@ export default function CatalogFilters({
     <div>
       <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
         <div className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-800">
-          <SlidersHorizontal className="h-4 w-4 text-blue-600" />
+          <SlidersHorizontal className="h-4 w-4 text-home-fg" />
           {t.panelTitle}
         </div>
         <div className="grid gap-3 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
@@ -109,13 +109,13 @@ export default function CatalogFilters({
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t.searchPlaceholder}
-              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3 text-sm outline-none transition focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3 text-sm outline-none transition focus:border-home-fg focus:ring-2 focus:ring-home-primary"
             />
           </label>
           <select
             value={sector}
             onChange={(event) => setSector(event.target.value)}
-            className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm outline-none focus:border-blue-400"
+            className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm outline-none focus:border-home-fg"
             aria-label={t.sectorAriaLabel}
           >
             <option value="all">{t.allSectors}</option>
@@ -126,7 +126,7 @@ export default function CatalogFilters({
           <select
             value={kind}
             onChange={(event) => setKind(event.target.value)}
-            className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm outline-none focus:border-blue-400"
+            className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm outline-none focus:border-home-fg"
             aria-label={t.kindAriaLabel}
           >
             <option value="all">{t.allKinds}</option>
@@ -137,7 +137,7 @@ export default function CatalogFilters({
           <select
             value={style}
             onChange={(event) => setStyle(event.target.value)}
-            className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm outline-none focus:border-blue-400"
+            className="h-11 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm outline-none focus:border-home-fg"
             aria-label={t.styleAriaLabel}
           >
             <option value="all">{t.allStyles}</option>

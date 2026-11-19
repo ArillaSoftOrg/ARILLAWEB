@@ -6,6 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { HomeButton } from '@/components/home/ui/HomeButton';
+import '@/lib/home-fonts';
 import { newsletterSchema, type NewsletterFormValues } from '@/lib/validations/newsletter';
 import { CheckCircle, AlertCircle, ArrowRight, Loader2 } from 'lucide-react';
 
@@ -39,52 +41,31 @@ export default function NewsletterSection() {
   };
 
   return (
-    <section
-      style={{
-        position: 'relative',
-        background: 'var(--paper)',
-        overflow: 'hidden',
-      }}
-      className="py-16 sm:py-20 lg:py-24"
-    >
-      <div
-        aria-hidden
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background:
-            'radial-gradient(circle at 0% 0%, rgba(124,58,237,0.07), transparent 45%), radial-gradient(circle at 100% 100%, rgba(139,92,246,0.08), transparent 45%)',
-          pointerEvents: 'none',
-        }}
-      />
-
-      <div
-        style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative' }}
-        className="px-5 sm:px-6"
-      >
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 lg:gap-12">
+    <section className="bg-home-surface-warm py-14 sm:py-16 lg:py-20">
+      <div className="mx-auto max-w-[1280px] px-5 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           <div className="lg:max-w-md">
-            <h2 className="text-role-section-heading">{t('title')}</h2>
-            <p className="text-role-body-lg" style={{ marginTop: '14px' }}>
-              {t('description')}
-            </p>
+            <h2 className="font-home-sans text-[26px] font-semibold leading-[1.2] tracking-[-0.02em] text-home-fg sm:text-[34px]">
+              {t('title')}
+            </h2>
+            <p className="font-home-sans mt-3.5 text-[17px] leading-7 text-home-text-secondary">{t('description')}</p>
           </div>
 
-          <div className="w-full lg:flex-1 lg:max-w-lg">
+          <div className="w-full lg:max-w-lg lg:flex-1">
             {status === 'success' ? (
-              <div className="flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 p-4">
-                <CheckCircle className="h-5 w-5 shrink-0 text-green-500" />
-                <p className="text-sm text-green-700">{t('success')}</p>
+              <div className="flex items-center gap-3 rounded-home-lg border border-home-border bg-home-bg p-4">
+                <CheckCircle className="h-5 w-5 shrink-0 text-home-fg" aria-hidden="true" />
+                <p className="font-home-sans text-sm text-home-fg">{t('success')}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} noValidate>
                 {status === 'error' && (
-                  <div className="mb-3 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-3">
-                    <AlertCircle className="h-4 w-4 shrink-0 text-red-500" />
+                  <div className="mb-3 flex items-center gap-3 rounded-home-md border border-red-200 bg-red-50 p-3">
+                    <AlertCircle className="h-4 w-4 shrink-0 text-red-500" aria-hidden="true" />
                     <p className="text-sm text-red-600">{t('error')}</p>
                   </div>
                 )}
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row">
                   <div className="flex-1">
                     <Input
                       id="newsletter-email"
@@ -92,21 +73,14 @@ export default function NewsletterSection() {
                       required
                       placeholder={t('emailPlaceholder')}
                       className={cn(
-                        'h-12 w-full rounded-lg border-slate-200 bg-white px-4 text-base shadow-sm',
-                        'focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2'
+                        'font-home-sans h-12 w-full rounded-home-full border-home-border-strong bg-home-bg px-5 text-base',
+                        'focus-visible:ring-2 focus-visible:ring-home-primary focus-visible:ring-offset-2'
                       )}
                       {...register('email')}
                     />
-                    {errors.email && (
-                      <p className="mt-1.5 text-xs text-red-500">{errors.email.message}</p>
-                    )}
+                    {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email.message}</p>}
                   </div>
-                  <button
-                    type="submit"
-                    disabled={status === 'loading'}
-                    className="inline-flex h-12 w-full sm:w-auto shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-6 text-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-violet-500/30 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none text-role-button"
-                    style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)' }}
-                  >
+                  <HomeButton type="submit" variant="primary" disabled={status === 'loading'} className="h-12 w-full sm:w-auto">
                     {status === 'loading' ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -117,7 +91,7 @@ export default function NewsletterSection() {
                         {t('submit')} <ArrowRight size={16} />
                       </>
                     )}
-                  </button>
+                  </HomeButton>
                 </div>
               </form>
             )}

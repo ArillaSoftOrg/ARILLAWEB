@@ -68,7 +68,7 @@ export default async function SiteExampleDetailPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <div className="mx-auto max-w-[1440px] px-6 lg:px-14">
-        <Link href={`/site-ornekleri/${sector}`} className="inline-flex items-center gap-2 text-sm font-bold text-blue-700">
+        <Link href={`/site-ornekleri/${sector}`} className="inline-flex items-center gap-2 text-sm font-bold text-home-fg">
           <ArrowLeft className="h-4 w-4" /> {project.category.name} tasarımları
         </Link>
 

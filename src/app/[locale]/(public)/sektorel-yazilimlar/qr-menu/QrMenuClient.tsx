@@ -81,7 +81,7 @@ function ProblemSection() {
           transform: 'translate(-50%, -50%)',
           width: '800px',
           height: '800px',
-          background: 'radial-gradient(ellipse, rgba(124,58,237,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(199,243,107,0.06) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -147,7 +147,7 @@ function ProblemSection() {
                 }}
                 whileHover={{
                   y: -4,
-                  borderColor: '#7c3aed40',
+                  borderColor: '#10101040',
                   boxShadow: '0 10px 28px rgba(0,0,0,0.09)',
                 }}
               >
@@ -207,7 +207,7 @@ function TargetAudienceSection() {
       icon: UtensilsCrossed,
       title: 'Restoranlar',
       description: 'Hızlı servis, çeşitli menü seçenekleri ve gerçek zamanlı fiyat güncellemeleri.',
-      color: '#f97316',
+      color: '#101010',
     },
     {
       icon: Wine,
@@ -219,13 +219,13 @@ function TargetAudienceSection() {
       icon: Briefcase,
       title: 'Birçok Şubeli İşletmeler',
       description: 'Tüm şubeleri merkezi olarak yönetin, her yerin kendi menüsü olsun.',
-      color: '#3b82f6',
+      color: '#101010',
     },
     {
       icon: MapPin,
       title: 'Catering & Etkinlik Şirketleri',
       description: 'Etkinlere özel menüler oluşturun ve müşterilere QR kod ile paylaşın.',
-      color: '#06b6d4',
+      color: '#101010',
     },
   ];
 
@@ -365,13 +365,13 @@ export default function QrMenuClient() {
       icon: QrCode,
       title: 'QR Kod & NFC Desteği',
       description: 'Masaya QR kodu koyun, müşteri telefonunu yaklaştır, menüyü görsün.',
-      color: '#7c3aed',
+      color: '#101010',
     },
     {
       icon: RefreshCw,
       title: 'Anlık Menü Güncelleme',
       description: 'Fiyat veya ürün değişikliğini 5 saniyede yayınlayın. Baskı maliyeti sıfır.',
-      color: '#06b6d4',
+      color: '#101010',
     },
     {
       icon: BarChart3,
@@ -389,13 +389,13 @@ export default function QrMenuClient() {
       icon: Palette,
       title: 'Tam Özelleştirme',
       description: 'Markanızın renkleri, logonuzu, fontlarınızı kullanarak kişiselleştirilmiş tasarım.',
-      color: '#ec4899',
+      color: '#101010',
     },
     {
       icon: Wifi,
       title: 'Çevrimdışı Modu',
       description: 'İnternet kesintisinde bile menü erişilebilir kalır. Müşteri kaybı yok.',
-      color: '#8b5cf6',
+      color: '#101010',
     },
   ];
 
@@ -520,7 +520,7 @@ export default function QrMenuClient() {
             style={{
               padding: '40px 32px',
               borderRadius: '12px',
-              border: '1px solid rgba(124,58,237,0.2)',
+              border: '1px solid rgba(199,243,107,0.2)',
               background: '#ffffff',
               display: 'flex',
               flexDirection: 'column',
@@ -551,17 +551,17 @@ export default function QrMenuClient() {
                 fontWeight: 600,
                 textDecoration: 'none',
                 color: '#FFFFFF',
-                background: '#7c3aed',
-                boxShadow: '0 2px 8px rgba(124,58,237,0.3)',
+                background: '#101010',
+                boxShadow: '0 2px 8px rgba(199,243,107,0.3)',
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(124,58,237,0.4)';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(199,243,107,0.4)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(124,58,237,0.3)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(199,243,107,0.3)';
               }}
             >
               Ücretsiz Demo Al
@@ -628,7 +628,7 @@ export default function QrMenuClient() {
               <Link
                 key={product.href}
                 href={product.href}
-                className="group flex flex-col gap-2 rounded-xl border border-black/[0.08] bg-white p-5 no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_8px_24px_rgba(37,99,235,0.09)]"
+                className="group flex flex-col gap-2 rounded-xl border border-black/[0.08] bg-white p-5 no-underline transition-all duration-200 hover:-translate-y-0.5 hover:border-home-fg hover:shadow-[0_8px_24px_rgba(199,243,107,0.09)]"
               >
                 <span style={{ fontSize: '15px', fontWeight: 600, color: '#0f172a' }}>
                   {product.title}
@@ -643,7 +643,7 @@ export default function QrMenuClient() {
                     gap: '4px',
                     fontSize: '13px',
                     fontWeight: 600,
-                    color: '#2563eb',
+                    color: '#101010',
                     marginTop: '4px',
                   }}
                 >
