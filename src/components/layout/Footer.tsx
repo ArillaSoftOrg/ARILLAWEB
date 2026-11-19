@@ -19,10 +19,10 @@ export default function Footer() {
         color: '#94a3b8',
       }}
     >
-      <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="px-5 sm:px-6 pt-12 sm:pt-16 pb-12 sm:pb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
+      <div style={{ maxWidth: '1280px', margin: '0 auto' }} className="px-5 sm:px-6 pt-10 sm:pt-16 pb-8 sm:pb-16">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8 sm:gap-10 lg:gap-12">
           {/* Brand */}
-          <div className="lg:col-span-1">
+          <div className="col-span-2 lg:col-span-1">
             <Link
               href="/"
               style={{ display: 'inline-block', textDecoration: 'none', marginBottom: '20px' }}
@@ -116,7 +116,7 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div>
+          <div className="col-span-2 lg:col-span-1">
             <h3 className="text-role-footer-header" style={{ marginBottom: '16px' }}>
               {t('contactHeading')}
             </h3>
