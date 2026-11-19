@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
+import { HomeButton } from '@/components/home/ui/HomeButton';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -76,7 +77,7 @@ export default function TeklifAlClient() {
 
       {/* İletişim Bilgileri */}
       <div>
-        <h3 className="text-base font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-100">
+        <h3 className="font-home-sans text-base font-semibold text-home-fg mb-4 pb-2 border-b border-home-border">
           İletişim Bilgileri
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -105,7 +106,7 @@ export default function TeklifAlClient() {
 
       {/* Çözüm Seçimi */}
       <div>
-        <h3 className="text-base font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-100">
+        <h3 className="font-home-sans text-base font-semibold text-home-fg mb-4 pb-2 border-b border-home-border">
           Çözüm Seçimi
         </h3>
         <div className="space-y-1.5">
@@ -134,7 +135,7 @@ export default function TeklifAlClient() {
 
       {/* Proje Detayları */}
       <div>
-        <h3 className="text-base font-semibold text-slate-900 mb-4 pb-2 border-b border-slate-100">
+        <h3 className="font-home-sans text-base font-semibold text-home-fg mb-4 pb-2 border-b border-home-border">
           Proje Detayları
         </h3>
         <div className="space-y-1.5">
@@ -149,7 +150,7 @@ export default function TeklifAlClient() {
         </div>
       </div>
 
-      <Button type="submit" size="lg" className="w-full" disabled={status === 'loading'}>
+      <HomeButton type="submit" variant="primary" className="w-full" disabled={status === 'loading'}>
         {status === 'loading' ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -158,7 +159,7 @@ export default function TeklifAlClient() {
         ) : (
           'Teklif Talebi Gönder'
         )}
-      </Button>
+      </HomeButton>
     </form>
   );
 }
