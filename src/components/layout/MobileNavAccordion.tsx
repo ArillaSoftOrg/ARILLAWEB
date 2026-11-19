@@ -3,7 +3,7 @@
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { CORPORATE_LINKS, getSectoralMenu, getServicesMenu, type Locale } from '@/lib/en-site-data';
+import { CORPORATE_LINKS, getServicesMenu, type Locale } from '@/lib/en-site-data';
 
 /**
  * Mobile nav shared by both locales: expandable accordion groups instead of the
@@ -19,7 +19,6 @@ export default function MobileNavAccordion({
   onNavigate: () => void;
 }) {
   const tNav = useTranslations('nav');
-  const sectoralMenu = getSectoralMenu(locale);
   const servicesMenu = getServicesMenu(locale);
 
   const linkStyle: React.CSSProperties = {
@@ -41,41 +40,6 @@ export default function MobileNavAccordion({
 
   return (
     <Accordion type="single" collapsible className="border-none">
-      <AccordionItem value="sectoral" className="border-b border-white/10">
-        <AccordionTrigger className="focus-ring-lime text-slate-100 hover:text-[#C7F36B] px-3 py-3 text-sm font-medium no-underline hover:no-underline">
-          {sectoralMenu.label}
-        </AccordionTrigger>
-        <AccordionContent className="text-slate-300 pb-2">
-          {sectoralMenu.groups.map((group) => (
-            <div key={group.heading}>
-              <p style={groupHeadingStyle}>{group.heading}</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
-                {group.items.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={onNavigate}
-                    className="navmenu-mobile-item"
-                    data-active={pathname === item.href}
-                    style={linkStyle}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-            <Link href={sectoralMenu.viewAllHref} onClick={onNavigate} className="navmenu-mobile-item" data-active={pathname === sectoralMenu.viewAllHref} style={linkStyle}>
-              {sectoralMenu.viewAllLabel}
-            </Link>
-            <Link href={sectoralMenu.ctaHref} onClick={onNavigate} className="navmenu-mobile-item" data-active="true" style={{ ...linkStyle, fontWeight: 600 }}>
-              {sectoralMenu.ctaLabel}
-            </Link>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-
       <AccordionItem value="services" className="border-b border-white/10">
         <AccordionTrigger className="focus-ring-lime text-slate-100 hover:text-[#C7F36B] px-3 py-3 text-sm font-medium no-underline hover:no-underline">
           {servicesMenu.label}

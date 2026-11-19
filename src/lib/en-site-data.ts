@@ -61,7 +61,6 @@ export const SOLUTION_DESCRIPTIONS: Record<SolutionKey, LocalizedText> = {
 export type ServiceSlug =
   | 'website-web-application'
   | 'mobile-application'
-  | 'game-development'
   | 'custom-software-admin-panels'
   | 'integrations-automation'
   | 'maintenance-technical-support';
@@ -96,16 +95,6 @@ export const SERVICES: ServiceMeta[] = [
     shortDescription: {
       en: 'Native and cross-platform apps for iOS and Android.',
       tr: 'iOS ve Android için native ve çoklu platform mobil uygulamalar.',
-    },
-    group: 'digital-products',
-  },
-  {
-    slug: 'game-development',
-    trSlug: 'oyun-gelistirme',
-    title: { en: 'Game Development', tr: 'Oyun Geliştirme' },
-    shortDescription: {
-      en: '2D and 3D games and interactive experiences for web and mobile.',
-      tr: 'Web ve mobil için 2D/3D oyunlar ve etkileşimli deneyimler.',
     },
     group: 'digital-products',
   },

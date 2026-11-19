@@ -257,7 +257,7 @@ function SiteExamplesPreviewSection() {
               Sektörünüze Uygun Site Konseptlerini İnceleyin
             </h2>
             <p className="font-home-sans mt-4 text-base leading-7 text-home-text-secondary">
-              Aşağıdaki tasarımlar canlı demo ve konsept çalışmalarıdır, gerçek müşteri projesi değildir; beğendiğiniz yaklaşımı işletmenize göre uyarlayabiliriz.
+              Aşağıdaki tasarımlar canlı demo ve konsept çalışmalarıdır; beğendiğiniz yaklaşımı işletmenize göre uyarlayabiliriz.
             </p>
           </motion.div>
           <motion.div variants={fadeUp}>
@@ -458,7 +458,7 @@ function HeroSection() {
       }}
       >
         <div
-          className="relative mx-auto flex w-full max-w-[1360px] flex-col items-center gap-6 px-4 pt-5 pb-12 sm:gap-8 sm:px-6 sm:pt-8 sm:pb-14 lg:grid lg:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)] lg:gap-10 lg:px-8 lg:py-8"
+          className="relative mx-auto flex w-full max-w-[1360px] xl:max-w-[1480px] flex-col items-center gap-6 px-4 pt-5 pb-12 sm:gap-8 sm:px-6 sm:pt-8 sm:pb-14 lg:grid lg:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)] lg:gap-10 lg:px-8 lg:py-8"
           style={{
             minHeight: "calc(100svh - var(--header-h) - var(--bar-h, 0px))",
           }}

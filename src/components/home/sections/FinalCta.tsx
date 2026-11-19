@@ -6,15 +6,13 @@ import { Link } from "@/i18n/navigation";
 import { AnimatedSection } from "@/components/home/ui/AnimatedSection";
 import { fadeUp } from "@/components/home/motion";
 import { HomeButton } from "@/components/home/ui/HomeButton";
-import FinalCtaWaveField from "@/components/home/sections/FinalCtaWaveField";
 import "@/lib/home-fonts";
 
 export default function FinalCta() {
   const t = useTranslations("pages.home.sections.finalCta");
 
   return (
-    <section className="relative overflow-hidden bg-home-surface-dark">
-      <FinalCtaWaveField />
+    <section className="relative overflow-hidden bg-black">
       <AnimatedSection className="relative z-10 mx-auto flex min-h-[560px] max-w-[760px] flex-col items-center justify-center px-5 py-20 text-center sm:min-h-[640px] sm:px-6 sm:py-24 lg:min-h-[720px] lg:py-28">
         <motion.h2
           variants={fadeUp}

@@ -5,9 +5,9 @@ import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import { CORPORATE_LINKS, getSectoralMenu, getServicesMenu, type Locale } from '@/lib/en-site-data';
+import { CORPORATE_LINKS, getServicesMenu, type Locale } from '@/lib/en-site-data';
 
-type MenuKey = 'sectoral' | 'services' | 'corporate';
+type MenuKey = 'services' | 'corporate';
 
 type NavGroup = { heading: string; items: { label: string; href: string }[] };
 
@@ -26,7 +26,6 @@ export default function MegaMenuNav({ locale, pathname }: { locale: Locale; path
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const sectoralMenu = getSectoralMenu(locale);
   const servicesMenu = getServicesMenu(locale);
   const corporateLabel = tNav('kurumsal');
 
@@ -75,49 +74,12 @@ export default function MegaMenuNav({ locale, pathname }: { locale: Locale; path
   };
 
   const corporateHrefs = CORPORATE_LINKS.map((item) => item.href);
-  const sectoralActive = sectoralMenu.groups.some((group) => isGroupActive(group, pathname));
   const servicesActive =
     servicesMenu.groups.some((group) => isGroupActive(group, pathname)) || pathname === servicesMenu.secondaryHref;
   const corporateActive = corporateHrefs.some((href) => pathname === href);
 
   return (
     <div ref={rootRef} style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-      {/* Sectoral Software */}
-      <div style={{ position: 'relative' }} onMouseEnter={() => openMenu('sectoral')} onMouseLeave={scheduleClose}>
-        <button
-          type="button"
-          className="navmenu-trigger text-role-navigation"
-          style={triggerStyle}
-          data-open={open === 'sectoral'}
-          data-active={sectoralActive}
-          aria-haspopup="true"
-          aria-expanded={open === 'sectoral'}
-          onClick={() => setOpen(open === 'sectoral' ? null : 'sectoral')}
-        >
-          {sectoralMenu.label}
-          <ChevronDown size={14} style={{ transition: 'transform 0.2s ease', transform: open === 'sectoral' ? 'rotate(180deg)' : 'rotate(0deg)' }} />
-        </button>
-        {open === 'sectoral' && (
-          <MegaPanel
-            groups={sectoralMenu.groups}
-            pathname={pathname}
-            columns={3}
-            onMouseEnter={() => openMenu('sectoral')}
-            onMouseLeave={scheduleClose}
-            footer={
-              <>
-                <Link href={sectoralMenu.viewAllHref} onClick={closeNow} className="navmenu-item" style={footerLinkStyle}>
-                  {sectoralMenu.viewAllLabel}
-                </Link>
-                <Link href={sectoralMenu.ctaHref} onClick={closeNow} className="navmenu-item" data-active="true" style={{ ...footerLinkStyle, fontWeight: 600 }}>
-                  {sectoralMenu.ctaLabel}
-                </Link>
-              </>
-            }
-          />
-        )}
-      </div>
-
       {/* Services */}
       <div style={{ position: 'relative' }} onMouseEnter={() => openMenu('services')} onMouseLeave={scheduleClose}>
         <button
@@ -154,7 +116,7 @@ export default function MegaMenuNav({ locale, pathname }: { locale: Locale; path
         )}
       </div>
 
-      {/* Corporate — flat dropdown, content unchanged from the legacy pattern */}
+      {/* Corporate â€” flat dropdown, content unchanged from the legacy pattern */}
       <div style={{ position: 'relative' }} onMouseEnter={() => openMenu('corporate')} onMouseLeave={scheduleClose}>
         <button
           type="button"

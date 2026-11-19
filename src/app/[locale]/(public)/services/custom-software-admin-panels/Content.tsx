@@ -1,24 +1,19 @@
 'use client';
 
 import {
-  ArrowRight,
   LayoutDashboard,
   ShieldCheck,
-  UsersRound,
-  Search,
-  PenTool,
   Code2,
-  Rocket,
 } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
-import Breadcrumbs from '@/components/sections/Breadcrumbs';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import ServiceJsonLd from '@/components/seo/ServiceJsonLd';
 import FAQJsonLd from '@/components/seo/FAQJsonLd';
-import FAQSection from '@/components/sections/FAQSection';
-import FeatureGrid from '@/components/sections/FeatureGrid';
-import HowItWorks from '@/components/sections/HowItWorks';
-import ProductCTASection from '@/components/sections/ProductCTASection';
+import ServiceFaq from '@/components/services/ServiceFaq';
+import ServiceFeatureGrid from '@/components/services/ServiceFeatureGrid';
+import ServiceHero from '@/components/services/ServiceHero';
+import ServiceLinkGrid from '@/components/services/ServiceLinkGrid';
+import ServiceProcess from '@/components/services/ServiceProcess';
+import ServiceCta from '@/components/services/ServiceCta';
 import {
   getIndustriesForService,
   getServiceMeta,
@@ -209,10 +204,9 @@ export default function CustomSoftwareAdminPanelsContent({ locale }: { locale: L
   const maintenanceService = SERVICES.find((item) => item.slug === 'maintenance-technical-support')!;
 
   const featureIcons = [LayoutDashboard, Code2, ShieldCheck];
-  const stepIcons = [Search, PenTool, Code2, Rocket];
 
   return (
-    <main className="bg-white">
+    <main className="bg-home-bg">
       <ServiceJsonLd
         name={t(service.title, locale)}
         description={t(service.shortDescription, locale)}
@@ -226,125 +220,51 @@ export default function CustomSoftwareAdminPanelsContent({ locale }: { locale: L
           { label: t(service.title, locale), href: `/${locale}${serviceHref(locale, service)}` },
         ]}
       />
-      <Breadcrumbs
-        items={[
+      <ServiceHero
+        breadcrumbs={[
           { label: copy.servicesBreadcrumb, href: servicesHubHref(locale) },
           { label: t(service.title, locale) },
         ]}
+        heading={copy.h1}
+        intro={copy.heroParagraph}
+        primary={{ label: copy.ctaPrimary, href: '/teklif-al' }}
+        secondary={{ label: copy.ctaSecondary, href: '/kurumsal/iletisim' }}
       />
-
-      <section className="section-py">
-        <div className="section-container">
-          <div className="max-w-2xl">
-            <span className="text-role-eyebrow inline-block bg-blue-100 px-3 py-1 rounded-full mb-4">
-              {copy.eyebrow}
-            </span>
-            <h1 className="text-role-hero mb-4">{copy.h1}</h1>
-            <p className="text-role-body-lg">{copy.heroParagraph}</p>
-          </div>
-        </div>
-      </section>
-
-      <FeatureGrid
+      <ServiceFeatureGrid
         title={copy.whatWeBuildTitle}
         description={copy.whatWeBuildDescription}
-        columns={3}
-        darkMode={false}
-        features={copy.features.map((feature, index) => ({
-          icon: featureIcons[index],
-          title: feature.title,
-          description: feature.description,
-        }))}
+        features={copy.features.map((feature, index) => ({ icon: featureIcons[index], title: feature.title, description: feature.description }))}
       />
-
-      <HowItWorks
+      <ServiceProcess
         title={copy.ourApproachTitle}
         description={copy.ourApproachDescription}
-        layout="horizontal"
-        darkMode={false}
-        steps={copy.steps.map((step, index) => ({
-          number: index + 1,
-          title: step.title,
-          description: step.description,
-          icon: stepIcons[index],
-        }))}
+        steps={copy.steps.map((step) => ({ title: step.title, description: step.description }))}
+        tone="warm"
       />
-
       {relatedIndustries.length > 0 && (
-        <section className="section-py" style={{ paddingTop: 0 }}>
-          <div className="section-container">
-            <h2 className="text-role-section-heading mb-8">{copy.industriesTitle}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {relatedIndustries.map((industry) => (
-                <Link
-                  key={industry.slug}
-                  href={industryHref(locale, industry)}
-                  className="group flex flex-col rounded-2xl border border-slate-200 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200 hover:shadow-lg"
-                >
-                  <h3 className="text-role-subheading mb-2 group-hover:text-violet-600 transition-colors">
-                    {t(industry.title, locale)}
-                  </h3>
-                  <p className="text-role-body text-sm leading-relaxed mb-4">{t(industry.summary, locale)}</p>
-                  <span className="mt-auto text-role-navigation inline-flex items-center gap-1 text-violet-600 group-hover:gap-2 transition-all">
-                    {copy.learnMore} <ArrowRight className="h-4 w-4" />
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ServiceLinkGrid
+          title={copy.industriesTitle}
+          items={relatedIndustries.map((industry) => ({ key: industry.slug, href: industryHref(locale, industry), title: t(industry.title, locale), description: t(industry.summary, locale) }))}
+          linkLabel={copy.learnMore}
+          columns={3}
+          tone="bg"
+          size="md"
+        />
       )}
-
-      <section className="section-py" style={{ paddingTop: 0 }}>
-        <div className="section-container">
-          <h2 className="text-role-section-heading mb-8">{copy.relatedServicesTitle}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link
-              href={serviceHref(locale, integrationsService)}
-              className="group flex flex-col rounded-2xl border border-slate-200 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200 hover:shadow-lg"
-            >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
-                <UsersRound className="h-5 w-5 text-violet-600" />
-              </div>
-              <h3 className="text-role-subheading mb-2 group-hover:text-violet-600 transition-colors">
-                {t(integrationsService.title, locale)}
-              </h3>
-              <p className="text-role-body text-sm leading-relaxed mb-4">
-                {t(integrationsService.shortDescription, locale)}
-              </p>
-              <span className="mt-auto text-role-navigation inline-flex items-center gap-1 text-violet-600 group-hover:gap-2 transition-all">
-                {copy.learnMore} <ArrowRight className="h-4 w-4" />
-              </span>
-            </Link>
-            <Link
-              href={serviceHref(locale, maintenanceService)}
-              className="group flex flex-col rounded-2xl border border-slate-200 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200 hover:shadow-lg"
-            >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
-                <ShieldCheck className="h-5 w-5 text-violet-600" />
-              </div>
-              <h3 className="text-role-subheading mb-2 group-hover:text-violet-600 transition-colors">
-                {t(maintenanceService.title, locale)}
-              </h3>
-              <p className="text-role-body text-sm leading-relaxed mb-4">
-                {t(maintenanceService.shortDescription, locale)}
-              </p>
-              <span className="mt-auto text-role-navigation inline-flex items-center gap-1 text-violet-600 group-hover:gap-2 transition-all">
-                {copy.learnMore} <ArrowRight className="h-4 w-4" />
-              </span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <FAQSection title={copy.faqHeading} faqs={copy.faqs} darkMode={false} columns={1} />
-
-      <ProductCTASection
+      <ServiceLinkGrid
+        title={copy.relatedServicesTitle}
+        items={[integrationsService, maintenanceService].map((item) => ({ key: item.slug, href: serviceHref(locale, item), title: t(item.title, locale), description: t(item.shortDescription, locale) }))}
+        linkLabel={copy.learnMore}
+        columns={2}
+        tone="warm"
+        size="md"
+      />
+      <ServiceFaq title={copy.faqHeading} faqs={copy.faqs} tone="bg" />
+      <ServiceCta
         title={copy.ctaTitle}
         description={copy.ctaDescription}
-        primaryButton={{ label: copy.ctaPrimary, href: '/teklif-al' }}
-        secondaryButton={{ label: copy.ctaSecondary, href: '/kurumsal/iletisim' }}
-        badgeLabel={copy.ctaBadge}
+        primary={{ label: copy.ctaPrimary, href: '/teklif-al' }}
+        secondary={{ label: copy.ctaSecondary, href: '/kurumsal/iletisim' }}
       />
     </main>
   );

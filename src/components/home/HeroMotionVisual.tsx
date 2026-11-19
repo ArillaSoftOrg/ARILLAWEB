@@ -40,7 +40,7 @@ export default function HeroMotionVisual() {
   }, [prefersReducedMotion]);
 
   return (
-    <div className="relative mx-auto w-full max-w-[560px] sm:max-w-[600px] xl:max-w-[620px]">
+    <div className="relative mx-auto w-full max-w-[560px] sm:max-w-[600px] lg:max-w-[700px] xl:max-w-[780px]">
       <video
         ref={videoRef}
         src="/MOTION.mp4"

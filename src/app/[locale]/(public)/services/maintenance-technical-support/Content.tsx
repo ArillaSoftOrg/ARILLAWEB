@@ -1,12 +1,12 @@
 'use client';
 
-import { LifeBuoy, RefreshCw, Activity, ArrowRight } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
-import Breadcrumbs from '@/components/sections/Breadcrumbs';
+import { LifeBuoy, RefreshCw, Activity } from 'lucide-react';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 import ServiceJsonLd from '@/components/seo/ServiceJsonLd';
-import FeatureGrid from '@/components/sections/FeatureGrid';
-import ProductCTASection from '@/components/sections/ProductCTASection';
+import ServiceFeatureGrid from '@/components/services/ServiceFeatureGrid';
+import ServiceHero from '@/components/services/ServiceHero';
+import ServiceLinkGrid from '@/components/services/ServiceLinkGrid';
+import ServiceCta from '@/components/services/ServiceCta';
 import { SERVICES, getServiceMeta, t, serviceHref, servicesHubHref, type Locale } from '@/lib/en-site-data';
 
 const COPY = {
@@ -101,7 +101,7 @@ export default function MaintenanceTechnicalSupportContent({ locale }: { locale:
   }));
 
   return (
-    <main className="bg-white">
+    <main className="bg-home-bg">
       <BreadcrumbJsonLd
         items={[
           { label: copy.servicesBreadcrumb, href: `/${locale}${servicesHubHref(locale)}` },
@@ -114,63 +114,35 @@ export default function MaintenanceTechnicalSupportContent({ locale }: { locale:
         url={`/${locale}${serviceHref(locale, service)}`}
         serviceType={copy.serviceJsonServiceType}
       />
-      <Breadcrumbs
-        items={[
+      <ServiceHero
+        breadcrumbs={[
           { label: copy.servicesBreadcrumb, href: servicesHubHref(locale) },
           { label: t(service.title, locale) },
         ]}
+        heading={copy.h1}
+        intro={copy.heroParagraph}
+        primary={{ label: copy.ctaPrimary, href: '/teklif-al' }}
+        secondary={{ label: copy.ctaSecondary, href: '/kurumsal/iletisim' }}
       />
-
-      <section className="section-py" style={{ paddingBottom: '32px' }}>
-        <div className="section-container">
-          <div className="max-w-2xl">
-            <span className="text-role-eyebrow inline-block bg-blue-100 px-3 py-1 rounded-full mb-4">
-              {copy.eyebrow}
-            </span>
-            <h1 className="text-role-hero mb-4">{copy.h1}</h1>
-            <p className="text-role-body-lg">{copy.heroParagraph}</p>
-          </div>
-        </div>
-      </section>
-
-      <FeatureGrid
+      <ServiceFeatureGrid
         title={copy.whatsIncludedTitle}
         description={copy.whatsIncludedDescription}
         features={features}
-        columns={3}
-        darkMode={false}
       />
-
-      <section className="section-py" style={{ paddingTop: 0 }}>
-        <div className="section-container">
-          <h2 className="text-role-section-heading mb-8">{copy.alongsideTitle}</h2>
-          <p className="text-role-body mb-8 max-w-2xl">{copy.alongsideBody}</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {otherServices.map((item) => (
-              <Link
-                key={item.slug}
-                href={serviceHref(locale, item)}
-                className="group flex flex-col rounded-2xl border border-slate-200 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200 hover:shadow-lg"
-              >
-                <h3 className="text-role-subheading mb-2 group-hover:text-violet-600 transition-colors">
-                  {t(item.title, locale)}
-                </h3>
-                <p className="text-role-body text-sm leading-relaxed mb-4">{t(item.shortDescription, locale)}</p>
-                <span className="mt-auto text-role-navigation inline-flex items-center gap-1 text-violet-600 group-hover:gap-2 transition-all">
-                  {copy.learnMore} <ArrowRight className="h-4 w-4" />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <ProductCTASection
+      <ServiceLinkGrid
+        title={copy.alongsideTitle}
+        description={copy.alongsideBody}
+        items={otherServices.map((item) => ({ key: item.slug, href: serviceHref(locale, item), title: t(item.title, locale), description: t(item.shortDescription, locale) }))}
+        linkLabel={copy.learnMore}
+        columns={3}
+        tone="warm"
+        size="md"
+      />
+      <ServiceCta
         title={copy.ctaTitle}
         description={copy.ctaDescription}
-        primaryButton={{ label: copy.ctaPrimary, href: '/teklif-al' }}
-        secondaryButton={{ label: copy.ctaSecondary, href: '/kurumsal/iletisim' }}
-        badgeLabel={copy.ctaBadge}
+        primary={{ label: copy.ctaPrimary, href: '/teklif-al' }}
+        secondary={{ label: copy.ctaSecondary, href: '/kurumsal/iletisim' }}
       />
     </main>
   );

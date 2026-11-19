@@ -1,8 +1,8 @@
-import { ArrowRight } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
-import Breadcrumbs from '@/components/sections/Breadcrumbs';
 import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
-import ProductCTASection from '@/components/sections/ProductCTASection';
+import ServiceCta from '@/components/services/ServiceCta';
+import ServiceHero from '@/components/services/ServiceHero';
+import ServiceLinkGrid from '@/components/services/ServiceLinkGrid';
+import ServicePromo from '@/components/services/ServicePromo';
 import {
   SERVICE_GROUPS,
   SERVICES,
@@ -52,73 +52,45 @@ export default function ServicesHubContent({ locale }: { locale: Locale }) {
   const copy = COPY[locale];
 
   return (
-    <main className="bg-white">
+    <main className="bg-home-bg">
       <BreadcrumbJsonLd items={[{ label: copy.breadcrumb, href: `/${locale}${servicesHubHref(locale)}` }]} />
-      <Breadcrumbs items={[{ label: copy.breadcrumb }]} />
+      <ServiceHero
+        breadcrumbs={[{ label: copy.breadcrumb }]}
+        heading={copy.h1}
+        intro={copy.intro}
+        primary={{ label: copy.ctaPrimary, href: '/teklif-al' }}
+        secondary={{ label: copy.ctaSecondary, href: '/kurumsal/iletisim' }}
+      />
 
-      <section className="section-py">
-        <div className="section-container">
-          <div className="max-w-2xl">
-            <span className="text-role-eyebrow inline-block bg-blue-100 px-3 py-1 rounded-full mb-4">
-              {copy.eyebrow}
-            </span>
-            <h1 className="text-role-hero mb-4">{copy.h1}</h1>
-            <p className="text-role-body-lg">{copy.intro}</p>
-          </div>
-        </div>
-      </section>
+      {SERVICE_GROUPS.map((group, index) => (
+        <ServiceLinkGrid
+          key={group.key}
+          title={t(group.label, locale)}
+          items={SERVICES.filter((service) => service.group === group.key).map((service) => ({
+            key: service.slug,
+            href: serviceHref(locale, service),
+            title: t(service.title, locale),
+            description: t(service.shortDescription, locale),
+          }))}
+          linkLabel={copy.learnMore}
+          columns={3}
+          tone={index % 2 === 0 ? 'bg' : 'warm'}
+          size="md"
+        />
+      ))}
 
-      {SERVICE_GROUPS.map((group) => {
-        const services = SERVICES.filter((service) => service.group === group.key);
-        return (
-          <section key={group.key} className="section-py" style={{ paddingTop: 0 }}>
-            <div className="section-container">
-              <h2 className="text-role-section-heading mb-8">{t(group.label, locale)}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {services.map((service) => (
-                  <Link
-                    key={service.slug}
-                    href={serviceHref(locale, service)}
-                    className="group flex flex-col rounded-2xl border border-slate-200 p-5 transition-all duration-200 hover:-translate-y-1 hover:border-violet-200 hover:shadow-lg"
-                  >
-                    <h3 className="text-role-subheading mb-2 group-hover:text-violet-600 transition-colors">
-                      {t(service.title, locale)}
-                    </h3>
-                    <p className="text-role-body text-sm leading-relaxed mb-4">{t(service.shortDescription, locale)}</p>
-                    <span className="mt-auto text-role-navigation inline-flex items-center gap-1 text-violet-600 group-hover:gap-2 transition-all">
-                      {copy.learnMore} <ArrowRight className="h-4 w-4" />
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-        );
-      })}
+      <ServicePromo
+        heading={copy.designExamplesTitle}
+        body={copy.designExamplesBody}
+        label={copy.viewExamples}
+        href={designExamplesHref(locale)}
+      />
 
-      <section className="section-py" style={{ paddingTop: 0 }}>
-        <div className="section-container">
-          <Link
-            href={designExamplesHref(locale)}
-            className="group flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-violet-200 bg-violet-50 p-6"
-          >
-            <div>
-              <h2 className="text-role-subheading mb-1">{copy.designExamplesTitle}</h2>
-              <p className="text-role-body text-sm">{copy.designExamplesBody}</p>
-            </div>
-            <span className="text-role-navigation inline-flex items-center gap-1 text-violet-600 group-hover:gap-2 transition-all">
-              {copy.viewExamples} <ArrowRight className="h-4 w-4" />
-            </span>
-          </Link>
-        </div>
-      </section>
-
-      <ProductCTASection
+      <ServiceCta
         title={copy.ctaTitle}
         description={copy.ctaDescription}
-        primaryButton={{ label: copy.ctaPrimary, href: '/teklif-al' }}
-        secondaryButton={{ label: copy.ctaSecondary, href: '/kurumsal/iletisim' }}
-        badgeLabel={copy.ctaBadge}
+        primary={{ label: copy.ctaPrimary, href: '/teklif-al' }}
+        secondary={{ label: copy.ctaSecondary, href: '/kurumsal/iletisim' }}
       />
     </main>
   );
