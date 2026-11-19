@@ -1,8 +1,9 @@
 'use client';
 
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
-import ProcessTimeline from './ProcessTimeline';
+import { motion } from 'framer-motion';
+import { AnimatedSection } from '@/components/home/ui/AnimatedSection';
+import { fadeUp, fadeUpItem, stagger } from '@/components/home/motion';
+import '@/lib/home-fonts';
 
 interface Step {
   number: number;
@@ -15,220 +16,72 @@ interface HowItWorksProps {
   title: string;
   description?: string;
   steps: Step[];
-  accentColor?: string;
+  accentColor?: string; // legacy, ignored
   darkMode?: boolean;
-  layout?: 'horizontal' | 'vertical'; // horizontal for steps in a row, vertical for timeline
-  variant?: 'cards' | 'process';
+  layout?: 'horizontal' | 'vertical'; // legacy, both render the same numbered grid
+  variant?: 'cards' | 'process'; // legacy, both render the same numbered grid
 }
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
-const stagger = {
-  visible: { transition: { staggerChildren: 0.12 } },
-};
-
-export default function HowItWorks({
-  title,
-  description,
-  steps,
-  accentColor = '#7c3aed',
-  darkMode = true,
-  layout = 'horizontal',
-  variant = 'cards',
-}: HowItWorksProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-80px' });
-  const isProcess = variant === 'process';
+/** Home-styled numbered steps (these are a real sequence, so they carry numbers). */
+export default function HowItWorks({ title, description, steps, darkMode = true }: HowItWorksProps) {
+  const colsClass = steps.length >= 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3';
 
   return (
-    <section
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-      className="section-py"
-    >
-      {/* Background glow */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          right: '-10%',
-          width: isProcess ? '360px' : '500px',
-          height: isProcess ? '360px' : '500px',
-          background: darkMode
-            ? 'radial-gradient(ellipse, rgba(124,58,237,0.07) 0%, transparent 70%)'
-            : `radial-gradient(ellipse, ${isProcess ? 'rgba(124,58,237,0.03)' : 'rgba(124,58,237,0.04)'} 0%, transparent 70%)`,
-          pointerEvents: 'none',
-        }}
-      />
-
-      <div className="section-container">
-        {/* Header */}
-        <motion.div
-          ref={ref}
-          variants={fadeUp}
-          initial="hidden"
-          animate={isInView ? 'visible' : 'hidden'}
-          className={isProcess ? 'mb-11 text-center sm:mb-12' : undefined}
-          style={isProcess ? undefined : { textAlign: 'center', marginBottom: '64px' }}
-        >
-          <h2
-            className={isProcess ? 'text-role-section-heading' : undefined}
-            style={{
-              fontSize: isProcess ? undefined : 'clamp(24px, 5vw, 48px)',
-              fontWeight: isProcess ? undefined : 800,
-              color: darkMode ? '#f1f5f9' : '#0f172a',
-              letterSpacing: isProcess ? undefined : '-1px',
-              lineHeight: isProcess ? undefined : 1.15,
-              margin: '0 0 16px 0',
-              wordBreak: 'break-word',
-            }}
+    <section className="py-14 sm:py-16 lg:py-20">
+      <div className="mx-auto max-w-[1280px] px-5 sm:px-6 lg:px-8">
+        <AnimatedSection className="mx-auto mb-8 max-w-2xl text-center sm:mb-10 lg:mb-12">
+          <motion.h2
+            variants={fadeUp}
+            className={`font-home-sans text-[32px] font-semibold leading-[1.16] tracking-[-0.02em] sm:text-[44px] sm:leading-[1.14] sm:tracking-[-0.025em] ${
+              darkMode ? 'text-home-text-inverse' : 'text-home-fg'
+            }`}
           >
             {title}
-          </h2>
+          </motion.h2>
           {description && (
-            <p
-              className={isProcess ? 'text-role-body-lg' : undefined}
-              style={{
-                fontSize: isProcess ? undefined : 'clamp(15px, 2.5vw, 17px)',
-                color: '#64748b',
-                maxWidth: '520px',
-                margin: '0 auto',
-                lineHeight: isProcess ? undefined : 1.7,
-              }}
+            <motion.p
+              variants={fadeUp}
+              className={`font-home-sans mx-auto mt-5 max-w-2xl text-[17px] leading-7 ${
+                darkMode ? 'text-home-text-inverse-secondary' : 'text-home-text-secondary'
+              }`}
             >
               {description}
-            </p>
+            </motion.p>
           )}
-        </motion.div>
+        </AnimatedSection>
 
-        {/* Steps */}
-        {isProcess ? (
-          <ProcessTimeline steps={steps} accentColor={accentColor} start={isInView} />
-        ) : (
-          <motion.div
-            variants={stagger}
-            initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
-            className={layout === 'horizontal' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6' : 'space-y-8'}
-          >
-            {steps.map((step, i) => {
-              const Icon = step.icon;
-
-              return (
-                <motion.div
-                  key={step.title}
-                  variants={fadeUp}
-                  style={{
-                    position: 'relative',
-                  }}
-                >
-                  {/* Connector line (only for horizontal layout, not last item) */}
-                  {layout === 'horizontal' && i < steps.length - 1 && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '48px',
-                        left: 'calc(100% + 12px)',
-                        width: 'calc(100% - 24px)',
-                        height: '2px',
-                        background: `linear-gradient(90deg, ${accentColor}, transparent)`,
-                        display: 'none',
-                        zIndex: -1,
-                      }}
-                      className="lg:block"
-                    />
-                  )}
-
-                  <div
-                    style={{
-                      borderRadius: '16px',
-                      background: darkMode ? 'rgba(22, 24, 32, 0.8)' : '#f8fafc',
-                      border: darkMode
-                        ? '1px solid rgba(255,255,255,0.07)'
-                        : '1px solid #e2e8f0',
-                      backdropFilter: darkMode ? 'blur(12px)' : 'none',
-                      padding: '24px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '16px',
-                      height: '100%',
-                      transition: 'all 0.3s ease',
-                      cursor: 'default',
-                    }}
-                    className="hover:shadow-lg"
-                  >
-                    {/* Step number badge */}
-                    <div
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '12px',
-                        background: `${accentColor}20`,
-                        border: `2px solid ${accentColor}`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '20px',
-                        fontWeight: 800,
-                        color: accentColor,
-                        flexShrink: 0,
-                      }}
-                    >
-                      {step.number}
-                    </div>
-
-                    {/* Icon (if provided) */}
-                    {Icon && (
-                      <div
-                        style={{
-                          width: '44px',
-                          height: '44px',
-                          borderRadius: '10px',
-                          background: `${accentColor}15`,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <Icon size={20} color={accentColor} />
-                      </div>
-                    )}
-
-                    {/* Content */}
-                    <div>
-                      <h3
-                        style={{
-                          fontSize: '16px',
-                          fontWeight: 700,
-                          color: darkMode ? '#f1f5f9' : '#0f172a',
-                          marginBottom: '8px',
-                          letterSpacing: '-0.3px',
-                        }}
-                      >
-                        {step.title}
-                      </h3>
-                      <p
-                        style={{
-                          fontSize: '14px',
-                          color: '#64748b',
-                          lineHeight: 1.7,
-                          margin: 0,
-                        }}
-                      >
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        )}
+        <AnimatedSection variants={stagger} className={`grid grid-cols-1 gap-5 sm:grid-cols-2 ${colsClass}`}>
+          {steps.map((step) => (
+            <motion.div
+              key={`${step.number}-${step.title}`}
+              variants={fadeUpItem}
+              className={`rounded-home-lg border p-6 ${
+                darkMode ? 'border-home-border-dark bg-home-surface-dark-raised' : 'border-home-border bg-home-bg'
+              }`}
+            >
+              <span
+                aria-hidden="true"
+                className="font-home-sans flex h-9 w-9 items-center justify-center rounded-home-full bg-home-primary text-[15px] font-semibold text-home-primary-foreground"
+              >
+                {step.number}
+              </span>
+              <h3
+                className={`font-home-sans mt-5 text-lg font-semibold tracking-[-0.01em] ${
+                  darkMode ? 'text-home-text-inverse' : 'text-home-fg'
+                }`}
+              >
+                {step.title}
+              </h3>
+              <p
+                className={`font-home-sans mt-2 text-[15px] leading-6 ${
+                  darkMode ? 'text-home-text-inverse-secondary' : 'text-home-text-secondary'
+                }`}
+              >
+                {step.description}
+              </p>
+            </motion.div>
+          ))}
+        </AnimatedSection>
       </div>
     </section>
   );

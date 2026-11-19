@@ -43,7 +43,7 @@ export default function Breadcrumbs({ items }: Props) {
                   <ChevronRight
                     size={13}
                     aria-hidden="true"
-                    style={{ color: '#94a3b8', flexShrink: 0 }}
+                    style={{ color: 'var(--home-text-muted)', flexShrink: 0 }}
                   />
                 )}
                 {isLast || !item.href ? (
@@ -52,7 +52,7 @@ export default function Breadcrumbs({ items }: Props) {
                     style={{
                       fontSize: '13px',
                       fontWeight: isLast ? 500 : 400,
-                      color: isLast ? '#334155' : '#64748b',
+                      color: isLast ? 'var(--home-fg)' : 'var(--home-text-muted)',
                       whiteSpace: 'nowrap',
                     }}
                   >
@@ -61,11 +61,11 @@ export default function Breadcrumbs({ items }: Props) {
                 ) : (
                   <Link
                     href={item.href}
-                    className="hover:underline hover:text-blue-700"
+                    className="font-home-sans hover:text-home-fg"
                     style={{
                       fontSize: '13px',
                       fontWeight: 400,
-                      color: '#2563eb',
+                      color: 'var(--home-text-muted)',
                       textDecoration: 'none',
                       whiteSpace: 'nowrap',
                     }}
